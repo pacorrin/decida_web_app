@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -12,4 +7,229 @@ datasource db {
   provider = "postgresql"
 }
 
-// Define your models here, then run: pnpm db:push or pnpm db:migrate
+enum assessment_status {
+  started
+  paid
+  in_progress
+  completed
+  report_generated
+  failed
+}
+
+enum payment_status {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum signal_level {
+  green
+  yellow
+  red
+}
+
+enum final_recommendation {
+  proceed_small_test
+  validate_first
+  adjust_idea
+  pause_for_now
+}
+
+model assessments {
+  asmt_id                  String            @id @default(cuid())
+  asmt_created_at          DateTime          @default(now())
+  asmt_updated_at          DateTime          @updatedAt
+  asmt_status              assessment_status @default(started)
+  asmt_email               String
+  asmt_country             String?
+  asmt_payment_status      payment_status?
+  asmt_payment_provider    String?
+  asmt_payment_reference   String?
+  asmt_started_at          DateTime?
+  asmt_completed_at        DateTime?
+  asmt_report_generated_at DateTime?
+
+  assessment_profile   assessment_profiles?
+  personal_fit_answers personal_fit_answers?
+  business_idea        business_ideas?
+  financial_inputs     financial_inputs?
+  market_risk_inputs   market_risk_inputs?
+  assessment_score     assessment_scores?
+  assessment_report    assessment_reports?
+  payments             payments[]
+  feedback             feedback?
+
+  @@index([asmt_email])
+  @@index([asmt_status])
+  @@map("assessments")
+}
+
+model assessment_profiles {
+  aprf_id                         String  @id @default(cuid())
+  aprf_asmt_id                    String  @unique
+  aprf_current_situation          String?
+  aprf_main_goal                  String?
+  aprf_expected_income_timeframe  String?
+  aprf_entrepreneurship_experience String?
+  aprf_capital_available_range    String?
+  aprf_acceptable_loss_range      String?
+  aprf_hours_per_week_range       String?
+  aprf_available_schedule         String?
+
+  assessment assessments @relation(fields: [aprf_asmt_id], references: [asmt_id], onDelete: Cascade)
+
+  @@map("assessment_profiles")
+}
+
+model personal_fit_answers {
+  pfit_id                      String  @id @default(cuid())
+  pfit_asmt_id                 String  @unique
+  pfit_enjoyed_activities      Json?
+  pfit_avoided_activities      Json?
+  pfit_work_preference         String?
+  pfit_sales_comfort_score     Int?
+  pfit_uncertainty_comfort_score Int?
+  pfit_hiring_preference       String?
+
+  assessment assessments @relation(fields: [pfit_asmt_id], references: [asmt_id], onDelete: Cascade)
+
+  @@map("personal_fit_answers")
+}
+
+model business_ideas {
+  bide_id                      String  @id @default(cuid())
+  bide_asmt_id                 String  @unique
+  bide_original_description    String?
+  bide_target_customer         String?
+  bide_problem_solved          String?
+  bide_why_would_pay           String?
+  bide_ai_summary              String?
+  bide_ai_detected_assumptions Json?
+  bide_user_confirmed_summary  Boolean @default(false)
+
+  assessment assessments @relation(fields: [bide_asmt_id], references: [asmt_id], onDelete: Cascade)
+
+  @@map("business_ideas")
+}
+
+model financial_inputs {
+  finp_id                           String   @id @default(cuid())
+  finp_asmt_id                      String   @unique
+  finp_initial_investment           Decimal? @db.Decimal(12, 2)
+  finp_price_per_sale               Decimal? @db.Decimal(12, 2)
+  finp_variable_cost_per_sale       Decimal? @db.Decimal(12, 2)
+  finp_estimated_monthly_sales      Int?
+  finp_fixed_monthly_costs_range    String?
+  finp_fixed_monthly_costs_amount   Decimal? @db.Decimal(12, 2)
+  finp_currency                     String?  @default("USD")
+  finp_gross_margin_per_sale        Decimal? @db.Decimal(12, 2)
+  finp_gross_margin_percentage      Decimal? @db.Decimal(5, 2)
+  finp_estimated_monthly_gross_profit Decimal? @db.Decimal(12, 2)
+  finp_estimated_monthly_net_profit Decimal? @db.Decimal(12, 2)
+  finp_break_even_sales             Int?
+  finp_payback_months               Decimal? @db.Decimal(6, 2)
+
+  assessment assessments @relation(fields: [finp_asmt_id], references: [asmt_id], onDelete: Cascade)
+
+  @@map("financial_inputs")
+}
+
+model market_risk_inputs {
+  mrsk_id                    String  @id @default(cuid())
+  mrsk_asmt_id               String  @unique
+  mrsk_has_talked_to_customers Boolean?
+  mrsk_competition_level     String?
+  mrsk_acquisition_channel   String?
+  mrsk_business_dependencies Json?
+  mrsk_main_concern          String?
+  mrsk_success_condition     String?
+
+  assessment assessments @relation(fields: [mrsk_asmt_id], references: [asmt_id], onDelete: Cascade)
+
+  @@map("market_risk_inputs")
+}
+
+model assessment_scores {
+  ascs_id                          String                @id @default(cuid())
+  ascs_asmt_id                     String                @unique
+  ascs_personal_fit_score          Int?
+  ascs_financial_viability_score   Int?
+  ascs_commercial_viability_score  Int?
+  ascs_risk_level_score            Int?
+  ascs_time_fit_score              Int?
+  ascs_scalability_score           Int?
+  ascs_personal_fit_signal         signal_level?
+  ascs_financial_viability_signal  signal_level?
+  ascs_commercial_viability_signal signal_level?
+  ascs_risk_level_signal           signal_level?
+  ascs_time_fit_signal             signal_level?
+  ascs_scalability_signal          signal_level?
+  ascs_final_recommendation        final_recommendation?
+  ascs_red_flags                   Json?
+  ascs_calculated_metrics          Json?
+  ascs_scoring_version             String?
+
+  assessment assessments @relation(fields: [ascs_asmt_id], references: [asmt_id], onDelete: Cascade)
+
+  @@map("assessment_scores")
+}
+
+model assessment_reports {
+  arep_id                      String   @id @default(cuid())
+  arep_asmt_id                 String   @unique
+  arep_executive_summary       String?
+  arep_business_understanding  String?
+  arep_strengths               Json?
+  arep_risks                   Json?
+  arep_personal_fit_analysis   String?
+  arep_financial_analysis      String?
+  arep_time_operation_analysis String?
+  arep_scalability_analysis    String?
+  arep_validation_plan         Json?
+  arep_final_recommendation_text String?
+  arep_pdf_url                 String?
+  arep_ai_model_used           String?
+  arep_prompt_version          String?
+  arep_created_at              DateTime @default(now())
+
+  assessment assessments @relation(fields: [arep_asmt_id], references: [asmt_id], onDelete: Cascade)
+
+  @@map("assessment_reports")
+}
+
+model payments {
+  paym_id                String         @id @default(cuid())
+  paym_asmt_id           String
+  paym_provider          String
+  paym_provider_session_id String?
+  paym_provider_payment_id String?
+  paym_amount            Decimal        @db.Decimal(12, 2)
+  paym_currency          String         @default("USD")
+  paym_status            payment_status @default(pending)
+  paym_created_at        DateTime       @default(now())
+  paym_paid_at           DateTime?
+  paym_raw_payload       Json?
+
+  assessment assessments @relation(fields: [paym_asmt_id], references: [asmt_id], onDelete: Cascade)
+
+  @@index([paym_asmt_id])
+  @@index([paym_status])
+  @@map("payments")
+}
+
+model feedback {
+  fdbk_id                  String   @id @default(cuid())
+  fdbk_asmt_id             String   @unique
+  fdbk_rating              Int?
+  fdbk_clarity_score       Int?
+  fdbk_usefulness_score    Int?
+  fdbk_comment             String?
+  fdbk_would_recommend     Boolean?
+  fdbk_testimonial_consent Boolean  @default(false)
+  fdbk_created_at          DateTime @default(now())
+
+  assessment assessments @relation(fields: [fdbk_asmt_id], references: [asmt_id], onDelete: Cascade)
+
+  @@map("feedback")
+}
