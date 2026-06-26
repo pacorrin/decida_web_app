@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: decida-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: decida
+      POSTGRES_PASSWORD: decida
+      POSTGRES_DB: decida
+    volumes:
+      - decida_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U decida -d decida"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  decida_postgres_data:
