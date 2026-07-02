@@ -42,6 +42,8 @@ model assessments {
   asmt_updated_at          DateTime          @updatedAt
   asmt_status              assessment_status @default(started)
   asmt_email               String
+  asmt_name                String?
+  asmt_phone               String?
   asmt_country             String?
   asmt_payment_status      payment_status?
   asmt_payment_provider    String?
