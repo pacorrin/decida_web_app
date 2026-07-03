@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -13,6 +13,7 @@ import {
   FieldLegend,
 } from "@/components/ui/field";
 import { StepNavigation } from "@/components/onboarding/step-navigation";
+import { LoadingOverlay } from "@/components/onboarding/loading-overlay";
 import { saveEvaluation } from "@/app/analizar/actions";
 import type { ActionState } from "@/lib/onboarding/schemas";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
@@ -50,11 +51,22 @@ type EvaluationFormProps = {
 
 export function EvaluationForm({ assessment }: EvaluationFormProps) {
   const [state, action, pending] = useActionState(saveEvaluation, initialState);
+  const [showTimeoutWarning, setShowTimeoutWarning] = useState(false);
   const fin = assessment.financial_inputs;
   const mkt = assessment.market_risk_inputs;
 
+  const handleTimeout = () => {
+    setShowTimeoutWarning(true);
+  };
+
   return (
-    <form action={action}>
+    <>
+      <LoadingOverlay
+        isLoading={pending}
+        onTimeout={handleTimeout}
+        timeoutMs={45000}
+      />
+      <form action={action}>
       <FieldGroup>
         <FieldSet>
           <FieldLegend>Finanzas básicas</FieldLegend>
@@ -253,5 +265,6 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
         submitLabel={pending ? "Generando tu diagnóstico..." : "Obtener mi diagnóstico"}
       />
     </form>
+    </>
   );
 }
