@@ -20,6 +20,7 @@ import {
 } from "@/lib/ai/schemas/structured-understanding";
 import type { RefineIdeaState } from "@/lib/onboarding/schemas";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
+import { Markdown } from "@/components/ui/markdown";
 
 const CATEGORY_LABELS: Record<string, string> = {
   cliente: "Cliente",
@@ -69,11 +70,11 @@ function UnderstandingSections({
 
   return (
     <div className="space-y-4">
-      <p className="text-base font-medium leading-relaxed text-primary">
-        {summary}
-      </p>
+      <div className="text-base font-medium leading-relaxed text-primary">
+        <Markdown content={summary} className="text-base" />
+      </div>
 
-      {entries.length > 0 ? (
+      {entries.length > 0 && (
         <div className="grid gap-3 sm:grid-cols-2">
           {entries.map(({ key, label, value }) => (
             <div
@@ -89,10 +90,6 @@ function UnderstandingSections({
             </div>
           ))}
         </div>
-      ) : (
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          {summary}
-        </p>
       )}
     </div>
   );

@@ -10,6 +10,7 @@ import {
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import { CheckCircle2, AlertTriangle, AlertCircle } from "lucide-react";
 import { ReportErrorState } from "@/components/onboarding/report-error-state";
+import { Markdown } from "@/components/ui/markdown";
 
 const DIMENSION_MAP = [
   {
@@ -91,9 +92,10 @@ export function ResultReport({ assessment }: ResultReportProps) {
     <div className="space-y-2">
       {report?.arep_executive_summary && (
         <ReportSection title="Resumen ejecutivo">
-          <p className="text-base leading-relaxed text-muted-foreground">
-            {report.arep_executive_summary}
-          </p>
+          <Markdown 
+            content={report.arep_executive_summary} 
+            className="text-base" 
+          />
           {recommendation && (
             <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4">
               <p className="text-sm font-medium text-primary">Recomendación</p>
@@ -175,17 +177,19 @@ export function ResultReport({ assessment }: ResultReportProps) {
 
       {report?.arep_financial_analysis && (
         <ReportSection title="Análisis financiero">
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
-            {report.arep_financial_analysis}
-          </p>
+          <Markdown 
+            content={report.arep_financial_analysis} 
+            className="text-sm" 
+          />
         </ReportSection>
       )}
 
       {report?.arep_personal_fit_analysis && (
         <ReportSection title="Compatibilidad personal">
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
-            {report.arep_personal_fit_analysis}
-          </p>
+          <Markdown 
+            content={report.arep_personal_fit_analysis} 
+            className="text-sm" 
+          />
         </ReportSection>
       )}
 
@@ -226,9 +230,10 @@ export function ResultReport({ assessment }: ResultReportProps) {
 
       {report?.arep_final_recommendation_text && (
         <ReportSection title="Recomendación final">
-          <p className="whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
-            {report.arep_final_recommendation_text}
-          </p>
+          <Markdown 
+            content={report.arep_final_recommendation_text} 
+            className="text-base" 
+          />
         </ReportSection>
       )}
 
