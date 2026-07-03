@@ -33,6 +33,11 @@ import {
 } from "@/lib/onboarding/session-server";
 import { getStepBySlug } from "@/lib/onboarding/steps";
 import { prisma } from "@/lib/prisma";
+import {
+  logReportGenerationError,
+  logReportGenerationRetry,
+  logReportGenerationSuccess,
+} from "@/lib/logging/report-logger";
 
 function redirectToStep(slug: Parameters<typeof getStepBySlug>[0]): never {
   redirect(getStepBySlug(slug).path);
@@ -500,7 +505,7 @@ export async function saveEvaluation(
 
   await prisma.assessments.update({
     where: { asmt_id: assessment.asmt_id },
-    data: { asmt_status: "completed" },
+    data: { asmt_status: "in_progress" },
   });
 
   const refreshed = await getAssessmentById(assessment.asmt_id);
@@ -510,11 +515,94 @@ export async function saveEvaluation(
     const { deterministic, interpretation } =
       await runScoringPipeline(refreshed);
     await generateReport(refreshed, deterministic, interpretation);
+    
+    logReportGenerationSuccess("Report generated successfully", {
+      assessmentId: assessment.asmt_id,
+      metadata: { email: assessment.asmt_email },
+    });
   } catch (error) {
-    console.error("Report generation failed:", error);
+    logReportGenerationError("Report generation failed during evaluation", {
+      assessmentId: assessment.asmt_id,
+      error,
+      metadata: {
+        email: assessment.asmt_email,
+        status: assessment.asmt_status,
+      },
+    });
+    
+    await prisma.assessments.update({
+      where: { asmt_id: assessment.asmt_id },
+      data: { 
+        asmt_status: "failed",
+        asmt_completed_at: new Date(),
+      },
+    });
   }
 
   redirectToStep("resultado");
+}
+
+export async function retryReportGeneration(): Promise<ActionState> {
+  const assessment = await requireAssessment();
+  
+  if (assessment.asmt_status !== "failed" && assessment.asmt_status !== "completed") {
+    return {
+      success: false,
+      message: "Solo puedes reintentar la generación de reportes fallidos.",
+    };
+  }
+
+  const refreshed = await getAssessmentById(assessment.asmt_id);
+  if (!refreshed) {
+    return {
+      success: false,
+      message: "No se pudo encontrar tu evaluación.",
+    };
+  }
+
+  logReportGenerationRetry("Manual retry attempt initiated", {
+    assessmentId: assessment.asmt_id,
+    metadata: { previousStatus: assessment.asmt_status },
+  });
+
+  try {
+    await prisma.assessments.update({
+      where: { asmt_id: assessment.asmt_id },
+      data: { asmt_status: "in_progress" },
+    });
+
+    const { deterministic, interpretation } =
+      await runScoringPipeline(refreshed);
+    await generateReport(refreshed, deterministic, interpretation);
+
+    logReportGenerationSuccess("Report generated successfully on retry", {
+      assessmentId: assessment.asmt_id,
+    });
+
+    return {
+      success: true,
+      message: "Reporte generado exitosamente.",
+    };
+  } catch (error) {
+    logReportGenerationError("Report generation retry failed", {
+      assessmentId: assessment.asmt_id,
+      error,
+      metadata: { retryAttempt: true },
+    });
+    
+    await prisma.assessments.update({
+      where: { asmt_id: assessment.asmt_id },
+      data: { 
+        asmt_status: "failed",
+        asmt_completed_at: new Date(),
+      },
+    });
+
+    return {
+      success: false,
+      message: "No se pudo generar el reporte. Por favor, contacta a soporte.",
+    };
+  }
 }
 
 export async function saveAndContinueLater(): Promise<void> {

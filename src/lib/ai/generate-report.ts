@@ -5,6 +5,8 @@ import type { ScoringInterpretResult } from "@/lib/ai/schemas/scoring-interpret"
 import type { DeterministicScoreResult } from "@/lib/scoring/types";
 
 const REPORT_PROMPT_VERSION = "v1.0.0";
+const MAX_RETRIES = 2;
+const RETRY_DELAY_MS = 1000;
 
 const BASE_SYSTEM = `Eres un consultor de viabilidad de negocios para Decida.
 Escribe en español mexicano, tono claro, directo y accionable.
@@ -73,11 +75,22 @@ const SECTION_PROMPTS: Record<
 
 async function generateSection(
   key: string,
-  ctx: ReportContext
+  ctx: ReportContext,
+  retryCount = 0
 ): Promise<string> {
   const promptFn = SECTION_PROMPTS[key];
   if (!promptFn) throw new Error(`Unknown section: ${key}`);
-  return generateText(BASE_SYSTEM, promptFn(ctx));
+  
+  try {
+    return await generateText(BASE_SYSTEM, promptFn(ctx));
+  } catch (error) {
+    if (retryCount < MAX_RETRIES) {
+      console.warn(`Retrying section ${key} (attempt ${retryCount + 1}/${MAX_RETRIES})`);
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS * (retryCount + 1)));
+      return generateSection(key, ctx, retryCount + 1);
+    }
+    throw new Error(`Failed to generate section ${key} after ${MAX_RETRIES} retries: ${error}`);
+  }
 }
 
 export async function generateReport(

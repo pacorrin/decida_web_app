@@ -8,7 +8,8 @@ import {
   type RecommendationType,
 } from "@/lib/example-report-data";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
-import { CheckCircle2, AlertTriangle } from "lucide-react";
+import { CheckCircle2, AlertTriangle, AlertCircle } from "lucide-react";
+import { ReportErrorState } from "@/components/onboarding/report-error-state";
 
 const DIMENSION_MAP = [
   {
@@ -61,6 +62,30 @@ export function ResultReport({ assessment }: ResultReportProps) {
     | RecommendationType
     | null
     | undefined;
+
+  if (assessment.asmt_status === "failed") {
+    return <ReportErrorState assessmentId={assessment.asmt_id} />;
+  }
+
+  if (!report && assessment.asmt_status === "in_progress") {
+    return (
+      <Card className="border-blue-200 bg-blue-50">
+        <CardContent className="py-6">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="mt-0.5 size-5 shrink-0 text-blue-600" />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-blue-900">
+                Tu diagnóstico se está procesando
+              </p>
+              <p className="text-sm text-blue-700">
+                Esto puede tomar unos momentos. La página se actualizará automáticamente.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-2">

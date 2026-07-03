@@ -74,6 +74,7 @@ export function isPaid(assessment: AssessmentBase): boolean {
     assessment.asmt_status === "in_progress" ||
     assessment.asmt_status === "completed" ||
     assessment.asmt_status === "report_generated" ||
+    assessment.asmt_status === "failed" ||
     assessment.asmt_payment_status === "paid"
   );
 }
