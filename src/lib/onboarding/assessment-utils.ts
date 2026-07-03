@@ -31,6 +31,14 @@ export type AssessmentBase = assessments & {
     finp_variable_cost_per_sale?: unknown;
     finp_estimated_monthly_sales?: number | null;
     finp_fixed_monthly_costs_range?: string | null;
+    finp_fixed_monthly_costs_amount?: unknown;
+    finp_currency?: string | null;
+    finp_gross_margin_per_sale?: unknown;
+    finp_gross_margin_percentage?: unknown;
+    finp_estimated_monthly_gross_profit?: unknown;
+    finp_estimated_monthly_net_profit?: unknown;
+    finp_break_even_sales?: number | null;
+    finp_payback_months?: unknown;
   } | null;
   market_risk_inputs?: {
     mrsk_id: string;
@@ -58,8 +66,11 @@ export type AssessmentBase = assessments & {
   } | null;
   assessment_report?: {
     arep_executive_summary?: string | null;
+    arep_business_understanding?: string | null;
     arep_financial_analysis?: string | null;
     arep_personal_fit_analysis?: string | null;
+    arep_time_operation_analysis?: string | null;
+    arep_scalability_analysis?: string | null;
     arep_final_recommendation_text?: string | null;
     arep_strengths?: unknown;
     arep_risks?: unknown;
