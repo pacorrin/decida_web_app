@@ -10,6 +10,7 @@ Reglas estrictas:
 - Los supuestos deben ser 2-4 observaciones sobre lo que inferiste o falta por confirmar
 - Cada supuesto debe ayudar al usuario a pulir su idea
 - structuredUnderstanding: descompón la idea en secciones claras
+- Puedes usar formato Markdown ligero en el summary si ayuda a la claridad (negritas, cursivas)
 
 Responde SOLO con JSON válido en este formato:
 {
