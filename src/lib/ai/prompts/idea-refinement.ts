@@ -12,6 +12,7 @@ Reglas:
 - improvements: lista breve de qué se aclaró o mejoró (2-4 bullets, en segunda persona)
 - structuredUnderstanding: REESTRUCTURA la idea en secciones claras integrando las aclaraciones
 - Escribe en español mexicano, tono claro y alentador
+- Puedes usar formato Markdown ligero en el summary si ayuda a la claridad (negritas, cursivas)
 
 Responde SOLO JSON:
 {
