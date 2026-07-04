@@ -11,6 +11,7 @@ import {
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import { CheckCircle2, AlertTriangle, AlertCircle, TrendingUp } from "lucide-react";
 import { ReportErrorState } from "@/components/onboarding/report-error-state";
+import { FeedbackForm } from "@/components/onboarding/feedback-form";
 import { Markdown } from "@/components/ui/markdown";
 import {
   Table,
@@ -463,6 +464,12 @@ export function ResultReport({ assessment }: ResultReportProps) {
               página en unos momentos.
             </CardContent>
           </Card>
+        )}
+
+        {report && (
+          <ReportSection id="feedback" title="¿Te fue útil este diagnóstico?">
+            <FeedbackForm assessment={assessment} />
+          </ReportSection>
         )}
       </div>
     </div>

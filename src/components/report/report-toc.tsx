@@ -13,6 +13,7 @@ const SECTIONS = [
   { id: "escalabilidad", label: "Escalabilidad" },
   { id: "validacion", label: "Plan de validación" },
   { id: "recomendacion", label: "Recomendación final" },
+  { id: "feedback", label: "Tu opinión" },
 ] as const;
 
 export function ReportToc({ className }: { className?: string }) {

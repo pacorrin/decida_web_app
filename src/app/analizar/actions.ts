@@ -20,6 +20,7 @@ import {
   paymentSchema,
   evaluationFinancialSchema,
   evaluationMarketSchema,
+  feedbackSchema,
   parseFieldErrors,
   refineIdeaSchema,
   type ActionState,
@@ -607,4 +608,57 @@ export async function retryReportGeneration(): Promise<ActionState> {
 
 export async function saveAndContinueLater(): Promise<void> {
   redirect("/");
+}
+
+export async function saveFeedback(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const assessment = await requireAssessment();
+
+  if (!assessment.assessment_report) {
+    return {
+      success: false,
+      message: "El diagnóstico aún no está listo para recibir feedback.",
+    };
+  }
+
+  const existingFeedback = await prisma.feedback.findUnique({
+    where: { fdbk_asmt_id: assessment.asmt_id },
+  });
+
+  if (existingFeedback) {
+    return {
+      success: false,
+      message: "Ya enviaste tu opinión sobre este diagnóstico.",
+    };
+  }
+
+  const parsed = feedbackSchema.safeParse({
+    rating: formData.get("rating"),
+    wouldRecommend: formData.get("wouldRecommend"),
+    comment: formData.get("comment") ?? undefined,
+    testimonialConsent: formData.get("testimonialConsent") ?? undefined,
+  });
+
+  if (!parsed.success) {
+    return { success: false, fieldErrors: parseFieldErrors(parsed.error) };
+  }
+
+  const data = parsed.data;
+
+  await prisma.feedback.create({
+    data: {
+      fdbk_asmt_id: assessment.asmt_id,
+      fdbk_rating: data.rating,
+      fdbk_would_recommend: data.wouldRecommend === "true",
+      fdbk_comment: data.comment ?? null,
+      fdbk_testimonial_consent: data.testimonialConsent ?? false,
+    },
+  });
+
+  return {
+    success: true,
+    message: "¡Gracias por tu opinión! Nos ayuda a mejorar Decida.",
+  };
 }
