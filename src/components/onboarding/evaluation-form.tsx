@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -51,19 +51,13 @@ type EvaluationFormProps = {
 
 export function EvaluationForm({ assessment }: EvaluationFormProps) {
   const [state, action, pending] = useActionState(saveEvaluation, initialState);
-  const [showTimeoutWarning, setShowTimeoutWarning] = useState(false);
   const fin = assessment.financial_inputs;
   const mkt = assessment.market_risk_inputs;
-
-  const handleTimeout = () => {
-    setShowTimeoutWarning(true);
-  };
 
   return (
     <>
       <LoadingOverlay
         isLoading={pending}
-        onTimeout={handleTimeout}
         timeoutMs={45000}
       />
       <form action={action}>

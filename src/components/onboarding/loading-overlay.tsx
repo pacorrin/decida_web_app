@@ -17,23 +17,18 @@ const PROGRESS_MESSAGES = [
   { progress: 90, message: "Finalizando reporte...", duration: 2000 },
 ];
 
-export function LoadingOverlay({
-  isLoading,
+function LoadingContent({
   onTimeout,
-  timeoutMs = 60000,
-}: LoadingOverlayProps) {
+  timeoutMs,
+}: {
+  onTimeout?: () => void;
+  timeoutMs: number;
+}) {
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [hasTimedOut, setHasTimedOut] = useState(false);
 
   useEffect(() => {
-    if (!isLoading) {
-      setMessageIndex(0);
-      setProgress(0);
-      setHasTimedOut(false);
-      return;
-    }
-
     let messageTimer: NodeJS.Timeout;
     let timeoutTimer: NodeJS.Timeout;
 
@@ -67,9 +62,7 @@ export function LoadingOverlay({
       clearTimeout(messageTimer);
       clearTimeout(timeoutTimer);
     };
-  }, [isLoading, onTimeout, timeoutMs]);
-
-  if (!isLoading) return null;
+  }, [onTimeout, timeoutMs]);
 
   const currentMessage = PROGRESS_MESSAGES[messageIndex];
 
@@ -111,5 +104,21 @@ export function LoadingOverlay({
         </p>
       </div>
     </div>
+  );
+}
+
+export function LoadingOverlay({
+  isLoading,
+  onTimeout,
+  timeoutMs = 60000,
+}: LoadingOverlayProps) {
+  if (!isLoading) return null;
+
+  return (
+    <LoadingContent
+      key="loading"
+      onTimeout={onTimeout}
+      timeoutMs={timeoutMs}
+    />
   );
 }
