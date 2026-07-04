@@ -14,6 +14,7 @@ const ASSESSMENT_INCLUDE = {
   market_risk_inputs: true,
   assessment_score: true,
   assessment_report: true,
+  feedback: true,
   payments: { orderBy: { paym_created_at: "desc" as const }, take: 1 },
 } as const;
 

@@ -76,6 +76,13 @@ export type AssessmentBase = assessments & {
     arep_risks?: unknown;
     arep_validation_plan?: unknown;
   } | null;
+  feedback?: {
+    fdbk_rating: number | null;
+    fdbk_comment: string | null;
+    fdbk_would_recommend: boolean | null;
+    fdbk_testimonial_consent: boolean;
+    fdbk_created_at: Date;
+  } | null;
   payments?: unknown[];
 };
 

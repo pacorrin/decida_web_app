@@ -61,6 +61,22 @@ export const evaluationMarketSchema = z.object({
   successCondition: z.string().min(10),
 });
 
+export const feedbackSchema = z.object({
+  rating: z.coerce.number().min(1, "Selecciona una calificación").max(5),
+  wouldRecommend: z.enum(["true", "false"], {
+    message: "Indica si recomendarías Decida",
+  }),
+  comment: z
+    .string()
+    .max(2000, "Máximo 2000 caracteres")
+    .optional()
+    .transform((value) => value?.trim() || undefined),
+  testimonialConsent: z
+    .enum(["on"])
+    .optional()
+    .transform((value) => value === "on"),
+});
+
 export type ContactInput = z.infer<typeof contactSchema>;
 export type IdeaInput = z.infer<typeof ideaSchema>;
 export type ProfileInput = z.infer<typeof profileSchema>;
@@ -68,6 +84,7 @@ export type ResourcesInput = z.infer<typeof resourcesSchema>;
 export type PersonalFitInput = z.infer<typeof personalFitSchema>;
 export type PaymentInput = z.infer<typeof paymentSchema>;
 export type EvaluationFinancialInput = z.infer<typeof evaluationFinancialSchema>;
+export type FeedbackInput = z.infer<typeof feedbackSchema>;
 export const refineIdeaSchema = z.object({
   selectedIds: z.array(z.string()).min(1, "Selecciona al menos un supuesto"),
   clarifications: z.record(z.string(), z.string()).optional(),
