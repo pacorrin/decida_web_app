@@ -13,6 +13,7 @@ import {
   FieldLegend,
 } from "@/components/ui/field";
 import { StepNavigation } from "@/components/onboarding/step-navigation";
+import { LoadingOverlay } from "@/components/onboarding/loading-overlay";
 import { saveEvaluation } from "@/app/analizar/actions";
 import type { ActionState } from "@/lib/onboarding/schemas";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
@@ -54,7 +55,12 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
   const mkt = assessment.market_risk_inputs;
 
   return (
-    <form action={action}>
+    <>
+      <LoadingOverlay
+        isLoading={pending}
+        timeoutMs={45000}
+      />
+      <form action={action}>
       <FieldGroup>
         <FieldSet>
           <FieldLegend>Finanzas básicas</FieldLegend>
@@ -253,5 +259,6 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
         submitLabel={pending ? "Generando tu diagnóstico..." : "Obtener mi diagnóstico"}
       />
     </form>
+    </>
   );
 }
