@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,6 +10,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { LegalFooterLinks } from "@/components/legal/legal-footer-links";
 import { StepNavigation } from "@/components/onboarding/step-navigation";
 import { saveContact } from "@/app/analizar/actions";
 import type { ActionState } from "@/lib/onboarding/schemas";
@@ -89,9 +91,58 @@ export function ContactForm({ assessment }: ContactFormProps) {
           </select>
           <FieldError errors={state.fieldErrors?.country?.map((m) => ({ message: m }))} />
         </Field>
+
+        <Field>
+          <label
+            htmlFor="acceptedTerms"
+            className="flex cursor-pointer items-start gap-3 rounded-lg border border-border/60 px-3 py-3 text-sm hover:bg-muted/40 has-checked:border-primary has-checked:bg-primary/5"
+          >
+            <input
+              id="acceptedTerms"
+              type="checkbox"
+              name="acceptedTerms"
+              value="on"
+              required
+              aria-invalid={!!state.fieldErrors?.acceptedTerms}
+              className="mt-0.5 size-4 rounded border-input"
+            />
+            <span>
+              <span className="font-medium">
+                Acepto los términos y la política de privacidad
+              </span>
+              <span className="mt-1 block text-muted-foreground">
+                He leído y acepto los{" "}
+                <Link
+                  href="/terminos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline underline-offset-4 hover:text-primary/80"
+                >
+                  Términos de servicio
+                </Link>{" "}
+                y la{" "}
+                <Link
+                  href="/privacidad"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline underline-offset-4 hover:text-primary/80"
+                >
+                  Política de privacidad
+                </Link>
+                , y autorizo el tratamiento de mis datos para enviarme el
+                reporte.
+              </span>
+            </span>
+          </label>
+          <FieldError
+            errors={state.fieldErrors?.acceptedTerms?.map((m) => ({ message: m }))}
+          />
+        </Field>
       </FieldGroup>
 
       <StepNavigation currentSlug="contacto" isPending={pending} showBack={false} />
+
+      <LegalFooterLinks className="mt-8 justify-center border-t border-border/60 pt-6" />
     </form>
   );
 }

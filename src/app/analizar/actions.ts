@@ -61,6 +61,7 @@ export async function saveContact(
     name: formData.get("name"),
     phone: formData.get("phone"),
     country: formData.get("country"),
+    acceptedTerms: formData.get("acceptedTerms"),
   });
 
   if (!parsed.success) {

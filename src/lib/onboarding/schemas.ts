@@ -6,6 +6,10 @@ export const contactSchema = z.object({
   name: z.string().min(2, "Ingresa tu nombre"),
   phone: z.string().min(8, "Ingresa un teléfono válido"),
   country: z.string().min(1, "Selecciona tu país"),
+  acceptedTerms: z.enum(["on"], {
+    message:
+      "Debes aceptar los términos de servicio y la política de privacidad",
+  }),
 });
 
 export const ideaSchema = z.object({

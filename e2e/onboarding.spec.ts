@@ -373,6 +373,7 @@ async function completarContacto(page: Page): Promise<void> {
     await page.fill("#email", uniqueEmail());
     await page.fill("#phone", "5512345678");
     await page.selectOption("#country", "MX");
+    await page.check("#acceptedTerms");
 
     await page.getByRole("button", { name: "Continuar" }).click();
     await expect(page).toHaveURL(/\/analizar\/idea/, { timeout: 30_000 });
@@ -565,6 +566,7 @@ test.describe("Onboarding de análisis de idea — múltiples giros", () => {
     await page.fill("#email", uniqueEmail());
     await page.fill("#phone", "123"); // < 8 caracteres
     await page.selectOption("#country", "MX");
+    await page.check("#acceptedTerms");
 
     await page.getByRole("button", { name: "Continuar" }).click();
 
