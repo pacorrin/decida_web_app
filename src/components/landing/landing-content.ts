@@ -7,6 +7,11 @@ export const NAV_LINKS = [
   { href: "#faq", label: "FAQ" },
 ] as const;
 
+export const LEGAL_LINKS = [
+  { href: "/privacidad", label: "Privacidad" },
+  { href: "/terminos", label: "Términos de servicio" },
+] as const;
+
 export const ANALYZES_ITEMS = [
   "Capital disponible",
   "Inversión inicial",

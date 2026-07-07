@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { NAV_LINKS } from "@/components/landing/landing-content";
+import { LegalFooterLinks } from "@/components/legal/legal-footer-links";
 import { Separator } from "@/components/ui/separator";
 
 export function SiteFooter() {
@@ -42,6 +43,7 @@ export function SiteFooter() {
           </nav>
         </div>
         <Separator className="my-8" />
+        <LegalFooterLinks className="mb-4 flex flex-wrap justify-center gap-x-4 gap-y-1" />
         <p className="text-center text-xs text-muted-foreground">
           © {new Date().getFullYear()} Decida. Business Viability Assessment.
         </p>
