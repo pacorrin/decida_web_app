@@ -6,7 +6,7 @@ export function HeroSection() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative overflow-hidden border-b border-border/60 bg-gradient-to-b from-accent/30 via-background to-background py-16 md:py-24"
+      className="relative overflow-x-hidden border-b border-border/60 bg-gradient-to-b from-accent/30 via-background to-background py-16 md:py-24"
     >
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
         <div className="space-y-8">
@@ -44,7 +44,7 @@ export function HeroSection() {
             preguntas y recibe un análisis claro, directo y accionable.
           </p>
         </div>
-        <div className="mx-auto w-full max-w-md lg:max-w-none">
+        <div className="mx-auto w-full max-w-md px-2 py-3 sm:px-3 sm:py-4 lg:max-w-none lg:px-4">
           <AssessmentPreviewCard />
         </div>
       </div>

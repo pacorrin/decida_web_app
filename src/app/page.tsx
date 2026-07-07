@@ -13,12 +13,6 @@ import { SiteFooter } from "@/components/landing/site-footer";
 export default function HomePage() {
   return (
     <>
-      <a
-        href="#contenido-principal"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
-      >
-        Saltar al contenido
-      </a>
       <SiteHeader />
       <main id="contenido-principal">
         <HeroSection />
