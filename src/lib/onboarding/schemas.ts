@@ -26,8 +26,6 @@ export const profileSchema = z.object({
 });
 
 export const resourcesSchema = z.object({
-  capitalAvailableRange: z.string().min(1, "Selecciona un rango de capital"),
-  acceptableLossRange: z.string().min(1, "Selecciona cuánto podrías perder"),
   hoursPerWeekRange: z.string().min(1, "Selecciona tus horas disponibles"),
   availableSchedule: z.string().min(1, "Selecciona tu disponibilidad"),
   expectedIncomeTimeframe: z.string().min(1, "Selecciona tu plazo esperado"),

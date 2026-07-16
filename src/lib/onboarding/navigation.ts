@@ -14,8 +14,6 @@ function isSituationComplete(profile: AssessmentBase["assessment_profile"]): boo
     profile?.aprf_current_situation &&
     profile.aprf_main_goal &&
     profile.aprf_entrepreneurship_experience &&
-    profile.aprf_capital_available_range &&
-    profile.aprf_acceptable_loss_range &&
     profile.aprf_hours_per_week_range &&
     profile.aprf_available_schedule &&
     profile.aprf_expected_income_timeframe

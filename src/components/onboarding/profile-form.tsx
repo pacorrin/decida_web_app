@@ -16,8 +16,6 @@ import {
   CURRENT_SITUATION_OPTIONS,
   MAIN_GOAL_OPTIONS,
   EXPERIENCE_OPTIONS,
-  CAPITAL_RANGE_OPTIONS,
-  LOSS_RANGE_OPTIONS,
   HOURS_RANGE_OPTIONS,
   SCHEDULE_OPTIONS,
   INCOME_TIMEFRAME_OPTIONS,
@@ -99,29 +97,7 @@ export function ProfileForm({ assessment }: ProfileFormProps) {
         </FieldSet>
 
         <FieldSet>
-          <FieldLegend>Tus recursos</FieldLegend>
-          <CardSelectField
-            name="capitalAvailableRange"
-            label="¿Cuánto capital tienes disponible para invertir?"
-            options={CAPITAL_RANGE_OPTIONS}
-            defaultValue={fieldValue(
-              v,
-              "capitalAvailableRange",
-              profile?.aprf_capital_available_range ?? ""
-            )}
-            error={state.fieldErrors?.capitalAvailableRange}
-          />
-          <CardSelectField
-            name="acceptableLossRange"
-            label="¿Cuánto estarías dispuesto a perder sin afectar tu estabilidad?"
-            options={LOSS_RANGE_OPTIONS}
-            defaultValue={fieldValue(
-              v,
-              "acceptableLossRange",
-              profile?.aprf_acceptable_loss_range ?? ""
-            )}
-            error={state.fieldErrors?.acceptableLossRange}
-          />
+          <FieldLegend>Tu disponibilidad</FieldLegend>
           <CardSelectField
             name="hoursPerWeekRange"
             label="¿Cuántas horas por semana puedes dedicar?"

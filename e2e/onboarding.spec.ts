@@ -39,18 +39,6 @@ type Perfil = {
 };
 
 type Recursos = {
-  capitalAvailableRange:
-    | "menos_10k"
-    | "10k_50k"
-    | "50k_150k"
-    | "150k_500k"
-    | "mas_500k";
-  acceptableLossRange:
-    | "menos_5k"
-    | "5k_20k"
-    | "20k_50k"
-    | "50k_100k"
-    | "mas_100k";
   hoursPerWeekRange: "menos_5" | "5_10" | "10_20" | "20_40" | "mas_40";
   availableSchedule:
     | "fines_semana"
@@ -125,8 +113,6 @@ const SCENARIOS: Scenario[] = [
       entrepreneurshipExperience: "ninguna",
     },
     recursos: {
-      capitalAvailableRange: "150k_500k",
-      acceptableLossRange: "50k_100k",
       hoursPerWeekRange: "mas_40",
       availableSchedule: "tiempo_completo",
       expectedIncomeTimeframe: "6_12_meses",
@@ -165,8 +151,6 @@ const SCENARIOS: Scenario[] = [
       entrepreneurshipExperience: "algo",
     },
     recursos: {
-      capitalAvailableRange: "10k_50k",
-      acceptableLossRange: "5k_20k",
       hoursPerWeekRange: "20_40",
       availableSchedule: "flexible",
       expectedIncomeTimeframe: "mas_12_meses",
@@ -205,8 +189,6 @@ const SCENARIOS: Scenario[] = [
       entrepreneurshipExperience: "varios_intentos",
     },
     recursos: {
-      capitalAvailableRange: "menos_10k",
-      acceptableLossRange: "menos_5k",
       hoursPerWeekRange: "10_20",
       availableSchedule: "noches",
       expectedIncomeTimeframe: "1_3_meses",
@@ -245,8 +227,6 @@ const SCENARIOS: Scenario[] = [
       entrepreneurshipExperience: "ninguna",
     },
     recursos: {
-      capitalAvailableRange: "50k_150k",
-      acceptableLossRange: "20k_50k",
       hoursPerWeekRange: "5_10",
       availableSchedule: "fines_semana",
       expectedIncomeTimeframe: "6_12_meses",
@@ -285,8 +265,6 @@ const SCENARIOS: Scenario[] = [
       entrepreneurshipExperience: "ninguna",
     },
     recursos: {
-      capitalAvailableRange: "menos_10k",
-      acceptableLossRange: "menos_5k",
       hoursPerWeekRange: "5_10",
       availableSchedule: "noches",
       expectedIncomeTimeframe: "3_6_meses",
@@ -325,8 +303,6 @@ const SCENARIOS: Scenario[] = [
       entrepreneurshipExperience: "negocio_activo",
     },
     recursos: {
-      capitalAvailableRange: "50k_150k",
-      acceptableLossRange: "20k_50k",
       hoursPerWeekRange: "mas_40",
       availableSchedule: "tiempo_completo",
       expectedIncomeTimeframe: "3_6_meses",
@@ -431,8 +407,6 @@ async function completarSituacion(page: Page, scenario: Scenario): Promise<void>
     await selectOptionCard(page, "currentSituation", p.currentSituation);
     await selectOptionCard(page, "mainGoal", p.mainGoal);
     await selectOptionCard(page, "entrepreneurshipExperience", p.entrepreneurshipExperience);
-    await selectOptionCard(page, "capitalAvailableRange", r.capitalAvailableRange);
-    await selectOptionCard(page, "acceptableLossRange", r.acceptableLossRange);
     await selectOptionCard(page, "hoursPerWeekRange", r.hoursPerWeekRange);
     await selectOptionCard(page, "availableSchedule", r.availableSchedule);
     await selectOptionCard(page, "expectedIncomeTimeframe", r.expectedIncomeTimeframe);

@@ -49,8 +49,6 @@ async function completarOnboarding(
   await selectOptionCard(page, "currentSituation", "independiente");
   await selectOptionCard(page, "mainGoal", "ingreso_extra");
   await selectOptionCard(page, "entrepreneurshipExperience", "algo");
-  await selectOptionCard(page, "capitalAvailableRange", "menos_10k");
-  await selectOptionCard(page, "acceptableLossRange", "menos_5k");
   await selectOptionCard(page, "hoursPerWeekRange", "10_20");
   await selectOptionCard(page, "availableSchedule", "noches");
   await selectOptionCard(page, "expectedIncomeTimeframe", "1_3_meses");
