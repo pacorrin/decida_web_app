@@ -14,36 +14,18 @@ import {
 } from "@/components/ui/field";
 import { StepNavigation } from "@/components/onboarding/step-navigation";
 import { LoadingOverlay } from "@/components/onboarding/loading-overlay";
+import { OptionCardGroup } from "@/components/onboarding/option-card-group";
 import { saveEvaluation } from "@/app/analizar/actions";
-import type { ActionState } from "@/lib/onboarding/schemas";
+import { fieldValue, type ActionState } from "@/lib/onboarding/schemas";
+import {
+  FIXED_COST_OPTIONS,
+  COMPETITION_OPTIONS,
+  CHANNEL_OPTIONS,
+  HAS_TALKED_TO_CUSTOMERS_OPTIONS,
+} from "@/lib/onboarding/options";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 
 const initialState: ActionState = { success: false };
-
-const selectClass =
-  "h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
-
-const FIXED_COST_OPTIONS = [
-  { value: "menos_5k", label: "Menos de $5,000 MXN" },
-  { value: "5k_15k", label: "$5,000 – $15,000 MXN" },
-  { value: "15k_30k", label: "$15,000 – $30,000 MXN" },
-  { value: "30k_50k", label: "$30,000 – $50,000 MXN" },
-  { value: "mas_50k", label: "Más de $50,000 MXN" },
-];
-
-const COMPETITION_OPTIONS = [
-  { value: "baja", label: "Baja — pocos competidores" },
-  { value: "media", label: "Media — algunos competidores" },
-  { value: "alta", label: "Alta — mucha competencia" },
-];
-
-const CHANNEL_OPTIONS = [
-  { value: "redes_sociales", label: "Redes sociales" },
-  { value: "referidos", label: "Referidos / boca a boca" },
-  { value: "publicidad", label: "Publicidad pagada" },
-  { value: "presencial", label: "Venta presencial" },
-  { value: "otro", label: "Otro" },
-];
 
 type EvaluationFormProps = {
   assessment: AssessmentWithRelations;
@@ -53,6 +35,14 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
   const [state, action, pending] = useActionState(saveEvaluation, initialState);
   const fin = assessment.financial_inputs;
   const mkt = assessment.market_risk_inputs;
+  const v = state.values;
+
+  const talkedToCustomersFallback =
+    mkt?.mrsk_has_talked_to_customers === true
+      ? "true"
+      : mkt?.mrsk_has_talked_to_customers === false
+        ? "false"
+        : "";
 
   return (
     <>
@@ -60,7 +50,7 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
         isLoading={pending}
         timeoutMs={45000}
       />
-      <form action={action}>
+      <form key={v ? "error" : "initial"} action={action}>
       <FieldGroup>
         <FieldSet>
           <FieldLegend>Finanzas básicas</FieldLegend>
@@ -77,7 +67,11 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
                 type="number"
                 min={0}
                 step="100"
-                defaultValue={fin?.finp_initial_investment?.toString() ?? ""}
+                defaultValue={fieldValue(
+                  v,
+                  "initialInvestment",
+                  fin?.finp_initial_investment?.toString() ?? ""
+                )}
                 required
               />
             </Field>
@@ -89,7 +83,11 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
                 type="number"
                 min={0}
                 step="10"
-                defaultValue={fin?.finp_price_per_sale?.toString() ?? ""}
+                defaultValue={fieldValue(
+                  v,
+                  "pricePerSale",
+                  fin?.finp_price_per_sale?.toString() ?? ""
+                )}
                 required
               />
             </Field>
@@ -103,7 +101,11 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
                 type="number"
                 min={0}
                 step="10"
-                defaultValue={fin?.finp_variable_cost_per_sale?.toString() ?? ""}
+                defaultValue={fieldValue(
+                  v,
+                  "variableCostPerSale",
+                  fin?.finp_variable_cost_per_sale?.toString() ?? ""
+                )}
                 required
               />
             </Field>
@@ -117,32 +119,31 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
                 type="number"
                 min={0}
                 step="1"
-                defaultValue={fin?.finp_estimated_monthly_sales?.toString() ?? ""}
+                defaultValue={fieldValue(
+                  v,
+                  "estimatedMonthlySales",
+                  fin?.finp_estimated_monthly_sales?.toString() ?? ""
+                )}
                 required
               />
             </Field>
           </div>
 
           <Field>
-            <FieldLabel htmlFor="fixedMonthlyCostsRange">
-              Costos fijos mensuales estimados
-            </FieldLabel>
-            <select
-              id="fixedMonthlyCostsRange"
+            <FieldLabel>Costos fijos mensuales estimados</FieldLabel>
+            <OptionCardGroup
               name="fixedMonthlyCostsRange"
-              defaultValue={fin?.finp_fixed_monthly_costs_range ?? ""}
+              options={FIXED_COST_OPTIONS}
+              defaultValue={fieldValue(
+                v,
+                "fixedMonthlyCostsRange",
+                fin?.finp_fixed_monthly_costs_range ?? ""
+              )}
+              layout="stack"
+              columns={1}
               required
-              className={selectClass}
-            >
-              <option value="" disabled>
-                Selecciona un rango
-              </option>
-              {FIXED_COST_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              ariaLabel="Costos fijos mensuales"
+            />
           </Field>
           <input type="hidden" name="currency" value="MXN" />
         </FieldSet>
@@ -151,70 +152,50 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
           <FieldLegend>Mercado y riesgos</FieldLegend>
 
           <Field>
-            <FieldLabel htmlFor="hasTalkedToCustomers">
-              ¿Has hablado con clientes potenciales?
-            </FieldLabel>
-            <select
-              id="hasTalkedToCustomers"
+            <FieldLabel>¿Has hablado con clientes potenciales?</FieldLabel>
+            <OptionCardGroup
               name="hasTalkedToCustomers"
-              defaultValue={
-                mkt?.mrsk_has_talked_to_customers === true
-                  ? "true"
-                  : mkt?.mrsk_has_talked_to_customers === false
-                    ? "false"
-                    : ""
-              }
+              options={HAS_TALKED_TO_CUSTOMERS_OPTIONS}
+              defaultValue={fieldValue(v, "hasTalkedToCustomers", talkedToCustomersFallback)}
+              layout="stack"
+              columns={1}
               required
-              className={selectClass}
-            >
-              <option value="" disabled>
-                Selecciona
-              </option>
-              <option value="true">Sí</option>
-              <option value="false">No, aún no</option>
-            </select>
+              ariaLabel="¿Has hablado con clientes?"
+            />
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="competitionLevel">Nivel de competencia</FieldLabel>
-            <select
-              id="competitionLevel"
+            <FieldLabel>Nivel de competencia</FieldLabel>
+            <OptionCardGroup
               name="competitionLevel"
-              defaultValue={mkt?.mrsk_competition_level ?? ""}
+              options={COMPETITION_OPTIONS}
+              defaultValue={fieldValue(
+                v,
+                "competitionLevel",
+                mkt?.mrsk_competition_level ?? ""
+              )}
+              layout="stack"
+              columns={1}
               required
-              className={selectClass}
-            >
-              <option value="" disabled>
-                Selecciona
-              </option>
-              {COMPETITION_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              ariaLabel="Nivel de competencia"
+            />
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="acquisitionChannel">
-              ¿Cómo conseguirías tus primeros clientes?
-            </FieldLabel>
-            <select
-              id="acquisitionChannel"
+            <FieldLabel>¿Cómo conseguirías tus primeros clientes?</FieldLabel>
+            <OptionCardGroup
               name="acquisitionChannel"
-              defaultValue={mkt?.mrsk_acquisition_channel ?? ""}
+              options={CHANNEL_OPTIONS}
+              defaultValue={fieldValue(
+                v,
+                "acquisitionChannel",
+                mkt?.mrsk_acquisition_channel ?? ""
+              )}
+              layout="stack"
+              columns={1}
               required
-              className={selectClass}
-            >
-              <option value="" disabled>
-                Selecciona
-              </option>
-              {CHANNEL_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              ariaLabel="Canal de adquisición"
+            />
           </Field>
 
           <Field>
@@ -223,7 +204,7 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
               id="mainConcern"
               name="mainConcern"
               rows={3}
-              defaultValue={mkt?.mrsk_main_concern ?? ""}
+              defaultValue={fieldValue(v, "mainConcern", mkt?.mrsk_main_concern ?? "")}
               placeholder="Ej: No sé si la gente pagaría lo suficiente..."
               required
             />
@@ -240,7 +221,11 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
               id="successCondition"
               name="successCondition"
               rows={3}
-              defaultValue={mkt?.mrsk_success_condition ?? ""}
+              defaultValue={fieldValue(
+                v,
+                "successCondition",
+                mkt?.mrsk_success_condition ?? ""
+              )}
               placeholder="Ej: Generar $15,000 MXN extra al mes en 6 meses..."
               required
             />

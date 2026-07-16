@@ -13,7 +13,7 @@ import {
 import { LegalFooterLinks } from "@/components/legal/legal-footer-links";
 import { StepNavigation } from "@/components/onboarding/step-navigation";
 import { saveContact } from "@/app/analizar/actions";
-import type { ActionState } from "@/lib/onboarding/schemas";
+import { fieldValue, isFieldChecked, type ActionState } from "@/lib/onboarding/schemas";
 import { COUNTRY_OPTIONS } from "@/lib/onboarding/options";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 
@@ -25,16 +25,17 @@ type ContactFormProps = {
 
 export function ContactForm({ assessment }: ContactFormProps) {
   const [state, action, pending] = useActionState(saveContact, initialState);
+  const v = state.values;
 
   return (
-    <form action={action}>
+    <form key={v ? "error" : "initial"} action={action}>
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="name">Nombre</FieldLabel>
           <Input
             id="name"
             name="name"
-            defaultValue={assessment?.asmt_name ?? ""}
+            defaultValue={fieldValue(v, "name", assessment?.asmt_name ?? "")}
             placeholder="Tu nombre"
             required
             aria-invalid={!!state.fieldErrors?.name}
@@ -48,7 +49,7 @@ export function ContactForm({ assessment }: ContactFormProps) {
             id="email"
             name="email"
             type="email"
-            defaultValue={assessment?.asmt_email ?? ""}
+            defaultValue={fieldValue(v, "email", assessment?.asmt_email ?? "")}
             placeholder="tu@correo.com"
             required
             aria-invalid={!!state.fieldErrors?.email}
@@ -65,7 +66,7 @@ export function ContactForm({ assessment }: ContactFormProps) {
             id="phone"
             name="phone"
             type="tel"
-            defaultValue={assessment?.asmt_phone ?? ""}
+            defaultValue={fieldValue(v, "phone", assessment?.asmt_phone ?? "")}
             placeholder="+52 55 1234 5678"
             required
             aria-invalid={!!state.fieldErrors?.phone}
@@ -78,7 +79,7 @@ export function ContactForm({ assessment }: ContactFormProps) {
           <select
             id="country"
             name="country"
-            defaultValue={assessment?.asmt_country ?? "MX"}
+            defaultValue={fieldValue(v, "country", assessment?.asmt_country ?? "MX")}
             required
             className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             aria-invalid={!!state.fieldErrors?.country}
@@ -102,6 +103,7 @@ export function ContactForm({ assessment }: ContactFormProps) {
               type="checkbox"
               name="acceptedTerms"
               value="on"
+              defaultChecked={isFieldChecked(v, "acceptedTerms")}
               required
               aria-invalid={!!state.fieldErrors?.acceptedTerms}
               className="mt-0.5 size-4 rounded border-input"

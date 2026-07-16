@@ -33,6 +33,8 @@ export const resourcesSchema = z.object({
   expectedIncomeTimeframe: z.string().min(1, "Selecciona tu plazo esperado"),
 });
 
+export const situationSchema = profileSchema.merge(resourcesSchema);
+
 export const personalFitSchema = z.object({
   enjoyedActivities: z
     .array(z.string())
@@ -85,6 +87,7 @@ export type ContactInput = z.infer<typeof contactSchema>;
 export type IdeaInput = z.infer<typeof ideaSchema>;
 export type ProfileInput = z.infer<typeof profileSchema>;
 export type ResourcesInput = z.infer<typeof resourcesSchema>;
+export type SituationInput = z.infer<typeof situationSchema>;
 export type PersonalFitInput = z.infer<typeof personalFitSchema>;
 export type PaymentInput = z.infer<typeof paymentSchema>;
 export type EvaluationFinancialInput = z.infer<typeof evaluationFinancialSchema>;
@@ -113,8 +116,55 @@ export type ActionState = {
   success: boolean;
   message?: string;
   fieldErrors?: Record<string, string[]>;
+  values?: Record<string, string | string[]>;
 };
 
+export function formDataToValues(
+  formData: FormData
+): Record<string, string | string[]> {
+  const obj: Record<string, string | string[]> = {};
+  for (const key of new Set(formData.keys())) {
+    const all = formData
+      .getAll(key)
+      .filter((v): v is string => typeof v === "string");
+    obj[key] = all.length > 1 ? all : (all[0] ?? "");
+  }
+  return obj;
+}
+
+export function fieldValue(
+  values: ActionState["values"],
+  name: string,
+  fallback = ""
+): string {
+  const v = values?.[name];
+  if (typeof v === "string") return v;
+  if (Array.isArray(v)) return v[0] ?? fallback;
+  return fallback;
+}
+
+export function fieldValues(
+  values: ActionState["values"],
+  name: string,
+  fallback: string[] = []
+): string[] {
+  const v = values?.[name];
+  if (Array.isArray(v)) return v;
+  if (typeof v === "string" && v) return [v];
+  return fallback;
+}
+
+export function isFieldChecked(
+  values: ActionState["values"],
+  name: string
+): boolean {
+  const v = values?.[name];
+  if (v === "on") return true;
+  if (Array.isArray(v)) return v.includes("on");
+  return false;
+}
+
+/** @deprecated Use formDataToValues */
 export function formDataToObject(formData: FormData): Record<string, string> {
   const obj: Record<string, string> = {};
   for (const [key, value] of formData.entries()) {

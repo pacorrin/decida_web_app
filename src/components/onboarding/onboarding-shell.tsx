@@ -9,6 +9,7 @@ import {
   type OnboardingStepSlug,
   getStepBySlug,
   getStepProgress,
+  getRemainingMinutes,
 } from "@/lib/onboarding/steps";
 import { STEP_COPY } from "@/lib/onboarding/copy";
 
@@ -27,6 +28,8 @@ export function OnboardingShell({ currentSlug, children }: OnboardingShellProps)
   const step = getStepBySlug(currentSlug);
   const copy = STEP_COPY[currentSlug];
   const progress = getStepProgress(currentSlug);
+  const remaining = getRemainingMinutes(currentSlug);
+  const showRemaining = currentSlug !== "resultado" && remaining > 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-accent/20 via-background to-background">
@@ -38,9 +41,19 @@ export function OnboardingShell({ currentSlug, children }: OnboardingShellProps)
           >
             Decida
           </Link>
-          <span className="text-xs text-muted-foreground">
-            Paso {step.order} de {ONBOARDING_STEPS.length}
-          </span>
+          <div
+            className="flex items-center gap-2 text-xs text-muted-foreground"
+            data-testid="onboarding-step-indicator"
+          >
+            <span>
+              Paso {step.order} de {ONBOARDING_STEPS.length}
+            </span>
+            {showRemaining && (
+              <span data-testid="onboarding-remaining-time">
+                · ~{remaining} min
+              </span>
+            )}
+          </div>
         </div>
         <div className="mx-auto max-w-2xl px-4 pb-3 sm:px-6">
           <div className="mb-2 flex gap-2">
@@ -61,7 +74,11 @@ export function OnboardingShell({ currentSlug, children }: OnboardingShellProps)
               </span>
             ))}
           </div>
-          <Progress value={progress} className="h-1.5" />
+          <Progress
+            value={progress}
+            className="h-1.5"
+            data-testid="onboarding-progress"
+          />
         </div>
       </header>
 

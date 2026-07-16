@@ -9,6 +9,19 @@ import {
   getStepBySlug,
 } from "./steps";
 
+function isSituationComplete(profile: AssessmentBase["assessment_profile"]): boolean {
+  return !!(
+    profile?.aprf_current_situation &&
+    profile.aprf_main_goal &&
+    profile.aprf_entrepreneurship_experience &&
+    profile.aprf_capital_available_range &&
+    profile.aprf_acceptable_loss_range &&
+    profile.aprf_hours_per_week_range &&
+    profile.aprf_available_schedule &&
+    profile.aprf_expected_income_timeframe
+  );
+}
+
 export function getResumeStep(
   assessment: AssessmentBase | null
 ): OnboardingStepSlug {
@@ -30,21 +43,8 @@ export function getResumeStep(
     return "pago";
   }
 
-  const profile = assessment.assessment_profile;
-  if (
-    !profile?.aprf_current_situation ||
-    !profile.aprf_main_goal ||
-    !profile.aprf_entrepreneurship_experience
-  ) {
+  if (!isSituationComplete(assessment.assessment_profile)) {
     return "perfil";
-  }
-
-  if (
-    !profile.aprf_capital_available_range ||
-    !profile.aprf_acceptable_loss_range ||
-    !profile.aprf_hours_per_week_range
-  ) {
-    return "recursos";
   }
 
   const fit = assessment.personal_fit_answers;
@@ -84,7 +84,6 @@ export function canAccessStep(
 
   const paidSteps: OnboardingStepSlug[] = [
     "perfil",
-    "recursos",
     "ajuste",
     "evaluacion",
     "resultado",
@@ -92,8 +91,7 @@ export function canAccessStep(
   if (paidSteps.includes(slug) && isPaid(assessment)) {
     const prerequisites: Record<string, boolean> = {
       perfil: isPaid(assessment),
-      recursos: !!assessment.assessment_profile?.aprf_current_situation,
-      ajuste: !!assessment.assessment_profile?.aprf_capital_available_range,
+      ajuste: isSituationComplete(assessment.assessment_profile),
       evaluacion: !!assessment.personal_fit_answers?.pfit_work_preference,
       resultado:
         !!assessment.financial_inputs && !!assessment.market_risk_inputs,

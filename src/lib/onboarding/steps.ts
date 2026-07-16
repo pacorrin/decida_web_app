@@ -6,7 +6,6 @@ export type OnboardingStepSlug =
   | "confirmacion"
   | "pago"
   | "perfil"
-  | "recursos"
   | "ajuste"
   | "evaluacion"
   | "resultado";
@@ -62,24 +61,15 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     slug: "perfil",
     phase: "diagnostico",
     order: 5,
-    label: "Perfil",
+    label: "Tu situación",
     phaseLabel: "Diagnóstico",
-    estimatedMinutes: 3,
+    estimatedMinutes: 6,
     path: "/analizar/perfil",
-  },
-  {
-    slug: "recursos",
-    phase: "diagnostico",
-    order: 6,
-    label: "Recursos",
-    phaseLabel: "Diagnóstico",
-    estimatedMinutes: 3,
-    path: "/analizar/recursos",
   },
   {
     slug: "ajuste",
     phase: "diagnostico",
-    order: 7,
+    order: 6,
     label: "Ajuste personal",
     phaseLabel: "Diagnóstico",
     estimatedMinutes: 3,
@@ -88,7 +78,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     slug: "evaluacion",
     phase: "diagnostico",
-    order: 8,
+    order: 7,
     label: "Evaluación",
     phaseLabel: "Diagnóstico",
     estimatedMinutes: 5,
@@ -97,7 +87,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     slug: "resultado",
     phase: "diagnostico",
-    order: 9,
+    order: 8,
     label: "Resultado",
     phaseLabel: "Diagnóstico",
     estimatedMinutes: 0,

@@ -12,6 +12,7 @@ import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils"
 import { CheckCircle2, AlertTriangle, AlertCircle, TrendingUp } from "lucide-react";
 import { ReportErrorState } from "@/components/onboarding/report-error-state";
 import { FeedbackForm } from "@/components/onboarding/feedback-form";
+import { AnalyzeAnotherButton } from "@/components/onboarding/analyze-another-button";
 import { Markdown } from "@/components/ui/markdown";
 import {
   Table,
@@ -55,9 +56,15 @@ const DIMENSION_MAP = [
 
 type ResultReportProps = {
   assessment: AssessmentWithRelations;
+  showFeedback?: boolean;
+  showAnalyzeAnother?: boolean;
 };
 
-export function ResultReport({ assessment }: ResultReportProps) {
+export function ResultReport({
+  assessment,
+  showFeedback = true,
+  showAnalyzeAnother = true,
+}: ResultReportProps) {
   const report = assessment.assessment_report;
   const scores = assessment.assessment_score;
   const financial = assessment.financial_inputs;
@@ -466,10 +473,19 @@ export function ResultReport({ assessment }: ResultReportProps) {
           </Card>
         )}
 
-        {report && (
+        {report && showFeedback && (
           <ReportSection id="feedback" title="¿Te fue útil este diagnóstico?">
             <FeedbackForm assessment={assessment} />
           </ReportSection>
+        )}
+
+        {report && showAnalyzeAnother && (
+          <div className="flex flex-col items-center gap-3 border-t border-border/60 pt-8">
+            <p className="text-center text-sm text-muted-foreground">
+              ¿Tienes otra idea que quieras evaluar?
+            </p>
+            <AnalyzeAnotherButton />
+          </div>
         )}
       </div>
     </div>

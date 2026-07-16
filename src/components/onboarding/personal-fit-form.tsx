@@ -11,20 +11,18 @@ import {
   FieldLegend,
 } from "@/components/ui/field";
 import { StepNavigation } from "@/components/onboarding/step-navigation";
+import { OptionCardGroup } from "@/components/onboarding/option-card-group";
 import { savePersonalFit } from "@/app/analizar/actions";
 import {
   ENJOYED_ACTIVITIES_OPTIONS,
   WORK_PREFERENCE_OPTIONS,
   HIRING_PREFERENCE_OPTIONS,
-  COMFORT_SCALE_OPTIONS,
+  COMFORT_SCALE_CARD_OPTIONS,
 } from "@/lib/onboarding/options";
-import type { ActionState } from "@/lib/onboarding/schemas";
+import { fieldValue, fieldValues, type ActionState } from "@/lib/onboarding/schemas";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 
 const initialState: ActionState = { success: false };
-
-const selectClass =
-  "h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
 type PersonalFitFormProps = {
   assessment: AssessmentWithRelations;
@@ -34,9 +32,11 @@ export function PersonalFitForm({ assessment }: PersonalFitFormProps) {
   const [state, action, pending] = useActionState(savePersonalFit, initialState);
   const fit = assessment.personal_fit_answers;
   const enjoyed = (fit?.pfit_enjoyed_activities as string[]) ?? [];
+  const v = state.values;
+  const enjoyedValues = fieldValues(v, "enjoyedActivities", enjoyed);
 
   return (
-    <form action={action}>
+    <form key={v ? "error" : "initial"} action={action}>
       <FieldGroup>
         <FieldSet>
           <FieldLegend>¿Qué actividades disfrutas más?</FieldLegend>
@@ -51,7 +51,7 @@ export function PersonalFitForm({ assessment }: PersonalFitFormProps) {
                   type="checkbox"
                   name="enjoyedActivities"
                   value={opt.value}
-                  defaultChecked={enjoyed.includes(opt.value)}
+                  defaultChecked={enjoyedValues.includes(opt.value)}
                   className="size-4 rounded border-input"
                 />
                 {opt.label}
@@ -66,25 +66,16 @@ export function PersonalFitForm({ assessment }: PersonalFitFormProps) {
         </FieldSet>
 
         <Field>
-          <FieldLabel htmlFor="workPreference">
-            ¿Prefieres trabajo físico, digital o mixto?
-          </FieldLabel>
-          <select
-            id="workPreference"
+          <FieldLabel>¿Prefieres trabajo físico, digital o mixto?</FieldLabel>
+          <OptionCardGroup
             name="workPreference"
-            defaultValue={fit?.pfit_work_preference ?? ""}
+            options={WORK_PREFERENCE_OPTIONS}
+            defaultValue={fieldValue(v, "workPreference", fit?.pfit_work_preference ?? "")}
+            layout="stack"
+            columns={1}
             required
-            className={selectClass}
-          >
-            <option value="" disabled>
-              Selecciona una opción
-            </option>
-            {WORK_PREFERENCE_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            ariaLabel="Preferencia de trabajo"
+          />
           <FieldError
             errors={state.fieldErrors?.workPreference?.map((m) => ({
               message: m,
@@ -93,88 +84,64 @@ export function PersonalFitForm({ assessment }: PersonalFitFormProps) {
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="salesComfortScore">
-            ¿Qué tan cómodo te sientes vendiendo?
-          </FieldLabel>
-          <select
-            id="salesComfortScore"
+          <FieldLabel>¿Qué tan cómodo te sientes vendiendo?</FieldLabel>
+          <OptionCardGroup
             name="salesComfortScore"
-            defaultValue={String(fit?.pfit_sales_comfort_score ?? "")}
+            options={COMFORT_SCALE_CARD_OPTIONS}
+            defaultValue={fieldValue(
+              v,
+              "salesComfortScore",
+              fit?.pfit_sales_comfort_score != null
+                ? String(fit.pfit_sales_comfort_score)
+                : ""
+            )}
+            columns={5}
             required
-            className={selectClass}
-          >
-            <option value="" disabled>
-              Selecciona
-            </option>
-            {COMFORT_SCALE_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            ariaLabel="Comodidad vendiendo"
+          />
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="uncertaintyComfortScore">
-            ¿Qué tanto toleras la incertidumbre?
-          </FieldLabel>
-          <select
-            id="uncertaintyComfortScore"
+          <FieldLabel>¿Qué tanto toleras la incertidumbre?</FieldLabel>
+          <OptionCardGroup
             name="uncertaintyComfortScore"
-            defaultValue={String(fit?.pfit_uncertainty_comfort_score ?? "")}
+            options={COMFORT_SCALE_CARD_OPTIONS}
+            defaultValue={fieldValue(
+              v,
+              "uncertaintyComfortScore",
+              fit?.pfit_uncertainty_comfort_score != null
+                ? String(fit.pfit_uncertainty_comfort_score)
+                : ""
+            )}
+            columns={5}
             required
-            className={selectClass}
-          >
-            <option value="" disabled>
-              Selecciona
-            </option>
-            {COMFORT_SCALE_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            ariaLabel="Tolerancia a la incertidumbre"
+          />
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="hiringPreference">
-            ¿Te gustaría contratar personas?
-          </FieldLabel>
-          <select
-            id="hiringPreference"
+          <FieldLabel>¿Te gustaría contratar personas?</FieldLabel>
+          <OptionCardGroup
             name="hiringPreference"
-            defaultValue={fit?.pfit_hiring_preference ?? ""}
+            options={HIRING_PREFERENCE_OPTIONS}
+            defaultValue={fieldValue(v, "hiringPreference", fit?.pfit_hiring_preference ?? "")}
+            layout="stack"
+            columns={1}
             required
-            className={selectClass}
-          >
-            <option value="" disabled>
-              Selecciona una opción
-            </option>
-            {HIRING_PREFERENCE_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            ariaLabel="Preferencia de contratación"
+          />
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="processComfortScore">
-            ¿Qué tanto te gusta seguir procesos?
-          </FieldLabel>
-          <select
-            id="processComfortScore"
+          <FieldLabel>¿Qué tanto te gusta seguir procesos?</FieldLabel>
+          <OptionCardGroup
             name="processComfortScore"
-            defaultValue="3"
+            options={COMFORT_SCALE_CARD_OPTIONS}
+            defaultValue={fieldValue(v, "processComfortScore", "3")}
+            columns={5}
             required
-            className={selectClass}
-          >
-            {COMFORT_SCALE_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            ariaLabel="Comodidad siguiendo procesos"
+          />
         </Field>
       </FieldGroup>
 

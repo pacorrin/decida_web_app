@@ -39,9 +39,18 @@ export default async function ResultadoPage() {
           >
             Decida
           </Link>
-          <span className="text-xs text-muted-foreground">
-            Paso {step.order} de {ONBOARDING_STEPS.length}
-          </span>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/mis-evaluaciones"
+              className="text-sm text-muted-foreground transition-colors hover:text-primary"
+              data-testid="resultado-mis-evaluaciones"
+            >
+              Mis evaluaciones
+            </Link>
+            <span className="text-xs text-muted-foreground">
+              Paso {step.order} de {ONBOARDING_STEPS.length}
+            </span>
+          </div>
         </div>
         <div className="mx-auto max-w-5xl px-4 pb-3 sm:px-6 lg:px-8">
           <div className="mb-2 flex gap-2">

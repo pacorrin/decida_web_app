@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/field";
 import { Card, CardContent } from "@/components/ui/card";
 import type { ActionState } from "@/lib/onboarding/schemas";
+import { fieldValue, isFieldChecked } from "@/lib/onboarding/schemas";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +37,7 @@ export function FeedbackForm({ assessment }: FeedbackFormProps) {
   const router = useRouter();
   const existingFeedback = assessment.feedback;
   const [state, action, pending] = useActionState(saveFeedback, initialState);
+  const v = state.values;
 
   useEffect(() => {
     if (state.success) {
@@ -62,7 +64,7 @@ export function FeedbackForm({ assessment }: FeedbackFormProps) {
   }
 
   return (
-    <form action={action}>
+    <form key={v ? "error" : "initial"} action={action}>
       <FieldGroup>
         <Field>
           <FieldLabel>¿Te fue útil este diagnóstico?</FieldLabel>
@@ -85,6 +87,7 @@ export function FeedbackForm({ assessment }: FeedbackFormProps) {
                   type="radio"
                   name="rating"
                   value={option.value}
+                  defaultChecked={fieldValue(v, "rating") === String(option.value)}
                   required
                   className="sr-only"
                   aria-label={`${option.value} — ${option.hint}`}
@@ -113,6 +116,7 @@ export function FeedbackForm({ assessment }: FeedbackFormProps) {
             placeholder="¿Qué te gustó o qué mejorarías del diagnóstico?"
             rows={3}
             maxLength={2000}
+            defaultValue={fieldValue(v, "comment")}
             aria-invalid={!!state.fieldErrors?.comment}
           />
           <FieldError
@@ -136,6 +140,7 @@ export function FeedbackForm({ assessment }: FeedbackFormProps) {
                 type="radio"
                 name="wouldRecommend"
                 value="true"
+                defaultChecked={fieldValue(v, "wouldRecommend") === "true"}
                 required
                 className="sr-only"
               />
@@ -147,6 +152,7 @@ export function FeedbackForm({ assessment }: FeedbackFormProps) {
                 type="radio"
                 name="wouldRecommend"
                 value="false"
+                defaultChecked={fieldValue(v, "wouldRecommend") === "false"}
                 required
                 className="sr-only"
               />
@@ -167,6 +173,7 @@ export function FeedbackForm({ assessment }: FeedbackFormProps) {
               type="checkbox"
               name="testimonialConsent"
               value="on"
+              defaultChecked={isFieldChecked(v, "testimonialConsent")}
               className="mt-0.5 size-4 rounded border-input"
             />
             <span>

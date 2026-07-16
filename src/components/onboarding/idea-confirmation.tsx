@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { BackButton } from "@/components/onboarding/step-navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { FieldError } from "@/components/ui/field";
@@ -308,13 +309,16 @@ export function IdeaConfirmation({ assessment }: IdeaConfirmationProps) {
         </div>
       )}
 
-      <div className="flex flex-col gap-3 border-t border-border/60 pt-4 sm:flex-row">
+      <div className="space-y-3 border-t border-border/60 pt-4">
+        <BackButton currentSlug="confirmacion" />
+        <div className="flex flex-col gap-3 sm:flex-row">
         <form action={confirmIdea} className="flex-1">
           <Button
             type="submit"
             className="w-full"
             size="lg"
             disabled={refining}
+            data-testid="idea-confirm"
           >
             {wasRefined || !hasAssumptions
               ? "Confirmar y continuar"
@@ -328,10 +332,12 @@ export function IdeaConfirmation({ assessment }: IdeaConfirmationProps) {
             className="w-full"
             size="lg"
             disabled={refining}
+            data-testid="idea-edit"
           >
             Editar mi idea
           </Button>
         </form>
+        </div>
       </div>
     </div>
   );

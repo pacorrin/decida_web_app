@@ -6,97 +6,156 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldSet,
+  FieldLegend,
 } from "@/components/ui/field";
 import { StepNavigation } from "@/components/onboarding/step-navigation";
-import { saveProfile } from "@/app/analizar/actions";
+import { OptionCardGroup } from "@/components/onboarding/option-card-group";
+import { saveSituation } from "@/app/analizar/actions";
 import {
   CURRENT_SITUATION_OPTIONS,
   MAIN_GOAL_OPTIONS,
   EXPERIENCE_OPTIONS,
+  CAPITAL_RANGE_OPTIONS,
+  LOSS_RANGE_OPTIONS,
+  HOURS_RANGE_OPTIONS,
+  SCHEDULE_OPTIONS,
+  INCOME_TIMEFRAME_OPTIONS,
 } from "@/lib/onboarding/options";
-import type { ActionState } from "@/lib/onboarding/schemas";
+import { fieldValue, type ActionState } from "@/lib/onboarding/schemas";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 
 const initialState: ActionState = { success: false };
-
-const selectClass =
-  "h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
 type ProfileFormProps = {
   assessment: AssessmentWithRelations;
 };
 
-function SelectField({
-  id,
+function CardSelectField({
   name,
   label,
   options,
   defaultValue,
   error,
 }: {
-  id: string;
   name: string;
   label: string;
   options: { value: string; label: string }[];
-  defaultValue?: string | null;
+  defaultValue?: string;
   error?: string[];
 }) {
   return (
     <Field>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      <select
-        id={id}
+      <FieldLabel>{label}</FieldLabel>
+      <OptionCardGroup
         name={name}
-        defaultValue={defaultValue ?? ""}
+        options={options}
+        defaultValue={defaultValue}
+        layout="stack"
+        columns={1}
         required
-        className={selectClass}
-        aria-invalid={!!error?.length}
-      >
-        <option value="" disabled>
-          Selecciona una opción
-        </option>
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
+        ariaLabel={label}
+      />
       <FieldError errors={error?.map((m) => ({ message: m }))} />
     </Field>
   );
 }
 
 export function ProfileForm({ assessment }: ProfileFormProps) {
-  const [state, action, pending] = useActionState(saveProfile, initialState);
+  const [state, action, pending] = useActionState(saveSituation, initialState);
   const profile = assessment.assessment_profile;
+  const v = state.values;
 
   return (
-    <form action={action}>
+    <form key={v ? "error" : "initial"} action={action}>
       <FieldGroup>
-        <SelectField
-          id="currentSituation"
-          name="currentSituation"
-          label="¿Cuál es tu situación actual?"
-          options={CURRENT_SITUATION_OPTIONS}
-          defaultValue={profile?.aprf_current_situation}
-          error={state.fieldErrors?.currentSituation}
-        />
-        <SelectField
-          id="mainGoal"
-          name="mainGoal"
-          label="¿Cuál es tu objetivo principal?"
-          options={MAIN_GOAL_OPTIONS}
-          defaultValue={profile?.aprf_main_goal}
-          error={state.fieldErrors?.mainGoal}
-        />
-        <SelectField
-          id="entrepreneurshipExperience"
-          name="entrepreneurshipExperience"
-          label="¿Cuánta experiencia tienes emprendiendo?"
-          options={EXPERIENCE_OPTIONS}
-          defaultValue={profile?.aprf_entrepreneurship_experience}
-          error={state.fieldErrors?.entrepreneurshipExperience}
-        />
+        <FieldSet>
+          <FieldLegend>Sobre ti</FieldLegend>
+          <CardSelectField
+            name="currentSituation"
+            label="¿Cuál es tu situación actual?"
+            options={CURRENT_SITUATION_OPTIONS}
+            defaultValue={fieldValue(v, "currentSituation", profile?.aprf_current_situation ?? "")}
+            error={state.fieldErrors?.currentSituation}
+          />
+          <CardSelectField
+            name="mainGoal"
+            label="¿Cuál es tu objetivo principal?"
+            options={MAIN_GOAL_OPTIONS}
+            defaultValue={fieldValue(v, "mainGoal", profile?.aprf_main_goal ?? "")}
+            error={state.fieldErrors?.mainGoal}
+          />
+          <CardSelectField
+            name="entrepreneurshipExperience"
+            label="¿Cuánta experiencia tienes emprendiendo?"
+            options={EXPERIENCE_OPTIONS}
+            defaultValue={fieldValue(
+              v,
+              "entrepreneurshipExperience",
+              profile?.aprf_entrepreneurship_experience ?? ""
+            )}
+            error={state.fieldErrors?.entrepreneurshipExperience}
+          />
+        </FieldSet>
+
+        <FieldSet>
+          <FieldLegend>Tus recursos</FieldLegend>
+          <CardSelectField
+            name="capitalAvailableRange"
+            label="¿Cuánto capital tienes disponible para invertir?"
+            options={CAPITAL_RANGE_OPTIONS}
+            defaultValue={fieldValue(
+              v,
+              "capitalAvailableRange",
+              profile?.aprf_capital_available_range ?? ""
+            )}
+            error={state.fieldErrors?.capitalAvailableRange}
+          />
+          <CardSelectField
+            name="acceptableLossRange"
+            label="¿Cuánto estarías dispuesto a perder sin afectar tu estabilidad?"
+            options={LOSS_RANGE_OPTIONS}
+            defaultValue={fieldValue(
+              v,
+              "acceptableLossRange",
+              profile?.aprf_acceptable_loss_range ?? ""
+            )}
+            error={state.fieldErrors?.acceptableLossRange}
+          />
+          <CardSelectField
+            name="hoursPerWeekRange"
+            label="¿Cuántas horas por semana puedes dedicar?"
+            options={HOURS_RANGE_OPTIONS}
+            defaultValue={fieldValue(
+              v,
+              "hoursPerWeekRange",
+              profile?.aprf_hours_per_week_range ?? ""
+            )}
+            error={state.fieldErrors?.hoursPerWeekRange}
+          />
+          <CardSelectField
+            name="availableSchedule"
+            label="¿Cuándo tienes disponibilidad?"
+            options={SCHEDULE_OPTIONS}
+            defaultValue={fieldValue(
+              v,
+              "availableSchedule",
+              profile?.aprf_available_schedule ?? ""
+            )}
+            error={state.fieldErrors?.availableSchedule}
+          />
+          <CardSelectField
+            name="expectedIncomeTimeframe"
+            label="¿En cuánto tiempo esperas ver resultados?"
+            options={INCOME_TIMEFRAME_OPTIONS}
+            defaultValue={fieldValue(
+              v,
+              "expectedIncomeTimeframe",
+              profile?.aprf_expected_income_timeframe ?? ""
+            )}
+            error={state.fieldErrors?.expectedIncomeTimeframe}
+          />
+        </FieldSet>
       </FieldGroup>
       <StepNavigation currentSlug="perfil" isPending={pending} />
     </form>

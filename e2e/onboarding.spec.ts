@@ -3,8 +3,8 @@ import { test, expect, type Page } from "@playwright/test";
 /**
  * E2E del onboarding de análisis de una idea de negocio (`/analizar`).
  *
- * El flujo es un wizard de 9 pasos (contacto → idea → confirmacion → pago →
- * perfil → recursos → ajuste → evaluacion → resultado) impulsado por Server
+ * El flujo es un wizard de 8 pasos (contacto → idea → confirmacion → pago →
+ * situacion → ajuste → evaluacion → resultado) impulsado por Server
  * Actions. No hay endpoints REST que interceptar: el avance se verifica por el
  * cambio de URL y el contenido renderizado. Los pasos deben completarse en
  * orden porque un guard en el servidor redirige cualquier intento de saltar.
@@ -361,6 +361,16 @@ function uniqueEmail(): string {
   return `e2e.onboarding+${stamp}@decida.test`;
 }
 
+async function selectOptionCard(
+  page: Page,
+  name: string,
+  value: string
+): Promise<void> {
+  await page
+    .locator(`[data-testid="option-card-${name}-${value}"]`)
+    .check({ force: true });
+}
+
 async function completarContacto(page: Page): Promise<void> {
   await test.step("Paso 1 · Contacto", async () => {
     await page.goto("/analizar");
@@ -401,8 +411,7 @@ async function completarConfirmacion(page: Page): Promise<void> {
     await expect(
       page.getByRole("heading", { name: "Así entendimos tu idea" })
     ).toBeVisible();
-    // El texto del botón varía ("Confirmar y continuar" / "Confirmar — es correcto").
-    await page.getByRole("button", { name: /Confirmar/ }).click();
+    await page.getByTestId("idea-confirm").click();
     await expect(page).toHaveURL(/\/analizar\/pago/, { timeout: 30_000 });
   });
 }
@@ -410,35 +419,23 @@ async function completarConfirmacion(page: Page): Promise<void> {
 async function completarPago(page: Page): Promise<void> {
   await test.step("Paso 4 · Pago simulado (beta)", async () => {
     await expect(page.getByText(/pago\s+simulado/i)).toBeVisible();
-    await page
-      .getByRole("button", { name: /Continuar y obtener mi análisis/ })
-      .click();
+    await page.getByTestId("payment-submit").click();
     await expect(page).toHaveURL(/\/analizar\/perfil/, { timeout: 30_000 });
   });
 }
 
-async function completarPerfil(page: Page, scenario: Scenario): Promise<void> {
-  await test.step("Paso 5 · Perfil", async () => {
-    await page.selectOption("#currentSituation", scenario.perfil.currentSituation);
-    await page.selectOption("#mainGoal", scenario.perfil.mainGoal);
-    await page.selectOption(
-      "#entrepreneurshipExperience",
-      scenario.perfil.entrepreneurshipExperience
-    );
-
-    await page.getByRole("button", { name: "Continuar" }).click();
-    await expect(page).toHaveURL(/\/analizar\/recursos/, { timeout: 30_000 });
-  });
-}
-
-async function completarRecursos(page: Page, scenario: Scenario): Promise<void> {
-  await test.step("Paso 6 · Recursos", async () => {
+async function completarSituacion(page: Page, scenario: Scenario): Promise<void> {
+  await test.step("Paso 5 · Tu situación (perfil + recursos)", async () => {
+    const p = scenario.perfil;
     const r = scenario.recursos;
-    await page.selectOption("#capitalAvailableRange", r.capitalAvailableRange);
-    await page.selectOption("#acceptableLossRange", r.acceptableLossRange);
-    await page.selectOption("#hoursPerWeekRange", r.hoursPerWeekRange);
-    await page.selectOption("#availableSchedule", r.availableSchedule);
-    await page.selectOption("#expectedIncomeTimeframe", r.expectedIncomeTimeframe);
+    await selectOptionCard(page, "currentSituation", p.currentSituation);
+    await selectOptionCard(page, "mainGoal", p.mainGoal);
+    await selectOptionCard(page, "entrepreneurshipExperience", p.entrepreneurshipExperience);
+    await selectOptionCard(page, "capitalAvailableRange", r.capitalAvailableRange);
+    await selectOptionCard(page, "acceptableLossRange", r.acceptableLossRange);
+    await selectOptionCard(page, "hoursPerWeekRange", r.hoursPerWeekRange);
+    await selectOptionCard(page, "availableSchedule", r.availableSchedule);
+    await selectOptionCard(page, "expectedIncomeTimeframe", r.expectedIncomeTimeframe);
 
     await page.getByRole("button", { name: "Continuar" }).click();
     await expect(page).toHaveURL(/\/analizar\/ajuste/, { timeout: 30_000 });
@@ -455,11 +452,11 @@ async function completarAjuste(page: Page, scenario: Scenario): Promise<void> {
         .check();
     }
 
-    await page.selectOption("#workPreference", a.workPreference);
-    await page.selectOption("#salesComfortScore", a.salesComfortScore);
-    await page.selectOption("#uncertaintyComfortScore", a.uncertaintyComfortScore);
-    await page.selectOption("#hiringPreference", a.hiringPreference);
-    // processComfortScore ya viene con "3" por defecto.
+    await selectOptionCard(page, "workPreference", a.workPreference);
+    await selectOptionCard(page, "salesComfortScore", a.salesComfortScore);
+    await selectOptionCard(page, "uncertaintyComfortScore", a.uncertaintyComfortScore);
+    await selectOptionCard(page, "hiringPreference", a.hiringPreference);
+    // processComfortScore defaults to "3" in scenarios
 
     await page.getByRole("button", { name: "Continuar" }).click();
     await expect(page).toHaveURL(/\/analizar\/evaluacion/, { timeout: 30_000 });
@@ -473,11 +470,11 @@ async function completarEvaluacion(page: Page, scenario: Scenario): Promise<void
     await page.fill("#pricePerSale", e.pricePerSale);
     await page.fill("#variableCostPerSale", e.variableCostPerSale);
     await page.fill("#estimatedMonthlySales", e.estimatedMonthlySales);
-    await page.selectOption("#fixedMonthlyCostsRange", e.fixedMonthlyCostsRange);
+    await selectOptionCard(page, "fixedMonthlyCostsRange", e.fixedMonthlyCostsRange);
 
-    await page.selectOption("#hasTalkedToCustomers", e.hasTalkedToCustomers);
-    await page.selectOption("#competitionLevel", e.competitionLevel);
-    await page.selectOption("#acquisitionChannel", e.acquisitionChannel);
+    await selectOptionCard(page, "hasTalkedToCustomers", e.hasTalkedToCustomers);
+    await selectOptionCard(page, "competitionLevel", e.competitionLevel);
+    await selectOptionCard(page, "acquisitionChannel", e.acquisitionChannel);
 
     await page.fill("#mainConcern", e.mainConcern);
     await page.fill("#successCondition", e.successCondition);
@@ -492,7 +489,7 @@ async function completarEvaluacion(page: Page, scenario: Scenario): Promise<void
 }
 
 async function verificarResultado(page: Page): Promise<void> {
-  await test.step("Paso 9 · Resultado / diagnóstico", async () => {
+  await test.step("Paso 8 · Resultado / diagnóstico", async () => {
     await expect(
       page.getByRole("heading", {
         name: "Tu diagnóstico de viabilidad",
@@ -547,8 +544,7 @@ test.describe("Onboarding de análisis de idea — múltiples giros", () => {
       await completarIdea(page, scenario);
       await completarConfirmacion(page);
       await completarPago(page);
-      await completarPerfil(page, scenario);
-      await completarRecursos(page, scenario);
+      await completarSituacion(page, scenario);
       await completarAjuste(page, scenario);
       await completarEvaluacion(page, scenario);
       await verificarResultado(page);

@@ -102,6 +102,41 @@ export const COMFORT_SCALE_OPTIONS: SelectOption[] = [
   { value: "5", label: "5 — Muy cómodo" },
 ];
 
+export const COMFORT_SCALE_CARD_OPTIONS = [
+  { value: "1", label: "1", hint: "Muy incómodo" },
+  { value: "2", label: "2", hint: "Incómodo" },
+  { value: "3", label: "3", hint: "Neutral" },
+  { value: "4", label: "4", hint: "Cómodo" },
+  { value: "5", label: "5", hint: "Muy cómodo" },
+];
+
+export const FIXED_COST_OPTIONS: SelectOption[] = [
+  { value: "menos_5k", label: "Menos de $5,000 MXN" },
+  { value: "5k_15k", label: "$5,000 – $15,000 MXN" },
+  { value: "15k_30k", label: "$15,000 – $30,000 MXN" },
+  { value: "30k_50k", label: "$30,000 – $50,000 MXN" },
+  { value: "mas_50k", label: "Más de $50,000 MXN" },
+];
+
+export const COMPETITION_OPTIONS: SelectOption[] = [
+  { value: "baja", label: "Baja — pocos competidores" },
+  { value: "media", label: "Media — algunos competidores" },
+  { value: "alta", label: "Alta — mucha competencia" },
+];
+
+export const CHANNEL_OPTIONS: SelectOption[] = [
+  { value: "redes_sociales", label: "Redes sociales" },
+  { value: "referidos", label: "Referidos / boca a boca" },
+  { value: "publicidad", label: "Publicidad pagada" },
+  { value: "presencial", label: "Venta presencial" },
+  { value: "otro", label: "Otro" },
+];
+
+export const HAS_TALKED_TO_CUSTOMERS_OPTIONS: SelectOption[] = [
+  { value: "true", label: "Sí" },
+  { value: "false", label: "No, aún no" },
+];
+
 export const PAYMENT_PLANS = [
   {
     id: "starter",

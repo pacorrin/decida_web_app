@@ -101,4 +101,12 @@ export function isIdeaConfirmed(assessment: AssessmentBase): boolean {
   return assessment.business_idea?.bide_user_confirmed_summary === true;
 }
 
+export function isAssessmentCompleted(assessment: AssessmentBase): boolean {
+  return (
+    assessment.asmt_status === "completed" ||
+    assessment.asmt_status === "report_generated" ||
+    !!assessment.assessment_report
+  );
+}
+
 export type { AssessmentBase as AssessmentWithRelations };

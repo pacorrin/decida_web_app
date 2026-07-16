@@ -10,8 +10,12 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { StepNavigation } from "@/components/onboarding/step-navigation";
+import {
+  LoadingOverlay,
+  IDEA_LOADING_MESSAGES,
+} from "@/components/onboarding/loading-overlay";
 import { saveIdea } from "@/app/analizar/actions";
-import type { ActionState } from "@/lib/onboarding/schemas";
+import { fieldValue, type ActionState } from "@/lib/onboarding/schemas";
 import { IDEA_PLACEHOLDER } from "@/lib/onboarding/copy";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 
@@ -23,9 +27,18 @@ type IdeaFormProps = {
 
 export function IdeaForm({ assessment }: IdeaFormProps) {
   const [state, action, pending] = useActionState(saveIdea, initialState);
+  const v = state.values;
 
   return (
-    <form action={action}>
+    <>
+      <LoadingOverlay
+        isLoading={pending}
+        title="Analizando tu idea"
+        messages={IDEA_LOADING_MESSAGES}
+        timeoutMs={45000}
+        footerHint="Esto puede tomar unos segundos. Por favor no cierres esta ventana."
+      />
+      <form key={v ? "error" : "initial"} action={action} data-testid="idea-form">
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="description">Describe tu idea de negocio</FieldLabel>
@@ -33,9 +46,11 @@ export function IdeaForm({ assessment }: IdeaFormProps) {
             id="description"
             name="description"
             rows={6}
-            defaultValue={
+            defaultValue={fieldValue(
+              v,
+              "description",
               assessment.business_idea?.bide_original_description ?? ""
-            }
+            )}
             placeholder={IDEA_PLACEHOLDER}
             required
             className="min-h-36 resize-y"
@@ -56,5 +71,6 @@ export function IdeaForm({ assessment }: IdeaFormProps) {
         submitLabel={pending ? "Analizando tu idea..." : "Continuar"}
       />
     </form>
+    </>
   );
 }

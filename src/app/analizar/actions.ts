@@ -16,22 +16,26 @@ import {
   ideaSchema,
   profileSchema,
   resourcesSchema,
+  situationSchema,
   personalFitSchema,
   paymentSchema,
   evaluationFinancialSchema,
   evaluationMarketSchema,
   feedbackSchema,
   parseFieldErrors,
+  formDataToValues,
   refineIdeaSchema,
   type ActionState,
   type RefineIdeaState,
 } from "@/lib/onboarding/schemas";
+import type { z } from "zod";
 import { PAYMENT_PLANS } from "@/lib/onboarding/options";
 import {
   getCurrentAssessment,
   getAssessmentById,
   setAssessmentCookie,
 } from "@/lib/onboarding/session-server";
+import { isAssessmentCompleted } from "@/lib/onboarding/assessment-utils";
 import { getStepBySlug } from "@/lib/onboarding/steps";
 import { prisma } from "@/lib/prisma";
 import {
@@ -52,6 +56,17 @@ function requireAssessment() {
   });
 }
 
+function validationError(
+  error: z.ZodError,
+  formData: FormData
+): ActionState {
+  return {
+    success: false,
+    fieldErrors: parseFieldErrors(error),
+    values: formDataToValues(formData),
+  };
+}
+
 export async function saveContact(
   _prev: ActionState,
   formData: FormData
@@ -65,7 +80,7 @@ export async function saveContact(
   });
 
   if (!parsed.success) {
-    return { success: false, fieldErrors: parseFieldErrors(parsed.error) };
+    return validationError(parsed.error, formData);
   }
 
   const { email, name, phone, country } = parsed.data;
@@ -73,7 +88,7 @@ export async function saveContact(
   const existing = await getCurrentAssessment();
   let asmtId: string;
 
-  if (existing) {
+  if (existing && !isAssessmentCompleted(existing)) {
     await prisma.assessments.update({
       where: { asmt_id: existing.asmt_id },
       data: {
@@ -112,7 +127,7 @@ export async function saveIdea(
   });
 
   if (!parsed.success) {
-    return { success: false, fieldErrors: parseFieldErrors(parsed.error) };
+    return validationError(parsed.error, formData);
   }
 
   const { description } = parsed.data;
@@ -264,7 +279,7 @@ export async function savePayment(
   });
 
   if (!parsed.success) {
-    return { success: false, fieldErrors: parseFieldErrors(parsed.error) };
+    return validationError(parsed.error, formData);
   }
 
   const plan = PAYMENT_PLANS.find((p) => p.id === parsed.data.planId);
@@ -298,49 +313,16 @@ export async function savePayment(
   redirectToStep("perfil");
 }
 
-export async function saveProfile(
+export async function saveSituation(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
   const assessment = await requireAssessment();
 
-  const parsed = profileSchema.safeParse({
+  const parsed = situationSchema.safeParse({
     currentSituation: formData.get("currentSituation"),
     mainGoal: formData.get("mainGoal"),
     entrepreneurshipExperience: formData.get("entrepreneurshipExperience"),
-  });
-
-  if (!parsed.success) {
-    return { success: false, fieldErrors: parseFieldErrors(parsed.error) };
-  }
-
-  const data = parsed.data;
-
-  await prisma.assessment_profiles.upsert({
-    where: { aprf_asmt_id: assessment.asmt_id },
-    create: {
-      aprf_asmt_id: assessment.asmt_id,
-      aprf_current_situation: data.currentSituation,
-      aprf_main_goal: data.mainGoal,
-      aprf_entrepreneurship_experience: data.entrepreneurshipExperience,
-    },
-    update: {
-      aprf_current_situation: data.currentSituation,
-      aprf_main_goal: data.mainGoal,
-      aprf_entrepreneurship_experience: data.entrepreneurshipExperience,
-    },
-  });
-
-  redirectToStep("recursos");
-}
-
-export async function saveResources(
-  _prev: ActionState,
-  formData: FormData
-): Promise<ActionState> {
-  const assessment = await requireAssessment();
-
-  const parsed = resourcesSchema.safeParse({
     capitalAvailableRange: formData.get("capitalAvailableRange"),
     acceptableLossRange: formData.get("acceptableLossRange"),
     hoursPerWeekRange: formData.get("hoursPerWeekRange"),
@@ -349,7 +331,7 @@ export async function saveResources(
   });
 
   if (!parsed.success) {
-    return { success: false, fieldErrors: parseFieldErrors(parsed.error) };
+    return validationError(parsed.error, formData);
   }
 
   const data = parsed.data;
@@ -358,6 +340,9 @@ export async function saveResources(
     where: { aprf_asmt_id: assessment.asmt_id },
     create: {
       aprf_asmt_id: assessment.asmt_id,
+      aprf_current_situation: data.currentSituation,
+      aprf_main_goal: data.mainGoal,
+      aprf_entrepreneurship_experience: data.entrepreneurshipExperience,
       aprf_capital_available_range: data.capitalAvailableRange,
       aprf_acceptable_loss_range: data.acceptableLossRange,
       aprf_hours_per_week_range: data.hoursPerWeekRange,
@@ -365,6 +350,9 @@ export async function saveResources(
       aprf_expected_income_timeframe: data.expectedIncomeTimeframe,
     },
     update: {
+      aprf_current_situation: data.currentSituation,
+      aprf_main_goal: data.mainGoal,
+      aprf_entrepreneurship_experience: data.entrepreneurshipExperience,
       aprf_capital_available_range: data.capitalAvailableRange,
       aprf_acceptable_loss_range: data.acceptableLossRange,
       aprf_hours_per_week_range: data.hoursPerWeekRange,
@@ -374,6 +362,14 @@ export async function saveResources(
   });
 
   redirectToStep("ajuste");
+}
+
+/** @deprecated Use saveSituation */
+export async function saveProfile(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  return saveSituation(_prev, formData);
 }
 
 export async function savePersonalFit(
@@ -394,7 +390,7 @@ export async function savePersonalFit(
   });
 
   if (!parsed.success) {
-    return { success: false, fieldErrors: parseFieldErrors(parsed.error) };
+    return validationError(parsed.error, formData);
   }
 
   const data = parsed.data;
@@ -450,16 +446,10 @@ export async function saveEvaluation(
   });
 
   if (!financialParsed.success) {
-    return {
-      success: false,
-      fieldErrors: parseFieldErrors(financialParsed.error),
-    };
+    return validationError(financialParsed.error, formData);
   }
   if (!marketParsed.success) {
-    return {
-      success: false,
-      fieldErrors: parseFieldErrors(marketParsed.error),
-    };
+    return validationError(marketParsed.error, formData);
   }
 
   const fin = financialParsed.data;
@@ -643,7 +633,7 @@ export async function saveFeedback(
   });
 
   if (!parsed.success) {
-    return { success: false, fieldErrors: parseFieldErrors(parsed.error) };
+    return validationError(parsed.error, formData);
   }
 
   const data = parsed.data;
@@ -662,4 +652,29 @@ export async function saveFeedback(
     success: true,
     message: "¡Gracias por tu opinión! Nos ayuda a mejorar Decida.",
   };
+}
+
+export async function startNewAssessment(): Promise<void> {
+  const assessment = await requireAssessment();
+
+  if (
+    !assessment.assessment_report &&
+    assessment.asmt_status !== "report_generated" &&
+    assessment.asmt_status !== "completed"
+  ) {
+    redirectToStep("resultado");
+  }
+
+  const newAssessment = await prisma.assessments.create({
+    data: {
+      asmt_email: assessment.asmt_email,
+      asmt_name: assessment.asmt_name,
+      asmt_phone: assessment.asmt_phone,
+      asmt_country: assessment.asmt_country,
+      asmt_started_at: new Date(),
+    },
+  });
+
+  await setAssessmentCookie(newAssessment.asmt_id);
+  redirectToStep("contacto");
 }

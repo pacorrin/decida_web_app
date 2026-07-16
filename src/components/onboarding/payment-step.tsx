@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ValueChecklist } from "@/components/onboarding/value-checklist";
+import { BackButton } from "@/components/onboarding/step-navigation";
 import { savePayment, saveAndContinueLater } from "@/app/analizar/actions";
 import {
   PAYMENT_ANCHOR_COPY,
@@ -30,6 +31,7 @@ export function PaymentStep() {
 
   return (
     <div className="space-y-6">
+      <BackButton currentSlug="pago" />
       <div className="rounded-xl border border-[#6baed6]/30 bg-accent/50 px-4 py-3 text-sm text-muted-foreground">
         <span className="font-medium text-primary">Modo beta</span> — pago
         simulado. Tu progreso está guardado.
@@ -71,6 +73,7 @@ export function PaymentStep() {
               disabled={pending}
               size="lg"
               className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+              data-testid="payment-submit"
             >
               {pending
                 ? "Procesando..."

@@ -36,6 +36,39 @@ enum final_recommendation {
   pause_for_now
 }
 
+enum verification_method {
+  email
+}
+
+enum verification_purpose {
+  history_access
+}
+
+model verification_codes {
+  vc_id          String               @id @default(cuid())
+  vc_identifier  String
+  vc_method      verification_method
+  vc_purpose     verification_purpose
+  vc_code        String
+  vc_created_at  DateTime             @default(now())
+  vc_expires_at  DateTime
+  vc_used_at     DateTime?
+
+  @@index([vc_identifier, vc_method, vc_purpose, vc_code])
+  @@map("verification_codes")
+}
+
+model history_sessions {
+  hses_id         String   @id @default(cuid())
+  hses_email      String
+  hses_token      String   @unique
+  hses_created_at DateTime @default(now())
+  hses_expires_at DateTime
+
+  @@index([hses_email])
+  @@map("history_sessions")
+}
+
 model assessments {
   asmt_id                  String            @id @default(cuid())
   asmt_created_at          DateTime          @default(now())

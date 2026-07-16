@@ -33,25 +33,25 @@ export const STEP_COPY: Record<OnboardingStepSlug, StepCopy> = {
     reassurance: "Tu progreso está guardado.",
   },
   perfil: {
-    title: "Cuéntanos sobre ti",
+    title: "Tu situación",
     subtitle:
-      "Esto nos ayuda a entender tu contexto y personalizar el diagnóstico.",
-    reassurance: "Perfecto. Ahora profundizamos en tu situación para un análisis realmente tuyo.",
-  },
-  recursos: {
-    title: "¿Qué recursos tienes disponibles?",
-    subtitle:
-      "Sé honesto con tus restricciones reales. Esto hace el análisis más útil.",
+      "Cuéntanos sobre ti y los recursos con los que cuentas para personalizar el diagnóstico.",
+    reassurance:
+      "Sé honesto — esto hace el análisis más útil para tu realidad.",
   },
   ajuste: {
     title: "¿Qué tipo de trabajo encaja contigo?",
     subtitle:
       "Evaluamos si tu idea es compatible con cómo te gusta trabajar.",
+    reassurance:
+      "No hay respuestas correctas; evaluamos compatibilidad, no talento.",
   },
   evaluacion: {
     title: "Evaluemos los números y el mercado",
     subtitle:
       "Últimas preguntas clave para tu diagnóstico de viabilidad.",
+    reassurance:
+      "Estimaciones aproximadas — no tienen que ser perfectas.",
   },
   resultado: {
     title: "Tu diagnóstico de viabilidad",
