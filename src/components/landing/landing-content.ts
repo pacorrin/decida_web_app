@@ -1,8 +1,8 @@
 export const NAV_LINKS = [
   { href: "#problema", label: "El problema" },
-  { href: "#analisis", label: "Qué analiza" },
-  { href: "#como-funciona", label: "Cómo funciona" },
+  { href: "#mecanismo", label: "Cómo decide" },
   { href: "#ejemplo", label: "Ejemplo" },
+  { href: "#para-quien", label: "¿Es para ti?" },
   { href: "#precio", label: "Precio" },
   { href: "#faq", label: "FAQ" },
   { href: "/mis-evaluaciones", label: "Mis evaluaciones" },
@@ -13,110 +13,113 @@ export const LEGAL_LINKS = [
   { href: "/terminos", label: "Términos de servicio" },
 ] as const;
 
-export const ANALYZES_ITEMS = [
-  "Capital disponible",
-  "Inversión inicial",
-  "Margen estimado",
-  "Tiempo requerido",
-  "Compatibilidad contigo",
-  "Riesgo operativo",
-  "Forma de conseguir clientes",
-  "Potencial de escalabilidad",
+/** Dimensions the diagnostic weighs against the user's constraints */
+export const CONSTRAINT_LENSES = [
+  { label: "Tu tiempo disponible", detail: "Horas y horario reales" },
+  { label: "Tu dinero e inversión", detail: "Costos, margen y recuperación" },
+  { label: "Tu perfil de trabajo", detail: "Si el negocio encaja contigo" },
+  { label: "Tu mercado cercano", detail: "Clientes, competencia y canal" },
+  { label: "Tu nivel de riesgo", detail: "Qué podrías perder al avanzar" },
+  { label: "Tu capacidad de escalar", detail: "Si crece sin romperte" },
 ] as const;
 
-export const HOW_IT_WORKS_STEPS = [
+export const MECHANISM_STEPS = [
   {
     step: 1,
-    title: "Describe tu idea",
+    title: "Describes tu idea",
     description:
-      "Cuéntanos qué negocio tienes en mente, para quién sería y qué problema resolvería.",
+      "En tus palabras: qué ofrecerías, a quién y por qué pagarían.",
   },
   {
     step: 2,
-    title: "Responde el diagnóstico guiado",
+    title: "Cruzamos idea y restricciones",
     description:
-      "Te haremos preguntas sobre recursos, tiempo, mercado, costos, ventas y preferencias personales.",
+      "Preguntas concretas sobre tu situación, tiempo, números y mercado.",
   },
   {
     step: 3,
-    title: "Recibe tu análisis",
+    title: "Recibes un resultado accionable",
     description:
-      "Obtén semáforos por dimensión, riesgos principales, fortalezas y próximos pasos concretos.",
+      "Señales por dimensión, riesgos, fortalezas y qué validar antes de invertir más.",
   },
 ] as const;
 
 export const REPORT_INCLUDES = [
-  "Resumen ejecutivo",
-  "Semáforos de viabilidad",
-  "Fortalezas de la idea",
-  "Riesgos ocultos",
-  "Análisis financiero básico",
-  "Compatibilidad personal",
-  "Próximos pasos de validación",
-  "Recomendación final",
+  "Resumen ejecutivo del diagnóstico",
+  "Señales de viabilidad por dimensión",
+  "Fortalezas y riesgos concretos",
+  "Lectura financiera básica (márgenes y equilibrio)",
+  "Compatibilidad con tu forma de trabajar",
+  "Plan de validación de dos semanas",
+  "Recomendación: avanzar, ajustar o pausar",
 ] as const;
 
 export const PRICING_INCLUDES = [
-  "Evaluación inmediata",
-  "Diagnóstico personalizado",
-  "Semáforos por dimensión",
-  "Riesgos principales",
-  "Próximos pasos",
+  "Diagnóstico de una idea",
+  "Reporte con señales por dimensión",
+  "Riesgos y próximos pasos de validación",
+  "Recomendación final accionable",
 ] as const;
 
 export const FOR_YOU_ITEMS = [
-  "Tienes una idea de negocio, pero no sabes si vale la pena.",
-  "Quieres generar ingreso extra sin invertir a ciegas.",
-  "Tienes capital limitado y quieres reducir riesgo.",
-  "Estás comparando oportunidades.",
-  "Quieres saber qué validar antes de avanzar.",
+  "Tienes una idea concreta y quieres saber si vale arriesgar tiempo y dinero bajo tus condiciones actuales.",
+  "Quieres un ingreso extra o reemplazar empleo sin invertir a ciegas.",
+  "Prefieres ajustar o pausar a tiempo antes de rentar, comprar equipo o gastar en publicidad.",
+  "Estás dispuesto a hablar con clientes reales si el diagnóstico lo pide.",
 ] as const;
 
 export const NOT_FOR_YOU_ITEMS = [
-  "Buscas una garantía de éxito.",
-  "Quieres que alguien te diga exactamente qué negocio abrir.",
-  "No estás dispuesto a validar con clientes reales.",
-  "Buscas asesoría legal, fiscal o financiera personalizada.",
+  "Buscas una garantía de éxito o que te inventen el negocio.",
+  "Quieres que alguien elija por ti qué abrir.",
+  "No vas a validar con clientes reales, pase lo que pase.",
+  "Necesitas asesoría legal, fiscal o financiera personalizada.",
 ] as const;
 
 export const FAQ_ITEMS = [
   {
-    question: "¿La herramienta me dice qué negocio abrir?",
+    question: "¿Decida me dice qué negocio abrir?",
     answer:
-      "No. La herramienta evalúa la idea que tú tienes en mente. Más adelante podrá comparar ideas, pero V1 se enfoca en analizar una idea específica.",
+      "No. Evalúa la idea que tú ya tienes. No inventa oportunidades ni elige por ti.",
   },
   {
     question: "¿Esto garantiza que mi negocio funcionará?",
     answer:
-      "No. El objetivo es reducir incertidumbre, identificar riesgos y ayudarte a tomar mejores decisiones antes de invertir.",
+      "No. Reduce incertidumbre: muestra riesgos, fortalezas y qué validar antes de invertir más.",
   },
   {
     question: "¿Necesito saber de finanzas?",
     answer:
-      "No. Solo necesitas responder estimaciones básicas. Si no sabes algún dato, el reporte también te dirá qué información necesitas investigar.",
+      "No. Usas estimaciones. Si falta un dato, el reporte indica qué investigar.",
   },
   {
-    question: "¿Puedo evaluar cualquier idea?",
+    question: "¿Qué tipo de ideas puedo evaluar?",
     answer:
-      "Sí. Puede ser un negocio físico, digital, de servicios, producto, franquicia, side hustle o proyecto independiente.",
+      "Físicas, digitales, servicios, producto, franquicia, side hustle o proyectos independientes — una idea por evaluación.",
   },
   {
-    question: "¿Qué pasa si mi idea sale con riesgo alto?",
+    question: "¿Qué pasa si el riesgo sale alto?",
     answer:
-      "Eso también es útil. Significa que puedes ajustar, validar o pausar antes de perder dinero.",
+      "También es un resultado útil: puedes ajustar la idea, validar o pausar antes de perder dinero.",
   },
   {
     question: "¿Cuánto tarda?",
-    answer:
-      "La experiencia debe tomar aproximadamente 10 a 15 minutos.",
+    answer: "Unos 10 a 15 minutos del diagnóstico guiado al reporte.",
   },
 ] as const;
 
-export const SIGNAL_DIMENSIONS = [
-  { label: "Compatibilidad personal", signal: "yellow" as const },
-  { label: "Viabilidad financiera", signal: "yellow" as const },
-  { label: "Viabilidad comercial", signal: "red" as const },
-  { label: "Nivel de riesgo", signal: "yellow" as const },
-  { label: "Ajuste de tiempo", signal: "green" as const },
-  { label: "Escalabilidad", signal: "yellow" as const },
-] as const;
+/** Static hero proof — illustrative sample judgment (not live user data) */
+export const HERO_JUDGMENT = {
+  ideaLabel: "Ejemplo ilustrativo",
+  ideaTitle: "Detailing móvil de autos",
+  recommendation: "Validar antes de invertir más",
+  constraintNote:
+    "Resultado cruzado con tiempo parcial, presupuesto acotado y canal aún poco claro.",
+  signals: [
+    { label: "Ajuste de tiempo", tone: "ok" as const },
+    { label: "Viabilidad comercial", tone: "caution" as const },
+    { label: "Riesgo", tone: "watch" as const },
+  ],
+  nextStep:
+    "Hablar con 10 clientes potenciales y cotizar costos reales antes de gastar más de $10,000 MXN.",
+} as const;
+

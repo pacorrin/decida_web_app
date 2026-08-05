@@ -4,18 +4,20 @@ export function ProblemSection() {
   return (
     <SectionShell
       id="problema"
-      title="La mayoría de las personas no falla por falta de ideas. Falla por no evaluarlas bien."
+      title="Las ideas no fallan en la cabeza. Fallan al chocar con tu realidad."
       variant="muted"
     >
-      <div className="mx-auto max-w-3xl space-y-4 text-center text-base leading-relaxed text-muted-foreground sm:text-lg">
+      <div className="mx-auto max-w-2xl space-y-4 text-center text-base leading-relaxed text-muted-foreground sm:text-lg">
         <p>
-          Muchas ideas suenan bien en la cabeza, pero se rompen cuando analizas
-          inversión, tiempo, clientes, margen, riesgo y operación real.
+          Una idea puede sonar bien y romperse cuando la miras con tu tiempo
+          disponible, tu dinero, tus clientes posibles y el riesgo que sí puedes
+          asumir.
         </p>
         <p>
-          Antes de comprar equipo, rentar local, pagar publicidad o invertir
-          tus ahorros, evalúa si la idea tiene sentido bajo tus condiciones
-          actuales.
+          Antes de rentar, comprar equipo o pagar publicidad, conviene saber si
+          esa idea aguanta{" "}
+          <span className="font-medium text-primary">tus</span> condiciones — no
+          las de un caso ideal.
         </p>
       </div>
     </SectionShell>

@@ -12,7 +12,6 @@ export function FaqSection() {
     <SectionShell
       id="faq"
       title="Preguntas frecuentes"
-      variant="muted"
     >
       <Accordion className="mx-auto max-w-3xl rounded-xl border border-border/70 bg-card px-4 sm:px-6">
         {FAQ_ITEMS.map((item, index) => (

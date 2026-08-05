@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-24T19:45:00.000Z",
+  "title": "Design System: Decida",
+  "extensions": {
+    "colorMeta": {
+      "verde-confianza": {
+        "role": "primary",
+        "displayName": "Verde Confianza",
+        "canonical": "#05422c",
+        "tonalRamp": ["#02140d", "#032116", "#042e1f", "#053b28", "#1e5541", "#698e80", "#b4c6c0", "#e6ecea"]
+      },
+      "coral-accion": {
+        "role": "secondary",
+        "displayName": "Coral Acción",
+        "canonical": "#ff7043",
+        "tonalRamp": ["#4d2214", "#803822", "#b34e2f", "#e6653c", "#ff7e56", "#ffa98e", "#ffd4c7", "#fff1ec"]
+      },
+      "azul-guia": {
+        "role": "tertiary",
+        "displayName": "Azul Guía",
+        "canonical": "#6baed6",
+        "tonalRamp": ["#203440", "#36576b", "#4b7a96", "#609dc1", "#7ab6da", "#a6cee6", "#d3e7f3", "#f0f7fb"]
+      },
+      "papel-blanco": {
+        "role": "neutral",
+        "displayName": "Papel Blanco",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#3d5c50", "#698e80", "#9bb0a8", "#c5d0cb", "#dce8e2", "#e8f0ec", "#f0f5f3", "#ffffff"]
+      },
+      "musgo-suave": {
+        "role": "neutral",
+        "displayName": "Musgo Suave",
+        "canonical": "#f0f5f3",
+        "tonalRamp": ["#3d5c50", "#5a7a6c", "#7a9688", "#a3b8ad", "#c5d4cc", "#dce8e2", "#e8f0ec", "#f0f5f3"]
+      },
+      "tinta-secundaria": {
+        "role": "neutral",
+        "displayName": "Tinta Secundaria",
+        "canonical": "#3d5c50",
+        "tonalRamp": ["#1a2822", "#243830", "#2e483e", "#3d5c50", "#5a7a6c", "#8aa396", "#c0cfc8", "#e8f0ec"]
+      },
+      "cielo-tenue": {
+        "role": "neutral",
+        "displayName": "Cielo Tenue",
+        "canonical": "#e8f4fa",
+        "tonalRamp": ["#36576b", "#4b7a96", "#6baed6", "#8fc0df", "#b3d4ea", "#d3e7f3", "#e8f4fa", "#f5fafc"]
+      },
+      "borde-suave": {
+        "role": "neutral",
+        "displayName": "Borde Suave",
+        "canonical": "#dce8e2",
+        "tonalRamp": ["#3d5c50", "#698e80", "#9bb0a8", "#b8c9c1", "#dce8e2", "#e8f0ec", "#f0f5f3", "#f8fbf9"]
+      },
+      "error": {
+        "role": "neutral",
+        "displayName": "Error",
+        "canonical": "#c62828",
+        "tonalRamp": ["#4a0f0f", "#7a1919", "#a02121", "#c62828", "#d45a5a", "#e39292", "#f1c9c9", "#fceeee"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero and step questions — one per viewport." },
+      "headline": { "displayName": "Headline", "purpose": "Section and step titles." },
+      "title": { "displayName": "Title", "purpose": "Form legends and card titles." },
+      "body": { "displayName": "Body", "purpose": "Primary reading text." },
+      "label": { "displayName": "Label", "purpose": "Field labels, metadata, nav." },
+      "mono": { "displayName": "Mono", "purpose": "Scannable numbers and IDs." }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-quiet",
+        "value": "150ms ease",
+        "purpose": "Minimal state transitions only; respect prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary CTA",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Coral Acción — the only primary action on a screen.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Analizar mi idea</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 12px 24px; border: none; border-radius: 10px; background: #ff7043; color: #ffffff; font-family: Geist, ui-sans-serif, system-ui, sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: background 150ms ease; } .ds-btn-primary:hover { background: #e6653c; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(107, 174, 214, 0.5); }"
+    },
+    {
+      "name": "Brand Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Verde Confianza for non-CTA product actions.",
+      "html": "<button class=\"ds-btn-brand\" type=\"button\">Continuar</button>",
+      "css": ".ds-btn-brand { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; padding: 8px 12px; border: none; border-radius: 10px; background: #05422c; color: #ffffff; font-family: Geist, ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: background 150ms ease; } .ds-btn-brand:hover { background: rgba(5, 66, 44, 0.8); } .ds-btn-brand:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(107, 174, 214, 0.5); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary path — e.g. ver ejemplo.",
+      "html": "<button class=\"ds-btn-outline\" type=\"button\">Ver ejemplo</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 12px 24px; border: 1px solid #dce8e2; border-radius: 10px; background: #ffffff; color: #05422c; font-family: Geist, ui-sans-serif, system-ui, sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: background 150ms ease; } .ds-btn-outline:hover { background: #f0f5f3; } .ds-btn-outline:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(107, 174, 214, 0.5); }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Default form input on papel blanco.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Tu correo\" aria-label=\"Correo\" />",
+      "css": ".ds-input { width: 100%; height: 40px; padding: 8px 12px; border: 1px solid #dce8e2; border-radius: 10px; background: #ffffff; color: #05422c; font-family: Geist, ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; } .ds-input::placeholder { color: #3d5c50; opacity: 0.7; } .ds-input:focus-visible { outline: none; border-color: #6baed6; box-shadow: 0 0 0 3px rgba(107, 174, 214, 0.35); }"
+    },
+    {
+      "name": "Option Card",
+      "kind": "chip",
+      "refersTo": "option-card",
+      "description": "Selectable answer card — clear selected state.",
+      "html": "<label class=\"ds-option\"><input type=\"radio\" name=\"demo\" checked /> Menos de 5 horas</label>",
+      "css": ".ds-option { display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid rgba(220, 232, 226, 0.7); border-radius: 10px; background: #ffffff; color: #05422c; font-family: Geist, ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; cursor: pointer; } .ds-option:has(input:checked) { border-color: #05422c; background: rgba(5, 66, 44, 0.05); } .ds-option input { accent-color: #05422c; }"
+    },
+    {
+      "name": "Surface Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Flat card — border/tone only, no shadow.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Starter</h3><p class=\"ds-card-body\">Diagnóstico inmediato y reporte completo</p></div>",
+      "css": ".ds-card { padding: 16px; border: 1px solid rgba(220, 232, 226, 0.8); border-radius: 14px; background: #ffffff; color: #05422c; font-family: Geist, ui-sans-serif, system-ui, sans-serif; } .ds-card-title { margin: 0 0 4px; font-size: 1.125rem; font-weight: 600; line-height: 1.35; } .ds-card-body { margin: 0; font-size: 0.875rem; line-height: 1.5; color: #3d5c50; }"
+    },
+    {
+      "name": "Site Nav Mark",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Wordmark and quiet text links.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Principal\"><a class=\"ds-nav-brand\" href=\"/\">Decida</a><a class=\"ds-nav-link\" href=\"#precio\">Precio</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 24px; } .ds-nav-brand { color: #05422c; font-family: Geist, ui-sans-serif, system-ui, sans-serif; font-size: 1.125rem; font-weight: 600; text-decoration: none; } .ds-nav-link { color: #3d5c50; font-family: Geist, ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; text-decoration: none; } .ds-nav-link:hover { color: #05422c; } .ds-nav-link:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(107, 174, 214, 0.5); border-radius: 4px; }"
+    },
+    {
+      "name": "Guide Callout",
+      "kind": "custom",
+      "refersTo": "chip-signal",
+      "description": "Azul Guía callout for tips — never a CTA.",
+      "html": "<div class=\"ds-callout\">Tu progreso está guardado.</div>",
+      "css": ".ds-callout { padding: 12px 16px; border: 1px solid rgba(107, 174, 214, 0.3); border-radius: 14px; background: rgba(232, 244, 250, 0.5); color: #3d5c50; font-family: Geist, ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; line-height: 1.5; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Diagnóstico en Papel Blanco",
+    "overview": "Decida se ve como un informe limpio sobre blanco: tipografía clara, poco ruido, y color solo cuando aporta juicio. La interfaz debe sentirse seria y profesional sin caer en formalismo frío; amigable sin parecer un coach motivacional. Cada pantalla debe orientar hacia una decisión informada, no entretener.\n\nLa profundidad no viene de sombras ni de “lift” decorativo, sino de jerarquía tipográfica, bordes suaves y tintes mínimos. El sistema es minimalista a propósito: lo que no ayuda a decidir no se muestra.",
+    "keyCharacteristics": [
+      "Papel blanco como lienzo; verde para identidad y texto",
+      "Coral reservado a la acción principal (CTA)",
+      "Azul guía para señales, hints y aclaraciones — nunca como hero",
+      "Flat: borde + tono; sin sombras decorativas",
+      "Claridad decisiva en botones y opciones",
+      "Resultados que se sienten fundamentados, no inventados"
+    ],
+    "rules": [
+      { "name": "The Ink vs Action Rule", "body": "Verde Confianza es identidad y lectura; Coral Acción es el único CTA principal. No invertir roles.", "section": "colors" },
+      { "name": "The Signal, Not Spectacle Rule", "body": "El color visualiza información (semáforos, foco, hints). Nunca decora ni distrae.", "section": "colors" },
+      { "name": "The Grounded Result Rule", "body": "Los resultados y métricas deben leerse como juicio fundamentado — tipografía clara, contexto breve (tooltip o nota) cuando haga falta — no como motivación vacía.", "section": "colors" },
+      { "name": "The Title Leads the Decision Rule", "body": "Títulos y subtítulos guían el flujo de lectura y la decisión; el cuerpo aclara, no compite.", "section": "typography" },
+      { "name": "The Legibility Floor Rule", "body": "Tamaños mínimos cómodos en móvil y desktop; antialiasing activo; nunca texto tenue sobre tintes débiles que rompa contraste.", "section": "typography" },
+      { "name": "The One Job Per Band Rule", "body": "Cada bloque tiene un propósito (explicar, preguntar, decidir). No mezclar prueba social inventada ni clutter en el mismo band.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Superficies en reposo sin sombra. Destacar con tipografía y color, no con lift.", "section": "elevation" },
+      { "name": "The Soft Edge Rule", "body": "Curvas suaves y consistentes; no mezclar sharp + pill en el mismo control set.", "section": "elevation" },
+      { "name": "The Decisive Control Rule", "body": "Opciones y CTAs deben leerse en <1s: un primary visible, estados selected inequívocos.", "section": "elevation" },
+      { "name": "The Quiet Motion Rule", "body": "Animaciones mínimas y solo si aclaran dirección o estado; nada espectacular.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do usar Coral Acción solo para la acción principal de la pantalla.",
+      "Do priorizar títulos/subtítulos que empujen a la siguiente decisión.",
+      "Do explicar métricas del resultado con contexto breve (nota o tooltip) cuando el número no se explica solo.",
+      "Do mantener contraste y tamaños legibles en móvil.",
+      "Do dejar blanco respirar; el vacío es parte del diagnóstico."
+    ],
+    "donts": [
+      "Don't añadir sombras, glows, gradientes decorativos o glassmorphism.",
+      "Don't parecer fintech neon, SaaS dashboard genérico, startup púrpura, brochure bancaria fría, ni consultora de negocios pomposa.",
+      "Don't sonar a coach motivacional ni a producto “inventado”: sin promesas vacías ni teatro visual.",
+      "Don't usar color como adorno; si no informa, quítalo.",
+      "Don't competir tipografías (no serif display, no mono para body)."
+    ]
+  }
+}
