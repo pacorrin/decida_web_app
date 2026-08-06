@@ -1,0 +1,23 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-08-05T23:22:05.265Z",
+        "reason": "Geist es la tipografía de marca de Decida (DESIGN.md), no una elección genérica"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          "src/lib/email/templates.ts"
+        ],
+        "createdAt": "2026-08-05T23:23:29.179Z",
+        "reason": "HTML de email transaccional con estilos inline; los clientes de correo no soportan la escala rem/CSS vars de DESIGN.md. Confirmado por el usuario."
+      }
+    ]
+  }
+}

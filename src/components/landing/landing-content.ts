@@ -6,6 +6,7 @@ export const NAV_LINKS = [
   { href: "#precio", label: "Precio" },
   { href: "#faq", label: "FAQ" },
   { href: "/mis-evaluaciones", label: "Mis evaluaciones" },
+  { href: "/cuenta", label: "Mi cuenta" },
 ] as const;
 
 export const LEGAL_LINKS = [

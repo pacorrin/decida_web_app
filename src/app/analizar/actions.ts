@@ -35,7 +35,12 @@ import {
 } from "@/lib/onboarding/session-server";
 import { isAssessmentCompleted } from "@/lib/onboarding/assessment-utils";
 import { getStepBySlug } from "@/lib/onboarding/steps";
+import { getResumeStep } from "@/lib/onboarding/navigation";
+import { ensureAssessmentForCurrentUser } from "@/lib/onboarding/for-user";
 import { prisma } from "@/lib/prisma";
+import { createUser, findUserByEmail, updateUserPassword, markEmailVerified } from "@/lib/auth/users";
+import { normalizeEmail } from "@/lib/auth/verification";
+import { createUserSession } from "@/lib/auth/session-server";
 import {
   logReportGenerationError,
   logReportGenerationRetry,
@@ -65,6 +70,22 @@ function validationError(
   };
 }
 
+/**
+ * Entry point for logged-in users starting (or resuming) an assessment
+ * without re-entering contact data. Must be a Server Action, not a GET
+ * route — it writes a cookie, and unlike a page render, a Server Action is
+ * only ever invoked by a real click, never by Next.js's automatic <Link>
+ * prefetching (which previously caused a fresh assessment to be silently
+ * created every time a "Analizar mi idea" link merely scrolled into view).
+ */
+export async function startAssessmentForCurrentUser(): Promise<void> {
+  const assessment = await ensureAssessmentForCurrentUser();
+  if (!assessment) {
+    redirectToStep("contacto");
+  }
+  redirect(getStepBySlug(getResumeStep(assessment)).path);
+}
+
 export async function saveContact(
   _prev: ActionState,
   formData: FormData
@@ -74,6 +95,7 @@ export async function saveContact(
     name: formData.get("name"),
     phone: formData.get("phone"),
     country: formData.get("country"),
+    password: formData.get("password"),
     acceptedTerms: formData.get("acceptedTerms"),
   });
 
@@ -81,7 +103,31 @@ export async function saveContact(
     return validationError(parsed.error, formData);
   }
 
-  const { email, name, phone, country } = parsed.data;
+  const { email, name, phone, country, password } = parsed.data;
+  const normalizedEmail = normalizeEmail(email);
+
+  // Never round-trip the password back to the client, even on error.
+  const redisplayValues = formDataToValues(formData);
+  delete redisplayValues.password;
+
+  const existingUser = await findUserByEmail(normalizedEmail);
+  if (existingUser?.user_email_verified_at) {
+    return {
+      success: false,
+      message: "Ya tienes una cuenta con este correo. Inicia sesión para continuar.",
+      values: redisplayValues,
+    };
+  }
+
+  // No verified account yet for this email: create (or claim an abandoned,
+  // never-verified) account and sign them in immediately — same trust level
+  // the anonymous flow already granted this email, now backed by a real
+  // account instead of a throwaway assessment.
+  const user = existingUser
+    ? await updateUserPassword(existingUser.user_id, password)
+    : await createUser({ email: normalizedEmail, password, name, phone });
+  await markEmailVerified(user.user_id);
+  await createUserSession(user.user_id);
 
   const existing = await getCurrentAssessment();
   let asmtId: string;
@@ -90,20 +136,22 @@ export async function saveContact(
     await prisma.assessments.update({
       where: { asmt_id: existing.asmt_id },
       data: {
-        asmt_email: email,
+        asmt_email: normalizedEmail,
         asmt_name: name,
         asmt_phone: phone,
         asmt_country: country,
+        asmt_user_id: user.user_id,
       },
     });
     asmtId = existing.asmt_id;
   } else {
     const assessment = await prisma.assessments.create({
       data: {
-        asmt_email: email,
+        asmt_email: normalizedEmail,
         asmt_name: name,
         asmt_phone: phone,
         asmt_country: country,
+        asmt_user_id: user.user_id,
         asmt_started_at: new Date(),
       },
     });

@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "595da03bbe9f8f8c",
+        "id": "d8504a16dbbcaf51",
         "type": "tabs",
         "children": [
           {
-            "id": "faef2d364ea585d7",
+            "id": "3191cec2ea06dd89",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CLAUDE.md",
+                "file": "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CLAUDE"
+              "title": "modulo-de-usuarios-y-autenticacion"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CLAUDE.md",
+                "file": "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Enlaces entrantes de CLAUDE"
+              "title": "Enlaces entrantes de modulo-de-usuarios-y-autenticacion"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CLAUDE.md",
+                "file": "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Enlaces salientes de CLAUDE"
+              "title": "Enlaces salientes de modulo-de-usuarios-y-autenticacion"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CLAUDE.md",
+                "file": "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Esquema de CLAUDE"
+              "title": "Esquema de modulo-de-usuarios-y-autenticacion"
             }
           }
         ]
@@ -183,14 +183,21 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "faef2d364ea585d7",
+  "active": "3191cec2ea06dd89",
   "lastOpenFiles": [
+    "wiki/arquitectura/stack-tecnico.md",
+    "Sin título.canvas",
+    "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
+    "wiki/arquitectura/historial-de-evaluaciones.md",
+    "raw/notion/17-rubric-6-dimensiones.md",
+    "wiki/producto/gaps-onboarding-vs-framework.md",
+    "CLAUDE.md",
+    "wiki/decisiones/plan-lanzamiento-60-90-dias.md",
     "index.md",
     "wiki/framework/dimensiones-de-viabilidad.md",
     "wiki/producto/roadmap-y-backlog.md",
     "wiki/reuniones/minutas.md",
     "log.md",
-    "raw/notion/17-rubric-6-dimensiones.md",
     "raw/notion/16-criterios-evaluacion-ideas.md",
     "wiki/framework/scoring-engine.md"
   ]

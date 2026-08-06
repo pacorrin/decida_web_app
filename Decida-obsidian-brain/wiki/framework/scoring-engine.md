@@ -8,6 +8,8 @@ updated: 2026-08-05
 
 Fuentes: [[../../raw/notion/10-scoring-engine]] · `src/lib/scoring/index.ts` · `src/lib/scoring/types.ts` · `src/lib/ai/schemas/scoring-interpret.ts`
 
+> 🔴 **Bug confirmado en código (2026-08-05)**: el score de `risk_level` está roto, no solo incompleto. `calculateDeterministicScores` (`src/lib/scoring/types.ts:150-160`) lo calcula a partir de `profile?.aprf_acceptable_loss_range`, campo que ya nunca se captura (removido del onboarding, ver nota de brecha abajo). `scoreFromRange()` cae en su fallback de `50` cuando el valor es `null` — **hoy casi todo assessment recibe el mismo score de riesgo** (~50-60) sin importar el capital real en juego. Detalle completo y plan de fix: [[../producto/gaps-onboarding-vs-framework#🔴 Hallazgo crítico]] y [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 2]].
+
 ## Regla central (diseño y código coinciden)
 > "El score no es el producto. El diagnóstico es el producto."
 
@@ -46,5 +48,8 @@ Inversión inicial > capital disponible · inversión > lo que puede perder · m
 ```
 El código real (`buildAssessmentContext()`) construye un contexto de texto más compacto (idea, objetivo, situación, preocupación principal) en vez del JSON completo propuesto en Notion — optimización de costo de tokens consistente con [[prompts-de-ia#AI Cost Control]].
 
+## Otros datos capturados pero ignorados por el scoring
+`pfit_uncertainty_comfort_score` y `pfit_process_comfort_score` se recolectan en el onboarding (paso `ajuste`) pero `calculateDeterministicScores` nunca los lee — dato muerto hoy, candidato de bajo costo para el fix de Sprint 2. Igual que `mrsk_business_dependencies`, que ni siquiera se llega a capturar en el formulario. Ver mapeo completo en [[../producto/gaps-onboarding-vs-framework]].
+
 ## Ver también
-[[dimensiones-de-viabilidad]] · [[prompts-de-ia]] · [[criterios-de-evaluacion]] · [[../arquitectura/modelo-de-datos]]
+[[dimensiones-de-viabilidad]] · [[prompts-de-ia]] · [[criterios-de-evaluacion]] · [[../arquitectura/modelo-de-datos]] · [[../producto/gaps-onboarding-vs-framework]]

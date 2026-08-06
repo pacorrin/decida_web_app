@@ -18,11 +18,12 @@ Fuente: [[../../raw/notion/08-technical-architecture-v1]] · `package.json` · `
 - **react-markdown** + `remark-gfm` + `rehype-raw` — renderizado markdown en respuestas de IA
 - **embla-carousel-react** — carrusel en landing
 - **Playwright** — pruebas end-to-end (`test:e2e`)
+- **Resend** — email transaccional (agregado 2026-08-05); **bcryptjs** — hashing de contraseñas (agregado 2026-08-05). Ver [[modulo-de-usuarios-y-autenticacion]]
 
 Esto es notablemente más específico y "productizado" que la hipótesis original de Notion ("Next.js, TypeScript, Server Actions, base de datos simple o JSON, Stripe o Mercado Pago, IA barata, PDF").
 
 ## Lo que NO se implementó (vs hipótesis original)
-- **Pago real** (Stripe/Mercado Pago): no confirmado en el código — el paso `/analizar/pago` es un **pago simulado (beta)**, con promesa de reembolso si el reporte falla. Ver [[../producto/pricing-y-gtm]].
+- **Pago real** (Stripe/Mercado Pago): no confirmado en el código — el paso `/analizar/pago` es un **pago simulado (beta)**, con promesa de reembolso si el reporte falla. Pospuesto a propósito, ver [[../producto/pricing-y-gtm]] y [[../decisiones/plan-lanzamiento-60-90-dias]].
 - **Generación de PDF**: no se confirmó un generador de PDF en la exploración de código realizada para este cerebro — a verificar en una próxima sesión (buscar en `src/lib` o dependencias como `puppeteer`/`react-pdf`).
 - **App móvil, multi-tenant, microservicios, Redis, colas**: siguen fuera de alcance, consistente con el diseño original.
 
@@ -31,6 +32,7 @@ Esto es notablemente más específico y "productizado" que la hipótesis origina
 - **Historial de evaluaciones** con verificación por email (`verification_codes`, `history_sessions`) — Notion lo marcaba explícitamente como fuera de alcance V1. Ver [[historial-de-evaluaciones]].
 - **Manejo de errores y reintentos robusto** para la generación de reportes, con logging estructurado. Ver [[manejo-de-errores-y-reembolsos]].
 - **Testing E2E con Playwright** — no mencionado en el diseño original.
+- **Módulo de usuarios y autenticación con contraseña** (`users`, `user_sessions`, Resend, bcryptjs) — agregado 2026-08-05. Ver [[modulo-de-usuarios-y-autenticacion]].
 
 ## Entorno de desarrollo (`AGENTS.md`, gotchas confirmados)
 - `.env` requerido y gitignored; sin él, `prisma generate` (postinstall) falla.
@@ -39,4 +41,4 @@ Esto es notablemente más específico y "productizado" que la hipótesis origina
 - PostgreSQL corre en Docker (`decida-postgres`, puerto 5432, user/pass/db = `decida`).
 
 ## Ver también
-[[modelo-de-datos]] · [[manejo-de-errores-y-reembolsos]] · [[../framework/scoring-engine]]
+[[modelo-de-datos]] · [[manejo-de-errores-y-reembolsos]] · [[modulo-de-usuarios-y-autenticacion]] · [[../framework/scoring-engine]]

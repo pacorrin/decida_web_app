@@ -1,6 +1,6 @@
 # obsidian-brain de Decida — schema
 
-Este directorio es un **segundo cerebro** sobre el negocio Decida, siguiendo el patrón LLM Wiki (raw sources inmutables → wiki interconectado que un LLM mantiene → este documento como schema). Vive dentro del repo (`decida/obsidian-brain/`) pero es conceptualmente independiente del código de la app — es la capa de conocimiento de negocio, no de ingeniería.
+Este directorio es un **segundo cerebro** sobre el negocio Decida, siguiendo el patrón LLM Wiki (raw sources inmutables → wiki interconectado que un LLM mantiene → este documento como schema). Vive dentro del repo (`decida/Decida-obsidian-brain/`) pero es conceptualmente independiente del código de la app — es la capa de conocimiento de negocio, no de ingeniería. Es el vault de Obsidian del usuario (contiene `.obsidian/` con su configuración local — no tocar esa carpeta).
 
 Está pensado para abrirse como **vault de Obsidian** (grafo, backlinks, búsqueda) mientras un agente de Claude Code lo mantiene.
 

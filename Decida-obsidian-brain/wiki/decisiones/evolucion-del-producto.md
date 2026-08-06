@@ -20,7 +20,7 @@ Esta página existe para responder una pregunta recurrente: *"¿esto que veo en 
 **Código**: removidas de la UX del paso de situación.
 **Commit**: `5886b4d refactor: remove capital and loss range from onboarding process`.
 **Impacto en cascada**: al menos 2 red flags del [[../framework/scoring-engine#Red flags|scoring engine]] dependían de estos datos ("inversión > capital disponible", "inversión > pérdida aceptable"). `PRODUCT.md` marca esto explícitamente como "abierto/no decidido": *"si las preguntas de capital/pérdida tolerable regresan en una sección financiera posterior (las columnas/opciones pueden seguir existiendo en el esquema)."*
-**Estado**: confirmado en el código y en `PRODUCT.md`. **Pregunta abierta real**: si esas red flags siguen siendo calculables hoy, o quedaron huérfanas. Requiere lectura de `src/lib/scoring/types.ts` con detalle o confirmación del usuario.
+**Estado (actualizado 2026-08-05, ya no es pregunta abierta)**: confirmado por lectura directa de `src/lib/scoring/types.ts` — no quedaron huérfanas, quedaron **rotas activamente**. El score de `risk_level` depende de `aprf_acceptable_loss_range` (siempre `null` hoy) y su función de scoring cae en un valor de fallback constante, así que la dimensión de riesgo hoy no discrimina entre ideas de alto y bajo riesgo real. Mapeo completo de todos los campos afectados (no solo riesgo) en [[../producto/gaps-onboarding-vs-framework]]. Fix agendado en [[plan-lanzamiento-60-90-dias#Sprint 2]].
 
 ## 3. Historial de evaluaciones (non-goal superado)
 **Notion**: "sin historial de evaluaciones" listado como non-goal explícito V1, y como ítem de "Future SaaS".

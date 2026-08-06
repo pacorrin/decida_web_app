@@ -1,10 +1,14 @@
 ---
 type: arquitectura
-tags: [decida, historial, non-goal-superado]
+tags: [decida, historial, non-goal-superado, usuarios]
 updated: 2026-08-05
 ---
 
 # Historial de evaluaciones (`/mis-evaluaciones`)
+
+> ⚠️ **En evolución activa (2026-08-05)**: el módulo de cuentas con contraseña que reemplaza este flujo passwordless ya está construido y probado — ver [[modulo-de-usuarios-y-autenticacion]]. Lo único que falta para que reemplace por completo esta página es vincular `assessments` a `user_id` y migrar estas rutas (`/mis-evaluaciones`) al nuevo sistema, alcance de Sprint 2. Esta página describe el estado **implementado hoy en estas rutas específicas** (roto, ver siguiente nota) — no el estado objetivo.
+
+> ⚠️ **Brecha confirmada (auditoría 2026-08-05)**: no existe ninguna librería de envío de email en el repo (`resend`/`nodemailer`/`sendgrid` — cero coincidencias). El código de verificación se genera y persiste en `verification_codes` pero **nunca se entrega al usuario**. En su estado actual, `/mis-evaluaciones` está roto end-to-end para cualquier usuario real. Ver [[../decisiones/plan-lanzamiento-60-90-dias#Hallazgos verificados en código]].
 
 Fuentes: `prisma/schema.prisma` (modelos `verification_codes`, `history_sessions`) · estructura de rutas `src/app/mis-evaluaciones/`
 
@@ -24,5 +28,14 @@ Conecta directamente con el nivel 2 de éxito de producto definido en `PRODUCT.m
 ## Pregunta abierta para el usuario
 ¿Esta feature se construyó en respuesta a feedback real de los primeros usuarios pagados, o fue una decisión de producto anticipada sin evidencia aún? No hay fuente (ni Notion ni docs del repo) que documente el "por qué" de esta decisión — buena candidata para la primera minuta de reunión que se ingiera a este cerebro. Ver [[../reuniones/minutas]].
 
+## Dirección futura (decidida 2026-08-05)
+- Autenticación pasa de passwordless (magic-code) a **cuenta con email + contraseña**.
+- `verification_codes` se reutiliza (no se descarta) para verificación de email en el registro y para el flujo de "olvidé mi contraseña" — deja de ser el mecanismo de login del día a día.
+- `assessments` gana un vínculo real a la cuenta (`user_id`), no solo el string `asmt_email` de hoy.
+- Dashboard v1 = solo listar el historial de evaluaciones sobre la cuenta autenticada. Recibos y formulario de soporte quedan fuera de esta primera iteración a propósito.
+- Panel de administración (soporte/reembolsos) queda pospuesto hasta después de esta migración.
+
+Detalle completo del plan: [[../decisiones/plan-lanzamiento-60-90-dias]].
+
 ## Ver también
-[[../decisiones/evolucion-del-producto]] · [[modelo-de-datos]] · [[../producto/prd#Non-goals]]
+[[../decisiones/evolucion-del-producto]] · [[../decisiones/plan-lanzamiento-60-90-dias]] · [[modulo-de-usuarios-y-autenticacion]] · [[modelo-de-datos]] · [[../producto/prd#Non-goals]]

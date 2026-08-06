@@ -37,6 +37,7 @@ La pregunta que resuelve: **¿Vale la pena esta idea para mí, ahora, con mis re
 | Producto | [[producto/principios-de-producto]] | Reglas de decisión de producto |
 | Producto | [[producto/pricing-y-gtm]] | Precio, canales, estado real del pago |
 | Producto | [[producto/roadmap-y-backlog]] | Plan MVP original vs línea de tiempo real (git) |
+| Producto | [[producto/gaps-onboarding-vs-framework]] | Mapeo del onboarding vs. el rubric de 6 dimensiones — incluye bug crítico del score de riesgo |
 | Framework | [[framework/dimensiones-de-viabilidad]] | Las 6 dimensiones — el IP central del producto |
 | Framework | [[framework/scoring-engine]] | Reglas determinísticas + interpretación IA |
 | Framework | [[framework/criterios-de-evaluacion]] | Marco de juicio humano detrás del scoring |
@@ -48,8 +49,10 @@ La pregunta que resuelve: **¿Vale la pena esta idea para mí, ahora, con mis re
 | Arquitectura | [[arquitectura/modelo-de-datos]] | Esquema relacional real vs propuesta Notion |
 | Arquitectura | [[arquitectura/manejo-de-errores-y-reembolsos]] | Qué pasa cuando falla la generación del reporte |
 | Arquitectura | [[arquitectura/historial-de-evaluaciones]] | Feature que superó los non-goals originales |
+| Arquitectura | [[arquitectura/modulo-de-usuarios-y-autenticacion]] | Cuentas con contraseña, email transaccional — Sprint 1 (2026-08-05) |
 | Marca | [[marca/sistema-de-diseno]] | "Diagnóstico en Papel Blanco" |
 | Decisiones | [[decisiones/evolucion-del-producto]] | Dónde y por qué el código se separó del PRD |
+| Decisiones | [[decisiones/plan-lanzamiento-60-90-dias]] | Plan de 12 semanas con fechas, prioridades y estrategia comercial |
 | Reuniones | [[reuniones/minutas]] | Estado de las minutas (aún no hay para Decida) |
 | — | [[glosario]] | Términos clave del negocio |
 
@@ -63,4 +66,10 @@ Salida siempre es una de 4: **Proceed small test / Validate first / Adjust idea 
 
 - No existen minutas de reuniones de Decida en Notion todavía — ver [[reuniones/minutas]].
 - No hay evidencia de clientes reales, testimonios o métricas de validación registradas en ninguna fuente (ni Notion ni código) — `PRODUCT.md` lo marca explícitamente como "no fabricar".
-- El pago en producción es simulado (beta) — sin integración real de Stripe/Mercado Pago confirmada. Ver [[producto/pricing-y-gtm]].
+- El pago en producción es simulado (beta), y se pospuso deliberadamente hasta definir el modelo de cobro — ver [[producto/pricing-y-gtm]] y [[decisiones/plan-lanzamiento-60-90-dias]].
+- El score de "Nivel de riesgo" está roto en producción (no solo incompleto) — ver [[producto/gaps-onboarding-vs-framework#🔴 Hallazgo crítico]], arreglo agendado en Sprint 2.
+- Falta vincular `assessments` a `users` y migrar `/mis-evaluaciones` al nuevo módulo de cuentas — ver [[arquitectura/modulo-de-usuarios-y-autenticacion#Qué falta]].
+
+## Estado de desarrollo (actualizado 2026-08-05)
+
+Hay un plan activo de lanzamiento en 60-90 días con fechas y checkpoints — ver [[decisiones/plan-lanzamiento-60-90-dias]]. Sprint 1 (fundamentos de cuenta) está 🟦 en curso, arrancó 5 días antes de lo previsto.

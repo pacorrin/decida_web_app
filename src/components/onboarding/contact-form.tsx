@@ -61,6 +61,23 @@ export function ContactForm({ assessment }: ContactFormProps) {
         </Field>
 
         <Field>
+          <FieldLabel htmlFor="password">Contraseña</FieldLabel>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="new-password"
+            placeholder="Mínimo 8 caracteres"
+            required
+            aria-invalid={!!state.fieldErrors?.password}
+          />
+          <FieldDescription>
+            Con esto creamos tu cuenta para guardar este diagnóstico y los que hagas después.
+          </FieldDescription>
+          <FieldError errors={state.fieldErrors?.password?.map((m) => ({ message: m }))} />
+        </Field>
+
+        <Field>
           <FieldLabel htmlFor="phone">Teléfono</FieldLabel>
           <Input
             id="phone"
@@ -141,6 +158,18 @@ export function ContactForm({ assessment }: ContactFormProps) {
           />
         </Field>
       </FieldGroup>
+
+      {state.message && !state.success && (
+        <p className="mt-4 text-sm text-destructive">
+          {state.message}{" "}
+          <Link
+            href="/cuenta/iniciar-sesion?next=/analizar"
+            className="font-medium underline underline-offset-4"
+          >
+            Iniciar sesión
+          </Link>
+        </p>
+      )}
 
       <StepNavigation currentSlug="contacto" isPending={pending} showBack={false} />
 

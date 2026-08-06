@@ -17,6 +17,7 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | [[wiki/producto/principios-de-producto]] | 5 principios operativos + compromiso de marca |
 | [[wiki/producto/pricing-y-gtm]] | Precios hipótesis vs pago simulado real, canales de venta |
 | [[wiki/producto/roadmap-y-backlog]] | Plan de 30-45 días vs línea de tiempo real (git) |
+| [[wiki/producto/gaps-onboarding-vs-framework]] | Mapeo campo por campo: rubric/criterios de Notion vs. lo que el onboarding captura hoy — incluye bug crítico del score de riesgo |
 
 ## Framework (IP central)
 | Página | Resumen |
@@ -39,7 +40,8 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | [[wiki/arquitectura/stack-tecnico]] | Next.js 16, React 19, Prisma 7, Postgres, OpenAI |
 | [[wiki/arquitectura/modelo-de-datos]] | 12 modelos Prisma, decisión relacional vs JSON simple |
 | [[wiki/arquitectura/manejo-de-errores-y-reembolsos]] | Retry, logging, proceso de reembolso (DEC-10) |
-| [[wiki/arquitectura/historial-de-evaluaciones]] | `/mis-evaluaciones` — non-goal original superado |
+| [[wiki/arquitectura/historial-de-evaluaciones]] | `/mis-evaluaciones` — non-goal original superado (en migración al módulo de cuentas) |
+| [[wiki/arquitectura/modulo-de-usuarios-y-autenticacion]] | Cuentas email+contraseña, sesiones, email transaccional — Sprint 1, 2026-08-05 |
 
 ## Marca
 | Página | Resumen |
@@ -50,6 +52,7 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | Página | Resumen |
 |---|---|
 | [[wiki/decisiones/evolucion-del-producto]] | Registro vivo de brechas Notion vs código (7 confirmadas) |
+| [[wiki/decisiones/plan-lanzamiento-60-90-dias]] | Auditoría de código, puntos críticos, plan de 12 semanas y estrategia comercial |
 
 ## Reuniones
 | Página | Resumen |
@@ -63,4 +66,6 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 - Sin minutas de reunión de Decida.
 - Sin evidencia de clientes/pagos reales en ninguna fuente.
 - Estado del trabajo de landing en curso (archivos sin commitear al momento de esta ingesta) no capturado — pendiente de re-ingesta cuando se estabilice.
-- Sin confirmación de si las red flags de capital/pérdida siguen siendo calculables tras la remoción de esas preguntas del onboarding.
+- Score de "Nivel de riesgo" roto en producción — arreglo agendado en Sprint 2, ver [[wiki/producto/gaps-onboarding-vs-framework]].
+- `users` aún no vinculado a `assessments`; `/mis-evaluaciones` sigue en el flujo passwordless roto — Sprint 2, ver [[wiki/arquitectura/modulo-de-usuarios-y-autenticacion]].
+- Falta cuenta real de Resend (`RESEND_API_KEY`) para que el envío de correos funcione fuera de desarrollo.
