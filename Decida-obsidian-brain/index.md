@@ -41,7 +41,8 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | [[wiki/arquitectura/modelo-de-datos]] | 12 modelos Prisma, decisión relacional vs JSON simple |
 | [[wiki/arquitectura/manejo-de-errores-y-reembolsos]] | Retry, logging, proceso de reembolso (DEC-10) |
 | [[wiki/arquitectura/historial-de-evaluaciones]] | `/mis-evaluaciones` — non-goal original superado (en migración al módulo de cuentas) |
-| [[wiki/arquitectura/modulo-de-usuarios-y-autenticacion]] | Cuentas email+contraseña, sesiones, email transaccional — Sprint 1, 2026-08-05 |
+| [[wiki/arquitectura/modulo-de-usuarios-y-autenticacion]] | Cuentas email+contraseña, sesiones, email transaccional, integración con onboarding — Sprint 1, 2026-08-05 |
+| [[wiki/arquitectura/dashboard-de-cuenta]] | Navbar + sidebar + rutas del panel `/cuenta` (route group, dropdown-menu nuevo) — 2026-08-05 |
 
 ## Marca
 | Página | Resumen |
@@ -67,5 +68,5 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 - Sin evidencia de clientes/pagos reales en ninguna fuente.
 - Estado del trabajo de landing en curso (archivos sin commitear al momento de esta ingesta) no capturado — pendiente de re-ingesta cuando se estabilice.
 - Score de "Nivel de riesgo" roto en producción — arreglo agendado en Sprint 2, ver [[wiki/producto/gaps-onboarding-vs-framework]].
-- `users` aún no vinculado a `assessments`; `/mis-evaluaciones` sigue en el flujo passwordless roto — Sprint 2, ver [[wiki/arquitectura/modulo-de-usuarios-y-autenticacion]].
+- `/mis-evaluaciones` sigue en el flujo passwordless roto y desconectado del sistema de cuentas nuevo — cualquier análisis iniciado ahí no queda ligado a `users`. Migrarlo es Sprint 2, ver [[wiki/arquitectura/modulo-de-usuarios-y-autenticacion]].
 - Falta cuenta real de Resend (`RESEND_API_KEY`) para que el envío de correos funcione fuera de desarrollo.

@@ -85,3 +85,27 @@ Verificado contra la base de datos real (no solo la UI): los 3 sub-flujos (usuar
 Actualizado: `wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md` (sección nueva "Integración con el onboarding" + lección de arquitectura sobre GET/prefetch), `wiki/arquitectura/modelo-de-datos.md` (relación `asmt_user_id` ya no es "pendiente"), `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (Sprint 1 ampliado, ítem de Sprint 2 tachado como adelantado), `wiki/experiencia/flujo-de-onboarding.md` (nota sobre el nuevo rol de `contacto`).
 
 Nota operativa: quedaron ~8 assessments de prueba en la BD local ligados a `francisco.test@example.com` (de los intentos fallidos durante la depuración) y 1 usuario/assessment de prueba nuevo (`nueva.persona@example.com`) — datos de prueba inofensivos, no se limpiaron automáticamente.
+
+## [2026-08-05] build | Dashboard real en /cuenta — segundo hallazgo: sistemas de identidad paralelos
+
+Probando el flujo, el usuario reportó que un análisis (usando la cuenta nueva.persona@example.com) no aparecía relacionado a su usuario. Investigación en la base de datos reveló dos cosas: (1) sí existe un análisis completado y bien vinculado (`asmt_user_id` correcto, con reporte generado); (2) había un segundo análisis con el email/nombre correctos pero `asmt_user_id` vacío.
+
+Causa raíz del (2): el usuario había usado "Mis evaluaciones" (navbar), el sistema viejo passwordless que se dejó intacto a propósito. Su botón "Analizar otra idea" (`startNewAssessmentFromHistory` en `src/app/mis-evaluaciones/actions.ts`) copia email/nombre/teléfono pero no tiene ninguna noción del sistema de cuentas nuevo — por diseño, ese código es anterior a hoy. `/mis-evaluaciones` y `/cuenta` son hoy dos sistemas de identidad completamente paralelos y desconectados.
+
+El usuario pidió: arreglar el dato suelto + agregar una lista simple en `/cuenta` ahora, sin esperar a Sprint 2. Se hizo: `UPDATE` puntual del assessment de prueba huérfano; `getUserAssessments()` (`src/app/cuenta/actions.ts`); `AccountAssessmentList` (`src/components/account/assessment-list.tsx`, mismo patrón visual que el `AssessmentList` del sistema viejo); ruta `/cuenta/evaluaciones/[id]` con el reporte completo, protegida por `asmt_user_id === user.user_id`; `/cuenta` ahora muestra la lista real en vez del placeholder.
+
+Verificado en navegador real contra la base de datos: login → `/cuenta` muestra la evaluación completada real (idea, fecha, recomendación "Validar antes de invertir") → clic → reporte completo de 12 secciones se renderiza correctamente en `/cuenta/evaluaciones/[id]`. `tsc` y `pnpm lint` limpios.
+
+No se tocó `/mis-evaluaciones` ni su botón "Analizar otra idea" — sigue sin poner `asmt_user_id`, eso queda para la migración completa de Sprint 2. Mientras tanto, cualquier análisis iniciado desde ahí seguirá quedando desligado de la cuenta nueva si el usuario también tiene sesión ahí en paralelo.
+
+Actualizado: `wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md` (sección nueva sobre el dashboard + causa raíz de los sistemas paralelos), `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (Sprint 1 ampliado de nuevo, nota de qué falta exactamente para Sprint 2).
+
+## [2026-08-05] build | Rediseño del panel /cuenta: navbar + sidebar tipo dashboard
+
+El usuario pidió rediseñar solo el área autenticada (`/cuenta`): navbar con marca a la izquierda y dropdown de usuario a la derecha (Perfil, Cerrar sesión) — confirmado por pregunta directa que el orden pedido originalmente estaba invertido por error de escritura — más un sidebar con "Análisis realizados" como único ítem por ahora. Páginas públicas (landing, registro, login, recuperar) explícitamente sin cambios.
+
+Implementado con un route group de Next.js (`src/app/cuenta/(dashboard)/`) para que solo el panel autenticado (`page.tsx`, `evaluaciones/[id]/page.tsx`, nuevo `perfil/page.tsx`) herede el nuevo layout, dejando `registro/`, `iniciar-sesion/`, `recuperar/` exactamente como estaban (mismo prefijo de URL `/cuenta`, layouts distintos). Nuevo layout centraliza el guard de autenticación. Nuevo primitivo de UI `src/components/ui/dropdown-menu.tsx` (primer uso de `@base-ui/react/menu` en el proyecto, mismo patrón que `sheet.tsx`). Nueva página de perfil, mínima y de solo lectura (nombre, correo, teléfono).
+
+Verificado en navegador real: navbar y sidebar correctos, dropdown abre con Perfil/Cerrar sesión, perfil muestra los datos de la cuenta, logout desde el dropdown funciona, el detalle de una evaluación sigue renderizando el reporte completo dentro del nuevo chrome, y las páginas públicas (`/cuenta/registro`, `/cuenta/iniciar-sesion`) siguen usando el header/footer de marketing sin ningún cambio. `tsc` y `pnpm lint` limpios.
+
+Creado: `wiki/arquitectura/dashboard-de-cuenta.md`. Actualizado: `wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md` (link cruzado), `index.md` (catálogo + gap de `/mis-evaluaciones` corregido, ya no dice "users sin vincular" porque eso se resolvió antes en la sesión).

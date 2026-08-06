@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
+                "file": "index.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "modulo-de-usuarios-y-autenticacion"
+              "title": "index"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
+                "file": "index.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Enlaces entrantes de modulo-de-usuarios-y-autenticacion"
+              "title": "Enlaces entrantes de index"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
+                "file": "index.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Enlaces salientes de modulo-de-usuarios-y-autenticacion"
+              "title": "Enlaces salientes de index"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
+                "file": "index.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Esquema de modulo-de-usuarios-y-autenticacion"
+              "title": "Esquema de index"
             }
           }
         ]
@@ -185,9 +185,10 @@
   },
   "active": "3191cec2ea06dd89",
   "lastOpenFiles": [
+    "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
+    "wiki/arquitectura/dashboard-de-cuenta.md",
     "wiki/arquitectura/stack-tecnico.md",
     "Sin título.canvas",
-    "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
     "wiki/arquitectura/historial-de-evaluaciones.md",
     "raw/notion/17-rubric-6-dimensiones.md",
     "wiki/producto/gaps-onboarding-vs-framework.md",

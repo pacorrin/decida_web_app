@@ -71,6 +71,7 @@ Verificado también (integración con onboarding, mismo día, contra la base de 
 - Flujo 1: clic real en "Analizar una idea" desde `/cuenta` → aterriza directo en "Cuéntanos tu idea de negocio" (paso `idea`), `asmt_user_id` correctamente poblado. Navegar por 3 páginas con el CTA visible sin hacer clic → 0 assessments nuevos (antes del fix: 3).
 - Flujo 2, correo con cuenta existente → mensaje + link a login con `next=/analizar` → login → retoma el onboarding automáticamente en `idea`, sin volver a pedir `contacto`.
 - Flujo 2, correo nuevo → cuenta creada (`user_email_verified_at` poblado de inmediato), sesión iniciada, assessment creado con `asmt_user_id` correcto → aterriza en `idea`.
+- Dashboard: login → `/cuenta` muestra la evaluación completada real de la cuenta (resumen de idea, fecha, "Validar antes de invertir") → clic en la tarjeta → `/cuenta/evaluaciones/[id]` renderiza el reporte completo (12 secciones: resumen ejecutivo, semáforos, análisis financiero, riesgos, recomendación final, etc.).
 
 ## Decisiones de diseño notables
 - **Passwordless → password, pero sin descartar la infraestructura de códigos.** En vez de construir un sistema de verificación nuevo desde cero, se generalizó el patrón ya usado por `history_access` (tabla `verification_codes` parametrizada por `purpose`). Menor superficie nueva, mismo modelo mental para quien lea el código.
@@ -98,14 +99,32 @@ El primer intento de Flujo 1 convirtió `/analizar` en un Route Handler que crea
 
 **Lección para futuras rutas de este tipo**: cualquier entry-point que deba "crear algo si no existe" debe vivir en un Server Action o Route Handler invocado explícitamente, nunca en el cuerpo de una página ni en un Route Handler GET que pueda ser objetivo de un `<Link>` en el resto de la app.
 
+## Dashboard de historial en `/cuenta` (mismo día, adelantado de Sprint 2)
+
+Al probar el flujo completo, el usuario detectó un segundo problema real, distinto del bug de prefetch: un análisis que había iniciado desde **"Mis evaluaciones"** (el sistema viejo, passwordless) aparecía en la base de datos con `asmt_email`/`asmt_name` correctos pero **`asmt_user_id` vacío**.
+
+**Causa raíz**: `/mis-evaluaciones` y `/cuenta` son hoy dos sistemas de identidad completamente paralelos y desconectados. El botón "Analizar otra idea" del sistema viejo (`startNewAssessmentFromHistory()` en `src/app/mis-evaluaciones/actions.ts`, sin tocar hoy) crea un assessment copiando `asmt_email`/`asmt_name`/`asmt_phone` de la evaluación anterior, pero no tiene ninguna noción de `users`/`asmt_user_id` — por diseño no podía tenerla, ese código es anterior a este módulo. Cualquier assessment iniciado desde ahí queda invisible para el sistema de cuentas nuevo, aunque el correo coincida.
+
+**Fix aplicado (parcial, con alcance acotado a pedido del usuario):**
+1. Se corrigió el dato huérfano puntual con un `UPDATE` directo (caso de prueba, no una migración general).
+2. Se construyó un **dashboard real de historial en `/cuenta`** — adelantado desde Sprint 2 porque, aunque se hubiera arreglado solo el dato, no había ningún lugar en la UI para verlo:
+   - `getUserAssessments(userId)` (`src/app/cuenta/actions.ts`) — evaluaciones completadas (`completed`/`report_generated` con reporte) filtradas por `asmt_user_id`, mismo patrón de query que `getHistoryAssessments` del sistema viejo.
+   - `AccountAssessmentList` (`src/components/account/assessment-list.tsx`) — lista de tarjetas con resumen de idea, fecha y recomendación; mismo diseño visual que `AssessmentList` del sistema viejo, pero apuntando a las rutas nuevas.
+   - `/cuenta/evaluaciones/[id]` — detalle del reporte completo, protegido por `getCurrentUser()` + verificación de que `assessment.asmt_user_id === user.user_id` (equivalente al chequeo por `hses_email` que usa `/mis-evaluaciones/[id]`, pero sobre la cuenta nueva).
+   - `/cuenta` ahora muestra la lista real en vez del placeholder "Muy pronto verás aquí...".
+
+**Lo que NO se arregló (deliberado, no es un bug pendiente sino alcance explícito de Sprint 2)**: el botón "Analizar otra idea" de `/mis-evaluaciones` sigue sin poner `asmt_user_id` — cualquier assessment nuevo iniciado desde ahí, con una cuenta nueva ya logueada en paralelo, seguirá quedando desligado hasta que `/mis-evaluaciones` se migre por completo al sistema de cuentas (Sprint 2). Mientras tanto: **usar siempre "Mi cuenta" → "Analizar una idea", no "Mis evaluaciones", para que el análisis quede ligado.**
+
 ## Qué falta (movido a Sprint 2, sigue pendiente)
-- Migrar `/mis-evaluaciones` para que use `getCurrentUser()` en vez del flujo de `history_sessions`.
-- Dashboard real de historial dentro de `/cuenta`.
+- Migrar `/mis-evaluaciones` para que use `getCurrentUser()` en vez del flujo de `history_sessions` (esto también resuelve el desligamiento descrito arriba de raíz).
+- Decidir si `/mis-evaluaciones` se retira del navbar mientras tanto, para no confundir a quien prueba con las dos rutas a la vez.
 
 Ver el detalle completo en [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 2]] y [[../producto/gaps-onboarding-vs-framework]].
 
 ## Pendiente que no es código
 Crear una cuenta real de Resend y configurar `RESEND_API_KEY` en el entorno de producción — sin eso, los correos de verificación y reset seguirán sin salir realmente, solo se ven en el log del servidor en desarrollo.
 
+> El navbar y sidebar del panel `/cuenta` (rediseño visual, mismo día) se documentan por separado en [[dashboard-de-cuenta]] para no sobrecargar esta página.
+
 ## Ver también
-[[../decisiones/plan-lanzamiento-60-90-dias]] · [[historial-de-evaluaciones]] · [[modelo-de-datos]] · [[stack-tecnico]] · [[manejo-de-errores-y-reembolsos]]
+[[../decisiones/plan-lanzamiento-60-90-dias]] · [[historial-de-evaluaciones]] · [[dashboard-de-cuenta]] · [[modelo-de-datos]] · [[stack-tecnico]] · [[manejo-de-errores-y-reembolsos]]

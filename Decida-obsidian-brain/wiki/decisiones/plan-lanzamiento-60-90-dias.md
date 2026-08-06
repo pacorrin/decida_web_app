@@ -90,7 +90,9 @@ Arrancó el mismo día en que se escribió el plan (5 de agosto), 5 días antes 
 - **Bug encontrado y corregido en el camino**: la primera versión de Flujo 1 escribía cookies desde un GET/Route Handler prefetcheable por cualquier `<Link>` de la app, creando assessments fantasma en cada prefetch silencioso. Corregido moviendo la mutación a un Server Action disparado solo por clic real. Detalle técnico completo en [[../arquitectura/modulo-de-usuarios-y-autenticacion#🔴 Bug encontrado y corregido en el camino]].
 - Los 3 sub-flujos verificados contra la base de datos real (no solo la UI): cuenta existente, cuenta nueva, y usuario ya logueado.
 
-**Lo que sigue quedando para Sprint 2**: migrar `/mis-evaluaciones` a la cuenta con contraseña (dashboard real de historial).
+**Ampliado de nuevo el mismo día — dashboard real en `/cuenta`**: al probar, el usuario encontró que un análisis iniciado desde el sistema viejo (`/mis-evaluaciones`) no aparecía ligado a su cuenta nueva. Causa raíz: `/mis-evaluaciones` y `/cuenta` son hoy dos sistemas de identidad paralelos y desconectados — el botón "Analizar otra idea" del sistema viejo no sabe nada de `users`/`asmt_user_id`. Se corrigió el dato de prueba puntual y, como tampoco había ningún lugar en la UI para ver evaluaciones aunque estuvieran bien ligadas, se construyó `/cuenta` con lista real de evaluaciones completadas + `/cuenta/evaluaciones/[id]` con el reporte completo — esto también estaba asignado a Sprint 2. Detalle completo en [[../arquitectura/modulo-de-usuarios-y-autenticacion#Dashboard de historial en /cuenta (mismo día, adelantado de Sprint 2)]].
+
+**Lo que sigue quedando para Sprint 2**: migrar `/mis-evaluaciones` por completo al sistema de cuentas (resuelve el desligamiento de raíz), y decidir si se retira del navbar mientras tanto para no confundir. Mientras Sprint 2 no llegue: usar siempre "Mi cuenta" → "Analizar una idea", no "Mis evaluaciones".
 
 **Pendiente de decisión del usuario, no de código**: crear la cuenta real de Resend y poner `RESEND_API_KEY` en `.env` de producción antes del lanzamiento — sin eso, ningún correo real sale, solo se ve en el log del servidor.
 

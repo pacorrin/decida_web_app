@@ -23,6 +23,7 @@ import {
 import { createUserSession, clearUserSessionCookie } from "@/lib/auth/session-server";
 import { verifyPassword } from "@/lib/auth/password";
 import { sendEmail } from "@/lib/email/resend";
+import { prisma } from "@/lib/prisma";
 import { verificationCodeEmail } from "@/lib/email/templates";
 
 export type AuthActionState = {
@@ -263,4 +264,23 @@ export async function resetPassword(
     message: "Contraseña actualizada. Ya puedes iniciar sesión.",
     step: "form",
   };
+}
+
+export async function getUserAssessments(userId: string) {
+  return prisma.assessments.findMany({
+    where: {
+      asmt_user_id: userId,
+      asmt_status: { in: ["completed", "report_generated"] },
+      assessment_report: { isNot: null },
+    },
+    include: {
+      business_idea: true,
+      assessment_score: true,
+      assessment_report: true,
+    },
+    orderBy: [
+      { asmt_report_generated_at: "desc" },
+      { asmt_created_at: "desc" },
+    ],
+  });
 }
