@@ -72,6 +72,42 @@ export async function requestAuthCode(
   return { success: true, code };
 }
 
+/**
+ * Checks a code without consuming it. Used when the flow needs to confirm the
+ * code on one screen and only spend it on a later screen (e.g. password reset:
+ * enter code → choose new password). `verifyAuthCode` still marks it used at the
+ * final step.
+ */
+export async function checkAuthCode(
+  email: string,
+  code: string,
+  purpose: AuthCodePurpose
+): Promise<{ success: true } | { success: false; message: string }> {
+  const identifier = normalizeEmail(email);
+  const normalizedCode = code.trim();
+  const now = new Date();
+
+  const record = await prisma.verification_codes.findFirst({
+    where: {
+      vc_identifier: identifier,
+      vc_method: AUTH_METHOD,
+      vc_purpose: purpose,
+      vc_code: normalizedCode,
+      vc_used_at: null,
+      vc_expires_at: { gt: now },
+    },
+  });
+
+  if (!record) {
+    return {
+      success: false,
+      message: "Código inválido o expirado. Solicita uno nuevo.",
+    };
+  }
+
+  return { success: true };
+}
+
 export async function verifyAuthCode(
   email: string,
   code: string,

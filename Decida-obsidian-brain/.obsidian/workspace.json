@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "index.md",
+                "file": "wiki/decisiones/plan-lanzamiento-60-90-dias.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "index"
+              "title": "plan-lanzamiento-60-90-dias"
             }
           }
         ]
@@ -185,6 +185,8 @@
   },
   "active": "3191cec2ea06dd89",
   "lastOpenFiles": [
+    "wiki/decisiones/evolucion-del-producto.md",
+    "index.md",
     "wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md",
     "wiki/arquitectura/dashboard-de-cuenta.md",
     "wiki/arquitectura/stack-tecnico.md",
@@ -194,7 +196,6 @@
     "wiki/producto/gaps-onboarding-vs-framework.md",
     "CLAUDE.md",
     "wiki/decisiones/plan-lanzamiento-60-90-dias.md",
-    "index.md",
     "wiki/framework/dimensiones-de-viabilidad.md",
     "wiki/producto/roadmap-y-backlog.md",
     "wiki/reuniones/minutas.md",

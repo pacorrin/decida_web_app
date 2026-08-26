@@ -1,7 +1,7 @@
 ---
 type: product
 tags: [decida, onboarding, gaps, scoring, critico]
-updated: 2026-08-05
+updated: 2026-08-26
 ---
 
 # Gaps del onboarding actual vs. el framework de 6 dimensiones
@@ -38,6 +38,7 @@ Generado para [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 2]] — "pulir 
 | Red flag "inversión > pérdida aceptable" | ❌ Ídem |
 | Escenarios pesimista/base/optimista | ❌ Solo un punto de estimación (`estimatedMonthlySales` único) |
 | Modelo de ingreso (único/recurrente/suscripción/proyecto/comisión) | ❌ No se pregunta — afecta directamente la lectura de margen y LTV |
+| Productos/servicios a vender, cada uno con su precio | ❌ `evaluationFinancialSchema` captura un único `price`. Falta una sección que liste varios productos/servicios con su precio (pedido del usuario, 2026-08-26). Al implementar, decidir si absorbe o complementa "modelo de ingreso" y "ticket/frecuencia" |
 
 ### 3. Viabilidad comercial (25%) — funcional pero con menos granularidad que el diseño original
 | Rubric/criterios pide | Estado en código |
@@ -45,6 +46,7 @@ Generado para [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 2]] — "pulir 
 | ¿Ya habló con clientes? | ⚠️ Capturado pero degradado a `true/false`. El Question Bank original (05) tenía niveles: 0, 1-3, 4-10, >10, ya tengo clientes — esa granularidad es señal fuerte para el semáforo y se perdió |
 | Nivel de competencia | ✅ `competitionLevel` |
 | Canal de adquisición | ✅ `acquisitionChannel` |
+| Costo de adquisición de clientes (CAC) | ❌ Solo se captura el *canal*, no su *costo*. Falta capturar CAC estimado (o gasto de marketing esperado ÷ clientes esperados) para cruzarlo con ticket/margen y leer CAC vs. LTV (pedido del usuario, 2026-08-26) |
 | Diferenciación vs. alternativas | ❌ No se pregunta explícitamente |
 | Ticket y frecuencia de compra | ❌ No se pregunta (relacionado con el gap de "modelo de ingreso" arriba) |
 
@@ -86,6 +88,10 @@ Horas/semana, horario, horizonte de ingreso esperado: todos capturados y usados 
 5. Restaurar granularidad de "¿habló con clientes?" (niveles, no solo sí/no).
 6. Pregunta de modelo de ingreso (único/recurrente/suscripción) — mejora la interpretación financiera y comercial a la vez.
 7. Usar `uncertaintyComfortScore` y `processComfortScore` en el cálculo (ya se capturan, solo falta conectarlos).
+
+**Pedidos por el usuario el 2026-08-26 (además del rubric):**
+10. Capturar costo de adquisición de clientes (CAC) — hoy solo se pregunta el canal, no su costo.
+11. Sección de productos/servicios a vender con su precio cada uno — hoy solo hay un `price` único. Ver detalle en [[../decisiones/plan-lanzamiento-60-90-dias#Datos de negocio adicionales a capturar en el onboarding (agregado 2026-08-26)]].
 
 **Puede esperar a una iteración posterior:**
 8. Pregunta dedicada de escalabilidad real del negocio (hoy es proxy débil pero no está "roto", solo incompleto).

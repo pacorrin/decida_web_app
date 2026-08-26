@@ -6,6 +6,7 @@ import {
   verifySignupSchema,
   logInSchema,
   requestResetSchema,
+  verifyResetCodeSchema,
   resetPasswordSchema,
 } from "@/lib/auth/schemas";
 import { parseFieldErrors, formDataToValues } from "@/lib/onboarding/schemas";
@@ -17,6 +18,7 @@ import {
 } from "@/lib/auth/users";
 import {
   requestAuthCode,
+  checkAuthCode,
   verifyAuthCode,
   normalizeEmail,
 } from "@/lib/auth/verification";
@@ -31,7 +33,7 @@ export type AuthActionState = {
   message?: string;
   fieldErrors?: Record<string, string[]>;
   values?: Record<string, string | string[]>;
-  step?: "form" | "verify";
+  step?: "form" | "verify" | "code" | "password";
 };
 
 export async function signUp(
@@ -214,7 +216,7 @@ export async function requestPasswordReset(
     success: true,
     message:
       "Si el correo tiene una cuenta, enviamos un código para restablecer tu contraseña.",
-    step: "verify",
+    step: "code",
   };
 
   if (!user) return genericState;
@@ -222,10 +224,46 @@ export async function requestPasswordReset(
   const codeResult = await requestAuthCode(email, "password_reset");
   if (codeResult.success) {
     const { subject, html } = verificationCodeEmail(codeResult.code, "reset");
-    await sendEmail({ to: email, subject, html });
+    try {
+      await sendEmail({ to: email, subject, html });
+    } catch (err) {
+      // Don't surface delivery failures here — that would both leak whether the
+      // account exists and crash the reset screen. The user can retry / re-request.
+      console.error("[reset] no se pudo enviar el código:", err);
+    }
   }
 
   return genericState;
+}
+
+/**
+ * Middle step of the 3-screen reset flow: confirm the code is valid without
+ * spending it. The code is only marked used later, in `resetPassword`.
+ */
+export async function verifyResetCode(
+  _prev: AuthActionState,
+  formData: FormData
+): Promise<AuthActionState> {
+  const parsed = verifyResetCodeSchema.safeParse({
+    email: formData.get("email"),
+    code: formData.get("code"),
+  });
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      fieldErrors: parseFieldErrors(parsed.error),
+      step: "code",
+    };
+  }
+
+  const { email, code } = parsed.data;
+  const result = await checkAuthCode(email, code, "password_reset");
+  if (!result.success) {
+    return { success: false, message: result.message, step: "code" };
+  }
+
+  return { success: true, step: "password" };
 }
 
 export async function resetPassword(
@@ -242,14 +280,15 @@ export async function resetPassword(
     return {
       success: false,
       fieldErrors: parseFieldErrors(parsed.error),
-      step: "verify",
+      step: "password",
     };
   }
 
   const { email, code, password } = parsed.data;
   const result = await verifyAuthCode(email, code, "password_reset");
   if (!result.success) {
-    return { success: false, message: result.message, step: "verify" };
+    // Code expired or was already spent between screens — send them back to re-request.
+    return { success: false, message: result.message, step: "code" };
   }
 
   const user = await findUserByEmail(email);

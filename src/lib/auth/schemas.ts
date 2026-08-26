@@ -20,6 +20,11 @@ export const requestResetSchema = z.object({
   email: z.string().email("Ingresa un correo válido"),
 });
 
+export const verifyResetCodeSchema = z.object({
+  email: z.string().email("Ingresa un correo válido"),
+  code: z.string().length(6, "El código debe tener 6 dígitos"),
+});
+
 export const resetPasswordSchema = z.object({
   email: z.string().email("Ingresa un correo válido"),
   code: z.string().length(6, "El código debe tener 6 dígitos"),
@@ -30,4 +35,5 @@ export type SignUpInput = z.infer<typeof signUpSchema>;
 export type VerifySignupInput = z.infer<typeof verifySignupSchema>;
 export type LogInInput = z.infer<typeof logInSchema>;
 export type RequestResetInput = z.infer<typeof requestResetSchema>;
+export type VerifyResetCodeInput = z.infer<typeof verifyResetCodeSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

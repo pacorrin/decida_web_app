@@ -13,7 +13,7 @@ export function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-56 shrink-0 border-r border-border/80 py-8 pr-4 sm:block">
+    <aside className="hidden w-56 shrink-0 self-stretch border-r border-border/80 py-8 pr-4 sm:block">
       <nav aria-label="Navegación de la cuenta" className="space-y-1">
         {NAV_ITEMS.map((item) => {
           const active =

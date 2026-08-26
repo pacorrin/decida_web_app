@@ -109,3 +109,59 @@ Implementado con un route group de Next.js (`src/app/cuenta/(dashboard)/`) para 
 Verificado en navegador real: navbar y sidebar correctos, dropdown abre con Perfil/Cerrar sesión, perfil muestra los datos de la cuenta, logout desde el dropdown funciona, el detalle de una evaluación sigue renderizando el reporte completo dentro del nuevo chrome, y las páginas públicas (`/cuenta/registro`, `/cuenta/iniciar-sesion`) siguen usando el header/footer de marketing sin ningún cambio. `tsc` y `pnpm lint` limpios.
 
 Creado: `wiki/arquitectura/dashboard-de-cuenta.md`. Actualizado: `wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md` (link cruzado), `index.md` (catálogo + gap de `/mis-evaluaciones` corregido, ya no dice "users sin vincular" porque eso se resolvió antes en la sesión).
+
+## [2026-08-06] verify | RESEND_API_KEY configurado — encontrado el siguiente bloqueante real
+
+El usuario configuró `RESEND_API_KEY` en `.env` y preguntó qué falta para cerrar Sprint 1. Se verificó con una prueba real (registro con correo nuevo) en vez de asumir que "tener la key" era suficiente: la llamada a Resend efectivamente ocurre (ya no es el fallback de consola), pero falló con `422 validation_error` — "Invalid `to` field... use our testing email address".
+
+Causa: `RESEND_FROM_EMAIL` sigue en el placeholder de `.env.example` (`Decida <onboarding@decida.app>`), y `decida.app` no está verificado como dominio de envío en la cuenta de Resend. Con un dominio sin verificar, Resend solo permite enviar a la propia casilla de la cuenta — cualquier registro con un correo real de usuario fallará hasta que se verifique un dominio (o se use temporalmente el remitente de pruebas de Resend para seguir probando sin esperar el DNS).
+
+Actualizado: `wiki/decisiones/plan-lanzamiento-60-90-dias.md` y `wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md` (sección "Pendiente que no es código") con el hallazgo y los dos caminos (remitente de pruebas ahora vs. dominio verificado antes de Sprint 4/lanzamiento).
+
+## [2026-08-06] verify | Remitente de pruebas de Resend configurado y su restricción real confirmada
+
+El usuario preguntó dónde encontrar el "correo remitente de pruebas" de Resend. Se confirmó en la documentación oficial de Resend (vía WebFetch/WebSearch, no de memoria) que no es algo que se busque en el dashboard — es una dirección fija que Resend documenta: `onboarding@resend.dev`. Se actualizó `RESEND_FROM_EMAIL` en `.env` a `Decida <onboarding@resend.dev>`.
+
+Se probó en vivo (registro con correo de prueba distinto al de la cuenta de Resend) y falló igual que antes, con el mismo error 422. Se confirmó vía documentación oficial de Resend (https://resend.com/docs/knowledge-base/403-error-resend-dev-domain) que esto es intencional: `onboarding@resend.dev` solo permite enviar a la dirección de correo con la que se creó la cuenta de Resend — cualquier otro destinatario falla hasta que se verifique un dominio propio en resend.com/domains.
+
+Actualizado: `wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md` y `wiki/decisiones/plan-lanzamiento-60-90-dias.md` con la restricción confirmada y el paso siguiente (verificar dominio propio, necesario antes de la beta cerrada de Sprint 4).
+
+## [2026-08-06] verify | Primer correo transaccional real enviado con éxito
+
+A pedido del usuario, se probó un registro real con `fcastellanosduarte@gmail.com` (el correo de su cuenta de Resend). Sin errores en el servidor; la UI avanzó correctamente al paso "Confirma tu correo" — confirma que Resend aceptó y envió el correo de verificación de verdad, no el fallback de consola. Este es el primer correo transaccional real que sale de la app.
+
+No se completó el registro (no se tiene acceso al inbox del usuario para leer el código de 6 dígitos) — queda en el paso de verificación, a la espera de que el usuario revise su correo si quiere terminarlo.
+
+Actualizado: `wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md` con la confirmación de envío real.
+
+## [2026-08-26] build | Puntos extra al Sprint 1 — recuperación de contraseña en 3 pantallas
+
+El usuario pidió agregar puntos nuevos al Sprint 1. Primero: mover el ingreso del código de verificación a su propia pantalla en el flujo de recuperación de contraseña. Elegido (por pregunta directa) el esquema de 3 pantallas: correo → código → nueva contraseña, donde cada tarjeta reemplaza a la anterior en vez de apilarse.
+
+Implementado en el código de la app: `checkAuthCode` en `src/lib/auth/verification.ts` (valida un código sin marcarlo usado — el `verifyAuthCode` que lo consume sigue corriendo solo en el paso final), acción `verifyResetCode` + `verifyResetCodeSchema`, `ResetPasswordForm` reescrito como wizard de 3 pasos con estado `email|code|password`. Hardening incidental encontrado probando: `requestPasswordReset` hacía `throw` si `sendEmail` fallaba (el `422` de Resend con destinatario que no es la casilla de la cuenta) → error 500 + fuga de si el correo existe; ahora va en `try/catch`. `signUp` no se tocó.
+
+Verificado en navegador real contra la BD local: flujo completo con `fcastellanosduarte@gmail.com` (código leído de la BD) → login con la contraseña nueva entra a `/cuenta`; el código se marca `vc_used_at` solo tras el paso final; código incorrecto → error inline sin avanzar; "Usar otro correo" → vuelve al paso 1; correo no entregable → ya no da 500. `tsc` y `pnpm lint` limpios.
+
+Nota operativa: la prueba dejó la contraseña de `fcastellanosduarte@gmail.com` como `DecidaReset2026!` en la BD local de desarrollo.
+
+Actualizado: `wiki/arquitectura/modulo-de-usuarios-y-autenticacion.md` (sección nueva + fila de la tabla de rutas + decisión de diseño), `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (subsección "Puntos extra agregados al Sprint 1", con el punto 2 abierto a la espera de que el usuario liste los demás). Cambios de código sin commitear al cierre.
+
+## [2026-08-26] build | Sprint 1 extra — paso final del reset termina en card de confirmación, no en formulario
+
+Segundo ajuste al mismo flujo: el usuario pidió que la última pantalla (nueva contraseña), una vez cambiada la contraseña, reemplace el formulario por una alerta visible con ícono y una card estética, ya que el input y el botón dejan de ser necesarios.
+
+Implementado en `src/components/auth/reset-password-form.tsx`: el estado `step === "password"` se bifurca — si `resetState.success`, se renderiza una `Card` (`role="status"`, tinte esmeralda `border-emerald-500/30 bg-emerald-50/40`) con un badge circular con ring y el ícono `CheckCircle2`, título "Contraseña actualizada", texto de apoyo y el único CTA "Ir a iniciar sesión"; si no, el formulario de siempre. Mismo lenguaje visual que las cards positivas de `/ejemplo`. Sin cambios de servidor.
+
+Verificado en navegador: flujo completo hasta el paso 3 → la card de éxito aparece y el input + botón "Actualizar contraseña" desaparecen. Reconfirmado de paso que el blindaje de `requestPasswordReset` funciona: reset para `nueva.persona@example.com` (verificado, correo que Resend rechaza) avanza al paso de código sin 500. `tsc` y `pnpm lint` limpios. Código sin commitear.
+
+## [2026-08-26] decision | Sprint 2 — agregar corrección de errores del paso "Así entendimos tu idea"
+
+El usuario pidió agregar al Sprint 2 el punto de corregir errores en el paso `confirmacion` del onboarding (`/analizar/confirmacion`, "Así entendimos tu idea"). Solo documentación, sin código todavía — los bugs concretos quedan pendientes de que el usuario los liste.
+
+Actualizado `wiki/decisiones/plan-lanzamiento-60-90-dias.md`: fila del Sprint 2 en la tabla, subsección nueva "Corregir errores del paso «Así entendimos tu idea»" con las rutas de código relevantes (`src/components/onboarding/idea-confirmation.tsx`, `src/lib/onboarding/copy.ts`, `src/lib/ai/prompts/idea-summary.ts` e `idea-refinement.ts`) y un hueco para el desglose de bugs, y el checkpoint del 6 sep.
+
+## [2026-08-26] decision | Sprint 2 — 2 datos de negocio más a capturar en el onboarding: CAC y catálogo de productos/precios
+
+El usuario agregó dos puntos más al Sprint 2: (1) capturar información para el costo de adquisición de clientes (CAC) — hoy el onboarding solo pregunta el canal (`acquisitionChannel`), no su costo; (2) una sección de productos/servicios que se piensan vender con su precio cada uno — hoy `evaluationFinancialSchema` tiene un único `price`.
+
+Actualizado: `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (fila del Sprint 2 + subsección nueva "Datos de negocio adicionales a capturar en el onboarding", con las rutas de código a revisar y la nota de conectarlos al scoring, no dejarlos como dato muerto), `wiki/producto/gaps-onboarding-vs-framework.md` (fila de CAC en dimensión 3 comercial, fila de productos/precios en dimensión 2 financiera, ítems 10-11 en el resumen priorizado). Solo documentación, sin código.

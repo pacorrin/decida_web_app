@@ -1,7 +1,7 @@
 ---
 type: decision-log
 tags: [decida, roadmap, lanzamiento, gtm, usuarios]
-updated: 2026-08-05
+updated: 2026-08-26
 ---
 
 # Plan de lanzamiento — 60/90 días
@@ -66,7 +66,7 @@ Esto conecta directamente con el nivel 2 de éxito de producto de `PRODUCT.md` (
 | Sprint | Semanas | Fechas objetivo | Foco | Entregables | Estado |
 |---|---|---|---|---|---|
 | 1 | 1-2 | ~~10 ago – 23 ago~~ **inició 5 ago** 2026 | Fundamentos de cuenta | Email transaccional funcionando, tabla `users`, registro/login/reset de password | 🟦 En curso (arrancó 5 días antes de lo previsto) |
-| 2 | 3-4 | 24 ago – 6 sep 2026 | Dashboard de usuario + pulir onboarding del análisis | ~~Assessments vinculados a cuenta~~ (adelantado a Sprint 1, ver abajo), `/mis-evaluaciones` como dashboard autenticado de historial, **y cerrar los gaps del onboarding vs. el framework de 6 dimensiones** (ver detalle abajo) | ⬜ Pendiente |
+| 2 | 3-4 | 24 ago – 6 sep 2026 | Dashboard de usuario + pulir onboarding del análisis | ~~Assessments vinculados a cuenta~~ (adelantado a Sprint 1, ver abajo), `/mis-evaluaciones` como dashboard autenticado de historial, **cerrar los gaps del onboarding vs. el framework de 6 dimensiones**, **corregir errores del paso "Así entendimos tu idea"**, y **capturar CAC + catálogo de productos/precios** (ver detalle abajo) | ⬜ Pendiente |
 | 3 | 5-6 | 7 sep – 20 sep 2026 | Hardening independiente de pago | PDF real, analytics del funnel, monitoreo de errores, landing cerrada | ⬜ Pendiente |
 | 4 | 7-9 | 21 sep – 11 oct 2026 | Beta cerrada con cuentas reales | Grupo pequeño con registro real (pago sigue simulado), feedback sobre valor del historial/cuenta, **en paralelo: análisis y decisión del modelo de pricing** (trabajo del usuario, no de desarrollo) | ⬜ Pendiente |
 | 5 | 10-12 | 12 oct – 1 nov 2026 | Cierre y lanzamiento | Integrar pago real según el modelo ya decidido, panel admin mínimo (ahora con volumen real que gestionar), lanzamiento público controlado | ⬜ Pendiente |
@@ -94,11 +94,18 @@ Arrancó el mismo día en que se escribió el plan (5 de agosto), 5 días antes 
 
 **Lo que sigue quedando para Sprint 2**: migrar `/mis-evaluaciones` por completo al sistema de cuentas (resuelve el desligamiento de raíz), y decidir si se retira del navbar mientras tanto para no confundir. Mientras Sprint 2 no llegue: usar siempre "Mi cuenta" → "Analizar una idea", no "Mis evaluaciones".
 
-**Pendiente de decisión del usuario, no de código**: crear la cuenta real de Resend y poner `RESEND_API_KEY` en `.env` de producción antes del lanzamiento — sin eso, ningún correo real sale, solo se ve en el log del servidor.
+### Puntos extra agregados al Sprint 1 (2026-08-26)
+
+Pulido de UX/robustez sobre lo ya entregado, a pedido del usuario:
+
+1. **Recuperación de contraseña en 3 pantallas** ✅ — el flujo de `/cuenta/recuperar` pasó de una vista con tarjetas apiladas (código + contraseña juntos) a un wizard de 3 pasos que se reemplazan: correo → código → nueva contraseña. Implicó una acción nueva `verifyResetCode` y un helper `checkAuthCode` que valida el código sin gastarlo (solo se consume en el paso final). De paso se blindó `requestPasswordReset` para que un fallo de envío de correo no tire un 500 ni filtre si el correo existe. El paso final, al éxito, ya no muestra formulario: lo reemplaza una card de confirmación esmeralda con ícono (`CheckCircle2`) y un único CTA "Ir a iniciar sesión". Verificado end-to-end en navegador. Detalle en [[../arquitectura/modulo-de-usuarios-y-autenticacion#Recuperación de contraseña en 3 pantallas (2026-08-26)]].
+2. _(pendiente de que el usuario liste los demás puntos)_
+
+**Pendiente de decisión del usuario, no de código**: ~~crear la cuenta real de Resend y poner `RESEND_API_KEY`~~ — hecho el 2026-08-06. ~~`RESEND_FROM_EMAIL` en placeholder~~ — actualizado a `onboarding@resend.dev` (remitente de pruebas oficial de Resend, confirmado en su documentación). **Restricción real confirmada en vivo**: ese remitente solo permite enviar a la dirección de correo con la que se creó la cuenta de Resend — cualquier otro destinatario falla (`422`/`403`, intencional por parte de Resend, no un bug). Para registrar cuentas con cualquier correo (necesario antes de la beta cerrada del Sprint 4) hay que verificar un dominio propio en resend.com/domains. Detalle completo en [[../arquitectura/modulo-de-usuarios-y-autenticacion#Pendiente que no es código]].
 
 ## Checkpoints clave (fechas duras para revisar tú solo si vas bien)
 - **2026-08-23** — Sprint 1 debe estar cerrado: cuentas y email funcionando de verdad.
-- **2026-09-06** — Sprint 2 cerrado: dashboard de historial en producción + onboarding pulido con las preguntas críticas del rubric recuperadas.
+- **2026-09-06** — Sprint 2 cerrado: dashboard de historial en producción + onboarding pulido con las preguntas críticas del rubric recuperadas + errores del paso "Así entendimos tu idea" corregidos.
 - **2026-09-20** — Sprint 3 cerrado: PDF, analytics y monitoreo listos; landing commiteada. Producto listo para invitar gente real.
 - **2026-10-11** — Beta cerrada corrida y con feedback recogido; modelo de pricing ya decidido.
 - **2026-11-01** — Fin de la ventana de 90 días: pago real integrado, lanzamiento público controlado activo. Meta cualitativa/cuantitativa: retención visible en cuentas (Sprints 1-4) + primeros clientes pagados reales (Sprint 5), según el criterio ya explicado en la nota de abajo.
@@ -119,6 +126,21 @@ Auditoría completa campo por campo contra [[../../raw/notion/17-rubric-6-dimens
 7. Conectar al scoring los datos que ya se capturan pero se ignoran hoy (`uncertaintyComfortScore`, `processComfortScore`).
 
 **Se puede posponer a una iteración posterior** (no bloquea ni rompe nada hoy): pregunta dedicada de escalabilidad real del negocio, restricciones personales, diferenciación explícita, ticket/frecuencia de compra. Detalle completo en [[../producto/gaps-onboarding-vs-framework]].
+
+### Corregir errores del paso "Así entendimos tu idea" (agregado 2026-08-26)
+
+Punto agregado a pedido del usuario. El paso `confirmacion` del onboarding (`/analizar/confirmacion`, título "Así entendimos tu idea" en `src/lib/onboarding/copy.ts`; UI en `src/components/onboarding/idea-confirmation.tsx`; resumen/refinamiento IA en `src/lib/ai/prompts/idea-summary.ts` e `idea-refinement.ts`) tiene errores que hay que corregir en este sprint.
+
+_Errores concretos pendientes de que el usuario los detalle_ — al recibir el listado, desglosar aquí cada bug con: qué pasa, cómo reproducirlo, y si es de UI, de la llamada a IA (incl. el fallback determinístico cuando no hay `OPENAI_API_KEY`), o de persistencia del resumen/aclaraciones.
+
+### Datos de negocio adicionales a capturar en el onboarding (agregado 2026-08-26)
+
+Dos campos/secciones nuevas pedidas por el usuario para este sprint, además de los gaps del rubric ya listados arriba:
+
+1. **Costo de adquisición de clientes (CAC).** Hoy el onboarding captura el *canal* de adquisición (`acquisitionChannel` en `evaluationMarketSchema`) pero nada sobre su *costo*. Agregar captura de CAC estimado (o los insumos para estimarlo: gasto de marketing esperado ÷ clientes esperados) para poder cruzarlo con el ticket/ingreso y leer la relación CAC vs. margen/LTV. Alimenta [[../framework/dimensiones-de-viabilidad|Viabilidad comercial y financiera]]. Ver gap en [[../producto/gaps-onboarding-vs-framework]].
+2. **Sección de productos/servicios a vender y sus precios.** Hoy `evaluationFinancialSchema` captura un único `price`. El usuario quiere una sección donde se listen los productos o servicios que la persona piensa vender, cada uno con su precio, en vez de un solo número. Se relaciona con los puntos ya listados de "modelo de ingreso" y "ticket/frecuencia de compra" — al implementarlo, decidir si esta sección los absorbe o los complementa. Alimenta [[../framework/dimensiones-de-viabilidad|Viabilidad financiera]].
+
+Al implementarlos: revisar `src/lib/onboarding/schemas.ts`, `src/lib/onboarding/steps.ts`, `prisma/schema.prisma` (ver si ya hay columnas aprovechables o hay que migrar) y `src/lib/scoring/types.ts` para conectarlos al cálculo, no solo capturarlos como dato muerto (mismo error que `uncertaintyComfortScore`/`processComfortScore`).
 
 ## Estrategias comerciales (sin cambios respecto a la versión anterior)
 1. `/ejemplo` como imán de leads.

@@ -12,9 +12,9 @@ export default async function DashboardLayout({
   if (!user) redirect("/cuenta/iniciar-sesion");
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-dvh flex-col bg-background">
       <DashboardNavbar user={user} />
-      <div className="mx-auto flex max-w-6xl">
+      <div className="mx-auto flex w-full max-w-6xl flex-1">
         <DashboardSidebar />
         <main
           id="contenido-principal"

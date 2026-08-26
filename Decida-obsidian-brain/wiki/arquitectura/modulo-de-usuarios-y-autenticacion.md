@@ -1,7 +1,7 @@
 ---
 type: arquitectura
 tags: [decida, usuarios, autenticacion, sprint-1, onboarding]
-updated: 2026-08-05
+updated: 2026-08-26
 ---
 
 # Módulo de usuarios y autenticación
@@ -59,7 +59,7 @@ El enum `verification_purpose` se extendió de un solo valor (`history_access`) 
 |---|---|
 | `/cuenta/registro` | Nombre + email + contraseña → código de verificación por correo → confirma y crea sesión |
 | `/cuenta/iniciar-sesion` | Email + contraseña → sesión |
-| `/cuenta/recuperar` | Solicita código de reset (mensaje genérico, no revela si el email existe) → nueva contraseña |
+| `/cuenta/recuperar` | Flujo de 3 pantallas (una tarjeta reemplaza a la anterior, ya no se apilan): (1) correo → (2) ingresar el código de 6 dígitos → (3) elegir nueva contraseña. Mensaje genérico, no revela si el email existe. Ver [[#Recuperación de contraseña en 3 pantallas (2026-08-26)]] |
 | `/cuenta` | Panel protegido — redirige a `/cuenta/iniciar-sesion` si no hay sesión. Hoy solo saluda al usuario y ofrece "Analizar una idea" / "Cerrar sesión"; el historial real de evaluaciones es Sprint 2 |
 
 Componentes en `src/components/auth/` (`SignUpForm`, `SignInForm`, `ResetPasswordForm`) siguen el mismo patrón de UI que el resto del onboarding: `useActionState` + `FieldGroup`/`Field`/`FieldError` de `src/components/ui/field.tsx`, consistente con [[../marca/sistema-de-diseno]].
@@ -76,7 +76,7 @@ Verificado también (integración con onboarding, mismo día, contra la base de 
 ## Decisiones de diseño notables
 - **Passwordless → password, pero sin descartar la infraestructura de códigos.** En vez de construir un sistema de verificación nuevo desde cero, se generalizó el patrón ya usado por `history_access` (tabla `verification_codes` parametrizada por `purpose`). Menor superficie nueva, mismo modelo mental para quien lea el código.
 - **Reintentar registro con email no verificado sobreescribe la contraseña**, no crea un usuario duplicado — si alguien empieza el registro y no confirma el código, puede volver a intentarlo con el mismo email.
-- **Mensajes de reset de contraseña son genéricos** ("si el correo tiene una cuenta...") para no filtrar qué emails están registrados.
+- **Mensajes de reset de contraseña son genéricos** ("si el correo tiene una cuenta...") para no filtrar qué emails están registrados. Desde el 2026-08-26 el reset es un wizard de 3 pantallas (correo → código → contraseña) — ver [[#Recuperación de contraseña en 3 pantallas (2026-08-26)]].
 - **`/cuenta` es la única ruta protegida hoy.** `/mis-evaluaciones` (el flujo passwordless viejo) sigue existiendo sin cambios — su migración a este sistema de cuentas es Sprint 2, no se tocó en este sprint para mantener el cambio acotado y revisable.
 
 ## Integración con el onboarding (mismo día)
@@ -122,9 +122,40 @@ Al probar el flujo completo, el usuario detectó un segundo problema real, disti
 Ver el detalle completo en [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 2]] y [[../producto/gaps-onboarding-vs-framework]].
 
 ## Pendiente que no es código
-Crear una cuenta real de Resend y configurar `RESEND_API_KEY` en el entorno de producción — sin eso, los correos de verificación y reset seguirán sin salir realmente, solo se ven en el log del servidor en desarrollo.
+- ~~Crear una cuenta real de Resend y configurar `RESEND_API_KEY`~~ — hecho el 2026-08-06.
+- ~~`RESEND_FROM_EMAIL` en el placeholder~~ — actualizado el 2026-08-06 a `Decida <onboarding@resend.dev>`, el remitente de pruebas oficial de Resend (no es algo que se "encuentra" en el dashboard — es una dirección fija que Resend documenta: [resend.com/docs/knowledge-base/403-error-resend-dev-domain](https://resend.com/docs/knowledge-base/403-error-resend-dev-domain)).
+- **Restricción confirmada en vivo (2026-08-06)**: `onboarding@resend.dev` solo permite enviar **a la dirección de correo con la que se creó la cuenta de Resend** — cualquier otro destinatario da `422/403`. Confirmado probando un registro con un correo de prueba cualquiera (falló) tras cambiar el remitente. Esto es intencional por parte de Resend (protege reputación de dominio durante pruebas), no un bug de la app.
+- **Envío real confirmado (2026-08-06)**: registro de prueba con `fcastellanosduarte@gmail.com` (el correo de la cuenta de Resend del usuario) — sin errores en el servidor, la UI avanzó al paso de código de verificación. Primer correo transaccional real que sale de la app fuera del log de consola de desarrollo.
+- **Siguiente paso real, no es código**: para poder registrar cuentas con *cualquier* correo (lo que va a necesitar cualquier prueba real con más de una persona, y por supuesto producción), hay que verificar un dominio propio en [resend.com/domains](https://resend.com/domains) (agregar los registros DNS que pida) y apuntar `RESEND_FROM_EMAIL` a una dirección de ese dominio. Mientras tanto, el flujo de registro/login/reset ya es 100% probable end-to-end usando el correo con el que se creó la cuenta de Resend.
 
 > El navbar y sidebar del panel `/cuenta` (rediseño visual, mismo día) se documentan por separado en [[dashboard-de-cuenta]] para no sobrecargar esta página.
+
+## Recuperación de contraseña en 3 pantallas (2026-08-26)
+
+Punto agregado al Sprint 1 a pedido del usuario. Antes, `/cuenta/recuperar` mostraba todo en una sola vista: la tarjeta de correo se quedaba arriba y, al pedir el código, aparecía una segunda tarjeta apilada debajo con **código + nueva contraseña juntos**. Ahora es un wizard de 3 pasos donde cada tarjeta reemplaza a la anterior:
+
+1. **Correo** → `requestPasswordReset` (sin cambios de fondo; ahora devuelve `step: "code"`).
+2. **Código** → acción nueva `verifyResetCode` (`src/app/cuenta/actions.ts`). Valida el código **sin consumirlo**.
+3. **Nueva contraseña** → `resetPassword` (sin cambios; consume el código con `verifyAuthCode` al final). Al éxito, el formulario (input + botón) desaparece y se reemplaza por una **card de confirmación** (`role="status"`): ícono `CheckCircle2` en un badge circular con ring, título "Contraseña actualizada", texto de apoyo y un único CTA "Ir a iniciar sesión". Tinte esmeralda, consistente con las cards positivas de `/ejemplo` (`border-emerald-*`, `bg-emerald-50/*`). Pedido explícito del usuario: una vez cambiada la contraseña, el input y el botón ya no sirven, así que el paso final termina en un mensaje y no en un formulario.
+
+### Decisión técnica: validar el código sin gastarlo
+
+`verifyAuthCode` marca el código como usado (`vc_used_at`), así que no se puede llamar dos veces. Para separar "confirmar el código" (pantalla 2) de "gastarlo" (pantalla 3) se agregó `checkAuthCode` en `src/lib/auth/verification.ts` — misma query que `verifyAuthCode` pero **sin el `UPDATE`**. El código solo se marca usado en el paso final. Si expira o se gasta entre pantalla 2 y 3 (otra pestaña, timeout de 15 min), `resetPassword` devuelve `step: "code"` y el cliente regresa al paso 2 con el mensaje de error.
+
+### Hardening incidental: fallo de envío ya no rompe la pantalla
+
+Se encontró probando que `requestPasswordReset` hacía `throw` si `sendEmail` fallaba (p. ej. el `422` de Resend con un destinatario que no es la casilla de la cuenta — ver [[#Pendiente que no es código]]), lo que tiraba un error 500 de servidor **y** filtraba que el correo existía. Ahora el `sendEmail` del reset va en `try/catch` con `console.error`: la pantalla siempre avanza al paso de código con el mensaje genérico, coherente con la decisión de no revelar qué correos están registrados. `signUp` conserva su comportamiento anterior (no se tocó, fuera de alcance).
+
+### Verificado en navegador real (2026-08-26)
+
+- Flujo completo con `fcastellanosduarte@gmail.com` (correo real, código leído de la BD): correo → código → nueva contraseña → "Contraseña actualizada" → login con la contraseña nueva entra a `/cuenta`. El código quedó con `vc_used_at` poblado **solo** tras el paso final.
+- Código incorrecto en el paso 2 → "Código inválido o expirado" inline, sin avanzar.
+- "Usar otro correo" en el paso 2 → regresa al paso 1 con el correo preservado.
+- Correo real pero no entregable (`francisco.test@example.com` / `nueva.persona@example.com`, falla el `422` de Resend) → ya no da error 500, avanza al paso de código con el mensaje genérico.
+- Paso 3 al éxito → el formulario se reemplaza por la card de confirmación esmeralda con ícono; no quedan input ni botón de submit, solo el CTA "Ir a iniciar sesión".
+- `tsc --noEmit` y `pnpm lint` limpios.
+
+> Nota operativa: la prueba dejó la contraseña de `fcastellanosduarte@gmail.com` en la BD local como `DecidaReset2026!` (solo afecta la base local de desarrollo).
 
 ## Ver también
 [[../decisiones/plan-lanzamiento-60-90-dias]] · [[historial-de-evaluaciones]] · [[dashboard-de-cuenta]] · [[modelo-de-datos]] · [[stack-tecnico]] · [[manejo-de-errores-y-reembolsos]]
