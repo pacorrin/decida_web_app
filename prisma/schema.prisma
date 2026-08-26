@@ -130,6 +130,7 @@ model personal_fit_answers {
   pfit_work_preference         String?
   pfit_sales_comfort_score     Int?
   pfit_uncertainty_comfort_score Int?
+  pfit_process_comfort_score   Int?
   pfit_hiring_preference       String?
 
   assessment assessments @relation(fields: [pfit_asmt_id], references: [asmt_id], onDelete: Cascade)

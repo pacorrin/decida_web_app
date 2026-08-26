@@ -107,13 +107,7 @@ export default function ExampleReportPage() {
         </div>
 
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-14">
-            <aside className="hidden lg:block">
-              <div className="sticky top-24">
-                <ReportToc />
-              </div>
-            </aside>
-
+          <div className="grid gap-10 lg:grid-cols-[1fr_220px] lg:gap-14">
             <div className="min-w-0 pb-16">
               <div className="lg:hidden">
                 <ReportToc className="mb-8" />
@@ -753,6 +747,12 @@ export default function ExampleReportPage() {
                 </Card>
               </ReportSection>
             </div>
+
+            <aside className="hidden lg:block">
+              <div className="sticky top-24">
+                <ReportToc />
+              </div>
+            </aside>
           </div>
         </div>
       </main>

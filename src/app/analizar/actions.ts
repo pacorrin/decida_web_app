@@ -372,6 +372,8 @@ export async function saveSituation(
     hoursPerWeekRange: formData.get("hoursPerWeekRange"),
     availableSchedule: formData.get("availableSchedule"),
     expectedIncomeTimeframe: formData.get("expectedIncomeTimeframe"),
+    capitalRange: formData.get("capitalRange") ?? undefined,
+    acceptableLossRange: formData.get("acceptableLossRange") ?? undefined,
   });
 
   if (!parsed.success) {
@@ -387,6 +389,8 @@ export async function saveSituation(
       aprf_current_situation: data.currentSituation,
       aprf_main_goal: data.mainGoal,
       aprf_entrepreneurship_experience: data.entrepreneurshipExperience,
+      aprf_capital_available_range: data.capitalRange ?? null,
+      aprf_acceptable_loss_range: data.acceptableLossRange ?? null,
       aprf_hours_per_week_range: data.hoursPerWeekRange,
       aprf_available_schedule: data.availableSchedule,
       aprf_expected_income_timeframe: data.expectedIncomeTimeframe,
@@ -395,8 +399,8 @@ export async function saveSituation(
       aprf_current_situation: data.currentSituation,
       aprf_main_goal: data.mainGoal,
       aprf_entrepreneurship_experience: data.entrepreneurshipExperience,
-      aprf_capital_available_range: null,
-      aprf_acceptable_loss_range: null,
+      aprf_capital_available_range: data.capitalRange ?? null,
+      aprf_acceptable_loss_range: data.acceptableLossRange ?? null,
       aprf_hours_per_week_range: data.hoursPerWeekRange,
       aprf_available_schedule: data.availableSchedule,
       aprf_expected_income_timeframe: data.expectedIncomeTimeframe,
@@ -446,6 +450,7 @@ export async function savePersonalFit(
       pfit_sales_comfort_score: data.salesComfortScore,
       pfit_uncertainty_comfort_score: data.uncertaintyComfortScore,
       pfit_hiring_preference: data.hiringPreference,
+      pfit_process_comfort_score: data.processComfortScore,
     },
     update: {
       pfit_enjoyed_activities: data.enjoyedActivities,
@@ -453,6 +458,7 @@ export async function savePersonalFit(
       pfit_sales_comfort_score: data.salesComfortScore,
       pfit_uncertainty_comfort_score: data.uncertaintyComfortScore,
       pfit_hiring_preference: data.hiringPreference,
+      pfit_process_comfort_score: data.processComfortScore,
     },
   });
 

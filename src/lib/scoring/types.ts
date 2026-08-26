@@ -126,7 +126,9 @@ export function calculateDeterministicScores(
         solo: 10,
         algunos: 12,
         equipo: 15,
-      })
+      }) +
+      (fit?.pfit_uncertainty_comfort_score ?? 3) * 2 + // 2–10 pts (score 1–5 × 2)
+      (fit?.pfit_process_comfort_score ?? 3) * 2 // 2–10 pts (score 1–5 × 2)
   );
 
   const financialScore = clampScore(

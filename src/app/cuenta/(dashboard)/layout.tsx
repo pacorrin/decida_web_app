@@ -14,7 +14,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <DashboardNavbar user={user} />
-      <div className="mx-auto flex w-full max-w-6xl flex-1">
+      <div className="mx-auto flex w-full max-w-[2560px] flex-1">
         <DashboardSidebar />
         <main
           id="contenido-principal"

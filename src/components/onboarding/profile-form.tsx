@@ -16,6 +16,8 @@ import {
   CURRENT_SITUATION_OPTIONS,
   MAIN_GOAL_OPTIONS,
   EXPERIENCE_OPTIONS,
+  CAPITAL_RANGE_OPTIONS,
+  LOSS_RANGE_OPTIONS,
   HOURS_RANGE_OPTIONS,
   SCHEDULE_OPTIONS,
   INCOME_TIMEFRAME_OPTIONS,
@@ -35,12 +37,14 @@ function CardSelectField({
   options,
   defaultValue,
   error,
+  required = true,
 }: {
   name: string;
   label: string;
   options: { value: string; label: string }[];
   defaultValue?: string;
   error?: string[];
+  required?: boolean;
 }) {
   return (
     <Field>
@@ -51,7 +55,7 @@ function CardSelectField({
         defaultValue={defaultValue}
         layout="stack"
         columns={1}
-        required
+        required={required}
         ariaLabel={label}
       />
       <FieldError errors={error?.map((m) => ({ message: m }))} />
@@ -93,6 +97,26 @@ export function ProfileForm({ assessment }: ProfileFormProps) {
               profile?.aprf_entrepreneurship_experience ?? ""
             )}
             error={state.fieldErrors?.entrepreneurshipExperience}
+          />
+        </FieldSet>
+
+        <FieldSet>
+          <FieldLegend>Tu capital y riesgo</FieldLegend>
+          <CardSelectField
+            name="capitalRange"
+            label="¿Cuánto capital podrías invertir como máximo?"
+            options={CAPITAL_RANGE_OPTIONS}
+            defaultValue={fieldValue(v, "capitalRange", profile?.aprf_capital_available_range ?? "")}
+            error={state.fieldErrors?.capitalRange}
+            required={false}
+          />
+          <CardSelectField
+            name="acceptableLossRange"
+            label="¿Cuánto estarías dispuesto a perder si no funciona?"
+            options={LOSS_RANGE_OPTIONS}
+            defaultValue={fieldValue(v, "acceptableLossRange", profile?.aprf_acceptable_loss_range ?? "")}
+            error={state.fieldErrors?.acceptableLossRange}
+            required={false}
           />
         </FieldSet>
 

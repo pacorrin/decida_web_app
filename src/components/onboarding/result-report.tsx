@@ -105,14 +105,7 @@ export function ResultReport({
   }
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-14">
-      {/* Table of Contents - Desktop */}
-      <aside className="hidden lg:block">
-        <div className="sticky top-24">
-          <ReportToc />
-        </div>
-      </aside>
-
+    <div className="grid gap-10 lg:grid-cols-[1fr_220px] lg:gap-14">
       <div className="min-w-0 space-y-2">
         {/* Table of Contents - Mobile */}
         <div className="lg:hidden">
@@ -121,7 +114,7 @@ export function ResultReport({
 
         {/* Executive Summary */}
         {report?.arep_executive_summary && (
-          <ReportSection id="resumen" title="Resumen ejecutivo">
+          <ReportSection id="resumen" title="Resumen ejecutivo" className="pt-0 md:pt-2">
             <Markdown 
               content={report.arep_executive_summary} 
               className="text-base" 
@@ -488,6 +481,13 @@ export function ResultReport({
           </div>
         )}
       </div>
+
+      {/* Table of Contents - Desktop */}
+      <aside className="hidden lg:block">
+        <div className="sticky top-24">
+          <ReportToc />
+        </div>
+      </aside>
     </div>
   );
 }

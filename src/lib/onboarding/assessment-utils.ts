@@ -16,6 +16,7 @@ export type AssessmentBase = assessments & {
     pfit_work_preference: string | null;
     pfit_sales_comfort_score: number | null;
     pfit_uncertainty_comfort_score: number | null;
+    pfit_process_comfort_score: number | null;
     pfit_hiring_preference: string | null;
   } | null;
   business_idea?: {

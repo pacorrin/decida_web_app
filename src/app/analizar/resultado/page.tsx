@@ -41,11 +41,11 @@ export default async function ResultadoPage() {
           </Link>
           <div className="flex items-center gap-4">
             <Link
-              href="/mis-evaluaciones"
+              href="/cuenta"
               className="text-sm text-muted-foreground transition-colors hover:text-primary"
-              data-testid="resultado-mis-evaluaciones"
+              data-testid="resultado-mi-cuenta"
             >
-              Mis evaluaciones
+              Mi cuenta
             </Link>
             <span className="text-xs text-muted-foreground">
               Paso {step.order} de {ONBOARDING_STEPS.length}

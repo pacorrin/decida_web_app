@@ -24,6 +24,8 @@ export const profileSchema = z.object({
   currentSituation: z.string().min(1, "Selecciona tu situación actual"),
   mainGoal: z.string().min(1, "Selecciona tu objetivo principal"),
   entrepreneurshipExperience: z.string().min(1, "Selecciona tu experiencia"),
+  capitalRange: z.string().optional(),
+  acceptableLossRange: z.string().optional(),
 });
 
 export const resourcesSchema = z.object({
