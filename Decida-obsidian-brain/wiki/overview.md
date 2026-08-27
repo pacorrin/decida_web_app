@@ -1,7 +1,7 @@
 ---
 type: overview
 tags: [decida, hub]
-updated: 2026-08-26
+updated: 2026-08-27
 ---
 
 # Decida — Overview
@@ -67,9 +67,16 @@ Salida siempre es una de 4: **Proceed small test / Validate first / Adjust idea 
 - No existen minutas de reuniones de Decida en Notion todavía — ver [[reuniones/minutas]].
 - No hay evidencia de clientes reales, testimonios o métricas de validación registradas en ninguna fuente (ni Notion ni código) — `PRODUCT.md` lo marca explícitamente como "no fabricar".
 - El pago en producción es simulado (beta), y se pospuso deliberadamente hasta definir el modelo de cobro — ver [[producto/pricing-y-gtm]] y [[decisiones/plan-lanzamiento-60-90-dias]].
-- El score de "Nivel de riesgo" está roto en producción (no solo incompleto) — ver [[producto/gaps-onboarding-vs-framework#🔴 Hallazgo crítico]], arreglo agendado en Sprint 2.
-- Falta vincular `assessments` a `users` y migrar `/mis-evaluaciones` al nuevo módulo de cuentas — ver [[arquitectura/modulo-de-usuarios-y-autenticacion#Qué falta]].
+- ~~El score de "Nivel de riesgo" está roto en producción~~ — ✅ resuelto (commit `43d1112` + cruce inversión-vs-capital y red flags determinísticas del 2026-08-27). Ver [[framework/scoring-engine]].
+- `/mis-evaluaciones` fue reemplazado por `/cuenta` (commit `43d1112`) — la migración del sistema passwordless viejo ya no es un gap abierto.
 
-## Estado de desarrollo (actualizado 2026-08-26)
+## Estado de desarrollo (actualizado 2026-08-27)
 
-Hay un plan activo de lanzamiento en 60-90 días con fechas y checkpoints — ver [[decisiones/plan-lanzamiento-60-90-dias]]. Sprint 1 (fundamentos de cuenta) prácticamente cerrado: auth con contraseña, dashboard `/cuenta`, y recuperación de contraseña en wizard de 3 pantallas ya commiteados; pendiente real no-código = verificar un dominio propio en Resend antes de la beta. Empezó a trabajarse el primer lote del Sprint 2: pulido del paso "Así entendimos tu idea" del onboarding (en un commit local sin subir — ver [[experiencia/flujo-de-onboarding#El paso «confirmacion» («Así entendimos tu idea») — pulido de IA (commit pendiente, 2026-08-26)]]).
+Hay un plan activo de lanzamiento en 60-90 días con fechas y checkpoints — ver [[decisiones/plan-lanzamiento-60-90-dias]].
+
+**Sprint 1** (fundamentos de cuenta): prácticamente cerrado — auth con contraseña, dashboard `/cuenta`, recuperación de contraseña en wizard de 3 pantallas. Pendiente real no-código = verificar un dominio propio en Resend antes de la beta.
+
+**Sprint 2** (pulir onboarding): en curso.
+- ✅ Pulido del paso "Así entendimos tu idea" (commit `0259101`).
+- ✅ Score de "Nivel de riesgo" arreglado: preguntas de capital/pérdida de vuelta + comfort scores conectados (commit `43d1112`); cruce inversión-vs-capital y 2 red flags determinísticas (2026-08-27, sin commitear al cierre).
+- Pendiente: inputs de `avoidedActivities` y dependencias del negocio, granularidad de "¿habló con clientes?", modelo de ingreso, CAC, sección de productos/precios, bugs concretos de "Así entendimos tu idea".

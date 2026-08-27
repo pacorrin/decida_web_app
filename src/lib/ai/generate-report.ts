@@ -53,6 +53,10 @@ function buildContext(
       goal: assessment.assessment_profile?.aprf_main_goal,
       situation: assessment.assessment_profile?.aprf_current_situation,
       capital: assessment.assessment_profile?.aprf_capital_available_range,
+      acceptableLoss: assessment.assessment_profile?.aprf_acceptable_loss_range,
+      initialInvestment: Number(
+        assessment.financial_inputs?.finp_initial_investment ?? 0
+      ) || null,
       hours: assessment.assessment_profile?.aprf_hours_per_week_range,
     }),
   };

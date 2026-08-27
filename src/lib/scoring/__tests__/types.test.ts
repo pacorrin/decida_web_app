@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculateDeterministicScores } from "../types";
+import { calculateDeterministicScores, detectFinancialRedFlags } from "../types";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 
 /**
@@ -320,5 +320,154 @@ describe("Preservation Tests", () => {
     expect(get("commercial_viability")).toBe(43);
     expect(get("time_fit")).toBe(65);
     expect(get("scalability")).toBe(60);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FINANCIAL RED FLAGS — investment vs. declared capital / acceptable loss
+// ─────────────────────────────────────────────────────────────────────────────
+
+function makeProfile(
+  overrides: Partial<
+    NonNullable<AssessmentWithRelations["assessment_profile"]>
+  > = {}
+) {
+  return {
+    aprf_current_situation: "empleado",
+    aprf_main_goal: "escalar_negocio",
+    aprf_entrepreneurship_experience: "ninguna",
+    aprf_capital_available_range: "10k_50k",
+    aprf_acceptable_loss_range: "20k_50k",
+    aprf_hours_per_week_range: "10_20",
+    aprf_available_schedule: "manana",
+    aprf_expected_income_timeframe: "6_12_meses",
+    ...overrides,
+  };
+}
+
+function withFinancials(
+  investment: number,
+  profileOverrides: Partial<
+    NonNullable<AssessmentWithRelations["assessment_profile"]>
+  > = {}
+): AssessmentWithRelations {
+  const base = makeAssessment({ assessment_profile: makeProfile(profileOverrides) });
+  return {
+    ...base,
+    financial_inputs: {
+      ...base.financial_inputs!,
+      finp_initial_investment: investment,
+    },
+  };
+}
+
+describe("detectFinancialRedFlags", () => {
+  it("flags investment above the acceptable-loss ceiling", () => {
+    const flags = detectFinancialRedFlags(
+      withFinancials(50_000, {
+        aprf_acceptable_loss_range: "menos_5k", // ceiling $5,000
+        aprf_capital_available_range: "150k_500k", // ceiling $500,000 — no flag
+      })
+    );
+    expect(flags).toHaveLength(1);
+    expect(flags[0]).toMatch(/podr[ií]as perder/i);
+  });
+
+  it("flags investment above the available-capital ceiling", () => {
+    const flags = detectFinancialRedFlags(
+      withFinancials(80_000, {
+        aprf_capital_available_range: "10k_50k", // ceiling $50,000
+        aprf_acceptable_loss_range: "mas_100k", // open-ended — no flag
+      })
+    );
+    expect(flags).toHaveLength(1);
+    expect(flags[0]).toMatch(/capital m[áa]ximo/i);
+  });
+
+  it("emits both flags when investment exceeds both ceilings", () => {
+    const flags = detectFinancialRedFlags(
+      withFinancials(200_000, {
+        aprf_capital_available_range: "10k_50k",
+        aprf_acceptable_loss_range: "20k_50k",
+      })
+    );
+    expect(flags).toHaveLength(2);
+  });
+
+  it("emits nothing when the investment fits within both ranges", () => {
+    const flags = detectFinancialRedFlags(
+      withFinancials(30_000, {
+        aprf_capital_available_range: "10k_50k",
+        aprf_acceptable_loss_range: "20k_50k",
+      })
+    );
+    expect(flags).toEqual([]);
+  });
+
+  it("emits nothing for open-ended top ranges", () => {
+    const flags = detectFinancialRedFlags(
+      withFinancials(1_000_000, {
+        aprf_capital_available_range: "mas_500k",
+        aprf_acceptable_loss_range: "mas_100k",
+      })
+    );
+    expect(flags).toEqual([]);
+  });
+
+  it("emits nothing when the ranges were never captured (older assessments)", () => {
+    const flags = detectFinancialRedFlags(
+      withFinancials(50_000, {
+        aprf_capital_available_range: null,
+        aprf_acceptable_loss_range: null,
+      })
+    );
+    expect(flags).toEqual([]);
+  });
+
+  it("emits nothing when no initial investment is declared", () => {
+    const flags = detectFinancialRedFlags(
+      withFinancials(0, {
+        aprf_capital_available_range: "menos_10k",
+        aprf_acceptable_loss_range: "menos_5k",
+      })
+    );
+    expect(flags).toEqual([]);
+  });
+});
+
+describe("riskScore — over-exposure adjustment", () => {
+  it("raises the risk score when the investment exceeds capital and acceptable loss", () => {
+    // "20k_50k" acceptable loss → base risk = 100 - 35 + 0 = 65
+    const within = calculateDeterministicScores(
+      withFinancials(30_000, {
+        aprf_acceptable_loss_range: "20k_50k",
+        aprf_capital_available_range: "10k_50k",
+      })
+    );
+    const over = calculateDeterministicScores(
+      withFinancials(80_000, {
+        aprf_acceptable_loss_range: "20k_50k", // ceiling $50,000 → +12
+        aprf_capital_available_range: "10k_50k", // ceiling $50,000 → +8
+      })
+    );
+
+    const risk = (r: ReturnType<typeof calculateDeterministicScores>) =>
+      r.dimensions.find((d) => d.key === "risk_level")!.score;
+
+    expect(risk(within)).toBe(65);
+    expect(risk(over)).toBe(85);
+  });
+
+  it("does not change the risk score for older assessments without the ranges", () => {
+    const result = calculateDeterministicScores(
+      withFinancials(500_000, {
+        aprf_acceptable_loss_range: null,
+        aprf_capital_available_range: null,
+      })
+    );
+    // scoreFromRange(null) → 50 → clamp(100 - 50 + 0 + 0) = 50
+    expect(
+      result.dimensions.find((d) => d.key === "risk_level")!.score
+    ).toBe(50);
   });
 });

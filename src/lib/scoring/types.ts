@@ -43,6 +43,106 @@ function scoreFromRange(
   return map[value] ?? 50;
 }
 
+/**
+ * Upper bound (MXN) of each `aprf_capital_available_range` / `aprf_acceptable_loss_range`
+ * option. Open-ended top ranges use +Infinity so they never trigger a false flag.
+ * Kept in sync with CAPITAL_RANGE_OPTIONS / LOSS_RANGE_OPTIONS in
+ * `src/lib/onboarding/options.ts`.
+ */
+const CAPITAL_RANGE_CEILING: Record<string, number> = {
+  menos_10k: 10_000,
+  "10k_50k": 50_000,
+  "50k_150k": 150_000,
+  "150k_500k": 500_000,
+  mas_500k: Number.POSITIVE_INFINITY,
+};
+
+const ACCEPTABLE_LOSS_CEILING: Record<string, number> = {
+  menos_5k: 5_000,
+  "5k_20k": 20_000,
+  "20k_50k": 50_000,
+  "50k_100k": 100_000,
+  mas_100k: Number.POSITIVE_INFINITY,
+};
+
+function rangeCeiling(
+  value: string | null | undefined,
+  map: Record<string, number>
+): number {
+  if (!value) return Number.POSITIVE_INFINITY;
+  return map[value] ?? Number.POSITIVE_INFINITY;
+}
+
+function formatMoney(amount: number): string {
+  return `$${Math.round(amount).toLocaleString("es-MX")}`;
+}
+
+export type FinancialExposure = {
+  /** Declared initial investment exceeds the top of the acceptable-loss range. */
+  investmentOverAcceptableLoss: boolean;
+  /** Declared initial investment exceeds the top of the available-capital range. */
+  investmentOverCapital: boolean;
+};
+
+function assessFinancialExposure(
+  assessment: AssessmentWithRelations
+): FinancialExposure {
+  const investment = Number(
+    assessment.financial_inputs?.finp_initial_investment ?? 0
+  );
+  if (!Number.isFinite(investment) || investment <= 0) {
+    return {
+      investmentOverAcceptableLoss: false,
+      investmentOverCapital: false,
+    };
+  }
+
+  const lossCeiling = rangeCeiling(
+    assessment.assessment_profile?.aprf_acceptable_loss_range,
+    ACCEPTABLE_LOSS_CEILING
+  );
+  const capitalCeiling = rangeCeiling(
+    assessment.assessment_profile?.aprf_capital_available_range,
+    CAPITAL_RANGE_CEILING
+  );
+
+  return {
+    investmentOverAcceptableLoss: investment > lossCeiling,
+    investmentOverCapital: investment > capitalCeiling,
+  };
+}
+
+/**
+ * Deterministic financial red flags derived from cross-referencing the declared
+ * initial investment against the capital / acceptable-loss ranges from the
+ * profile step. Returns user-facing Spanish strings, ready to merge into
+ * `ascs_red_flags` ahead of the AI-generated ones. Empty when the data needed
+ * for the comparison is missing (backward compatible with older assessments).
+ */
+export function detectFinancialRedFlags(
+  assessment: AssessmentWithRelations
+): string[] {
+  const investment = Number(
+    assessment.financial_inputs?.finp_initial_investment ?? 0
+  );
+  const exposure = assessFinancialExposure(assessment);
+  const flags: string[] = [];
+
+  if (exposure.investmentOverAcceptableLoss) {
+    flags.push(
+      `Tu inversión inicial (${formatMoney(investment)}) es mayor que lo que dijiste que podrías perder sin afectar tu estabilidad. Si el negocio no funciona, la pérdida real superaría tu límite declarado — considera arrancar con una versión de menor inversión.`
+    );
+  }
+
+  if (exposure.investmentOverCapital) {
+    flags.push(
+      `Tu inversión inicial (${formatMoney(investment)}) supera el capital máximo que declaraste tener disponible para esta idea. Aclara de dónde saldría la diferencia antes de comprometerte.`
+    );
+  }
+
+  return flags;
+}
+
 export function calculateFinancialMetrics(
   initialInvestment: number,
   pricePerSale: number,
@@ -149,6 +249,13 @@ export function calculateDeterministicScores(
       (market?.mrsk_acquisition_channel ? 15 : 0)
   );
 
+  // Over-exposure: the declared initial investment exceeds what the user said
+  // they can lose / have available. Pushes the risk score up (higher = riskier).
+  const exposure = assessFinancialExposure(assessment);
+  const overExposurePenalty =
+    (exposure.investmentOverAcceptableLoss ? 12 : 0) +
+    (exposure.investmentOverCapital ? 8 : 0);
+
   const riskScore = clampScore(
     100 -
       scoreFromRange(profile?.aprf_acceptable_loss_range, {
@@ -158,7 +265,8 @@ export function calculateDeterministicScores(
         "50k_100k": 50,
         mas_100k: 65,
       }) +
-      (market?.mrsk_has_talked_to_customers ? 10 : 0)
+      (market?.mrsk_has_talked_to_customers ? 10 : 0) +
+      overExposurePenalty
   );
 
   const timeScore = clampScore(

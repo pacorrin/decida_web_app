@@ -180,3 +180,20 @@ Qué hace ese trabajo, según lectura directa del `git diff`:
 - **Estado de calidad**: `tsc --noEmit` limpio; eslint agrega **1 error nuevo** `react-hooks/set-state-in-effect` en `idea-confirmation.tsx` (el `useEffect` de `rotateState` copia el patrón del de `refineState`, que ya tenía ese error preexistente — el "un error de eslint preexistente" que menciona `AGENTS.md` vive en este archivo).
 
 Actualizado: `wiki/experiencia/flujo-de-onboarding.md` (sección nueva dedicada al paso `confirmacion`), `wiki/framework/prompts-de-ia.md` (prompt de refinamiento + prompt rotate nuevo + capa de saneo), `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (nota de "avance real" en el punto de Sprint 2). No se tocó código ni se commiteó nada.
+
+_(Seguimiento: el usuario luego lo commiteó como `0259101`; las páginas se corrigieron para reflejarlo.)_
+
+## [2026-08-27] build | Sprint 2 — red flags financieras determinísticas + cruce inversión vs. capital en el riskScore
+
+El usuario pidió trabajar el punto del score de riesgo. Al revisar el código se encontró que el **núcleo ya estaba commiteado** (`43d1112`, desde un spec en `.kiro/specs/risk-score-fix/`): capital disponible + pérdida aceptable de vuelta en el paso `perfil`, `saveSituation` las persiste, y `pfit_uncertainty_comfort_score` / `pfit_process_comfort_score` conectados al `personalFitScore` (con columna nueva `pfit_process_comfort_score` ya migrada en la BD, 5 tests en `src/lib/scoring/__tests__/types.test.ts`). Ese spec dejó fuera a propósito el cruce inversión-vs-capital y las red flags financieras — eso es lo que se hizo ahora.
+
+Implementado (sin commitear al cierre):
+- **`detectFinancialRedFlags(assessment)`** en `src/lib/scoring/types.ts`: emite las 2 red flags financieras del catálogo de Notion — "inversión inicial > pérdida aceptable" e "inversión inicial > capital disponible" — cruzando `finp_initial_investment` contra el **techo** del rango declarado (`ACCEPTABLE_LOSS_CEILING` / `CAPITAL_RANGE_CEILING`, sincronizados con `options.ts`). Rangos abiertos (`mas_100k` / `mas_500k`) = techo `Infinity`, nunca disparan. Si los rangos no se capturaron (assessments viejos) o no hay inversión declarada → array vacío.
+- **`riskScore`** en `calculateDeterministicScores`: penalización de sobre-exposición `+12` (inversión > pérdida tolerable) y/o `+8` (inversión > capital). No cambia la firma pública ni las otras dimensiones.
+- **`runScoringPipeline`** (`scoring/index.ts`): las flags determinísticas se anteponen a `interpretation.red_flags` (mutando el objeto para que tanto el `assessment_scores.upsert` como `generateReport` vean la misma lista); dedupe defensivo.
+- **Contexto a la IA**: `buildAssessmentContext` (interpret) y `buildContext` (reporte) ahora incluyen inversión inicial + capital declarado + pérdida tolerable. `SCORING_INTERPRET_SYSTEM_PROMPT` gana una instrucción de reflejar la sobre-exposición en `risk_level_signal` + una red flag.
+- **Tests**: +9 en `types.test.ts` (7 de `detectFinancialRedFlags`, 2 de la penalización de riskScore). Total 14, todos pasan. `tsc` y eslint limpios en los archivos tocados.
+
+Verificado contra datos reales: se recorrió `runScoringPipeline` sobre un assessment de prueba real (`cmta3xvx6…`, `menos_5k` de pérdida tolerable, inversión $45,000) — `ascs_red_flags` persistido en la BD quedó con la flag determinística primero ("Tu inversión inicial ($45,000) es mayor que lo que dijiste que podrías perder…") + una de la IA reforzándola, `ascs_risk_level_score` = 100, semáforo rojo. Assessments viejos sin los rangos: sin flags, riskScore fallback 50 (preservado).
+
+Actualizado: `wiki/framework/scoring-engine.md`, `wiki/producto/gaps-onboarding-vs-framework.md`, `wiki/decisiones/evolucion-del-producto.md` (#2 → RESUELTO), `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (P0#4 + Sprint 2 imprescindible 1/2/7 marcados hechos), `wiki/overview.md` (gaps + estado de desarrollo). De paso se corrigieron las etiquetas "commit pendiente" del pulido de "Así entendimos tu idea" (ya commiteado como `0259101`).

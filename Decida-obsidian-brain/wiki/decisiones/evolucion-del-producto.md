@@ -1,7 +1,7 @@
 ---
 type: decision-log
 tags: [decida, decisiones, evolucion]
-updated: 2026-08-05
+updated: 2026-08-27
 ---
 
 # Evolución del producto — dónde el código se separó del PRD
@@ -20,7 +20,11 @@ Esta página existe para responder una pregunta recurrente: *"¿esto que veo en 
 **Código**: removidas de la UX del paso de situación.
 **Commit**: `5886b4d refactor: remove capital and loss range from onboarding process`.
 **Impacto en cascada**: al menos 2 red flags del [[../framework/scoring-engine#Red flags|scoring engine]] dependían de estos datos ("inversión > capital disponible", "inversión > pérdida aceptable"). `PRODUCT.md` marca esto explícitamente como "abierto/no decidido": *"si las preguntas de capital/pérdida tolerable regresan en una sección financiera posterior (las columnas/opciones pueden seguir existiendo en el esquema)."*
-**Estado (actualizado 2026-08-05, ya no es pregunta abierta)**: confirmado por lectura directa de `src/lib/scoring/types.ts` — no quedaron huérfanas, quedaron **rotas activamente**. El score de `risk_level` depende de `aprf_acceptable_loss_range` (siempre `null` hoy) y su función de scoring cae en un valor de fallback constante, así que la dimensión de riesgo hoy no discrimina entre ideas de alto y bajo riesgo real. Mapeo completo de todos los campos afectados (no solo riesgo) en [[../producto/gaps-onboarding-vs-framework]]. Fix agendado en [[plan-lanzamiento-60-90-dias#Sprint 2]].
+**Estado (actualizado 2026-08-27) — RESUELTO**:
+- **Commit `43d1112`** (spec `.kiro/specs/risk-score-fix/`): las preguntas de capital disponible y pérdida aceptable volvieron al paso `perfil` (como `capitalRange` / `acceptableLossRange`, opcionales para no romper assessments viejos); `saveSituation` las persiste; `pfit_uncertainty_comfort_score` y `pfit_process_comfort_score` (que también eran datos muertos) se conectaron al `personalFitScore`. Con tests en `src/lib/scoring/__tests__/types.test.ts`.
+- **2026-08-27**: `riskScore` ahora cruza `finp_initial_investment` contra el techo del rango de capital / pérdida (penalización de sobre-exposición) y `detectFinancialRedFlags()` emite las 2 red flags financieras del catálogo. Ver [[../framework/scoring-engine#Red flags]].
+
+Mapeo completo del resto de campos del onboarding aún pendientes en [[../producto/gaps-onboarding-vs-framework]].
 
 ## 3. Historial de evaluaciones (non-goal superado)
 **Notion**: "sin historial de evaluaciones" listado como non-goal explícito V1, y como ítem de "Future SaaS".

@@ -1,14 +1,16 @@
 ---
 type: framework
 tags: [decida, scoring, ai]
-updated: 2026-08-05
+updated: 2026-08-27
 ---
 
 # Scoring Engine
 
 Fuentes: [[../../raw/notion/10-scoring-engine]] · `src/lib/scoring/index.ts` · `src/lib/scoring/types.ts` · `src/lib/ai/schemas/scoring-interpret.ts`
 
-> 🔴 **Bug confirmado en código (2026-08-05)**: el score de `risk_level` está roto, no solo incompleto. `calculateDeterministicScores` (`src/lib/scoring/types.ts:150-160`) lo calcula a partir de `profile?.aprf_acceptable_loss_range`, campo que ya nunca se captura (removido del onboarding, ver nota de brecha abajo). `scoreFromRange()` cae en su fallback de `50` cuando el valor es `null` — **hoy casi todo assessment recibe el mismo score de riesgo** (~50-60) sin importar el capital real en juego. Detalle completo y plan de fix: [[../producto/gaps-onboarding-vs-framework#🔴 Hallazgo crítico]] y [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 2]].
+> ✅ **Bug del score de riesgo resuelto (commits `43d1112` + trabajo del 2026-08-27)**. Antes, `risk_level` dependía de `aprf_acceptable_loss_range`, que ya nunca se capturaba → `scoreFromRange()` caía en el fallback constante de `50`. El fix llegó en dos partes:
+> 1. **`43d1112`** (spec en `.kiro/specs/risk-score-fix/`): las preguntas de capital disponible y pérdida aceptable volvieron al paso `perfil`, `saveSituation` las persiste, y `pfit_uncertainty_comfort_score` / `pfit_process_comfort_score` (antes datos muertos) ahora suman a `personalFitScore`.
+> 2. **2026-08-27**: `riskScore` ahora **cruza la inversión declarada contra el capital / pérdida aceptable** (penalización de sobre-exposición: +12 si inversión > pérdida tolerable, +8 si > capital), y se calculan las 2 red flags determinísticas correspondientes. Ver [[#Red flags]] y [[#Sobre-exposición: inversión vs. capital declarado]].
 
 ## Regla central (diseño y código coinciden)
 > "El score no es el producto. El diagnóstico es el producto."
@@ -33,9 +35,21 @@ Personal Fit 20% · Financial Viability 25% · Commercial Viability 25% · Risk 
 - **Pause for Now** — economía negativa, inversión > pérdida aceptable, sin cliente claro, alta dependencia + poco tiempo.
 
 ## Red flags (reglas duras, pueden tumbar un score "aceptable")
-Inversión inicial > capital disponible · inversión > lo que puede perder · margen por venta negativo · no sabe quién es el cliente · no sabe cómo conseguirá clientes · no ha hablado con clientes y planea invertir capital alto · quiere reemplazar empleo sin ingresos recurrentes probados · depende de plataforma externa sin plan alterno · requiere permisos/regulación no investigados.
+Catálogo de diseño (Notion): inversión inicial > capital disponible · inversión > lo que puede perder · margen por venta negativo · no sabe quién es el cliente · no sabe cómo conseguirá clientes · no ha hablado con clientes y planea invertir capital alto · quiere reemplazar empleo sin ingresos recurrentes probados · depende de plataforma externa sin plan alterno · requiere permisos/regulación no investigados.
 
-> Nota de brecha: dos de las red flags originales (inversión > capital disponible, inversión > pérdida aceptable) dependían de las preguntas de capital/pérdida tolerable que fueron **removidas del onboarding en producción** (commit `5886b4d`). Verificar en próxima ingesta si estas red flags siguen siendo calculables con los datos que hoy se capturan, o si quedaron huérfanas. Ver [[../decisiones/evolucion-del-producto]].
+**Cómo se calculan hoy (código):**
+- **Determinísticas** (`detectFinancialRedFlags()` en `src/lib/scoring/types.ts`, desde 2026-08-27): las dos red flags financieras del catálogo — "inversión inicial > pérdida aceptable" e "inversión inicial > capital disponible" — se calculan cruzando `finp_initial_investment` (número) contra el **techo** del rango declarado (`aprf_acceptable_loss_range` / `aprf_capital_available_range`). Solo se disparan cuando la inversión supera el tope del rango; los rangos abiertos (`mas_100k`, `mas_500k`) nunca disparan. Si los rangos no se capturaron (assessments viejos), no se emite nada. `runScoringPipeline` las mete **primero** en `ascs_red_flags`, antes que las de la IA.
+- **De la IA**: el resto del catálogo (cliente poco claro, canal poco claro, dependencia de plataforma, regulación, etc.) las sigue infiriendo `interpretScores` a partir del contexto. El prompt ahora también recibe la inversión y los rangos de capital/pérdida, así que suele reforzar la señal de sobre-exposición con su propia red flag.
+
+> Brecha cerrada: las dos red flags financieras habían quedado incalculables cuando se removieron las preguntas de capital/pérdida (commit `5886b4d`). Con esas preguntas de vuelta (`43d1112`) y `detectFinancialRedFlags()` ya vuelven a calcularse. Ver [[../decisiones/evolucion-del-producto#2]].
+
+## Sobre-exposición: inversión vs. capital declarado
+
+`calculateDeterministicScores` calcula una penalización de sobre-exposición que se suma al `riskScore` (alto = más riesgo):
+- `+12` si `finp_initial_investment` supera el techo de `aprf_acceptable_loss_range`
+- `+8` si supera el techo de `aprf_capital_available_range`
+
+Ejemplo real (assessment de prueba, `menos_5k` de pérdida tolerable, inversión $45,000): `riskScore` = 100, semáforo rojo, más las 2 red flags ("Tu inversión inicial ($45,000) es mayor que lo que dijiste que podrías perder…"). Cubierto por tests en `src/lib/scoring/__tests__/types.test.ts`.
 
 ## Input estructurado a la IA (forma del JSON, Notion)
 ```json
@@ -46,10 +60,11 @@ Inversión inicial > capital disponible · inversión > lo que puede perder · m
   "calculatedMetrics": { "grossMargin": 500, "monthlyNetEstimate": 8000, "paybackMonths": 3.5 }
 }
 ```
-El código real (`buildAssessmentContext()`) construye un contexto de texto más compacto (idea, objetivo, situación, preocupación principal) en vez del JSON completo propuesto en Notion — optimización de costo de tokens consistente con [[prompts-de-ia#AI Cost Control]].
+El código real (`buildAssessmentContext()`) construye un contexto de texto más compacto que el JSON completo de Notion — optimización de costo de tokens consistente con [[prompts-de-ia#AI Cost Control]]. Desde 2026-08-27 incluye idea, objetivo, situación, **inversión inicial estimada, capital disponible declarado, pérdida tolerable**, y preocupación principal.
 
 ## Otros datos capturados pero ignorados por el scoring
-`pfit_uncertainty_comfort_score` y `pfit_process_comfort_score` se recolectan en el onboarding (paso `ajuste`) pero `calculateDeterministicScores` nunca los lee — dato muerto hoy, candidato de bajo costo para el fix de Sprint 2. Igual que `mrsk_business_dependencies`, que ni siquiera se llega a capturar en el formulario. Ver mapeo completo en [[../producto/gaps-onboarding-vs-framework]].
+- `pfit_uncertainty_comfort_score` y `pfit_process_comfort_score` — **ya conectados** al `personalFitScore` (commit `43d1112`, +2 a +10 pts cada uno). Ya no son dato muerto.
+- `mrsk_business_dependencies` — sigue sin capturarse siquiera en el formulario (pendiente de Sprint 2). Ver mapeo completo en [[../producto/gaps-onboarding-vs-framework]].
 
 ## Ver también
 [[dimensiones-de-viabilidad]] · [[prompts-de-ia]] · [[criterios-de-evaluacion]] · [[../arquitectura/modelo-de-datos]] · [[../producto/gaps-onboarding-vs-framework]]

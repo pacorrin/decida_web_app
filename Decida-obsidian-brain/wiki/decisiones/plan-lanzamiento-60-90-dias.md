@@ -1,7 +1,7 @@
 ---
 type: decision-log
 tags: [decida, roadmap, lanzamiento, gtm, usuarios]
-updated: 2026-08-26
+updated: 2026-08-27
 ---
 
 # Plan de lanzamiento — 60/90 días
@@ -49,7 +49,7 @@ Esto conecta directamente con el nivel 2 de éxito de producto de `PRODUCT.md` (
 1. Email transaccional real (Resend u otro) — ya no es solo un "nice to have" de historial, es prerequisito de todo el módulo de cuentas (verificación de registro + reset de password).
 2. Módulo de usuarios con cuenta y contraseña + vínculo `assessments` ↔ `user_id`.
 3. Dashboard de historial de evaluaciones sobre esa cuenta autenticada.
-4. **Arreglar el score de "Nivel de riesgo", que está roto en producción** (no solo incompleto): depende de `aprf_acceptable_loss_range`, que ya no se captura, así que hoy devuelve un valor casi constante para cualquier idea. Ver [[../producto/gaps-onboarding-vs-framework#🔴 Hallazgo crítico]].
+4. ✅ **HECHO** — Score de "Nivel de riesgo" arreglado (commit `43d1112` + trabajo del 2026-08-27). Ver [[../framework/scoring-engine]] y [[../producto/gaps-onboarding-vs-framework#✅ Hallazgo crítico (resuelto): el score de Riesgo estaba roto]].
 
 **P1 — hardening que no depende del modelo de pago:**
 5. Generación real de PDF (necesaria para el reporte con o sin pago real).
@@ -115,15 +115,15 @@ Pulido de UX/robustez sobre lo ya entregado, a pedido del usuario:
 Auditoría completa campo por campo contra [[../../raw/notion/17-rubric-6-dimensiones]] y [[../../raw/notion/16-criterios-evaluacion-ideas]] archivada en [[../producto/gaps-onboarding-vs-framework]]. Resumen de lo que entra en este sprint:
 
 **Imprescindible (arregla señal rota o ausente):**
-1. Recuperar capital disponible + pérdida aceptable (evaluar versión de menor fricción que la original si esa fue la razón de haberlas quitado).
-2. Reconectar el score de riesgo a datos reales una vez recuperadas esas preguntas.
+1. ✅ **HECHO** — Capital disponible + pérdida aceptable de vuelta en el paso `perfil` (commit `43d1112`, spec `.kiro/specs/risk-score-fix/`).
+2. ✅ **HECHO** — Score de riesgo reconectado: usa el dato real (`43d1112`) + cruza la inversión declarada contra el techo del rango de capital/pérdida y emite 2 red flags determinísticas (`detectFinancialRedFlags()`, 2026-08-27). Ver [[../framework/scoring-engine#Red flags]] y el log del 2026-08-27.
 3. Agregar "actividades que evita" (`avoidedActivities`) — el campo en BD ya existe, solo falta el input del formulario.
 4. Agregar dependencias del negocio (proveedor, empleados, ubicación, plataforma, inventario, regulación) — mismo caso: campo en BD listo, falta el input.
 
 **Alto valor, bajo costo:**
 5. Restaurar granularidad de "¿ya habló con clientes?" (niveles, no solo sí/no).
 6. Pregunta de modelo de ingreso (único/recurrente/suscripción/proyecto/comisión).
-7. Conectar al scoring los datos que ya se capturan pero se ignoran hoy (`uncertaintyComfortScore`, `processComfortScore`).
+7. ✅ **HECHO** — `uncertaintyComfortScore` y `processComfortScore` ya se conectan al `personalFitScore` (commit `43d1112`).
 
 **Se puede posponer a una iteración posterior** (no bloquea ni rompe nada hoy): pregunta dedicada de escalabilidad real del negocio, restricciones personales, diferenciación explícita, ticket/frecuencia de compra. Detalle completo en [[../producto/gaps-onboarding-vs-framework]].
 
@@ -133,7 +133,7 @@ Punto agregado a pedido del usuario. El paso `confirmacion` del onboarding (`/an
 
 _Errores concretos pendientes de que el usuario los detalle_ — al recibir el listado, desglosar aquí cada bug con: qué pasa, cómo reproducirlo, y si es de UI, de la llamada a IA (incl. el fallback determinístico cuando no hay `OPENAI_API_KEY`), o de persistencia del resumen/aclaraciones.
 
-**Avance real (commit local sin subir, 2026-08-26):** primer lote ya trabajado. Corrige el error de que "Pulir mi idea con IA" (y sobre todo el fallback offline) pegaba las aclaraciones crudas en las tarjetas de "Nuestro entendimiento", dejando texto tipo transcripción. Incluye: prompt de refinamiento reescrito para sintetizar en vez de transcribir, capa de saneo determinística en `openai.ts`, fallback reescrito que teje las aclaraciones en prosa natural, IDs de supuesto únicos (evita que un input de aclaración llene otro), acción nueva "Analizar más" (`rotateIdeaAssumptions`) que solo rota supuestos sin reescribir el resumen, y varios arreglos de a11y/UX. Detalle completo en [[../experiencia/flujo-de-onboarding#El paso «confirmacion» («Así entendimos tu idea») — pulido de IA (commit pendiente, 2026-08-26)]]. Agrega 1 error nuevo de eslint (`set-state-in-effect`, mismo patrón que el preexistente en el archivo).
+**Avance real (commit `0259101`, 2026-08-26):** primer lote ya trabajado. Corrige el error de que "Pulir mi idea con IA" (y sobre todo el fallback offline) pegaba las aclaraciones crudas en las tarjetas de "Nuestro entendimiento", dejando texto tipo transcripción. Incluye: prompt de refinamiento reescrito para sintetizar en vez de transcribir, capa de saneo determinística en `openai.ts`, fallback reescrito que teje las aclaraciones en prosa natural, IDs de supuesto únicos (evita que un input de aclaración llene otro), acción nueva "Analizar más" (`rotateIdeaAssumptions`) que solo rota supuestos sin reescribir el resumen, y varios arreglos de a11y/UX. Detalle completo en [[../experiencia/flujo-de-onboarding#El paso «confirmacion» («Así entendimos tu idea») — pulido de IA (2026-08-26)]]. Agrega 1 error nuevo de eslint (`set-state-in-effect`, mismo patrón que el preexistente en el archivo).
 
 ### Datos de negocio adicionales a capturar en el onboarding (agregado 2026-08-26)
 

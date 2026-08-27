@@ -11,19 +11,49 @@ import {
   type ScoringInterpretResult,
 } from "@/lib/ai/schemas/scoring-interpret";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
-import { calculateDeterministicScores } from "./types";
+import { calculateDeterministicScores, detectFinancialRedFlags } from "./types";
 
-export { calculateDeterministicScores, calculateFinancialMetrics } from "./types";
+export {
+  calculateDeterministicScores,
+  calculateFinancialMetrics,
+  detectFinancialRedFlags,
+} from "./types";
 export type { CalculatedMetrics, DeterministicScoreResult } from "./types";
 
+const LOSS_RANGE_LABELS: Record<string, string> = {
+  menos_5k: "menos de $5,000",
+  "5k_20k": "$5,000–$20,000",
+  "20k_50k": "$20,000–$50,000",
+  "50k_100k": "$50,000–$100,000",
+  mas_100k: "más de $100,000",
+};
+
+const CAPITAL_RANGE_LABELS: Record<string, string> = {
+  menos_10k: "menos de $10,000",
+  "10k_50k": "$10,000–$50,000",
+  "50k_150k": "$50,000–$150,000",
+  "150k_500k": "$150,000–$500,000",
+  mas_500k: "más de $500,000",
+};
+
 function buildAssessmentContext(assessment: AssessmentWithRelations): string {
+  const profile = assessment.assessment_profile;
+  const investment = Number(
+    assessment.financial_inputs?.finp_initial_investment ?? 0
+  );
+  const lossLabel = LOSS_RANGE_LABELS[profile?.aprf_acceptable_loss_range ?? ""];
+  const capitalLabel =
+    CAPITAL_RANGE_LABELS[profile?.aprf_capital_available_range ?? ""];
+
   const parts = [
     assessment.business_idea?.bide_ai_summary &&
       `Idea: ${assessment.business_idea.bide_ai_summary}`,
-    assessment.assessment_profile?.aprf_main_goal &&
-      `Objetivo: ${assessment.assessment_profile.aprf_main_goal}`,
-    assessment.assessment_profile?.aprf_current_situation &&
-      `Situación: ${assessment.assessment_profile.aprf_current_situation}`,
+    profile?.aprf_main_goal && `Objetivo: ${profile.aprf_main_goal}`,
+    profile?.aprf_current_situation &&
+      `Situación: ${profile.aprf_current_situation}`,
+    investment > 0 && `Inversión inicial estimada: $${Math.round(investment).toLocaleString("es-MX")} MXN`,
+    capitalLabel && `Capital disponible declarado: ${capitalLabel} MXN`,
+    lossLabel && `Pérdida que toleraría sin afectar su estabilidad: ${lossLabel} MXN`,
     assessment.market_risk_inputs?.mrsk_main_concern &&
       `Preocupación principal: ${assessment.market_risk_inputs.mrsk_main_concern}`,
   ].filter(Boolean);
@@ -55,6 +85,17 @@ export async function runScoringPipeline(assessment: AssessmentWithRelations) {
     scoresMap,
     buildAssessmentContext(assessment)
   );
+
+  // Deterministic flags (investment vs. declared capital / acceptable loss) go
+  // first, then the AI-generated ones. Fold them back into `interpretation` so
+  // both the persisted score and the report generation see the same list.
+  const deterministicRedFlags = detectFinancialRedFlags(assessment);
+  interpretation.red_flags = [
+    ...deterministicRedFlags,
+    ...interpretation.red_flags.filter(
+      (flag) => !deterministicRedFlags.includes(flag)
+    ),
+  ];
 
   const scoreData = {
     ascs_personal_fit_score: deterministic.dimensions.find(

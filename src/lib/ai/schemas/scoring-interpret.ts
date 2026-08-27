@@ -31,6 +31,8 @@ Asigna semáforos:
 
 Para risk_level, la lógica es invertida: score alto = menos riesgo = green.
 
+Si el contexto muestra que la inversión inicial estimada supera el capital disponible declarado o la pérdida que la persona toleraría, refléjalo en risk_level_signal (peor semáforo) y agrega una red flag concreta al respecto.
+
 Recomendación final (elige una):
 - proceed_small_test: viable con prueba pequeña
 - validate_first: necesita validar antes de invertir

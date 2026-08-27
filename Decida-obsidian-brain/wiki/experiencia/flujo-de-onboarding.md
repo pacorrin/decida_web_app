@@ -38,9 +38,9 @@ Esto también significa que **perfil, recursos y ajuste personal ocurren despué
 ## El paso "contacto" ahora también es el punto de entrada de cuentas (2026-08-05)
 Desde la integración con el [[../arquitectura/modulo-de-usuarios-y-autenticacion|módulo de usuarios]], `contacto` dejó de ser un simple formulario de captura: ahora crea la cuenta del usuario (correo nuevo) o detecta una cuenta existente y pide iniciar sesión (con retorno automático al onboarding vía `?next=/analizar`). Un usuario ya logueado nunca ve este paso — se salta directo a `idea` con sus datos ya cargados. Detalle técnico completo, incluyendo el bug de prefetch que hubo que corregir en el camino, en [[../arquitectura/modulo-de-usuarios-y-autenticacion#Integración con el onboarding (mismo día)]].
 
-## El paso «confirmacion» («Así entendimos tu idea») — pulido de IA (commit pendiente, 2026-08-26)
+## El paso «confirmacion» («Así entendimos tu idea») — pulido de IA (2026-08-26)
 
-> Estado: trabajado en un **commit local sin subir** al 2026-08-26. Es el primer lote del punto de Sprint 2 "corregir errores del paso «Así entendimos tu idea»" (ver [[../decisiones/plan-lanzamiento-60-90-dias#Corregir errores del paso «Así entendimos tu idea» (agregado 2026-08-26)]]). Fuentes: `src/components/onboarding/idea-confirmation.tsx`, `src/app/analizar/actions.ts`, `src/lib/ai/openai.ts`, `src/lib/ai/prompts/idea-refinement.ts`, `src/lib/ai/prompts/idea-assumptions-rotate.ts` (nuevo), `src/lib/ai/schemas/idea-assumptions*.ts`.
+> Estado: commiteado como `0259101` (2026-08-26). Es el primer lote del punto de Sprint 2 "corregir errores del paso «Así entendimos tu idea»" (ver [[../decisiones/plan-lanzamiento-60-90-dias#Corregir errores del paso «Así entendimos tu idea» (agregado 2026-08-26)]]). Fuentes: `src/components/onboarding/idea-confirmation.tsx`, `src/app/analizar/actions.ts`, `src/lib/ai/openai.ts`, `src/lib/ai/prompts/idea-refinement.ts`, `src/lib/ai/prompts/idea-assumptions-rotate.ts` (nuevo), `src/lib/ai/schemas/idea-assumptions*.ts`.
 
 ### Qué muestra el paso
 Tras describir la idea (`idea`), el paso `confirmacion` muestra dos bloques:
