@@ -23,27 +23,47 @@ export type IdeaAiPayload = {
 function parseAssumptionItems(raw: unknown): AssumptionItem[] {
   if (!Array.isArray(raw) || raw.length === 0) return [];
 
+  let items: AssumptionItem[];
+
   if (typeof raw[0] === "string") {
-    return (raw as string[]).map((text, index) => ({
+    items = (raw as string[]).map((text, index) => ({
       id: `legacy-${index}`,
       text,
       refinementHint: "¿Puedes confirmar o aclarar este punto?",
       category: "otro" as const,
     }));
+  } else {
+    const parsed = assumptionsArraySchema.safeParse(raw);
+    items = parsed.success ? parsed.data : [];
   }
 
-  const parsed = assumptionsArraySchema.safeParse(raw);
-  return parsed.success ? parsed.data : [];
+  return ensureUniqueAssumptionIds(items);
+}
+
+function ensureUniqueAssumptionIds(items: AssumptionItem[]): AssumptionItem[] {
+  const seen = new Set<string>();
+  return items.map((item, index) => {
+    const base = item.id?.trim() || `assumption-${index + 1}`;
+    let id = base;
+    let suffix = 2;
+    while (seen.has(id)) {
+      id = `${base}-${suffix}`;
+      suffix += 1;
+    }
+    seen.add(id);
+    return id === item.id ? item : { ...item, id };
+  });
 }
 
 export function packIdeaAiPayload(
   assumptions: AssumptionItem[],
   structured?: StructuredUnderstanding
 ): IdeaAiPayload | AssumptionItem[] {
+  const unique = ensureUniqueAssumptionIds(assumptions);
   if (structured) {
-    return { assumptions, structured };
+    return { assumptions: unique, structured };
   }
-  return assumptions;
+  return unique;
 }
 
 export function unpackIdeaAiPayload(raw: unknown): IdeaAiPayload {

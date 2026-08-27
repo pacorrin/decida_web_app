@@ -111,6 +111,8 @@ export type RefineIdeaState = ActionState & {
   }>;
   improvements?: string[];
   refined?: boolean;
+  /** True when only the assumptions list was rotated (no summary rewrite). */
+  assumptionsOnly?: boolean;
 };
 
 export type ActionState = {

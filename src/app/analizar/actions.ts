@@ -4,10 +4,12 @@ import { redirect } from "next/navigation";
 import {
   generateFallbackIdeaSummary,
   generateFallbackIdeaRefinement,
+  generateFallbackIdeaAssumptionsRotation,
   generateIdeaRefinement,
+  generateIdeaAssumptionsRotation,
   generateIdeaSummary,
 } from "@/lib/ai/openai";
-import { parseAssumptions, packIdeaAiPayload } from "@/lib/ai/schemas/idea-assumptions";
+import { parseAssumptions, packIdeaAiPayload, unpackIdeaAiPayload } from "@/lib/ai/schemas/idea-assumptions";
 import type { StructuredUnderstanding } from "@/lib/ai/schemas/structured-understanding";
 import { generateReport } from "@/lib/ai/generate-report";
 import { runScoringPipeline } from "@/lib/scoring";
@@ -244,6 +246,7 @@ export async function refineIdea(
   }
 
   const allAssumptions = parseAssumptions(idea.bide_ai_detected_assumptions);
+  const payload = unpackIdeaAiPayload(idea.bide_ai_detected_assumptions);
   const selectedAssumptions = allAssumptions.filter((a) =>
     parsed.data.selectedIds.includes(a.id)
   );
@@ -256,18 +259,24 @@ export async function refineIdea(
   }
 
   let refinement;
+  let usedFallback = false;
   try {
     refinement = await generateIdeaRefinement({
       originalDescription: idea.bide_original_description ?? "",
       currentSummary: idea.bide_ai_summary,
       selectedAssumptions,
       clarifications: parsed.data.clarifications ?? {},
+      currentStructured: payload.structured,
     });
-  } catch {
+  } catch (error) {
+    usedFallback = true;
+    console.error("[refineIdea] AI refinement failed, using fallback", error);
     refinement = generateFallbackIdeaRefinement({
       currentSummary: idea.bide_ai_summary,
       selectedAssumptions,
       clarifications: parsed.data.clarifications ?? {},
+      currentStructured: payload.structured,
+      originalDescription: idea.bide_original_description ?? "",
     });
   }
 
@@ -294,7 +303,54 @@ export async function refineIdea(
     structuredUnderstanding: refinement.structuredUnderstanding,
     assumptions: refinement.assumptions,
     improvements: refinement.improvements,
-    message: "Tu idea quedó más clara. Revisa el resumen actualizado.",
+    message: usedFallback
+      ? "Integramos tus aclaraciones en el resumen. Revisa Nuestro entendimiento."
+      : "Actualizamos Nuestro entendimiento con tus aclaraciones. Revisa el resumen.",
+  };
+}
+
+/**
+ * Regenerates only the "Supuestos detectados" list with new angles,
+ * without rewriting the understanding card above.
+ */
+export async function rotateIdeaAssumptions(
+  _prev: RefineIdeaState,
+  _formData: FormData
+): Promise<RefineIdeaState> {
+  const assessment = await requireAssessment();
+  const idea = assessment.business_idea;
+  if (!idea?.bide_ai_summary) redirectToStep("idea");
+
+  const payload = unpackIdeaAiPayload(idea.bide_ai_detected_assumptions);
+  const previousAssumptions = payload.assumptions;
+
+  let rotation;
+  try {
+    rotation = await generateIdeaAssumptionsRotation({
+      originalDescription: idea.bide_original_description ?? "",
+      currentSummary: idea.bide_ai_summary,
+      structured: payload.structured,
+      previousAssumptions,
+    });
+  } catch {
+    rotation = generateFallbackIdeaAssumptionsRotation(previousAssumptions);
+  }
+
+  await prisma.business_ideas.update({
+    where: { bide_asmt_id: assessment.asmt_id },
+    data: {
+      bide_ai_detected_assumptions: packIdeaAiPayload(
+        rotation.assumptions,
+        payload.structured
+      ),
+    },
+  });
+
+  return {
+    success: true,
+    assumptionsOnly: true,
+    assumptions: rotation.assumptions,
+    message: "Nuevos supuestos listos. Elige los que quieras aclarar.",
   };
 }
 

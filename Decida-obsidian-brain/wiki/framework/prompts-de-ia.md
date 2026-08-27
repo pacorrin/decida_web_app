@@ -1,7 +1,7 @@
 ---
 type: framework
 tags: [decida, ai, prompts]
-updated: 2026-08-05
+updated: 2026-08-26
 ---
 
 # Prompts de IA y lógica de diagnóstico
@@ -14,8 +14,11 @@ La IA **no es el cerebro único del producto**. Actúa como redactor-consultor q
 ## Dónde vive en el código
 - `src/lib/ai/openai.ts` — cliente/modelo de razonamiento (`generateReasoningJson`, `getReasoningModel`).
 - `src/lib/ai/generate-report.ts` — orquesta la generación del reporte completo, sección por sección, **con reintentos automáticos** (ver [[../arquitectura/manejo-de-errores-y-reembolsos]]).
-- `src/lib/ai/prompts/idea-summary.ts`, `idea-refinement.ts` — prompts de comprensión/confirmación de la idea (fase gratis del onboarding).
-- `src/lib/ai/schemas/` — schemas Zod que tipan cada salida de IA: `idea-summary`, `idea-refinement`, `idea-assumptions`, `structured-understanding`, `scoring-interpret`.
+- `src/lib/ai/prompts/idea-summary.ts`, `idea-refinement.ts`, `idea-assumptions-rotate.ts` — prompts de comprensión/confirmación de la idea (fase gratis del onboarding). `idea-assumptions-rotate` es nuevo (commit pendiente, 2026-08-26): solo regenera la lista de supuestos, sin reescribir el resumen. Ver [[../experiencia/flujo-de-onboarding#El paso «confirmacion» («Así entendimos tu idea») — pulido de IA (commit pendiente, 2026-08-26)]].
+- `src/lib/ai/schemas/` — schemas Zod que tipan cada salida de IA: `idea-summary`, `idea-refinement`, `idea-assumptions`, `idea-assumptions-rotate`, `structured-understanding`, `scoring-interpret`.
+
+### Pulido del prompt de refinamiento de idea (commit pendiente, 2026-08-26)
+`IDEA_REFINEMENT_SYSTEM_PROMPT` se reescribió de "integra las aclaraciones del usuario" a "REESCRIBE «Nuestro entendimiento» como análisis sintetizado". Reglas nuevas: prohibido pegar la aclaración literal, prohibidos los verbos de transcripción ("comentaste", "indicaste", "aclaraste", "mencionaste"…), cada campo de `structuredUnderstanding` = 1 frase analítica corta, mapeo semántico del tema al campo, + un ejemplo de referencia de estilo en el propio prompt. El prompt ahora recibe el `structuredUnderstanding` actual como contexto. Además hay una **capa de saneo determinística en `openai.ts`** que corre sobre la salida (real o fallback): detecta volcados de Q&A o de aclaraciones crudas y los reemplaza por el valor previo. Esto es una defensa dedicada contra que la sección "Así entendimos tu idea" se lea como transcripción — antes lo hacía, sobre todo en el fallback sin API key.
 
 Esto confirma que el diseño de "prompts separados por responsabilidad, con output JSON tipado" de Notion 15 se implementó literalmente — cada prompt tiene su propio schema Zod de validación.
 

@@ -127,11 +127,13 @@ Auditoría completa campo por campo contra [[../../raw/notion/17-rubric-6-dimens
 
 **Se puede posponer a una iteración posterior** (no bloquea ni rompe nada hoy): pregunta dedicada de escalabilidad real del negocio, restricciones personales, diferenciación explícita, ticket/frecuencia de compra. Detalle completo en [[../producto/gaps-onboarding-vs-framework]].
 
-### Corregir errores del paso "Así entendimos tu idea" (agregado 2026-08-26)
+### Corregir errores del paso «Así entendimos tu idea» (agregado 2026-08-26)
 
 Punto agregado a pedido del usuario. El paso `confirmacion` del onboarding (`/analizar/confirmacion`, título "Así entendimos tu idea" en `src/lib/onboarding/copy.ts`; UI en `src/components/onboarding/idea-confirmation.tsx`; resumen/refinamiento IA en `src/lib/ai/prompts/idea-summary.ts` e `idea-refinement.ts`) tiene errores que hay que corregir en este sprint.
 
 _Errores concretos pendientes de que el usuario los detalle_ — al recibir el listado, desglosar aquí cada bug con: qué pasa, cómo reproducirlo, y si es de UI, de la llamada a IA (incl. el fallback determinístico cuando no hay `OPENAI_API_KEY`), o de persistencia del resumen/aclaraciones.
+
+**Avance real (commit local sin subir, 2026-08-26):** primer lote ya trabajado. Corrige el error de que "Pulir mi idea con IA" (y sobre todo el fallback offline) pegaba las aclaraciones crudas en las tarjetas de "Nuestro entendimiento", dejando texto tipo transcripción. Incluye: prompt de refinamiento reescrito para sintetizar en vez de transcribir, capa de saneo determinística en `openai.ts`, fallback reescrito que teje las aclaraciones en prosa natural, IDs de supuesto únicos (evita que un input de aclaración llene otro), acción nueva "Analizar más" (`rotateIdeaAssumptions`) que solo rota supuestos sin reescribir el resumen, y varios arreglos de a11y/UX. Detalle completo en [[../experiencia/flujo-de-onboarding#El paso «confirmacion» («Así entendimos tu idea») — pulido de IA (commit pendiente, 2026-08-26)]]. Agrega 1 error nuevo de eslint (`set-state-in-effect`, mismo patrón que el preexistente en el archivo).
 
 ### Datos de negocio adicionales a capturar en el onboarding (agregado 2026-08-26)
 

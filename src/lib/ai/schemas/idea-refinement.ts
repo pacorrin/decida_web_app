@@ -6,7 +6,7 @@ export const ideaRefinementSchema = z.object({
   summary: z.string(),
   refinedDescription: z.string(),
   structuredUnderstanding: structuredUnderstandingSchema,
-  assumptions: z.array(assumptionItemSchema).max(5),
+  assumptions: z.array(assumptionItemSchema).min(2).max(5),
   improvements: z.array(z.string()).min(1).max(4),
 });
 
