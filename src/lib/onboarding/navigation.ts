@@ -20,6 +20,15 @@ function isSituationComplete(profile: AssessmentBase["assessment_profile"]): boo
   );
 }
 
+function hasProducts(assessment: AssessmentBase): boolean {
+  const products = assessment.financial_inputs?.finp_products;
+  return Array.isArray(products) && products.length > 0;
+}
+
+function isFitComplete(fit: AssessmentBase["personal_fit_answers"]): boolean {
+  return !!(fit?.pfit_work_preference && fit.pfit_hiring_preference);
+}
+
 export function getResumeStep(
   assessment: AssessmentBase | null
 ): OnboardingStepSlug {
@@ -45,12 +54,15 @@ export function getResumeStep(
     return "perfil";
   }
 
-  const fit = assessment.personal_fit_answers;
-  if (!fit?.pfit_work_preference || !fit.pfit_hiring_preference) {
+  if (!isFitComplete(assessment.personal_fit_answers)) {
     return "ajuste";
   }
 
-  if (!assessment.financial_inputs || !assessment.market_risk_inputs) {
+  if (!hasProducts(assessment)) {
+    return "productos";
+  }
+
+  if (!assessment.market_risk_inputs) {
     return "evaluacion";
   }
 
@@ -83,6 +95,7 @@ export function canAccessStep(
   const paidSteps: OnboardingStepSlug[] = [
     "perfil",
     "ajuste",
+    "productos",
     "evaluacion",
     "resultado",
   ];
@@ -90,9 +103,9 @@ export function canAccessStep(
     const prerequisites: Record<string, boolean> = {
       perfil: isPaid(assessment),
       ajuste: isSituationComplete(assessment.assessment_profile),
-      evaluacion: !!assessment.personal_fit_answers?.pfit_work_preference,
-      resultado:
-        !!assessment.financial_inputs && !!assessment.market_risk_inputs,
+      productos: isFitComplete(assessment.personal_fit_answers),
+      evaluacion: hasProducts(assessment),
+      resultado: hasProducts(assessment) && !!assessment.market_risk_inputs,
     };
     return prerequisites[slug] ?? false;
   }

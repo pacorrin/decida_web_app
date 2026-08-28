@@ -1,7 +1,7 @@
 ---
 type: framework
 tags: [decida, scoring, ai]
-updated: 2026-08-27
+updated: 2026-08-28
 ---
 
 # Scoring Engine
@@ -20,7 +20,7 @@ El score alimenta semáforos, explicaciones, alertas, recomendaciones y prompts 
 ## Arquitectura implementada (confirmada en código)
 El diseño Notion pedía explícitamente: *"implementar primero reglas simples y explícitas en TypeScript. Evitar modelos opacos al inicio. La IA debe explicar, no decidir."* Esto se implementó tal cual, en `runScoringPipeline()` (`src/lib/scoring/index.ts`):
 
-1. **`calculateDeterministicScores(assessment)`** (`types.ts`) — reglas TypeScript puras sobre los datos del assessment, produce un score numérico por cada una de las [[dimensiones-de-viabilidad|6 dimensiones]] + métricas financieras calculadas (margen, break-even, payback).
+1. **`calculateDeterministicScores(assessment)`** (`types.ts`) — reglas TypeScript puras sobre los datos del assessment, produce un score numérico por cada una de las [[dimensiones-de-viabilidad|6 dimensiones]] + métricas financieras calculadas (margen, break-even, payback). **Desde 2026-08-28** el precio/costo/volumen que consume vienen del **blend ponderado por unidades** del listado de productos del paso `productos` (`blendProducts()` en `src/lib/onboarding/products.ts`), no de 3 campos únicos. Ver [[../experiencia/flujo-de-onboarding#El paso «productos» — catálogo de lo que se piensa vender (2026-08-28)]].
 2. **`interpretScores(scores, context)`** — llama a `generateReasoningJson()` (OpenAI) con `SCORING_INTERPRET_SYSTEM_PROMPT` para traducir los scores numéricos a: señal por dimensión (verde/amarillo/rojo), red flags, y recomendación final.
 3. **Fallback determinístico**: si la llamada a IA falla, `fallbackScoringInterpret(scores)` genera la interpretación sin IA — el pipeline nunca se cae solo porque OpenAI falle. Esto es coherente con [[../arquitectura/manejo-de-errores-y-reembolsos]].
 4. El resultado se persiste vía `prisma.assessment_scores.upsert()`, incluyendo `ascs_scoring_version` (versión del scoring + modelo de razonamiento usado) para trazabilidad.
@@ -38,7 +38,10 @@ Personal Fit 20% · Financial Viability 25% · Commercial Viability 25% · Risk 
 Catálogo de diseño (Notion): inversión inicial > capital disponible · inversión > lo que puede perder · margen por venta negativo · no sabe quién es el cliente · no sabe cómo conseguirá clientes · no ha hablado con clientes y planea invertir capital alto · quiere reemplazar empleo sin ingresos recurrentes probados · depende de plataforma externa sin plan alterno · requiere permisos/regulación no investigados.
 
 **Cómo se calculan hoy (código):**
-- **Determinísticas** (`detectFinancialRedFlags()` en `src/lib/scoring/types.ts`, desde 2026-08-27): las dos red flags financieras del catálogo — "inversión inicial > pérdida aceptable" e "inversión inicial > capital disponible" — se calculan cruzando `finp_initial_investment` (número) contra el **techo** del rango declarado (`aprf_acceptable_loss_range` / `aprf_capital_available_range`). Solo se disparan cuando la inversión supera el tope del rango; los rangos abiertos (`mas_100k`, `mas_500k`) nunca disparan. Si los rangos no se capturaron (assessments viejos), no se emite nada. `runScoringPipeline` las mete **primero** en `ascs_red_flags`, antes que las de la IA.
+- **Determinísticas** (`detectFinancialRedFlags()` en `src/lib/scoring/types.ts`):
+  - _Desde 2026-08-27_: "inversión inicial > pérdida aceptable" e "inversión inicial > capital disponible" — cruzando `finp_initial_investment` (número) contra el **techo** del rango declarado (`aprf_acceptable_loss_range` / `aprf_capital_available_range`). Solo se disparan cuando la inversión supera el tope; los rangos abiertos (`mas_100k`, `mas_500k`) nunca disparan; si los rangos no se capturaron (assessments viejos), no se emite nada.
+  - _Desde 2026-08-28_: "margen por venta negativo" — una red flag por cada producto del paso `productos` cuyo precio sea ≤ su costo variable (`productsBelowCost()` sobre `finp_products`).
+  - `runScoringPipeline` mete las determinísticas **primero** en `ascs_red_flags`, antes que las de la IA.
 - **De la IA**: el resto del catálogo (cliente poco claro, canal poco claro, dependencia de plataforma, regulación, etc.) las sigue infiriendo `interpretScores` a partir del contexto. El prompt ahora también recibe la inversión y los rangos de capital/pérdida, así que suele reforzar la señal de sobre-exposición con su propia red flag.
 
 > Brecha cerrada: las dos red flags financieras habían quedado incalculables cuando se removieron las preguntas de capital/pérdida (commit `5886b4d`). Con esas preguntas de vuelta (`43d1112`) y `detectFinancialRedFlags()` ya vuelven a calcularse. Ver [[../decisiones/evolucion-del-producto#2]].

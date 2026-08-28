@@ -28,6 +28,7 @@ export type AssessmentBase = assessments & {
   financial_inputs?: {
     finp_id: string;
     finp_initial_investment?: unknown;
+    finp_products?: unknown;
     finp_price_per_sale?: unknown;
     finp_variable_cost_per_sale?: unknown;
     finp_estimated_monthly_sales?: number | null;

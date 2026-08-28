@@ -1,6 +1,7 @@
 import { generateText, getNarrativeModel } from "@/lib/ai/openai";
 import { prisma } from "@/lib/prisma";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
+import { parseStoredProducts } from "@/lib/onboarding/products";
 import type { ScoringInterpretResult } from "@/lib/ai/schemas/scoring-interpret";
 import type { DeterministicScoreResult } from "@/lib/scoring/types";
 
@@ -28,6 +29,7 @@ type ReportContext = {
   metrics: string;
   interpretation: string;
   profile: string;
+  products: string;
 };
 
 function buildContext(
@@ -37,6 +39,17 @@ function buildContext(
 ): ReportContext {
   return {
     idea: assessment.business_idea?.bide_ai_summary ?? "",
+    products: JSON.stringify(
+      parseStoredProducts(assessment.financial_inputs?.finp_products).map(
+        (p) => ({
+          nombre: p.name,
+          tipo: p.kind,
+          precio: p.price,
+          costo_variable: p.variableCost,
+          unidades_mes: p.monthlyUnits,
+        })
+      )
+    ),
     scores: JSON.stringify(
       deterministic.dimensions.map((d) => ({
         dimension: d.label,
@@ -69,9 +82,9 @@ const SECTION_PROMPTS: Record<
   executive_summary: (ctx) =>
     `Escribe un resumen ejecutivo del diagnóstico.\nIdea: ${ctx.idea}\nScores: ${ctx.scores}\nInterpretación: ${ctx.interpretation}`,
   business_understanding: (ctx) =>
-    `Explica cómo entendemos el negocio del usuario y su propuesta de valor.\nIdea: ${ctx.idea}\nPerfil: ${ctx.profile}`,
+    `Explica cómo entendemos el negocio del usuario y su propuesta de valor.\nIdea: ${ctx.idea}\nPerfil: ${ctx.profile}\nProductos/servicios que planea vender: ${ctx.products}`,
   financial_analysis: (ctx) =>
-    `Analiza la viabilidad financiera usando SOLO estas métricas: ${ctx.metrics}\nScores financieros: ${ctx.scores}`,
+    `Analiza la viabilidad financiera usando SOLO estas métricas: ${ctx.metrics}\nScores financieros: ${ctx.scores}\nProductos/servicios y sus precios/costos/volúmenes: ${ctx.products}\nComenta el margen por producto y si alguno se vende con pérdida.`,
   personal_fit_analysis: (ctx) =>
     `Analiza la compatibilidad entre la persona y este tipo de negocio.\nPerfil: ${ctx.profile}\nIdea: ${ctx.idea}`,
   time_operation_analysis: (ctx) =>

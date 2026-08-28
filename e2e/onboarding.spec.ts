@@ -3,8 +3,8 @@ import { test, expect, type Page } from "@playwright/test";
 /**
  * E2E del onboarding de análisis de una idea de negocio (`/analizar`).
  *
- * El flujo es un wizard de 8 pasos (contacto → idea → confirmacion → pago →
- * situacion → ajuste → evaluacion → resultado) impulsado por Server
+ * El flujo es un wizard de 9 pasos (contacto → idea → confirmacion → pago →
+ * situacion → ajuste → productos → evaluacion → resultado) impulsado por Server
  * Actions. No hay endpoints REST que interceptar: el avance se verifica por el
  * cambio de URL y el contenido renderizado. Los pasos deben completarse en
  * orden porque un guard en el servidor redirige cualquier intento de saltar.
@@ -433,17 +433,27 @@ async function completarAjuste(page: Page, scenario: Scenario): Promise<void> {
     // processComfortScore defaults to "3" in scenarios
 
     await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page).toHaveURL(/\/analizar\/productos/, { timeout: 30_000 });
+  });
+}
+
+async function completarProductos(page: Page, scenario: Scenario): Promise<void> {
+  await test.step("Paso 8 · Productos y servicios", async () => {
+    const e = scenario.evaluacion;
+    await page.fill('[data-testid="product-name-0"]', `Oferta principal — ${scenario.nombre}`);
+    await page.fill('[data-testid="product-price-0"]', e.pricePerSale);
+    await page.fill('[data-testid="product-cost-0"]', e.variableCostPerSale);
+    await page.fill('[data-testid="product-units-0"]', e.estimatedMonthlySales);
+
+    await page.getByRole("button", { name: "Continuar" }).click();
     await expect(page).toHaveURL(/\/analizar\/evaluacion/, { timeout: 30_000 });
   });
 }
 
 async function completarEvaluacion(page: Page, scenario: Scenario): Promise<void> {
-  await test.step("Paso 8 · Evaluación (números y mercado)", async () => {
+  await test.step("Paso 9 · Evaluación (números y mercado)", async () => {
     const e = scenario.evaluacion;
     await page.fill("#initialInvestment", e.initialInvestment);
-    await page.fill("#pricePerSale", e.pricePerSale);
-    await page.fill("#variableCostPerSale", e.variableCostPerSale);
-    await page.fill("#estimatedMonthlySales", e.estimatedMonthlySales);
     await selectOptionCard(page, "fixedMonthlyCostsRange", e.fixedMonthlyCostsRange);
 
     await selectOptionCard(page, "hasTalkedToCustomers", e.hasTalkedToCustomers);
@@ -463,7 +473,7 @@ async function completarEvaluacion(page: Page, scenario: Scenario): Promise<void
 }
 
 async function verificarResultado(page: Page): Promise<void> {
-  await test.step("Paso 8 · Resultado / diagnóstico", async () => {
+  await test.step("Paso 10 · Resultado / diagnóstico", async () => {
     await expect(
       page.getByRole("heading", {
         name: "Tu diagnóstico de viabilidad",
@@ -520,6 +530,7 @@ test.describe("Onboarding de análisis de idea — múltiples giros", () => {
       await completarPago(page);
       await completarSituacion(page, scenario);
       await completarAjuste(page, scenario);
+      await completarProductos(page, scenario);
       await completarEvaluacion(page, scenario);
       await verificarResultado(page);
       await enviarFeedback(page);

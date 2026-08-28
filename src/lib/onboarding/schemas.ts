@@ -53,11 +53,26 @@ export const paymentSchema = z.object({
 
 export const evaluationFinancialSchema = z.object({
   initialInvestment: z.coerce.number().min(0),
-  pricePerSale: z.coerce.number().min(0),
-  variableCostPerSale: z.coerce.number().min(0),
-  estimatedMonthlySales: z.coerce.number().int().min(0),
   fixedMonthlyCostsRange: z.string().min(1),
   currency: z.string().default("MXN"),
+});
+
+export const productItemSchema = z.object({
+  name: z.string().trim().min(1, "Escribe un nombre").max(120),
+  kind: z.enum(["producto", "servicio"]),
+  price: z.coerce.number().min(0, "El precio no puede ser negativo"),
+  variableCost: z.coerce.number().min(0, "El costo no puede ser negativo"),
+  monthlyUnits: z.coerce
+    .number()
+    .int("Usa un número entero")
+    .min(0, "No puede ser negativo"),
+});
+
+export const productsSchema = z.object({
+  products: z
+    .array(productItemSchema)
+    .min(1, "Agrega al menos un producto o servicio")
+    .max(10, "Máximo 10 productos o servicios"),
 });
 
 export const evaluationMarketSchema = z.object({
@@ -92,6 +107,8 @@ export type SituationInput = z.infer<typeof situationSchema>;
 export type PersonalFitInput = z.infer<typeof personalFitSchema>;
 export type PaymentInput = z.infer<typeof paymentSchema>;
 export type EvaluationFinancialInput = z.infer<typeof evaluationFinancialSchema>;
+export type ProductItemInput = z.infer<typeof productItemSchema>;
+export type ProductsInput = z.infer<typeof productsSchema>;
 export type FeedbackInput = z.infer<typeof feedbackSchema>;
 export const refineIdeaSchema = z.object({
   selectedIds: z.array(z.string()).min(1, "Selecciona al menos un supuesto"),

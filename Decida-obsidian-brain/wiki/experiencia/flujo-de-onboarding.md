@@ -1,7 +1,7 @@
 ---
 type: experiencia
 tags: [decida, onboarding, ux]
-updated: 2026-08-26
+updated: 2026-08-28
 ---
 
 # Flujo de onboarding — diseño vs implementado
@@ -23,10 +23,11 @@ En este diseño, el pago ocurre **antes** de que el usuario invierta esfuerzo de
 | 4 | `pago` | pago | 1 |
 | 5 | `perfil` | diagnostico | 6 |
 | 6 | `ajuste` | diagnostico | 3 |
-| 7 | `evaluacion` | diagnostico | 5 |
-| 8 | `resultado` | diagnostico | 0 |
+| 7 | `productos` | diagnostico | 3 |
+| 8 | `evaluacion` | diagnostico | 4 |
+| 9 | `resultado` | diagnostico | 0 |
 
-Tres fases explícitas: **`gratis`** (contacto, idea, confirmación) → **`pago`** (compromiso) → **`diagnostico`** (perfil, ajuste, evaluación, resultado).
+Tres fases explícitas: **`gratis`** (contacto, idea, confirmación) → **`pago`** (compromiso) → **`diagnostico`** (perfil, ajuste, productos, evaluación, resultado). `productos` se agregó el 2026-08-28 — ver [[#El paso «productos» — catálogo de lo que se piensa vender (2026-08-28)]].
 
 ## La diferencia clave
 En el código, **la idea se captura y se confirma con IA antes del pago**, no después. El usuario ve que el sistema entendió su idea (gratis) y *luego* decide comprometerse pagando. Esto es lo opuesto al orden original de Notion, y probablemente una decisión deliberada de conversión: reduce la fricción de pagar "a ciegas" — el usuario paga después de sentir que el producto ya lo entendió, no antes.
@@ -40,7 +41,7 @@ Desde la integración con el [[../arquitectura/modulo-de-usuarios-y-autenticacio
 
 ## El paso «confirmacion» («Así entendimos tu idea») — pulido de IA (2026-08-26)
 
-> Estado: commiteado como `0259101` (2026-08-26). Es el primer lote del punto de Sprint 2 "corregir errores del paso «Así entendimos tu idea»" (ver [[../decisiones/plan-lanzamiento-60-90-dias#Corregir errores del paso «Así entendimos tu idea» (agregado 2026-08-26)]]). Fuentes: `src/components/onboarding/idea-confirmation.tsx`, `src/app/analizar/actions.ts`, `src/lib/ai/openai.ts`, `src/lib/ai/prompts/idea-refinement.ts`, `src/lib/ai/prompts/idea-assumptions-rotate.ts` (nuevo), `src/lib/ai/schemas/idea-assumptions*.ts`.
+> Estado: commiteado como `0259101` (2026-08-26). **Cierra** el punto de Sprint 2 "corregir errores del paso «Así entendimos tu idea»" — el usuario confirmó el 2026-08-28 que no hubo una lista de bugs aparte, este commit cubrió lo que tenía en mente (ver [[../decisiones/plan-lanzamiento-60-90-dias#✅ Corregir errores del paso «Así entendimos tu idea» (agregado 2026-08-26, cerrado 2026-08-28)]]). Fuentes: `src/components/onboarding/idea-confirmation.tsx`, `src/app/analizar/actions.ts`, `src/lib/ai/openai.ts`, `src/lib/ai/prompts/idea-refinement.ts`, `src/lib/ai/prompts/idea-assumptions-rotate.ts` (nuevo), `src/lib/ai/schemas/idea-assumptions*.ts`.
 
 ### Qué muestra el paso
 Tras describir la idea (`idea`), el paso `confirmacion` muestra dos bloques:
@@ -65,6 +66,32 @@ Al seleccionar supuestos, escribir aclaraciones y darle a **"Pulir mi idea con I
 - **Schema**: `ideaRefinementSchema.assumptions` pasa de `.max(5)` a `.min(2).max(5)`; nuevo flag `RefineIdeaState.assumptionsOnly`; mensajes de éxito distintos según se haya usado IA o fallback; `console.error` al caer en fallback.
 
 > Nota de estado: el commit agrega **un error nuevo de eslint** `react-hooks/set-state-in-effect` en `idea-confirmation.tsx` (el `useEffect` de `rotateState` sigue el mismo patrón que el de `refineState`, que ya tenía ese error preexistente). `tsc --noEmit` limpio.
+
+## El paso «productos» — catálogo de lo que se piensa vender (2026-08-28)
+
+Paso nuevo (`/analizar/productos`, "Tus productos y servicios"), entre `ajuste` y `evaluacion`. Cubre el punto 5 de Sprint 2 ("sección de productos/servicios a vender con su precio"). Fuentes: `src/app/analizar/productos/page.tsx`, `src/components/onboarding/products-form.tsx`, `src/lib/onboarding/products.ts`, `saveProducts` en `src/app/analizar/actions.ts`.
+
+### Qué captura
+Una lista de 1 a 10 renglones, cada uno: **nombre**, **tipo** (producto/servicio), **precio**, **costo variable por unidad**, **unidades/mes estimadas**. UI con agregar/quitar renglón y un preview en vivo de ingresos/utilidad/margen mensual, más una alerta si algún renglón se vende a precio ≤ costo.
+
+### Decisión: el listado **absorbe** los campos únicos de "Evaluemos los números"
+Antes, el paso `evaluacion` capturaba **un solo** `pricePerSale` / `variableCostPerSale` / `estimatedMonthlySales`. Ahora esos 3 campos **se quitaron de `evaluacion`** y `saveProducts` los deriva del listado como un **blend ponderado por unidades** y los escribe en las mismas columnas (`finp_price_per_sale`, etc.), así que `calculateFinancialMetrics` y todo lo aguas abajo no cambió:
+- `estimatedMonthlySales` = Σ `monthlyUnits`
+- `pricePerSale` = Σ(precio·unidades) / Σ unidades
+- `variableCostPerSale` = Σ(costo·unidades) / Σ unidades
+
+El blend es exacto para la utilidad bruta mensual (= Σ (precio−costo)·unidades). El listado crudo se guarda además en la columna JSON nueva `finp_products` para el reporte y análisis por producto. Si Σ unidades = 0 → los tres quedan en 0 (degrada sin romper).
+
+### Efecto en el diagnóstico
+- `detectFinancialRedFlags()` emite una red flag determinística por cada producto con precio ≤ costo variable ("cada venta pierde dinero"). Ver [[../framework/scoring-engine#Red flags]].
+- El prompt de reporte (`business_understanding` y `financial_analysis`) recibe el listado y comenta el margen por producto y si alguno va con pérdida.
+- El reporte (`result-report.tsx`) muestra una tabla "Productos y servicios" con margen por renglón (rojo si ≤ 0), y las filas de precio/costo en "Inputs y cálculos" se etiquetan "promedio (ponderado)" cuando hay más de un producto.
+
+### Guard / navegación
+`hasProducts()` = `finp_products` es un array no vacío. `getResumeStep` manda a `productos` después de `ajuste` si no hay productos; `canAccessStep` agrega `productos` a los pasos post-pago con prerequisito "ajuste completo", y `evaluacion`/`resultado` ahora requieren `hasProducts`.
+
+### Verificado end-to-end (2026-08-28)
+Con un assessment real (cookie sembrada, sin pasar por el contacto roto de los e2e): el paso renderiza, guarda 2 productos, el blend en BD queda correcto (precio $900, costo $206.67, 30 uds. para el ejemplo probado), `evaluacion` ya no tiene los 3 campos, el guard no deja saltar a `resultado`, y el reporte final muestra la tabla de productos + el margen −7% en rojo + la red flag de venta bajo costo. `tsc`, `eslint` y `vitest` (19 tests, +5 de `products.ts`) limpios.
 
 ## Paso "ajuste" — no existía en el diseño original
 `ajuste` (fase diagnóstico, ~3 min) no tiene equivalente directo en los 12 pasos de Notion. Por el nombre ("Ajuste personal") probablemente corresponde a lo que Notion llamaba "Personal Work Fit" (Step 4) — pero movido de antes-del-pago a después-del-pago, y separado de "perfil" como su propio paso. A verificar leyendo `src/app/analizar/ajuste/page.tsx` en una próxima sesión si se necesita el detalle exacto de qué preguntas contiene hoy.

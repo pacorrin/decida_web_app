@@ -1,7 +1,7 @@
 ---
 type: decision-log
 tags: [decida, decisiones, evolucion]
-updated: 2026-08-27
+updated: 2026-08-28
 ---
 
 # Evolución del producto — dónde el código se separó del PRD
@@ -50,6 +50,12 @@ Mapeo completo del resto de campos del onboarding aún pendientes en [[../produc
 ## 7. Markdown en respuestas de IA
 **Notion**: no especificaba formato de salida más allá de "output JSON" por sección.
 **Código**: soporte de renderizado markdown agregado a las respuestas de IA (`react-markdown`, `remark-gfm`, `rehype-raw`) — mejora probable de legibilidad del reporte.
+
+## 8. Paso "productos" — de un precio único a un catálogo (2026-08-28)
+**Notion / código previo**: el paso de evaluación financiera capturaba **un solo** precio por venta, costo variable y ventas/mes.
+**Código**: paso nuevo `productos` entre `ajuste` y `evaluacion` — lista de 1-10 productos/servicios, cada uno con nombre, tipo, precio, costo variable y unidades/mes. El paso `evaluacion` perdió esos 3 campos; `saveProducts` los deriva como blend ponderado por unidades y los escribe en las mismas columnas (`finp_price_per_sale`, etc.), así que el motor de scoring no cambió. Listado crudo en la columna JSON nueva `finp_products`.
+**Por qué**: pedido del usuario (Sprint 2, punto 5) — capturar el catálogo real da señal de margen por producto y permite la red flag "vende bajo costo". Ver [[../experiencia/flujo-de-onboarding#El paso «productos» — catálogo de lo que se piensa vender (2026-08-28)]].
+**Estado**: implementado y verificado end-to-end. Sin commitear al cierre de la sesión del 2026-08-28.
 
 ## Patrón general observado
 En casi todos los casos, el código **construyó más resiliencia y más superficie de producto** de lo que el PRD original consideraba necesario para un MVP de validación (ver la advertencia explícita en [[../producto/prd#Riesgo estratégico]]: *"el mayor riesgo es construir demasiada funcionalidad antes de confirmar que la gente paga"*). Ninguna fuente ingerida (Notion o repo) documenta si esto respondió a feedback real de clientes pagados o fue trabajo anticipado. **Esta es la pregunta más valiosa para la primera minuta de reunión que se ingiera** — ver [[../reuniones/minutas]].

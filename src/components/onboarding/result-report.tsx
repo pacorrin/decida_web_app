@@ -9,6 +9,7 @@ import {
   type RecommendationType,
 } from "@/lib/example-report-data";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
+import { parseStoredProducts } from "@/lib/onboarding/products";
 import { CheckCircle2, AlertTriangle, AlertCircle, TrendingUp } from "lucide-react";
 import { ReportErrorState } from "@/components/onboarding/report-error-state";
 import { FeedbackForm } from "@/components/onboarding/feedback-form";
@@ -68,6 +69,7 @@ export function ResultReport({
   const report = assessment.assessment_report;
   const scores = assessment.assessment_score;
   const financial = assessment.financial_inputs;
+  const products = parseStoredProducts(financial?.finp_products);
   const strengths = (report?.arep_strengths as string[]) ?? [];
   const risks = (report?.arep_risks as string[]) ?? [];
   const validationPlan = report?.arep_validation_plan as
@@ -238,6 +240,84 @@ export function ResultReport({
               )}
             </div>
 
+            {/* Products & Services */}
+            {products.length > 0 && (
+              <Card className="mt-6 border-border/70">
+                <CardHeader>
+                  <CardTitle className="text-base">
+                    Productos y servicios
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                            Nombre
+                          </TableCell>
+                          <TableCell className="text-right text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                            Precio
+                          </TableCell>
+                          <TableCell className="text-right text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                            Costo var.
+                          </TableCell>
+                          <TableCell className="text-right text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                            Uds./mes
+                          </TableCell>
+                          <TableCell className="text-right text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                            Margen
+                          </TableCell>
+                        </TableRow>
+                        {products.map((p, i) => {
+                          const marginPct =
+                            p.price > 0
+                              ? ((p.price - p.variableCost) / p.price) * 100
+                              : null;
+                          return (
+                            <TableRow key={i}>
+                              <TableCell className="font-medium">
+                                {p.name}
+                                <span className="ml-2 text-xs text-muted-foreground">
+                                  {p.kind}
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-right tabular-nums">
+                                {formatCurrency(
+                                  p.price,
+                                  financial?.finp_currency ?? "MXN"
+                                )}
+                              </TableCell>
+                              <TableCell className="text-right tabular-nums">
+                                {formatCurrency(
+                                  p.variableCost,
+                                  financial?.finp_currency ?? "MXN"
+                                )}
+                              </TableCell>
+                              <TableCell className="text-right tabular-nums">
+                                {p.monthlyUnits}
+                              </TableCell>
+                              <TableCell
+                                className={`text-right tabular-nums ${
+                                  marginPct != null && marginPct <= 0
+                                    ? "text-destructive"
+                                    : ""
+                                }`}
+                              >
+                                {marginPct == null
+                                  ? "—"
+                                  : `${marginPct.toFixed(0)}%`}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Financial Details Table */}
             <Card className="mt-6 border-border/70">
               <CardHeader>
@@ -263,7 +343,9 @@ export function ResultReport({
                       {financial.finp_price_per_sale != null && (
                         <TableRow>
                           <TableCell className="text-muted-foreground">
-                            Precio por venta
+                            {products.length > 1
+                              ? "Precio promedio por venta (ponderado)"
+                              : "Precio por venta"}
                           </TableCell>
                           <TableCell className="text-right font-medium tabular-nums">
                             {formatCurrency(
@@ -276,7 +358,9 @@ export function ResultReport({
                       {financial.finp_variable_cost_per_sale != null && (
                         <TableRow>
                           <TableCell className="text-muted-foreground">
-                            Costo variable por venta
+                            {products.length > 1
+                              ? "Costo variable promedio (ponderado)"
+                              : "Costo variable por venta"}
                           </TableCell>
                           <TableCell className="text-right font-medium tabular-nums">
                             {formatCurrency(

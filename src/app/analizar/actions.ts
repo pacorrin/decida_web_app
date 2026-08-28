@@ -21,6 +21,7 @@ import {
   paymentSchema,
   evaluationFinancialSchema,
   evaluationMarketSchema,
+  productsSchema,
   feedbackSchema,
   parseFieldErrors,
   formDataToValues,
@@ -39,6 +40,7 @@ import { isAssessmentCompleted } from "@/lib/onboarding/assessment-utils";
 import { getStepBySlug } from "@/lib/onboarding/steps";
 import { getResumeStep } from "@/lib/onboarding/navigation";
 import { ensureAssessmentForCurrentUser } from "@/lib/onboarding/for-user";
+import { blendProducts } from "@/lib/onboarding/products";
 import { prisma } from "@/lib/prisma";
 import { createUser, findUserByEmail, updateUserPassword, markEmailVerified } from "@/lib/auth/users";
 import { normalizeEmail } from "@/lib/auth/verification";
@@ -523,6 +525,53 @@ export async function savePersonalFit(
     data: { asmt_status: "in_progress" },
   });
 
+  redirectToStep("productos");
+}
+
+export async function saveProducts(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const assessment = await requireAssessment();
+
+  let rawProducts: unknown = [];
+  try {
+    rawProducts = JSON.parse(String(formData.get("productsJson") ?? "[]"));
+  } catch {
+    rawProducts = [];
+  }
+
+  const parsed = productsSchema.safeParse({ products: rawProducts });
+  if (!parsed.success) {
+    return {
+      success: false,
+      message:
+        parsed.error.issues[0]?.message ??
+        "Revisa los datos de tus productos y servicios.",
+    };
+  }
+
+  const products = parsed.data.products;
+  const blend = blendProducts(products);
+
+  const derived = {
+    finp_products: products,
+    finp_price_per_sale: blend.pricePerSale,
+    finp_variable_cost_per_sale: blend.variableCostPerSale,
+    finp_estimated_monthly_sales: blend.estimatedMonthlySales,
+  };
+
+  await prisma.financial_inputs.upsert({
+    where: { finp_asmt_id: assessment.asmt_id },
+    create: { finp_asmt_id: assessment.asmt_id, ...derived },
+    update: derived,
+  });
+
+  await prisma.assessments.update({
+    where: { asmt_id: assessment.asmt_id },
+    data: { asmt_status: "in_progress" },
+  });
+
   redirectToStep("evaluacion");
 }
 
@@ -534,9 +583,6 @@ export async function saveEvaluation(
 
   const financialParsed = evaluationFinancialSchema.safeParse({
     initialInvestment: formData.get("initialInvestment"),
-    pricePerSale: formData.get("pricePerSale"),
-    variableCostPerSale: formData.get("variableCostPerSale"),
-    estimatedMonthlySales: formData.get("estimatedMonthlySales"),
     fixedMonthlyCostsRange: formData.get("fixedMonthlyCostsRange"),
     currency: formData.get("currency") ?? "MXN",
   });
@@ -564,17 +610,11 @@ export async function saveEvaluation(
     create: {
       finp_asmt_id: assessment.asmt_id,
       finp_initial_investment: fin.initialInvestment,
-      finp_price_per_sale: fin.pricePerSale,
-      finp_variable_cost_per_sale: fin.variableCostPerSale,
-      finp_estimated_monthly_sales: fin.estimatedMonthlySales,
       finp_fixed_monthly_costs_range: fin.fixedMonthlyCostsRange,
       finp_currency: fin.currency,
     },
     update: {
       finp_initial_investment: fin.initialInvestment,
-      finp_price_per_sale: fin.pricePerSale,
-      finp_variable_cost_per_sale: fin.variableCostPerSale,
-      finp_estimated_monthly_sales: fin.estimatedMonthlySales,
       finp_fixed_monthly_costs_range: fin.fixedMonthlyCostsRange,
       finp_currency: fin.currency,
     },

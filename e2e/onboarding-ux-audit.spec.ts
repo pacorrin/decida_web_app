@@ -195,7 +195,30 @@ test.describe("Auditoría UX del onboarding", () => {
     await selectOptionCard(page, "uncertaintyComfortScore", "3");
     await selectOptionCard(page, "hiringPreference", "solo");
     metricas.push(
-      await medirPaso(page, "6→7 · Ajuste → Evaluación", async () => {
+      await medirPaso(page, "6→7 · Ajuste → Productos", async () => {
+        await page.getByRole("button", { name: "Continuar" }).click();
+        await expect(page).toHaveURL(/\/analizar\/productos/, {
+          timeout: 30_000,
+        });
+      })
+    );
+
+    // --- Paso 7: Productos y servicios ---
+    metricas.push(
+      await medirPaso(page, "7 · Productos y servicios (formulario)", async () => {
+        await expect(
+          page.getByRole("heading", { name: "Tus productos y servicios" })
+        ).toBeVisible();
+      })
+    );
+
+    await page.fill('[data-testid="product-name-0"]', "Servicio de consultoría");
+    await page.fill('[data-testid="product-price-0"]', "12000");
+    await page.fill('[data-testid="product-cost-0"]', "1500");
+    await page.fill('[data-testid="product-units-0"]', "4");
+
+    metricas.push(
+      await medirPaso(page, "7→8 · Productos → Evaluación", async () => {
         await page.getByRole("button", { name: "Continuar" }).click();
         await expect(page).toHaveURL(/\/analizar\/evaluacion/, {
           timeout: 30_000,
@@ -203,9 +226,9 @@ test.describe("Auditoría UX del onboarding", () => {
       })
     );
 
-    // --- Paso 7: Evaluación ---
+    // --- Paso 8: Evaluación ---
     metricas.push(
-      await medirPaso(page, "7 · Evaluación (formulario)", async () => {
+      await medirPaso(page, "8 · Evaluación (formulario)", async () => {
         await expect(
           page.getByRole("heading", { name: "Evaluemos los números y el mercado" })
         ).toBeVisible();
@@ -213,9 +236,6 @@ test.describe("Auditoría UX del onboarding", () => {
     );
 
     await page.fill("#initialInvestment", "6000");
-    await page.fill("#pricePerSale", "12000");
-    await page.fill("#variableCostPerSale", "1500");
-    await page.fill("#estimatedMonthlySales", "4");
     await selectOptionCard(page, "fixedMonthlyCostsRange", "menos_5k");
     await selectOptionCard(page, "hasTalkedToCustomers", "true");
     await selectOptionCard(page, "competitionLevel", "alta");

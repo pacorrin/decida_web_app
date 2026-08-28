@@ -1,7 +1,7 @@
 ---
 type: product
 tags: [decida, onboarding, gaps, scoring, critico]
-updated: 2026-08-27
+updated: 2026-08-28
 ---
 
 # Gaps del onboarding actual vs. el framework de 6 dimensiones
@@ -24,7 +24,7 @@ Antes, `calculateDeterministicScores` calculaba `riskScore` a partir de `profile
 | Rubric/criterios pide | Estado en código |
 |---|---|
 | Actividades que disfruta | ✅ `enjoyedActivities` |
-| **Actividades que evita** | ❌ No se pregunta. El campo `pfit_avoided_activities` existe en la BD pero `personalFitSchema` no lo captura. Sin esto, la regla "evita ventas + canal de venta directa → bajar Personal Fit y Comercial" es inaplicable. |
+| **Actividades que evita** | ❌ No se pregunta. El campo `pfit_avoided_activities` existe en la BD pero `personalFitSchema` no lo captura. Sin esto, la regla "evita ventas + canal de venta directa → bajar Personal Fit y Comercial" es inaplicable. **Movido a Sprint 3 (2026-08-28)** — falta definir su uso antes de capturarlo. |
 | Preferencia físico/digital/mixto | ✅ `workPreference` |
 | Comodidad vendiendo | ✅ `salesComfortScore` — capturado y usado en el score |
 | Comodidad con incertidumbre | ✅ `uncertaintyComfortScore` — capturado y **ya conectado** al `personalFitScore` (commit `43d1112`) |
@@ -42,7 +42,7 @@ Antes, `calculateDeterministicScores` calculaba `riskScore` a partir de `profile
 | Red flag "inversión > pérdida aceptable" | ✅ Ídem, contra el techo del rango de pérdida; además suma penalización de sobre-exposición al `riskScore` |
 | Escenarios pesimista/base/optimista | ❌ Solo un punto de estimación (`estimatedMonthlySales` único) |
 | Modelo de ingreso (único/recurrente/suscripción/proyecto/comisión) | ❌ No se pregunta — afecta directamente la lectura de margen y LTV |
-| Productos/servicios a vender, cada uno con su precio | ❌ `evaluationFinancialSchema` captura un único `price`. Falta una sección que liste varios productos/servicios con su precio (pedido del usuario, 2026-08-26). Al implementar, decidir si absorbe o complementa "modelo de ingreso" y "ticket/frecuencia" |
+| Productos/servicios a vender, cada uno con su precio | ✅ Paso nuevo `productos` (2026-08-28): lista de 1-10 renglones con nombre, tipo, precio, costo variable y unidades/mes. **Absorbió** los 3 campos únicos de precio/costo/ventas de `evaluacion` — el scoring los deriva del blend ponderado por unidades. Red flag por producto vendido bajo costo. Ver [[../experiencia/flujo-de-onboarding#El paso «productos» — catálogo de lo que se piensa vender (2026-08-28)]] |
 
 ### 3. Viabilidad comercial (25%) — funcional pero con menos granularidad que el diseño original
 | Rubric/criterios pide | Estado en código |
@@ -85,17 +85,19 @@ Horas/semana, horario, horizonte de ingreso esperado: todos capturados y usados 
 **~~Debe entrar sí o sí (arregla el bug activo)~~ — HECHO:**
 1. ~~Recuperar capital disponible + pérdida aceptable~~ — ✅ commit `43d1112` (dos `CardSelectField` en el paso `perfil`).
 2. ~~Reconectar `riskScore` para que use datos reales~~ — ✅ commit `43d1112` (dato) + 2026-08-27 (cruce inversión vs. capital/pérdida + 2 red flags determinísticas).
-3. Agregar la pregunta de "actividades que evita" (`avoidedActivities`) — el campo en BD ya existe, falta el input.
-4. Agregar dependencias del negocio (`mrsk_business_dependencies`) — el campo en BD ya existe, falta el input.
+3. Agregar dependencias del negocio (`mrsk_business_dependencies`) — el campo en BD ya existe, falta el input.
+
+**Movido al Sprint 3 (2026-08-28):**
+- "Actividades que evita" (`pfit_avoided_activities`) — el campo en BD existe pero **aún no está definido qué señal debe dar**. Se decide su uso en Sprint 3 antes de capturarlo. Ver [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — «actividades que evita» (pfit_avoided_activities)]].
 
 **Vale la pena en el mismo sprint (bajo costo, cierra gaps de señal):**
-5. Restaurar granularidad de "¿habló con clientes?" (niveles, no solo sí/no).
-6. Pregunta de modelo de ingreso (único/recurrente/suscripción) — mejora la interpretación financiera y comercial a la vez.
-7. ~~Usar `uncertaintyComfortScore` y `processComfortScore` en el cálculo~~ — ✅ commit `43d1112`.
+4. Restaurar granularidad de "¿habló con clientes?" (niveles, no solo sí/no).
+5. Pregunta de modelo de ingreso (único/recurrente/suscripción) — mejora la interpretación financiera y comercial a la vez.
+6. ~~Usar `uncertaintyComfortScore` y `processComfortScore` en el cálculo~~ — ✅ commit `43d1112`.
 
 **Pedidos por el usuario el 2026-08-26 (además del rubric):**
 10. Capturar costo de adquisición de clientes (CAC) — hoy solo se pregunta el canal, no su costo.
-11. Sección de productos/servicios a vender con su precio cada uno — hoy solo hay un `price` único. Ver detalle en [[../decisiones/plan-lanzamiento-60-90-dias#Datos de negocio adicionales a capturar en el onboarding (agregado 2026-08-26)]].
+11. ~~Sección de productos/servicios a vender con su precio cada uno~~ — ✅ paso nuevo `productos` (2026-08-28), absorbe los 3 campos únicos de precio/costo/ventas. Ver [[../experiencia/flujo-de-onboarding#El paso «productos» — catálogo de lo que se piensa vender (2026-08-28)]].
 
 **Puede esperar a una iteración posterior:**
 8. Pregunta dedicada de escalabilidad real del negocio (hoy es proxy débil pero no está "roto", solo incompleto).

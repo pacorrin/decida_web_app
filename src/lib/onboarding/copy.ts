@@ -46,6 +46,13 @@ export const STEP_COPY: Record<OnboardingStepSlug, StepCopy> = {
     reassurance:
       "No hay respuestas correctas; evaluamos compatibilidad, no talento.",
   },
+  productos: {
+    title: "Tus productos y servicios",
+    subtitle:
+      "Lista lo que piensas vender, con su precio y costo. Con esto calculamos tus márgenes.",
+    reassurance:
+      "Estimaciones aproximadas — puedes agregar hasta 10 y ajustarlas después.",
+  },
   evaluacion: {
     title: "Evaluemos los números y el mercado",
     subtitle:

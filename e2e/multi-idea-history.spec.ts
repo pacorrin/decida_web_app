@@ -61,12 +61,16 @@ async function completarOnboarding(
   await selectOptionCard(page, "uncertaintyComfortScore", "3");
   await selectOptionCard(page, "hiringPreference", "solo");
   await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page).toHaveURL(/\/analizar\/productos/, { timeout: 30_000 });
+
+  await page.fill('[data-testid="product-name-0"]', "Servicio de consultoría");
+  await page.fill('[data-testid="product-price-0"]', "12000");
+  await page.fill('[data-testid="product-cost-0"]', "1500");
+  await page.fill('[data-testid="product-units-0"]', "4");
+  await page.getByRole("button", { name: "Continuar" }).click();
   await expect(page).toHaveURL(/\/analizar\/evaluacion/, { timeout: 30_000 });
 
   await page.fill("#initialInvestment", "6000");
-  await page.fill("#pricePerSale", "12000");
-  await page.fill("#variableCostPerSale", "1500");
-  await page.fill("#estimatedMonthlySales", "4");
   await selectOptionCard(page, "fixedMonthlyCostsRange", "menos_5k");
   await selectOptionCard(page, "hasTalkedToCustomers", "true");
   await selectOptionCard(page, "competitionLevel", "alta");

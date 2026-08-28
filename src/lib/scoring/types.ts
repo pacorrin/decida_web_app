@@ -1,4 +1,8 @@
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
+import {
+  parseStoredProducts,
+  productsBelowCost,
+} from "@/lib/onboarding/products";
 
 export type DimensionKey =
   | "personal_fit"
@@ -137,6 +141,18 @@ export function detectFinancialRedFlags(
   if (exposure.investmentOverCapital) {
     flags.push(
       `Tu inversión inicial (${formatMoney(investment)}) supera el capital máximo que declaraste tener disponible para esta idea. Aclara de dónde saldría la diferencia antes de comprometerte.`
+    );
+  }
+
+  const below = productsBelowCost(
+    parseStoredProducts(assessment.financial_inputs?.finp_products)
+  );
+  if (below.length > 0) {
+    const names = below.map((p) => `"${p.name}"`).join(", ");
+    flags.push(
+      `${below.length === 1 ? "El producto" : "Los productos"} ${names} ${
+        below.length === 1 ? "tiene" : "tienen"
+      } un precio igual o menor a su costo variable — cada venta pierde dinero. Sube el precio o baja el costo antes de arrancar.`
     );
   }
 

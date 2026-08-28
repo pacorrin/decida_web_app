@@ -1,7 +1,7 @@
 ---
 type: framework
 tags: [decida, ai, prompts]
-updated: 2026-08-26
+updated: 2026-08-28
 ---
 
 # Prompts de IA y lógica de diagnóstico
@@ -13,7 +13,7 @@ La IA **no es el cerebro único del producto**. Actúa como redactor-consultor q
 
 ## Dónde vive en el código
 - `src/lib/ai/openai.ts` — cliente/modelo de razonamiento (`generateReasoningJson`, `getReasoningModel`).
-- `src/lib/ai/generate-report.ts` — orquesta la generación del reporte completo, sección por sección, **con reintentos automáticos** (ver [[../arquitectura/manejo-de-errores-y-reembolsos]]).
+- `src/lib/ai/generate-report.ts` — orquesta la generación del reporte completo, sección por sección, **con reintentos automáticos** (ver [[../arquitectura/manejo-de-errores-y-reembolsos]]). Desde 2026-08-28 el contexto de `business_understanding` y `financial_analysis` incluye el listado de productos/servicios (precio, costo, volumen por renglón) y se le pide comentar el margen por producto y si alguno se vende con pérdida.
 - `src/lib/ai/prompts/idea-summary.ts`, `idea-refinement.ts`, `idea-assumptions-rotate.ts` — prompts de comprensión/confirmación de la idea (fase gratis del onboarding). `idea-assumptions-rotate` es nuevo (commit `0259101`, 2026-08-26): solo regenera la lista de supuestos, sin reescribir el resumen. Ver [[../experiencia/flujo-de-onboarding#El paso «confirmacion» («Así entendimos tu idea») — pulido de IA (2026-08-26)]].
 - `src/lib/ai/schemas/` — schemas Zod que tipan cada salida de IA: `idea-summary`, `idea-refinement`, `idea-assumptions`, `idea-assumptions-rotate`, `structured-understanding`, `scoring-interpret`.
 

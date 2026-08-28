@@ -1,7 +1,7 @@
 ---
 type: overview
 tags: [decida, hub]
-updated: 2026-08-27
+updated: 2026-08-28
 ---
 
 # Decida — Overview
@@ -70,7 +70,7 @@ Salida siempre es una de 4: **Proceed small test / Validate first / Adjust idea 
 - ~~El score de "Nivel de riesgo" está roto en producción~~ — ✅ resuelto (commit `43d1112` + cruce inversión-vs-capital y red flags determinísticas del 2026-08-27). Ver [[framework/scoring-engine]].
 - `/mis-evaluaciones` fue reemplazado por `/cuenta` (commit `43d1112`) — la migración del sistema passwordless viejo ya no es un gap abierto.
 
-## Estado de desarrollo (actualizado 2026-08-27)
+## Estado de desarrollo (actualizado 2026-08-28)
 
 Hay un plan activo de lanzamiento en 60-90 días con fechas y checkpoints — ver [[decisiones/plan-lanzamiento-60-90-dias]].
 
@@ -78,5 +78,7 @@ Hay un plan activo de lanzamiento en 60-90 días con fechas y checkpoints — ve
 
 **Sprint 2** (pulir onboarding): en curso.
 - ✅ Pulido del paso "Así entendimos tu idea" (commit `0259101`).
-- ✅ Score de "Nivel de riesgo" arreglado: preguntas de capital/pérdida de vuelta + comfort scores conectados (commit `43d1112`); cruce inversión-vs-capital y 2 red flags determinísticas (2026-08-27, sin commitear al cierre).
-- Pendiente: inputs de `avoidedActivities` y dependencias del negocio, granularidad de "¿habló con clientes?", modelo de ingreso, CAC, sección de productos/precios, bugs concretos de "Así entendimos tu idea".
+- ✅ Score de "Nivel de riesgo" arreglado + cruce inversión-vs-capital + red flags determinísticas (commits `43d1112`, `936351d`).
+- ✅ Paso nuevo `productos` — catálogo de productos/servicios con precio/costo/volumen; absorbe los campos únicos de precio de `evaluacion` (2026-08-28, sin commitear al cierre).
+- Pendiente en Sprint 2: input de dependencias del negocio (`mrsk_business_dependencies`), granularidad de "¿habló con clientes?", modelo de ingreso, CAC.
+- Movido a Sprint 3 (2026-08-28): "actividades que evita" (`pfit_avoided_activities`) — falta definir qué señal debe dar antes de capturarlo.

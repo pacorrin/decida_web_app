@@ -197,3 +197,44 @@ Implementado (sin commitear al cierre):
 Verificado contra datos reales: se recorrió `runScoringPipeline` sobre un assessment de prueba real (`cmta3xvx6…`, `menos_5k` de pérdida tolerable, inversión $45,000) — `ascs_red_flags` persistido en la BD quedó con la flag determinística primero ("Tu inversión inicial ($45,000) es mayor que lo que dijiste que podrías perder…") + una de la IA reforzándola, `ascs_risk_level_score` = 100, semáforo rojo. Assessments viejos sin los rangos: sin flags, riskScore fallback 50 (preservado).
 
 Actualizado: `wiki/framework/scoring-engine.md`, `wiki/producto/gaps-onboarding-vs-framework.md`, `wiki/decisiones/evolucion-del-producto.md` (#2 → RESUELTO), `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (P0#4 + Sprint 2 imprescindible 1/2/7 marcados hechos), `wiki/overview.md` (gaps + estado de desarrollo). De paso se corrigieron las etiquetas "commit pendiente" del pulido de "Así entendimos tu idea" (ya commiteado como `0259101`).
+
+## [2026-08-28] decision | `pfit_avoided_activities` movido del Sprint 2 al Sprint 3
+
+El usuario revisó el avance (score de riesgo, red flags y pulido de "Así entendimos tu idea" ya commiteados: `43d1112`, `936351d`, `0259101`) y decidió sacar del Sprint 2 el punto de "actividades que evita" (`pfit_avoided_activities`), porque **apenas se está definiendo qué se va a hacer con ese campo** — no arregla nada roto hoy, simplemente no existe la captura ni el uso.
+
+Actualizado:
+- `wiki/decisiones/plan-lanzamiento-60-90-dias.md`: quitado de la lista "Imprescindible" del Sprint 2 (renumerada); agregado a la fila del Sprint 3 en la tabla; subsección nueva "Sprint 3 — «actividades que evita» (`pfit_avoided_activities`)" con lo que hay que definir antes de implementar (opciones, efecto en scoring, ubicación del input).
+- `wiki/producto/gaps-onboarding-vs-framework.md`: fila de "Actividades que evita" en la dimensión 1 marcada como movida a Sprint 3; resumen priorizado renumerado con sección "Movido al Sprint 3".
+
+Sin cambios de código.
+
+## [2026-08-28] decision | Cerrado el punto "corregir errores del paso «Así entendimos tu idea»"
+
+El usuario confirmó que el punto está hecho: no hubo una lista separada de bugs concretos — los errores que tenía en mente quedaron cubiertos por el commit `0259101` (pulido de refinamiento IA + rotación de supuestos, 2026-08-27). No hay commits ni cambios nuevos aparte de ese.
+
+Actualizado:
+- `wiki/decisiones/plan-lanzamiento-60-90-dias.md`: subsección renombrada a "✅ Corregir errores del paso «Así entendimos tu idea» (… cerrado 2026-08-28)", con nota de que no hubo catálogo de bugs y `0259101` lo cubrió; se dejó anotada la deuda menor de eslint (`set-state-in-effect`). Fila del Sprint 2 en la tabla con ese ítem tachado (`0259101`), más `/mis-evaluaciones` → `/cuenta` (`43d1112`).
+- `wiki/experiencia/flujo-de-onboarding.md`: la sección del paso `confirmacion` ahora dice que **cierra** el punto, no que es "primer lote".
+- `wiki/overview.md`: quitado de la lista de pendientes de Sprint 2.
+
+Queda abierto en Sprint 2 sólo: input de `mrsk_business_dependencies`, granularidad de "¿habló con clientes?", modelo de ingreso, CAC, sección de productos/precios. Sin cambios de código.
+
+## [2026-08-28] build | Paso nuevo `productos` en el onboarding — catálogo de productos/servicios (Sprint 2, punto 5)
+
+El usuario pidió agregar un paso "productos y servicios" antes de "Evaluemos los números y el mercado". Se aclararon 3 decisiones con preguntas: (1) el listado **absorbe** los 3 campos únicos de precio/costo/ventas de `evaluacion` (el scoring deriva un blend); (2) por renglón se captura nombre + tipo (producto/servicio) + precio + costo variable + unidades/mes; (3) obligatorio, mín. 1, máx. 10.
+
+Implementado (sin commitear al cierre):
+- **Paso** `productos` (order 7, entre `ajuste` y `evaluacion`): `src/lib/onboarding/steps.ts`, `copy.ts`, `src/app/analizar/productos/page.tsx`, `src/components/onboarding/products-form.tsx` (lista dinámica con estado cliente → hidden JSON, preview en vivo de ingresos/utilidad/margen, alerta de venta bajo costo).
+- **Datos**: columna JSON `finp_products` en `financial_inputs` (`prisma db push` corrido). `saveProducts` en `actions.ts` parsea con `productsSchema` (Zod), calcula el blend ponderado por unidades con `blendProducts()` (`src/lib/onboarding/products.ts`) y escribe `finp_products` + los 3 derivados (`finp_price_per_sale`, `finp_variable_cost_per_sale`, `finp_estimated_monthly_sales`). El blend es exacto para la utilidad bruta mensual.
+- **`evaluacion`**: `evaluationFinancialSchema` y `evaluation-form.tsx` pierden los 3 campos; conserva inversión inicial + costos fijos + mercado.
+- **Navegación**: `hasProducts()` en `navigation.ts`; `getResumeStep` manda a `productos` tras `ajuste`; `canAccessStep` con prereqs.
+- **Scoring/reporte**: `detectFinancialRedFlags()` emite una red flag por producto con precio ≤ costo variable (`productsBelowCost()`); `generate-report.ts` pasa el listado a los prompts de `business_understanding` y `financial_analysis`; `result-report.tsx` muestra tabla "Productos y servicios" con margen por renglón (rojo si ≤ 0) y etiqueta "promedio (ponderado)" en los inputs cuando hay >1 producto.
+- **Tests**: `src/lib/onboarding/__tests__/products.test.ts` (5, cubren blend exacto / units=0 / below-cost / parseo). `vitest` total 19, `tsc` y `eslint` limpios (los 5 errores preexistentes de eslint no son de estos archivos).
+
+Verificado end-to-end con Playwright (cookie sembrada sobre un assessment real `cmtbj31wj…` para saltar el paso de contacto de los e2e, que está roto desde que `contactSchema` pide `password`): el paso renderiza, guarda 2 productos, el blend en BD queda correcto (precio $900, costo $206.67, 30 uds.), `evaluacion` ya no tiene los 3 campos, el guard no deja saltar a `resultado`, y el reporte final muestra la tabla de productos + margen −7% en rojo + la red flag "vende bajo costo" (primera en `ascs_red_flags`, antes de las de la IA). Se instaló `playwright chromium` (no estaba). Se revirtió un bump incidental de `pnpm-lock.yaml`.
+
+Los 3 archivos e2e (`onboarding.spec.ts`, `multi-idea-history.spec.ts`, `onboarding-ux-audit.spec.ts`) se actualizaron para el paso nuevo (`data-testid` en la fila de productos, helper `completarProductos`), aunque la suite ya estaba roja antes por el paso de contacto.
+
+Actualizado: `wiki/experiencia/flujo-de-onboarding.md` (tabla de pasos + sección nueva), `wiki/framework/scoring-engine.md` (red flag + blend), `wiki/producto/gaps-onboarding-vs-framework.md` (dimensión 2 + punto 11 hecho), `wiki/decisiones/plan-lanzamiento-60-90-dias.md`, `wiki/decisiones/evolucion-del-producto.md` (entrada #8), `wiki/overview.md`.
+
+Nota operativa: el assessment de prueba `cmtbj31wj0010t86zj4299ls3` quedó completado con productos de prueba en la BD local. El dev server se reinició (era necesario para que Prisma cargara la columna nueva) y ahora corre bajo el preview de la sesión.

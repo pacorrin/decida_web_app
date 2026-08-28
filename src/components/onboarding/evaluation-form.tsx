@@ -55,79 +55,32 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
         <FieldSet>
           <FieldLegend>Finanzas básicas</FieldLegend>
           <FieldDescription>
-            Estimaciones aproximadas — no tienen que ser perfectas.
+            El precio y las ventas de cada producto ya los capturamos en el paso
+            anterior. Estimaciones aproximadas — no tienen que ser perfectas.
           </FieldDescription>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field>
-              <FieldLabel htmlFor="initialInvestment">Inversión inicial (MXN)</FieldLabel>
-              <Input
-                id="initialInvestment"
-                name="initialInvestment"
-                type="number"
-                min={0}
-                step="100"
-                defaultValue={fieldValue(
-                  v,
-                  "initialInvestment",
-                  fin?.finp_initial_investment?.toString() ?? ""
-                )}
-                required
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="pricePerSale">Precio por venta (MXN)</FieldLabel>
-              <Input
-                id="pricePerSale"
-                name="pricePerSale"
-                type="number"
-                min={0}
-                step="10"
-                defaultValue={fieldValue(
-                  v,
-                  "pricePerSale",
-                  fin?.finp_price_per_sale?.toString() ?? ""
-                )}
-                required
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="variableCostPerSale">
-                Costo variable por venta (MXN)
-              </FieldLabel>
-              <Input
-                id="variableCostPerSale"
-                name="variableCostPerSale"
-                type="number"
-                min={0}
-                step="10"
-                defaultValue={fieldValue(
-                  v,
-                  "variableCostPerSale",
-                  fin?.finp_variable_cost_per_sale?.toString() ?? ""
-                )}
-                required
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="estimatedMonthlySales">
-                Ventas estimadas al mes
-              </FieldLabel>
-              <Input
-                id="estimatedMonthlySales"
-                name="estimatedMonthlySales"
-                type="number"
-                min={0}
-                step="1"
-                defaultValue={fieldValue(
-                  v,
-                  "estimatedMonthlySales",
-                  fin?.finp_estimated_monthly_sales?.toString() ?? ""
-                )}
-                required
-              />
-            </Field>
-          </div>
+          <Field>
+            <FieldLabel htmlFor="initialInvestment">
+              Inversión inicial (MXN)
+            </FieldLabel>
+            <Input
+              id="initialInvestment"
+              name="initialInvestment"
+              type="number"
+              min={0}
+              step="100"
+              defaultValue={fieldValue(
+                v,
+                "initialInvestment",
+                fin?.finp_initial_investment?.toString() ?? ""
+              )}
+              required
+            />
+            <FieldDescription>
+              Lo que necesitas gastar una vez para arrancar (equipo, permisos,
+              inventario inicial).
+            </FieldDescription>
+          </Field>
 
           <Field>
             <FieldLabel>Costos fijos mensuales estimados</FieldLabel>
