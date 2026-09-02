@@ -79,6 +79,9 @@ export const evaluationMarketSchema = z.object({
   hasTalkedToCustomers: z.enum(["true", "false"]),
   competitionLevel: z.string().min(1),
   acquisitionChannel: z.string().min(1),
+  businessDependencies: z
+    .array(z.string())
+    .min(1, "Selecciona al menos una opción"),
   mainConcern: z.string().min(10),
   successCondition: z.string().min(10),
 });

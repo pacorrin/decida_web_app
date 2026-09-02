@@ -11,30 +11,30 @@ import {
   type ScoringInterpretResult,
 } from "@/lib/ai/schemas/scoring-interpret";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
-import { calculateDeterministicScores, detectFinancialRedFlags } from "./types";
+import {
+  calculateDeterministicScores,
+  detectFinancialRedFlags,
+  detectDependencyRedFlags,
+} from "./types";
+import { CAPITAL_RANGE_LABELS, LOSS_RANGE_LABELS } from "./ranges";
 
 export {
   calculateDeterministicScores,
   calculateFinancialMetrics,
   detectFinancialRedFlags,
+  detectDependencyRedFlags,
 } from "./types";
 export type { CalculatedMetrics, DeterministicScoreResult } from "./types";
 
-const LOSS_RANGE_LABELS: Record<string, string> = {
-  menos_5k: "menos de $5,000",
-  "5k_20k": "$5,000–$20,000",
-  "20k_50k": "$20,000–$50,000",
-  "50k_100k": "$50,000–$100,000",
-  mas_100k: "más de $100,000",
+const DEPENDENCY_CONTEXT_LABELS: Record<string, string> = {
+  proveedor: "un solo proveedor clave",
+  cliente_unico: "1 o 2 clientes que serían la mayoría de sus ingresos",
+  plataforma: "una plataforma externa",
+  permiso: "un permiso, licencia o regulación",
+  ubicacion: "una ubicación física específica",
+  inventario: "inventario que caduca o se deprecia rápido",
 };
 
-const CAPITAL_RANGE_LABELS: Record<string, string> = {
-  menos_10k: "menos de $10,000",
-  "10k_50k": "$10,000–$50,000",
-  "50k_150k": "$50,000–$150,000",
-  "150k_500k": "$150,000–$500,000",
-  mas_500k: "más de $500,000",
-};
 
 function buildAssessmentContext(assessment: AssessmentWithRelations): string {
   const profile = assessment.assessment_profile;
@@ -54,10 +54,26 @@ function buildAssessmentContext(assessment: AssessmentWithRelations): string {
     investment > 0 && `Inversión inicial estimada: $${Math.round(investment).toLocaleString("es-MX")} MXN`,
     capitalLabel && `Capital disponible declarado: ${capitalLabel} MXN`,
     lossLabel && `Pérdida que toleraría sin afectar su estabilidad: ${lossLabel} MXN`,
+    dependencyContextLine(assessment),
     assessment.market_risk_inputs?.mrsk_main_concern &&
       `Preocupación principal: ${assessment.market_risk_inputs.mrsk_main_concern}`,
   ].filter(Boolean);
   return parts.join("\n");
+}
+
+function dependencyContextLine(
+  assessment: AssessmentWithRelations
+): string | null {
+  const raw = assessment.market_risk_inputs?.mrsk_business_dependencies;
+  const deps = Array.isArray(raw)
+    ? raw.filter(
+        (d): d is string => typeof d === "string" && d in DEPENDENCY_CONTEXT_LABELS
+      )
+    : [];
+  if (deps.length === 0) return null;
+  return `Dependencias críticas declaradas del negocio: ${deps
+    .map((d) => DEPENDENCY_CONTEXT_LABELS[d])
+    .join(", ")}`;
 }
 
 async function interpretScores(
@@ -86,10 +102,14 @@ export async function runScoringPipeline(assessment: AssessmentWithRelations) {
     buildAssessmentContext(assessment)
   );
 
-  // Deterministic flags (investment vs. declared capital / acceptable loss) go
-  // first, then the AI-generated ones. Fold them back into `interpretation` so
-  // both the persisted score and the report generation see the same list.
-  const deterministicRedFlags = detectFinancialRedFlags(assessment);
+  // Deterministic flags (investment vs. declared capital / acceptable loss,
+  // products below cost, business dependencies) go first, then the AI-generated
+  // ones. Fold them back into `interpretation` so both the persisted score and
+  // the report generation see the same list.
+  const deterministicRedFlags = [
+    ...detectFinancialRedFlags(assessment),
+    ...detectDependencyRedFlags(assessment),
+  ];
   interpretation.red_flags = [
     ...deterministicRedFlags,
     ...interpretation.red_flags.filter(

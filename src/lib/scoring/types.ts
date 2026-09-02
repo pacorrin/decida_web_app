@@ -3,6 +3,14 @@ import {
   parseStoredProducts,
   productsBelowCost,
 } from "@/lib/onboarding/products";
+import {
+  ACCEPTABLE_LOSS_CEILING,
+  CAPITAL_RANGE_CEILING,
+  dependencyRiskPenalty,
+  formatMoney,
+  parseDependencies,
+  rangeCeiling,
+} from "./ranges";
 
 export type DimensionKey =
   | "personal_fit"
@@ -48,37 +56,35 @@ function scoreFromRange(
 }
 
 /**
- * Upper bound (MXN) of each `aprf_capital_available_range` / `aprf_acceptable_loss_range`
- * option. Open-ended top ranges use +Infinity so they never trigger a false flag.
- * Kept in sync with CAPITAL_RANGE_OPTIONS / LOSS_RANGE_OPTIONS in
- * `src/lib/onboarding/options.ts`.
+ * Deterministic red flags from the rubric's checklist that depend on the
+ * business-dependency selection. Merged into `ascs_red_flags` alongside
+ * `detectFinancialRedFlags`. Empty when nothing critical was selected.
  */
-const CAPITAL_RANGE_CEILING: Record<string, number> = {
-  menos_10k: 10_000,
-  "10k_50k": 50_000,
-  "50k_150k": 150_000,
-  "150k_500k": 500_000,
-  mas_500k: Number.POSITIVE_INFINITY,
-};
+export function detectDependencyRedFlags(
+  assessment: AssessmentWithRelations
+): string[] {
+  const deps = parseDependencies(
+    assessment.market_risk_inputs?.mrsk_business_dependencies
+  );
+  const flags: string[] = [];
 
-const ACCEPTABLE_LOSS_CEILING: Record<string, number> = {
-  menos_5k: 5_000,
-  "5k_20k": 20_000,
-  "20k_50k": 50_000,
-  "50k_100k": 100_000,
-  mas_100k: Number.POSITIVE_INFINITY,
-};
+  if (deps.includes("plataforma")) {
+    flags.push(
+      "Tu negocio depende de una plataforma externa. Si esa plataforma cambia sus reglas o te suspende, pierdes el canal de un día para otro — ten un plan alterno antes de invertir fuerte."
+    );
+  }
+  if (deps.includes("permiso")) {
+    flags.push(
+      "Tu negocio requiere un permiso, licencia o regulación para operar. Investígalo a fondo antes de invertir: puede bloquear el arranque o encarecerlo."
+    );
+  }
+  if (deps.includes("cliente_unico")) {
+    flags.push(
+      "Dependerías de 1 o 2 clientes para la mayoría de tus ingresos. Si uno se va, el negocio tambalea — diversifica la cartera pronto."
+    );
+  }
 
-function rangeCeiling(
-  value: string | null | undefined,
-  map: Record<string, number>
-): number {
-  if (!value) return Number.POSITIVE_INFINITY;
-  return map[value] ?? Number.POSITIVE_INFINITY;
-}
-
-function formatMoney(amount: number): string {
-  return `$${Math.round(amount).toLocaleString("es-MX")}`;
+  return flags;
 }
 
 export type FinancialExposure = {
@@ -272,6 +278,11 @@ export function calculateDeterministicScores(
     (exposure.investmentOverAcceptableLoss ? 12 : 0) +
     (exposure.investmentOverCapital ? 8 : 0);
 
+  // Weighted penalty for declared business dependencies (rubric dimension 4).
+  const dependencyPenalty = dependencyRiskPenalty(
+    parseDependencies(market?.mrsk_business_dependencies)
+  );
+
   const riskScore = clampScore(
     100 -
       scoreFromRange(profile?.aprf_acceptable_loss_range, {
@@ -282,7 +293,8 @@ export function calculateDeterministicScores(
         mas_100k: 65,
       }) +
       (market?.mrsk_has_talked_to_customers ? 10 : 0) +
-      overExposurePenalty
+      overExposurePenalty +
+      dependencyPenalty
   );
 
   const timeScore = clampScore(

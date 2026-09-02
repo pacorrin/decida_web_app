@@ -41,16 +41,16 @@ Antes, `calculateDeterministicScores` calculaba `riskScore` a partir de `profile
 | Red flag "inversión > capital disponible" | ✅ `detectFinancialRedFlags()` (2026-08-27) — cruza `finp_initial_investment` contra el techo del rango de capital |
 | Red flag "inversión > pérdida aceptable" | ✅ Ídem, contra el techo del rango de pérdida; además suma penalización de sobre-exposición al `riskScore` |
 | Escenarios pesimista/base/optimista | ❌ Solo un punto de estimación (`estimatedMonthlySales` único) |
-| Modelo de ingreso (único/recurrente/suscripción/proyecto/comisión) | ❌ No se pregunta — afecta directamente la lectura de margen y LTV |
+| Modelo de ingreso (único/recurrente/suscripción/proyecto/comisión) | ❌ No se pregunta. **Pospuesto a Sprint 3** (decisión 2026-08-28) — sin LTV en el motor, solo desbloquea 1 red flag |
 | Productos/servicios a vender, cada uno con su precio | ✅ Paso nuevo `productos` (2026-08-28): lista de 1-10 renglones con nombre, tipo, precio, costo variable y unidades/mes. **Absorbió** los 3 campos únicos de precio/costo/ventas de `evaluacion` — el scoring los deriva del blend ponderado por unidades. Red flag por producto vendido bajo costo. Ver [[../experiencia/flujo-de-onboarding#El paso «productos» — catálogo de lo que se piensa vender (2026-08-28)]] |
 
 ### 3. Viabilidad comercial (25%) — funcional pero con menos granularidad que el diseño original
 | Rubric/criterios pide | Estado en código |
 |---|---|
-| ¿Ya habló con clientes? | ⚠️ Capturado pero degradado a `true/false`. El Question Bank original (05) tenía niveles: 0, 1-3, 4-10, >10, ya tengo clientes — esa granularidad es señal fuerte para el semáforo y se perdió |
+| ¿Ya habló con clientes? | ⚠️ Capturado pero degradado a `true/false`. El Question Bank original (05) tenía niveles: 0, 1-3, 4-10, >10, ya tengo clientes. El sí/no vale 35 de ~75 pts del `commercialScore` — acantilado binario. **Entra a Sprint 2** (decisión 2026-08-28). |
 | Nivel de competencia | ✅ `competitionLevel` |
 | Canal de adquisición | ✅ `acquisitionChannel` |
-| Costo de adquisición de clientes (CAC) | ❌ Solo se captura el *canal*, no su *costo*. Falta capturar CAC estimado (o gasto de marketing esperado ÷ clientes esperados) para cruzarlo con ticket/margen y leer CAC vs. LTV (pedido del usuario, 2026-08-26) |
+| Costo de adquisición de clientes (CAC) | ❌ Solo se captura el *canal*, no su *costo*. **Pospuesto a post-beta** (decisión 2026-08-28) — no es input del rubric, necesita el modelo de ingreso primero, estimación pre-lanzamiento poco confiable. Ver [[../decisiones/alcance-campos-restantes-sprint-2#CAC — NO en esta etapa]] |
 | Diferenciación vs. alternativas | ❌ No se pregunta explícitamente |
 | Ticket y frecuencia de compra | ❌ No se pregunta (relacionado con el gap de "modelo de ingreso" arriba) |
 
@@ -58,12 +58,12 @@ Antes, `calculateDeterministicScores` calculaba `riskScore` a partir de `profile
 | Rubric/criterios pide | Estado en código |
 |---|---|
 | Capital en riesgo vs. pérdida aceptable | ✅ `riskScore` usa `aprf_acceptable_loss_range` real + penalización de sobre-exposición cuando `finp_initial_investment` supera el techo del rango de capital/pérdida; 2 red flags determinísticas (2026-08-27) |
-| **Dependencias del negocio** (proveedor, empleados, ubicación, plataforma, inventario, regulación) | ❌ El campo `mrsk_business_dependencies` (JSON) existe en la BD pero `evaluationMarketSchema` nunca lo captura — siempre queda `null`, y `calculateDeterministicScores` no lo usa en ningún lado |
-| Reversibilidad de la prueba | ❌ No se pregunta |
-| Concentración (1 cliente/proveedor/plataforma) | ❌ No se pregunta (se solaparía con dependencias, mismo gap) |
-| Barreras legales/regulatorias | ❌ No se pregunta |
+| **Dependencias del negocio** (proveedor, 1-2 clientes, plataforma, ubicación, inventario, regulación) | ✅ **HECHO (2026-08-28)** — grid de checkboxes en `evaluacion` (`BUSINESS_DEPENDENCY_OPTIONS`), penalización ponderada al `riskScore` (plataforma/permiso +6, resto +3, tope +16) y 3 red flags determinísticas (`detectDependencyRedFlags()`). Ver [[../framework/scoring-engine#Penalizaciones al riskScore (alto = más riesgo)]]. |
+| Reversibilidad de la prueba | ❌ No se pregunta — único gap abierto de la dimensión 4 |
+| Concentración (1 cliente/proveedor/plataforma) | ✅ Cubierto por las opciones `cliente_unico` / `proveedor` / `plataforma` de dependencias del negocio (2026-08-28) |
+| Barreras legales/regulatorias | ✅ Cubierto por la opción `permiso` de dependencias del negocio + red flag "investígalo antes de invertir" (2026-08-28) |
 
-El input principal de riesgo (capital/pérdida vs. inversión) ya está cubierto. Lo que sigue faltando: dependencias del negocio, reversibilidad, concentración y barreras regulatorias — todo eso depende de agregar el input de `mrsk_business_dependencies` al formulario (ya listado abajo).
+Capital/pérdida vs. inversión (2026-08-27) y dependencias del negocio (2026-08-28) ya están cubiertos. Lo que sigue faltando en la dimensión 4: **reversibilidad de la prueba** (¿se puede probar barato y salir?) — la única del rubric que aún no tiene ninguna señal.
 
 ### 5. Tiempo y operación (10%) — sólido, sin gaps relevantes
 Horas/semana, horario, horizonte de ingreso esperado: todos capturados y usados en el score. No requiere trabajo en Sprint 2.
@@ -85,23 +85,23 @@ Horas/semana, horario, horizonte de ingreso esperado: todos capturados y usados 
 **~~Debe entrar sí o sí (arregla el bug activo)~~ — HECHO:**
 1. ~~Recuperar capital disponible + pérdida aceptable~~ — ✅ commit `43d1112` (dos `CardSelectField` en el paso `perfil`).
 2. ~~Reconectar `riskScore` para que use datos reales~~ — ✅ commit `43d1112` (dato) + 2026-08-27 (cruce inversión vs. capital/pérdida + 2 red flags determinísticas).
-3. Agregar dependencias del negocio (`mrsk_business_dependencies`) — el campo en BD ya existe, falta el input.
-
-**Movido al Sprint 3 (2026-08-28):**
-- "Actividades que evita" (`pfit_avoided_activities`) — el campo en BD existe pero **aún no está definido qué señal debe dar**. Se decide su uso en Sprint 3 antes de capturarlo. Ver [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — «actividades que evita» (pfit_avoided_activities)]].
+3. ~~Agregar dependencias del negocio (`mrsk_business_dependencies`)~~ — ✅ **HECHO (2026-08-28)**. Ver [[../decisiones/alcance-campos-restantes-sprint-2#Detalle]].
 
 **Vale la pena en el mismo sprint (bajo costo, cierra gaps de señal):**
-4. Restaurar granularidad de "¿habló con clientes?" (niveles, no solo sí/no).
-5. Pregunta de modelo de ingreso (único/recurrente/suscripción) — mejora la interpretación financiera y comercial a la vez.
-6. ~~Usar `uncertaintyComfortScore` y `processComfortScore` en el cálculo~~ — ✅ commit `43d1112`.
+4. Restaurar granularidad de "¿habló con clientes?" (niveles, no solo sí/no) — entra a Sprint 2.
+5. ~~Usar `uncertaintyComfortScore` y `processComfortScore` en el cálculo~~ — ✅ commit `43d1112`.
 
-**Pedidos por el usuario el 2026-08-26 (además del rubric):**
-10. Capturar costo de adquisición de clientes (CAC) — hoy solo se pregunta el canal, no su costo.
-11. ~~Sección de productos/servicios a vender con su precio cada uno~~ — ✅ paso nuevo `productos` (2026-08-28), absorbe los 3 campos únicos de precio/costo/ventas. Ver [[../experiencia/flujo-de-onboarding#El paso «productos» — catálogo de lo que se piensa vender (2026-08-28)]].
+**Pedidos por el usuario el 2026-08-26:**
+6. ~~Sección de productos/servicios a vender con su precio cada uno~~ — ✅ paso nuevo `productos` (2026-08-28), absorbe los 3 campos únicos de precio/costo/ventas. Ver [[../experiencia/flujo-de-onboarding#El paso «productos» — catálogo de lo que se piensa vender (2026-08-28)]].
+
+**Movido fuera del MVP (decisión 2026-08-28, ver [[../decisiones/alcance-campos-restantes-sprint-2]]):**
+- **`pfit_avoided_activities`** → Sprint 3. Falta definir qué señal debe dar.
+- **Modelo de ingreso** (único/recurrente/suscripción) → Sprint 3. Sin LTV en el motor, solo desbloquea 1 red flag; es enriquecimiento.
+- **CAC** → post-beta. No es input del rubric, necesita el modelo de ingreso primero, estimación poco confiable.
 
 **Puede esperar a una iteración posterior:**
-8. Pregunta dedicada de escalabilidad real del negocio (hoy es proxy débil pero no está "roto", solo incompleto).
-9. Restricciones personales, diferenciación explícita, ticket/frecuencia — enriquecen el diagnóstico pero no bloquean ni rompen el scoring actual.
+7. Pregunta dedicada de escalabilidad real del negocio (hoy es proxy débil pero no está "roto", solo incompleto).
+8. Restricciones personales, diferenciación explícita, ticket/frecuencia — enriquecen el diagnóstico pero no bloquean ni rompen el scoring actual.
 
 ## Ver también
 [[../framework/scoring-engine]] · [[../framework/dimensiones-de-viabilidad]] · [[../experiencia/flujo-de-onboarding]] · [[../decisiones/evolucion-del-producto]] · [[../decisiones/plan-lanzamiento-60-90-dias]]

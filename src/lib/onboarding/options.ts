@@ -137,6 +137,32 @@ export const HAS_TALKED_TO_CUSTOMERS_OPTIONS: SelectOption[] = [
   { value: "false", label: "No, aún no" },
 ];
 
+export const BUSINESS_DEPENDENCY_OPTIONS: SelectOption[] = [
+  { value: "proveedor", label: "Un solo proveedor o fabricante clave" },
+  {
+    value: "cliente_unico",
+    label: "1 o 2 clientes que serían la mayoría de mis ingresos",
+  },
+  {
+    value: "plataforma",
+    label:
+      "Una plataforma externa (Instagram, Amazon, Uber, App Store, marketplace)",
+  },
+  {
+    value: "permiso",
+    label: "Un permiso, licencia o regulación para operar legalmente",
+  },
+  {
+    value: "ubicacion",
+    label: "Una ubicación física específica (un local, una zona)",
+  },
+  { value: "inventario", label: "Inventario que caduca o se deprecia rápido" },
+  {
+    value: "ninguna",
+    label: "Ninguna de estas — puedo operar sin depender de algo crítico",
+  },
+];
+
 export const PAYMENT_PLANS = [
   {
     id: "starter",

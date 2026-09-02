@@ -38,21 +38,28 @@ Personal Fit 20% · Financial Viability 25% · Commercial Viability 25% · Risk 
 Catálogo de diseño (Notion): inversión inicial > capital disponible · inversión > lo que puede perder · margen por venta negativo · no sabe quién es el cliente · no sabe cómo conseguirá clientes · no ha hablado con clientes y planea invertir capital alto · quiere reemplazar empleo sin ingresos recurrentes probados · depende de plataforma externa sin plan alterno · requiere permisos/regulación no investigados.
 
 **Cómo se calculan hoy (código):**
-- **Determinísticas** (`detectFinancialRedFlags()` en `src/lib/scoring/types.ts`):
-  - _Desde 2026-08-27_: "inversión inicial > pérdida aceptable" e "inversión inicial > capital disponible" — cruzando `finp_initial_investment` (número) contra el **techo** del rango declarado (`aprf_acceptable_loss_range` / `aprf_capital_available_range`). Solo se disparan cuando la inversión supera el tope; los rangos abiertos (`mas_100k`, `mas_500k`) nunca disparan; si los rangos no se capturaron (assessments viejos), no se emite nada.
-  - _Desde 2026-08-28_: "margen por venta negativo" — una red flag por cada producto del paso `productos` cuyo precio sea ≤ su costo variable (`productsBelowCost()` sobre `finp_products`).
-  - `runScoringPipeline` mete las determinísticas **primero** en `ascs_red_flags`, antes que las de la IA.
-- **De la IA**: el resto del catálogo (cliente poco claro, canal poco claro, dependencia de plataforma, regulación, etc.) las sigue infiriendo `interpretScores` a partir del contexto. El prompt ahora también recibe la inversión y los rangos de capital/pérdida, así que suele reforzar la señal de sobre-exposición con su propia red flag.
+- **Determinísticas** (`src/lib/scoring/types.ts`):
+  - `detectFinancialRedFlags()` — _Desde 2026-08-27_: "inversión inicial > pérdida aceptable" e "inversión inicial > capital disponible" — cruzando `finp_initial_investment` (número) contra el **techo** del rango declarado (`aprf_acceptable_loss_range` / `aprf_capital_available_range`). Solo se disparan cuando la inversión supera el tope; los rangos abiertos (`mas_100k`, `mas_500k`) nunca disparan; si los rangos no se capturaron (assessments viejos), no se emite nada. _Desde 2026-08-28_: "margen por venta negativo" — una red flag por cada producto del paso `productos` cuyo precio sea ≤ su costo variable (`productsBelowCost()` sobre `finp_products`).
+  - `detectDependencyRedFlags()` — _Desde 2026-08-28_: 3 red flags según `mrsk_business_dependencies` (paso `evaluacion`): `plataforma` → "depende de plataforma externa, ten plan alterno"; `permiso` → "requiere permiso/licencia/regulación, investígalo antes de invertir"; `cliente_unico` → "1-2 clientes = mayoría de ingresos, si uno se va el negocio tambalea". Las otras 3 opciones (proveedor, ubicación, inventario) penalizan el score pero no emiten red flag.
+  - `runScoringPipeline` mete las determinísticas **primero** en `ascs_red_flags` (financieras, luego dependencias), antes que las de la IA.
+- **De la IA**: el resto del catálogo (cliente poco claro, canal poco claro, etc.) las sigue infiriendo `interpretScores` a partir del contexto. El prompt de interpretación recibe inversión, rangos de capital/pérdida y las dependencias declaradas; el de `strengths_risks` también recibe el listado de dependencias.
 
 > Brecha cerrada: las dos red flags financieras habían quedado incalculables cuando se removieron las preguntas de capital/pérdida (commit `5886b4d`). Con esas preguntas de vuelta (`43d1112`) y `detectFinancialRedFlags()` ya vuelven a calcularse. Ver [[../decisiones/evolucion-del-producto#2]].
 
-## Sobre-exposición: inversión vs. capital declarado
+## Penalizaciones al `riskScore` (alto = más riesgo)
 
-`calculateDeterministicScores` calcula una penalización de sobre-exposición que se suma al `riskScore` (alto = más riesgo):
+`calculateDeterministicScores` suma al `riskScore`, además del `100 - scoreFromRange(pérdida aceptable) + bono si habló con clientes`:
+
+**Sobre-exposición: inversión vs. capital declarado** (_2026-08-27_):
 - `+12` si `finp_initial_investment` supera el techo de `aprf_acceptable_loss_range`
 - `+8` si supera el techo de `aprf_capital_available_range`
 
-Ejemplo real (assessment de prueba, `menos_5k` de pérdida tolerable, inversión $45,000): `riskScore` = 100, semáforo rojo, más las 2 red flags ("Tu inversión inicial ($45,000) es mayor que lo que dijiste que podrías perder…"). Cubierto por tests en `src/lib/scoring/__tests__/types.test.ts`.
+**Dependencias del negocio** (_2026-08-28_, `mrsk_business_dependencies` — rubric dimensión 4):
+- `plataforma` **+6**, `permiso` **+6** (están en el checklist de red flags del rubric)
+- `proveedor`, `cliente_unico`, `ubicacion`, `inventario` **+3** c/u
+- `ninguna` → 0. Tope total **+16** (`DEPENDENCY_PENALTY_CAP`).
+
+Ejemplos cubiertos por tests en `src/lib/scoring/__tests__/types.test.ts`: base 65 → `["plataforma"]` 71 → `["plataforma","permiso"]` 77 → 5 dependencias → cap +16 → 81. Con assessments de prueba de sobre-exposición extrema el `riskScore` ya está clampeado a 100 y la penalización se absorbe.
 
 ## Input estructurado a la IA (forma del JSON, Notion)
 ```json
@@ -67,7 +74,8 @@ El código real (`buildAssessmentContext()`) construye un contexto de texto más
 
 ## Otros datos capturados pero ignorados por el scoring
 - `pfit_uncertainty_comfort_score` y `pfit_process_comfort_score` — **ya conectados** al `personalFitScore` (commit `43d1112`, +2 a +10 pts cada uno). Ya no son dato muerto.
-- `mrsk_business_dependencies` — sigue sin capturarse siquiera en el formulario (pendiente de Sprint 2). Ver mapeo completo en [[../producto/gaps-onboarding-vs-framework]].
+- `mrsk_business_dependencies` — **ya capturado y conectado** (2026-08-28): grid de checkboxes en `evaluacion`, penalización ponderada al `riskScore` + 3 red flags. Ver arriba.
+- `pfit_avoided_activities` — sigue sin capturarse (movido a Sprint 3, falta definir su uso). Ver mapeo completo en [[../producto/gaps-onboarding-vs-framework]].
 
 ## Ver también
 [[dimensiones-de-viabilidad]] · [[prompts-de-ia]] · [[criterios-de-evaluacion]] · [[../arquitectura/modelo-de-datos]] · [[../producto/gaps-onboarding-vs-framework]]

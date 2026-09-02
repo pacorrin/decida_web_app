@@ -66,8 +66,8 @@ Esto conecta directamente con el nivel 2 de éxito de producto de `PRODUCT.md` (
 | Sprint | Semanas | Fechas objetivo | Foco | Entregables | Estado |
 |---|---|---|---|---|---|
 | 1 | 1-2 | ~~10 ago – 23 ago~~ **inició 5 ago** 2026 | Fundamentos de cuenta | Email transaccional funcionando, tabla `users`, registro/login/reset de password | 🟦 En curso (arrancó 5 días antes de lo previsto) |
-| 2 | 3-4 | 24 ago – 6 sep 2026 | Dashboard de usuario + pulir onboarding del análisis | ~~Assessments vinculados a cuenta~~ (adelantado a Sprint 1), ~~`/mis-evaluaciones` → dashboard `/cuenta`~~ (`43d1112`), **cerrar los gaps del onboarding vs. el framework de 6 dimensiones**, ~~corregir errores del paso "Así entendimos tu idea"~~ (`0259101`), ~~catálogo de productos/precios~~ (paso `productos`, 2026-08-28), y **capturar CAC** (ver detalle abajo) | ⬜ Pendiente |
-| 3 | 5-6 | 7 sep – 20 sep 2026 | Hardening independiente de pago | PDF real, analytics del funnel, monitoreo de errores, landing cerrada, **+ definir y usar `pfit_avoided_activities`** (movido del Sprint 2) | ⬜ Pendiente |
+| 2 | 3-4 | 24 ago – 6 sep 2026 | Dashboard de usuario + pulir onboarding del análisis | ~~Assessments vinculados a cuenta~~ (adelantado a Sprint 1), ~~`/mis-evaluaciones` → dashboard `/cuenta`~~ (`43d1112`), **cerrar los gaps críticos del onboarding vs. el rubric** (~~dependencias del negocio~~ hecho 2026-08-28; falta: granularidad "¿habló con clientes?"), ~~corregir errores del paso "Así entendimos tu idea"~~ (`0259101`), ~~catálogo de productos/precios~~ (paso `productos`, 2026-08-28) | ⬜ Pendiente |
+| 3 | 5-6 | 7 sep – 20 sep 2026 | Hardening independiente de pago | PDF real, analytics del funnel, monitoreo de errores, landing cerrada, **+ campos de onboarding pospuestos del Sprint 2** (`pfit_avoided_activities`, modelo de ingreso) | ⬜ Pendiente |
 | 4 | 7-9 | 21 sep – 11 oct 2026 | Beta cerrada con cuentas reales | Grupo pequeño con registro real (pago sigue simulado), feedback sobre valor del historial/cuenta, **en paralelo: análisis y decisión del modelo de pricing** (trabajo del usuario, no de desarrollo) | ⬜ Pendiente |
 | 5 | 10-12 | 12 oct – 1 nov 2026 | Cierre y lanzamiento | Integrar pago real según el modelo ya decidido, panel admin mínimo (ahora con volumen real que gestionar), lanzamiento público controlado | ⬜ Pendiente |
 
@@ -112,20 +112,23 @@ Pulido de UX/robustez sobre lo ya entregado, a pedido del usuario:
 
 ## Sprint 2 — pulir el onboarding del análisis de idea (agregado 2026-08-05)
 
-Auditoría completa campo por campo contra [[../../raw/notion/17-rubric-6-dimensiones]] y [[../../raw/notion/16-criterios-evaluacion-ideas]] archivada en [[../producto/gaps-onboarding-vs-framework]]. Resumen de lo que entra en este sprint:
+Auditoría completa campo por campo contra [[../../raw/notion/17-rubric-6-dimensiones]] y [[../../raw/notion/16-criterios-evaluacion-ideas]] archivada en [[../producto/gaps-onboarding-vs-framework]]. El alcance de los campos que quedaban pendientes se decidió el 2026-08-28 en [[alcance-campos-restantes-sprint-2]] (criterio: solo entra lo que vuelve creíble una dimensión del rubric).
 
 **Imprescindible (arregla señal rota o ausente):**
 1. ✅ **HECHO** — Capital disponible + pérdida aceptable de vuelta en el paso `perfil` (commit `43d1112`, spec `.kiro/specs/risk-score-fix/`).
 2. ✅ **HECHO** — Score de riesgo reconectado: usa el dato real (`43d1112`) + cruza la inversión declarada contra el techo del rango de capital/pérdida y emite 2 red flags determinísticas (`detectFinancialRedFlags()`, 2026-08-27). Ver [[../framework/scoring-engine#Red flags]] y el log del 2026-08-27.
-3. Agregar dependencias del negocio (proveedor, empleados, ubicación, plataforma, inventario, regulación) — el campo `mrsk_business_dependencies` en BD ya existe, falta el input.
-
-**Movido al Sprint 3 (2026-08-28):**
-- ~~Agregar "actividades que evita" (`avoidedActivities`)~~ — **pasa al Sprint 3**. El campo `pfit_avoided_activities` ya existe en BD, pero **todavía no está definido qué se va a hacer con él** en el scoring/diagnóstico. Se documenta y se decide su uso en Sprint 3 antes de capturarlo. Ver [[#Sprint 3 — «actividades que evita» (pfit_avoided_activities)]].
+3. ✅ **HECHO (2026-08-28)** — Dependencias del negocio: grid de checkboxes en el paso `evaluacion`, 6 opciones + "ninguna" (proveedor · 1-2 clientes = mayoría · plataforma externa · permiso/regulación · ubicación física · inventario perecedero), penalización ponderada al `riskScore` (plataforma/permiso +6, resto +3, tope +16) y 3 red flags determinísticas (`detectDependencyRedFlags()`). Verificado end-to-end. Arregla la dimensión 4 (Riesgo), la menos cubierta. Detalle en [[alcance-campos-restantes-sprint-2#Detalle]] y [[../framework/scoring-engine#Penalizaciones al riskScore (alto = más riesgo)]].
 
 **Alto valor, bajo costo:**
-4. Restaurar granularidad de "¿ya habló con clientes?" (niveles, no solo sí/no).
-5. Pregunta de modelo de ingreso (único/recurrente/suscripción/proyecto/comisión).
-6. ✅ **HECHO** — `uncertaintyComfortScore` y `processComfortScore` ya se conectan al `personalFitScore` (commit `43d1112`).
+4. Restaurar granularidad de "¿ya habló con clientes?" (niveles, no solo sí/no) — el sí/no es un acantilado binario de 35 pts en `commercialScore`.
+5. ✅ **HECHO** — `uncertaintyComfortScore` y `processComfortScore` ya se conectan al `personalFitScore` (commit `43d1112`).
+
+**Movido al Sprint 3 (2026-08-28)** — no arreglan nada roto, no entran al MVP:
+- "Actividades que evita" (`pfit_avoided_activities`) — falta definir qué señal debe dar.
+- Pregunta de modelo de ingreso (único/recurrente/suscripción/proyecto/comisión) — sin LTV en el motor, el impacto directo es 1 red flag; es enriquecimiento.
+- Ver [[#Sprint 3 — campos de onboarding pospuestos]].
+
+**Post-beta** (decisión del usuario, 2026-08-28): **CAC** (costo de adquisición de clientes) — es la estimación menos confiable del assessment y necesita el modelo de ingreso primero. Ver [[alcance-campos-restantes-sprint-2#CAC — NO en esta etapa]].
 
 **Se puede posponer a una iteración posterior** (no bloquea ni rompe nada hoy): pregunta dedicada de escalabilidad real del negocio, restricciones personales, diferenciación explícita, ticket/frecuencia de compra. Detalle completo en [[../producto/gaps-onboarding-vs-framework]].
 
@@ -141,21 +144,26 @@ Deuda menor que quedó abierta: `0259101` agrega 1 error nuevo de eslint (`set-s
 
 Dos campos/secciones nuevas pedidas por el usuario para este sprint, además de los gaps del rubric ya listados arriba:
 
-1. **Costo de adquisición de clientes (CAC).** Hoy el onboarding captura el *canal* de adquisición (`acquisitionChannel` en `evaluationMarketSchema`) pero nada sobre su *costo*. Agregar captura de CAC estimado (o los insumos para estimarlo: gasto de marketing esperado ÷ clientes esperados) para poder cruzarlo con el ticket/ingreso y leer la relación CAC vs. margen/LTV. Alimenta [[../framework/dimensiones-de-viabilidad|Viabilidad comercial y financiera]]. Ver gap en [[../producto/gaps-onboarding-vs-framework]].
+1. **Costo de adquisición de clientes (CAC)** — **pospuesto a post-beta** (decisión 2026-08-28). Hoy el onboarding captura el *canal* de adquisición (`acquisitionChannel`) pero nada sobre su *costo*. La razón de no meterlo ahora: no es un input puntuado del rubric, necesita el modelo de ingreso (LTV) para no dar falsas alarmas en negocios de suscripción, y la estimación pre-lanzamiento es la menos confiable del assessment. Ver [[alcance-campos-restantes-sprint-2#CAC — NO en esta etapa]].
 2. ✅ **HECHO (2026-08-28)** — **Sección de productos/servicios a vender y sus precios.** Paso nuevo `productos` (`/analizar/productos`, entre `ajuste` y `evaluacion`): lista de 1-10 renglones con nombre, tipo (producto/servicio), precio, costo variable y unidades/mes. Decisión: **absorbe** los 3 campos únicos de precio/costo/ventas que estaban en `evaluacion` — el scoring los deriva del blend ponderado por unidades y los escribe en las mismas columnas, más el listado crudo en `finp_products` (JSON). Red flag determinística por producto vendido bajo costo. El reporte muestra tabla de productos con margen por renglón. Verificado end-to-end. Detalle en [[../experiencia/flujo-de-onboarding#El paso «productos» — catálogo de lo que se piensa vender (2026-08-28)]].
 
-Al implementarlos: revisar `src/lib/onboarding/schemas.ts`, `src/lib/onboarding/steps.ts`, `prisma/schema.prisma` (ver si ya hay columnas aprovechables o hay que migrar) y `src/lib/scoring/types.ts` para conectarlos al cálculo, no solo capturarlos como dato muerto (mismo error que `uncertaintyComfortScore`/`processComfortScore`).
+## Sprint 3 — campos de onboarding pospuestos
 
-## Sprint 3 — «actividades que evita» (`pfit_avoided_activities`)
+Tres campos que no entran al MVP (decisión 2026-08-28, ver [[alcance-campos-restantes-sprint-2]]). Ninguno arregla algo roto; se implementan cuando haya una decisión de producto clara y/o feedback de la beta.
 
-Movido aquí del Sprint 2 el 2026-08-28. El campo `pfit_avoided_activities` (JSON) ya existe en `prisma/schema.prisma` pero **no se captura ni se usa**, y todavía no hay decisión de producto sobre qué señal debería dar. No entra en Sprint 2 como "imprescindible" porque no arregla nada roto — hoy simplemente no existe.
+### «Actividades que evita» (`pfit_avoided_activities`)
+El campo (JSON) ya existe en `prisma/schema.prisma` pero no se captura ni se usa, y no hay decisión de qué señal debería dar. Antes de implementarlo hay que definir:
+- **Qué opciones ofrecer**: ¿la misma lista que `ENJOYED_ACTIVITIES_OPTIONS`, o una propia?
+- **Cómo afecta el scoring**: regla candidata del rubric — "evita vender + canal de venta directa/presencial → baja Fit personal y Comercial". Confirmar peso y si toca una o dos dimensiones.
+- **Dónde va el input**: paso `ajuste` (junto a `enjoyedActivities` en `personal-fit-form.tsx`).
 
-Antes de implementarlo hay que definir:
-- **Qué opciones ofrecer**: ¿la misma lista que `ENJOYED_ACTIVITIES_OPTIONS` (vender/operar/crear/enseñar/analizar/liderar), o una lista propia?
-- **Cómo afecta el scoring**: la regla candidata del rubric es "evita vender + su canal de adquisición es venta directa/presencial → baja Fit personal y Viabilidad comercial". Confirmar el peso y si toca una o dos dimensiones.
-- **Dónde va el input**: paso `ajuste` (junto a `enjoyedActivities` en `personal-fit-form.tsx`) es lo natural.
+Entregable: decisión documentada + `avoidedActivitiesSchema` en `personalFitSchema` + input + persistencia en `savePersonalFit` + regla en `calculateDeterministicScores` con tests.
 
-Entregable: decisión documentada + `avoidedActivitiesSchema` en `personalFitSchema` + input + persistencia en `savePersonalFit` + regla en `calculateDeterministicScores` con tests, siguiendo el patrón del fix de `riskScore`.
+### Modelo de ingreso (único / recurrente / suscripción / proyecto / comisión)
+Un select (a nivel negocio o por producto en el paso `productos`). Sin LTV en el motor determinístico, el impacto directo es acotado: desbloquea la red flag "quiere reemplazar empleo sin ingresos recurrentes probados" (dimensión 5, hoy incalculable) y mejora la narrativa de la IA. Prerequisito natural del CAC.
+
+### CAC (post-beta, no Sprint 3 fijo)
+Ver [[alcance-campos-restantes-sprint-2#CAC — NO en esta etapa]]. Depende del modelo de ingreso y de saber si la gente puede responderlo con sentido.
 
 ## Estrategias comerciales (sin cambios respecto a la versión anterior)
 1. `/ejemplo` como imán de leads.

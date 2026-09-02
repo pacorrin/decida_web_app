@@ -82,6 +82,15 @@ type Evaluacion = {
     | "publicidad"
     | "presencial"
     | "otro";
+  businessDependencies: Array<
+    | "proveedor"
+    | "cliente_unico"
+    | "plataforma"
+    | "permiso"
+    | "ubicacion"
+    | "inventario"
+    | "ninguna"
+  >;
   mainConcern: string;
   successCondition: string;
 };
@@ -133,6 +142,7 @@ const SCENARIOS: Scenario[] = [
       hasTalkedToCustomers: "false",
       competitionLevel: "alta",
       acquisitionChannel: "presencial",
+      businessDependencies: ["ubicacion", "inventario"],
       mainConcern:
         "La renta del local es alta y hay muchas cafeterías cerca; no sé si lograré suficiente tráfico.",
       successCondition:
@@ -171,6 +181,7 @@ const SCENARIOS: Scenario[] = [
       hasTalkedToCustomers: "true",
       competitionLevel: "media",
       acquisitionChannel: "redes_sociales",
+      businessDependencies: ["ninguna"],
       mainConcern:
         "Vender software a dentistas puede ser lento y la adopción de tecnología en consultorios chicos es baja.",
       successCondition:
@@ -209,6 +220,7 @@ const SCENARIOS: Scenario[] = [
       hasTalkedToCustomers: "true",
       competitionLevel: "alta",
       acquisitionChannel: "referidos",
+      businessDependencies: ["cliente_unico"],
       mainConcern:
         "Depender de pocos clientes y competir con muchas agencias que cobran más barato.",
       successCondition:
@@ -247,6 +259,7 @@ const SCENARIOS: Scenario[] = [
       hasTalkedToCustomers: "false",
       competitionLevel: "alta",
       acquisitionChannel: "publicidad",
+      businessDependencies: ["plataforma", "inventario"],
       mainConcern:
         "El costo de adquisición por publicidad puede comerse el margen y hay mucha competencia de fast fashion.",
       successCondition:
@@ -285,6 +298,7 @@ const SCENARIOS: Scenario[] = [
       hasTalkedToCustomers: "true",
       competitionLevel: "media",
       acquisitionChannel: "redes_sociales",
+      businessDependencies: ["plataforma"],
       mainConcern:
         "La retención mensual de las membresías suele ser baja y hay mucho contenido gratis en YouTube.",
       successCondition:
@@ -323,6 +337,7 @@ const SCENARIOS: Scenario[] = [
       hasTalkedToCustomers: "true",
       competitionLevel: "media",
       acquisitionChannel: "redes_sociales",
+      businessDependencies: ["permiso", "inventario"],
       mainConcern:
         "La logística de entrega y la merma de alimentos frescos pueden reducir mucho el margen al escalar.",
       successCondition:
@@ -459,6 +474,12 @@ async function completarEvaluacion(page: Page, scenario: Scenario): Promise<void
     await selectOptionCard(page, "hasTalkedToCustomers", e.hasTalkedToCustomers);
     await selectOptionCard(page, "competitionLevel", e.competitionLevel);
     await selectOptionCard(page, "acquisitionChannel", e.acquisitionChannel);
+
+    for (const dep of e.businessDependencies) {
+      await page
+        .locator(`input[name="businessDependencies"][value="${dep}"]`)
+        .check({ force: true });
+    }
 
     await page.fill("#mainConcern", e.mainConcern);
     await page.fill("#successCondition", e.successCondition);

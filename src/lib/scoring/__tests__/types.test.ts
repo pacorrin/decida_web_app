@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { calculateDeterministicScores, detectFinancialRedFlags } from "../types";
+import {
+  calculateDeterministicScores,
+  detectFinancialRedFlags,
+  detectDependencyRedFlags,
+} from "../types";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 
 /**
@@ -469,5 +473,104 @@ describe("riskScore — over-exposure adjustment", () => {
     expect(
       result.dimensions.find((d) => d.key === "risk_level")!.score
     ).toBe(50);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BUSINESS DEPENDENCIES — riskScore penalty + red flags (rubric dimension 4)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function withDependencies(deps: string[]): AssessmentWithRelations {
+  // makeProfile() → aprf_acceptable_loss_range "20k_50k" and no over-exposure,
+  // so base riskScore = clamp(100 - 35 + 0 + 0) = 65 with plenty of headroom.
+  const base = makeAssessment({ assessment_profile: makeProfile() });
+  return {
+    ...base,
+    market_risk_inputs: {
+      ...base.market_risk_inputs!,
+      mrsk_business_dependencies: deps,
+    },
+  };
+}
+
+const riskOf = (a: AssessmentWithRelations) =>
+  calculateDeterministicScores(a).dimensions.find((d) => d.key === "risk_level")!
+    .score;
+
+describe("riskScore — business-dependency penalty", () => {
+  it("adds nothing when there are no dependencies", () => {
+    expect(riskOf(withDependencies([]))).toBe(65);
+    expect(riskOf(withDependencies(["ninguna"]))).toBe(65);
+  });
+
+  it("weights platform and permit higher than the rest", () => {
+    expect(riskOf(withDependencies(["plataforma"]))).toBe(71); // +6
+    expect(riskOf(withDependencies(["plataforma", "permiso"]))).toBe(77); // +12
+    expect(riskOf(withDependencies(["proveedor"]))).toBe(68); // +3
+  });
+
+  it("caps the penalty at +16", () => {
+    // 6 + 6 + 3 + 3 + 3 = 21 → capped at 16
+    expect(
+      riskOf(
+        withDependencies([
+          "plataforma",
+          "permiso",
+          "proveedor",
+          "cliente_unico",
+          "ubicacion",
+        ])
+      )
+    ).toBe(81);
+  });
+
+  it("leaves other dimensions untouched", () => {
+    const scores = calculateDeterministicScores(
+      withDependencies(["plataforma", "permiso"])
+    );
+    const get = (k: string) =>
+      scores.dimensions.find((d) => d.key === k)!.score;
+    expect(get("financial_viability")).toBe(35);
+    expect(get("commercial_viability")).toBe(43);
+    expect(get("time_fit")).toBe(65);
+    expect(get("scalability")).toBe(60);
+  });
+});
+
+describe("detectDependencyRedFlags", () => {
+  it("flags an external-platform dependency", () => {
+    const flags = detectDependencyRedFlags(withDependencies(["plataforma"]));
+    expect(flags).toHaveLength(1);
+    expect(flags[0]).toMatch(/plataforma externa/i);
+  });
+
+  it("flags a permit/regulation dependency", () => {
+    const flags = detectDependencyRedFlags(withDependencies(["permiso"]));
+    expect(flags).toHaveLength(1);
+    expect(flags[0]).toMatch(/permiso|licencia|regulaci/i);
+  });
+
+  it("flags customer concentration", () => {
+    const flags = detectDependencyRedFlags(withDependencies(["cliente_unico"]));
+    expect(flags).toHaveLength(1);
+    expect(flags[0]).toMatch(/1 o 2 clientes/i);
+  });
+
+  it("emits all three when all three are selected", () => {
+    expect(
+      detectDependencyRedFlags(
+        withDependencies(["plataforma", "permiso", "cliente_unico"])
+      )
+    ).toHaveLength(3);
+  });
+
+  it("emits nothing for non-flagged dependencies or empty selections", () => {
+    expect(
+      detectDependencyRedFlags(
+        withDependencies(["proveedor", "ubicacion", "inventario"])
+      )
+    ).toEqual([]);
+    expect(detectDependencyRedFlags(withDependencies([]))).toEqual([]);
+    expect(detectDependencyRedFlags(withDependencies(["ninguna"]))).toEqual([]);
   });
 });

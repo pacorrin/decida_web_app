@@ -16,12 +16,17 @@ import { StepNavigation } from "@/components/onboarding/step-navigation";
 import { LoadingOverlay } from "@/components/onboarding/loading-overlay";
 import { OptionCardGroup } from "@/components/onboarding/option-card-group";
 import { saveEvaluation } from "@/app/analizar/actions";
-import { fieldValue, type ActionState } from "@/lib/onboarding/schemas";
+import {
+  fieldValue,
+  fieldValues,
+  type ActionState,
+} from "@/lib/onboarding/schemas";
 import {
   FIXED_COST_OPTIONS,
   COMPETITION_OPTIONS,
   CHANNEL_OPTIONS,
   HAS_TALKED_TO_CUSTOMERS_OPTIONS,
+  BUSINESS_DEPENDENCY_OPTIONS,
 } from "@/lib/onboarding/options";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 
@@ -43,6 +48,12 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
       : mkt?.mrsk_has_talked_to_customers === false
         ? "false"
         : "";
+
+  const dependencyValues = fieldValues(
+    v,
+    "businessDependencies",
+    (mkt?.mrsk_business_dependencies as string[] | undefined) ?? []
+  );
 
   return (
     <>
@@ -148,6 +159,33 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
               columns={1}
               required
               ariaLabel="Canal de adquisición"
+            />
+          </Field>
+
+          <Field>
+            <FieldLabel>¿De qué depende tu negocio para funcionar?</FieldLabel>
+            <FieldDescription>Selecciona todo lo que aplique.</FieldDescription>
+            <div className="grid gap-2">
+              {BUSINESS_DEPENDENCY_OPTIONS.map((opt) => (
+                <label
+                  key={opt.value}
+                  className="flex cursor-pointer items-start gap-2 rounded-lg border border-border/60 px-3 py-2 text-sm hover:bg-muted/50 has-checked:border-primary has-checked:bg-primary/5"
+                >
+                  <input
+                    type="checkbox"
+                    name="businessDependencies"
+                    value={opt.value}
+                    defaultChecked={dependencyValues.includes(opt.value)}
+                    className="mt-0.5 size-4 rounded border-input"
+                  />
+                  {opt.label}
+                </label>
+              ))}
+            </div>
+            <FieldError
+              errors={state.fieldErrors?.businessDependencies?.map((m) => ({
+                message: m,
+              }))}
             />
           </Field>
 

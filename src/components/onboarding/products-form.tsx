@@ -126,7 +126,8 @@ export function ProductsForm({
           <FieldLabel>¿Qué vas a vender?</FieldLabel>
           <FieldDescription>
             Agrega cada producto o servicio con su precio, su costo variable por
-            unidad y cuántas unidades esperas vender al mes. Hasta {MAX_PRODUCTS}.
+            unidad y cuántas unidades esperas vender al mes. Hasta {MAX_PRODUCTS} productos o
+            servicios.
           </FieldDescription>
         </Field>
 
@@ -224,7 +225,7 @@ export function ProductsForm({
                     disabled={pending}
                   />
                   <FieldDescription>
-                    Lo que te cuesta cada unidad (materiales, comisión, envío).
+                    Lo que te cuesta cada unidad (materiales, comisión, envío, traslados).
                   </FieldDescription>
                 </Field>
 

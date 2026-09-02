@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReportSection } from "@/components/report/report-section";
 import { SignalBadge, formatCurrency } from "@/components/report/signal-badge";
 import { ReportToc } from "@/components/report/report-toc";
@@ -10,6 +10,11 @@ import {
 } from "@/lib/example-report-data";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import { parseStoredProducts } from "@/lib/onboarding/products";
+import {
+  parseStoredRisks,
+  parseStoredStrengths,
+  parseStoredValidationPlan,
+} from "@/lib/report/sections";
 import { CheckCircle2, AlertTriangle, AlertCircle, TrendingUp } from "lucide-react";
 import { ReportErrorState } from "@/components/onboarding/report-error-state";
 import { FeedbackForm } from "@/components/onboarding/feedback-form";
@@ -70,11 +75,9 @@ export function ResultReport({
   const scores = assessment.assessment_score;
   const financial = assessment.financial_inputs;
   const products = parseStoredProducts(financial?.finp_products);
-  const strengths = (report?.arep_strengths as string[]) ?? [];
-  const risks = (report?.arep_risks as string[]) ?? [];
-  const validationPlan = report?.arep_validation_plan as
-    | { week1?: string[]; week2?: string[] }
-    | null;
+  const strengths = parseStoredStrengths(report?.arep_strengths);
+  const risks = parseStoredRisks(report?.arep_risks);
+  const validationPlan = parseStoredValidationPlan(report?.arep_validation_plan);
   const redFlags = (scores?.ascs_red_flags as string[]) ?? [];
 
   const recommendation = scores?.ascs_final_recommendation as
@@ -422,36 +425,103 @@ export function ResultReport({
         )}
 
         {/* Strengths */}
-        {strengths.length > 0 && (
+        {report && (
           <ReportSection id="fortalezas" title="Fortalezas">
-            <ul className="space-y-2">
-              {strengths.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm">
-                  <CheckCircle2
-                    className="mt-0.5 size-4 shrink-0 text-emerald-600"
-                    aria-hidden
-                  />
-                  {item}
-                </li>
-              ))}
-            </ul>
+            {strengths.length > 0 ? (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {strengths.map((item, i) => (
+                  <Card
+                    key={i}
+                    className="border-emerald-200/50 bg-emerald-50/20"
+                  >
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-start gap-2 text-base text-emerald-900">
+                        <CheckCircle2
+                          className="mt-0.5 size-4 shrink-0"
+                          aria-hidden
+                        />
+                        {item.title}
+                      </CardTitle>
+                    </CardHeader>
+                    {item.whyItMatters && (
+                      <CardContent>
+                        <p className="text-sm leading-relaxed text-emerald-900/80">
+                          {item.whyItMatters}
+                        </p>
+                      </CardContent>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Con los datos que nos diste, todavía no encontramos una fortaleza
+                que se sostenga por sí sola. No es un veredicto sobre ti ni sobre
+                la idea: significa que aún no hay evidencia — ni números ni
+                conversaciones con clientes — que la respalde. El plan de
+                validación de abajo es exactamente el trabajo que falta para
+                generarla.
+              </p>
+            )}
           </ReportSection>
         )}
 
         {/* Risks */}
         {(risks.length > 0 || redFlags.length > 0) && (
           <ReportSection id="riesgos" title="Riesgos">
-            <ul className="space-y-2">
-              {[...risks, ...redFlags].map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm">
-                  <AlertTriangle
-                    className="mt-0.5 size-4 shrink-0 text-amber-600"
-                    aria-hidden
-                  />
-                  {item}
-                </li>
-              ))}
-            </ul>
+            {risks.length > 0 && (
+              <div className="grid gap-4">
+                {risks.map((risk, i) => (
+                  <Card key={i} className="border-amber-200/50">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-start gap-2 text-base text-amber-950">
+                        <AlertTriangle
+                          className="mt-0.5 size-4 shrink-0 text-amber-600"
+                          aria-hidden
+                        />
+                        {risk.title}
+                      </CardTitle>
+                      {risk.whyItMatters && (
+                        <CardDescription className="text-amber-900/70">
+                          {risk.whyItMatters}
+                        </CardDescription>
+                      )}
+                    </CardHeader>
+                    {risk.howToReduce && (
+                      <CardContent>
+                        <p className="text-sm">
+                          <span className="font-medium text-primary">
+                            Cómo reducirlo:{" "}
+                          </span>
+                          <span className="text-muted-foreground">
+                            {risk.howToReduce}
+                          </span>
+                        </p>
+                      </CardContent>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {redFlags.length > 0 && (
+              <div className="mt-6">
+                <p className="mb-3 text-sm font-medium text-primary">
+                  Alertas detectadas en tus números
+                </p>
+                <ul className="space-y-2">
+                  {redFlags.map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm">
+                      <AlertCircle
+                        className="mt-0.5 size-4 shrink-0 text-destructive"
+                        aria-hidden
+                      />
+                      <span className="text-muted-foreground">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </ReportSection>
         )}
 
@@ -496,37 +566,28 @@ export function ResultReport({
         )}
 
         {/* Validation Plan */}
-        {validationPlan && (
+        {validationPlan.length > 0 && (
           <ReportSection id="validacion" title="Plan de validación">
             <div className="grid gap-4 sm:grid-cols-2">
-              {validationPlan.week1 && (
-                <Card>
+              {validationPlan.map((week) => (
+                <Card key={week.week}>
                   <CardHeader>
-                    <CardTitle className="text-base">Semana 1</CardTitle>
+                    <CardTitle className="text-base">
+                      Semana {week.week}
+                    </CardTitle>
+                    {week.title && (
+                      <CardDescription>{week.title}</CardDescription>
+                    )}
                   </CardHeader>
                   <CardContent>
                     <ul className="list-disc space-y-1 pl-4 text-sm text-muted-foreground">
-                      {validationPlan.week1.map((item, i) => (
-                        <li key={i}>{item}</li>
+                      {week.tasks.map((task, i) => (
+                        <li key={i}>{task}</li>
                       ))}
                     </ul>
                   </CardContent>
                 </Card>
-              )}
-              {validationPlan.week2 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-base">Semana 2</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="list-disc space-y-1 pl-4 text-sm text-muted-foreground">
-                      {validationPlan.week2.map((item, i) => (
-                        <li key={i}>{item}</li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              )}
+              ))}
             </div>
           </ReportSection>
         )}

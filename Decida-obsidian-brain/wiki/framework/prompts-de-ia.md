@@ -1,7 +1,7 @@
 ---
 type: framework
 tags: [decida, ai, prompts]
-updated: 2026-08-28
+updated: 2026-09-02
 ---
 
 # Prompts de IA y lógica de diagnóstico
@@ -21,6 +21,11 @@ La IA **no es el cerebro único del producto**. Actúa como redactor-consultor q
 `IDEA_REFINEMENT_SYSTEM_PROMPT` se reescribió de "integra las aclaraciones del usuario" a "REESCRIBE «Nuestro entendimiento» como análisis sintetizado". Reglas nuevas: prohibido pegar la aclaración literal, prohibidos los verbos de transcripción ("comentaste", "indicaste", "aclaraste", "mencionaste"…), cada campo de `structuredUnderstanding` = 1 frase analítica corta, mapeo semántico del tema al campo, + un ejemplo de referencia de estilo en el propio prompt. El prompt ahora recibe el `structuredUnderstanding` actual como contexto. Además hay una **capa de saneo determinística en `openai.ts`** que corre sobre la salida (real o fallback): detecta volcados de Q&A o de aclaraciones crudas y los reemplaza por el valor previo. Esto es una defensa dedicada contra que la sección "Así entendimos tu idea" se lea como transcripción — antes lo hacía, sobre todo en el fallback sin API key.
 
 Esto confirma que el diseño de "prompts separados por responsabilidad, con output JSON tipado" de Notion 15 se implementó literalmente — cada prompt tiene su propio schema Zod de validación.
+
+### Secciones JSON del reporte (arreglo 2026-09-02)
+`src/lib/ai/schemas/report-sections.ts` — `strengthsRisksSchema` y `validationPlanSchema` con sus system prompts dedicados. Existen porque esas dos secciones se generaban con `generateText` bajo un `BASE_SYSTEM` que instruye Markdown: el modelo envolvía el JSON en un bloque cercado y `JSON.parse` fallaba en **33 de 33 reportes**. Ahora usan `generateJson` (`response_format: json_object`) + Zod, y sus prompts **nunca mencionan Markdown**. Detalle completo en [[../experiencia/reporte-de-resultado#🔴→✅ Las 3 secciones JSON estaban rotas al 100% (arreglado 2026-09-02)]].
+
+> Regla que se desprende: **cualquier prompt que pida JSON va por `generateJson`/`generateReasoningJson` + schema Zod, nunca por `generateText`.** Las 4 llamadas que sí funcionaban ya seguían ese patrón; las 2 rotas eran las únicas que no.
 
 ## Arquitectura de prompts (Notion, 7 responsabilidades)
 1. Idea Understanding — resumir la idea sin agregar supuestos.

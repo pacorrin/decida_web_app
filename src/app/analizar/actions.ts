@@ -591,6 +591,7 @@ export async function saveEvaluation(
     hasTalkedToCustomers: formData.get("hasTalkedToCustomers"),
     competitionLevel: formData.get("competitionLevel"),
     acquisitionChannel: formData.get("acquisitionChannel"),
+    businessDependencies: formData.getAll("businessDependencies"),
     mainConcern: formData.get("mainConcern"),
     successCondition: formData.get("successCondition"),
   });
@@ -627,6 +628,7 @@ export async function saveEvaluation(
       mrsk_has_talked_to_customers: mkt.hasTalkedToCustomers === "true",
       mrsk_competition_level: mkt.competitionLevel,
       mrsk_acquisition_channel: mkt.acquisitionChannel,
+      mrsk_business_dependencies: mkt.businessDependencies,
       mrsk_main_concern: mkt.mainConcern,
       mrsk_success_condition: mkt.successCondition,
     },
@@ -634,6 +636,7 @@ export async function saveEvaluation(
       mrsk_has_talked_to_customers: mkt.hasTalkedToCustomers === "true",
       mrsk_competition_level: mkt.competitionLevel,
       mrsk_acquisition_channel: mkt.acquisitionChannel,
+      mrsk_business_dependencies: mkt.businessDependencies,
       mrsk_main_concern: mkt.mainConcern,
       mrsk_success_condition: mkt.successCondition,
     },

@@ -1,11 +1,44 @@
-import { generateText, getNarrativeModel } from "@/lib/ai/openai";
+import { generateJson, generateText, getNarrativeModel } from "@/lib/ai/openai";
 import { prisma } from "@/lib/prisma";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import { parseStoredProducts } from "@/lib/onboarding/products";
+import { BUSINESS_DEPENDENCY_OPTIONS } from "@/lib/onboarding/options";
+
+const DEPENDENCY_LABEL = new Map(
+  BUSINESS_DEPENDENCY_OPTIONS.map((o) => [o.value, o.label])
+);
+
+function dependencyLabels(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((d): d is string => typeof d === "string" && d !== "ninguna")
+    .map((d) => DEPENDENCY_LABEL.get(d) ?? d);
+}
 import type { ScoringInterpretResult } from "@/lib/ai/schemas/scoring-interpret";
 import type { DeterministicScoreResult } from "@/lib/scoring/types";
+import { detectDeterministicStrengths } from "@/lib/scoring/strengths";
+import type {
+  ReportRisk,
+  ReportStrength,
+  ValidationWeek,
+} from "@/lib/report/sections";
+import {
+  STRENGTHS_RISKS_SYSTEM_PROMPT,
+  VALIDATION_PLAN_SYSTEM_PROMPT,
+  buildStrengthsRisksPrompt,
+  buildValidationPlanPrompt,
+  strengthsRisksSchema,
+  validationPlanSchema,
+} from "@/lib/ai/schemas/report-sections";
+import { logReportGenerationError } from "@/lib/logging/report-logger";
 
-const REPORT_PROMPT_VERSION = "v1.0.0";
+/**
+ * Bumped to v1.1.0 when the JSON sections moved to `generateJson` + Zod and
+ * `arep_strengths` / `arep_risks` / `arep_validation_plan` changed shape.
+ * Rows written before that carry v1.0.0 and are read through the legacy branch
+ * of `parseStored*` in `src/lib/report/sections.ts`.
+ */
+export const REPORT_PROMPT_VERSION = "v1.1.0";
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
 
@@ -30,6 +63,7 @@ type ReportContext = {
   interpretation: string;
   profile: string;
   products: string;
+  dependencies: string;
 };
 
 function buildContext(
@@ -72,6 +106,9 @@ function buildContext(
       ) || null,
       hours: assessment.assessment_profile?.aprf_hours_per_week_range,
     }),
+    dependencies: JSON.stringify(
+      dependencyLabels(assessment.market_risk_inputs?.mrsk_business_dependencies)
+    ),
   };
 }
 
@@ -91,10 +128,6 @@ const SECTION_PROMPTS: Record<
     `Analiza si el negocio cabe en el tiempo disponible del usuario.\nPerfil: ${ctx.profile}`,
   scalability_analysis: (ctx) =>
     `Analiza el potencial de escalabilidad.\nIdea: ${ctx.idea}\nScores: ${ctx.scores}`,
-  strengths_risks: (ctx) =>
-    `Genera JSON con fortalezas y riesgos: {"strengths": ["..."], "risks": ["..."]}\nDatos: ${ctx.interpretation}\nScores: ${ctx.scores}`,
-  validation_plan: (ctx) =>
-    `Genera JSON con plan de validación de 2 semanas: {"week1": ["..."], "week2": ["..."]}\nRecomendación: ${ctx.interpretation}`,
   final_recommendation: (ctx) =>
     `Escribe la recomendación final en 2 párrafos.\nInterpretación: ${ctx.interpretation}\nIdea: ${ctx.idea}`,
 };
@@ -119,6 +152,70 @@ async function generateSection(
   }
 }
 
+/**
+ * The two sections that must come back as JSON go through `generateJson`
+ * (`response_format: json_object`) with their own system prompts, never through
+ * BASE_SYSTEM — that prompt instructs Markdown, which made the model fence its
+ * JSON and broke `JSON.parse` on every single report.
+ */
+async function generateStrengthsRisks(
+  ctx: ReportContext,
+  verifiedFacts: string[]
+) {
+  const raw = await generateJson<unknown>(
+    STRENGTHS_RISKS_SYSTEM_PROMPT,
+    buildStrengthsRisksPrompt({
+      idea: ctx.idea,
+      scores: ctx.scores,
+      metrics: ctx.metrics,
+      profile: ctx.profile,
+      products: ctx.products,
+      dependencies: ctx.dependencies,
+      interpretation: ctx.interpretation,
+      verifiedFacts,
+    })
+  );
+  return strengthsRisksSchema.parse(raw);
+}
+
+async function generateValidationPlan(ctx: ReportContext) {
+  const raw = await generateJson<unknown>(
+    VALIDATION_PLAN_SYSTEM_PROMPT,
+    buildValidationPlanPrompt({
+      idea: ctx.idea,
+      interpretation: ctx.interpretation,
+      products: ctx.products,
+      profile: ctx.profile,
+    })
+  );
+  return validationPlanSchema.parse(raw);
+}
+
+/**
+ * Deterministic strengths are a safety net, not a supplement: the AI already
+ * receives them as verified facts, so topping up a healthy response just
+ * produces near-duplicates ("Margen bruto del 60%" next to "Margen bruto de
+ * 60%"). Only fill in when the AI came back thin.
+ */
+const MIN_AI_STRENGTHS = 3;
+
+function mergeStrengths(
+  fromAi: ReportStrength[],
+  deterministic: ReportStrength[]
+): ReportStrength[] {
+  if (fromAi.length >= MIN_AI_STRENGTHS) return fromAi;
+
+  const seen = new Set(fromAi.map((s) => s.title.toLowerCase()));
+  const merged = [...fromAi];
+  for (const s of deterministic) {
+    if (merged.length >= MIN_AI_STRENGTHS) break;
+    if (seen.has(s.title.toLowerCase())) continue;
+    seen.add(s.title.toLowerCase());
+    merged.push(s);
+  }
+  return merged;
+}
+
 export async function generateReport(
   assessment: AssessmentWithRelations,
   deterministic: DeterministicScoreResult,
@@ -127,6 +224,16 @@ export async function generateReport(
   const ctx = buildContext(assessment, deterministic, interpretation);
   const model = getNarrativeModel();
 
+  // Computed up front: fed to the AI as verified facts so its strengths stay
+  // anchored to real numbers, and reused as the fallback if the call fails.
+  const deterministicStrengths = detectDeterministicStrengths(
+    assessment,
+    deterministic.metrics
+  );
+  const verifiedFacts = deterministicStrengths.map(
+    (s) => `${s.title}: ${s.whyItMatters}`
+  );
+
   const [
     executiveSummary,
     businessUnderstanding,
@@ -134,9 +241,9 @@ export async function generateReport(
     personalFitAnalysis,
     timeOperationAnalysis,
     scalabilityAnalysis,
-    strengthsRisksRaw,
-    validationPlanRaw,
     finalRecommendation,
+    strengthsRisks,
+    validationWeeks,
   ] = await Promise.all([
     generateSection("executive_summary", ctx),
     generateSection("business_understanding", ctx),
@@ -144,35 +251,38 @@ export async function generateReport(
     generateSection("personal_fit_analysis", ctx),
     generateSection("time_operation_analysis", ctx),
     generateSection("scalability_analysis", ctx),
-    generateSection("strengths_risks", ctx),
-    generateSection("validation_plan", ctx),
     generateSection("final_recommendation", ctx),
+
+    generateStrengthsRisks(ctx, verifiedFacts).catch((error) => {
+      logReportGenerationError(
+        "strengths_risks: respuesta de IA inválida, usando fortalezas determinísticas",
+        { assessmentId: assessment.asmt_id, error }
+      );
+      return null;
+    }),
+    generateValidationPlan(ctx).catch((error) => {
+      logReportGenerationError("validation_plan: respuesta de IA inválida", {
+        assessmentId: assessment.asmt_id,
+        error,
+      });
+      return null;
+    }),
   ]);
 
-  let strengths: string[] = [];
-  let risks: string[] = [];
-  let validationPlan: { week1: string[]; week2: string[] } = {
-    week1: [],
-    week2: [],
-  };
+  // Strengths: AI first, topped up with deterministic ones so the section is
+  // never a single empty platitude. When nothing fires at all we store [] and
+  // the report renders an honest empty state — we never fabricate a strength.
+  const strengths: ReportStrength[] = mergeStrengths(
+    strengthsRisks?.strengths ?? [],
+    deterministicStrengths
+  );
 
-  try {
-    const parsed = JSON.parse(strengthsRisksRaw);
-    strengths = parsed.strengths ?? [];
-    risks = parsed.risks ?? [];
-  } catch {
-    strengths = ["Tu idea tiene elementos a favor según tu perfil."];
-    risks = interpretation.red_flags;
-  }
+  // Risks come only from the AI now. The deterministic red flags live in
+  // `ascs_red_flags` and are rendered separately — merging them here is what
+  // made every risk show up twice.
+  const risks: ReportRisk[] = strengthsRisks?.risks ?? [];
 
-  try {
-    validationPlan = JSON.parse(validationPlanRaw);
-  } catch {
-    validationPlan = {
-      week1: ["Hablar con 10 clientes potenciales", "Investigar precios de competidores"],
-      week2: ["Hacer una prueba piloto", "Calcular margen real"],
-    };
-  }
+  const validationPlan: ValidationWeek[] = validationWeeks?.weeks ?? [];
 
   const reportData = {
     arep_executive_summary: executiveSummary,

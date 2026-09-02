@@ -1,7 +1,7 @@
 ---
 type: overview
 tags: [decida, hub]
-updated: 2026-08-28
+updated: 2026-09-02
 ---
 
 # Decida — Overview
@@ -70,6 +70,8 @@ Salida siempre es una de 4: **Proceed small test / Validate first / Adjust idea 
 - ~~El score de "Nivel de riesgo" está roto en producción~~ — ✅ resuelto (commit `43d1112` + cruce inversión-vs-capital y red flags determinísticas del 2026-08-27). Ver [[framework/scoring-engine]].
 - `/mis-evaluaciones` fue reemplazado por `/cuenta` (commit `43d1112`) — la migración del sistema passwordless viejo ya no es un gap abierto.
 
+> ✅ **Bug del reporte resuelto (2026-09-02)**: Fortalezas, Riesgos y Plan de validación fallaban su parseo JSON en el 100% de los reportes y caían a textos genéricos. Ver [[experiencia/reporte-de-resultado#🔴→✅ Las 3 secciones JSON estaban rotas al 100% (arreglado 2026-09-02)]].
+
 ## Estado de desarrollo (actualizado 2026-08-28)
 
 Hay un plan activo de lanzamiento en 60-90 días con fechas y checkpoints — ver [[decisiones/plan-lanzamiento-60-90-dias]].
@@ -80,5 +82,6 @@ Hay un plan activo de lanzamiento en 60-90 días con fechas y checkpoints — ve
 - ✅ Pulido del paso "Así entendimos tu idea" (commit `0259101`).
 - ✅ Score de "Nivel de riesgo" arreglado + cruce inversión-vs-capital + red flags determinísticas (commits `43d1112`, `936351d`).
 - ✅ Paso nuevo `productos` — catálogo de productos/servicios con precio/costo/volumen; absorbe los campos únicos de precio de `evaluacion` (2026-08-28, sin commitear al cierre).
-- Pendiente en Sprint 2: input de dependencias del negocio (`mrsk_business_dependencies`), granularidad de "¿habló con clientes?", modelo de ingreso, CAC.
-- Movido a Sprint 3 (2026-08-28): "actividades que evita" (`pfit_avoided_activities`) — falta definir qué señal debe dar antes de capturarlo.
+- ✅ Dependencias del negocio — grid de checkboxes en `evaluacion`, penalización ponderada al `riskScore` + 3 red flags (2026-08-28, sin commitear).
+- Pendiente para cerrar Sprint 2: solo granularidad de "¿habló con clientes?" (5 niveles vs. sí/no). Decisión de alcance en [[decisiones/alcance-campos-restantes-sprint-2]].
+- Fuera del MVP (2026-08-28): `pfit_avoided_activities` y modelo de ingreso → Sprint 3; CAC → post-beta.

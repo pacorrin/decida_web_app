@@ -47,6 +47,7 @@ export type AssessmentBase = assessments & {
     mrsk_has_talked_to_customers?: boolean | null;
     mrsk_competition_level?: string | null;
     mrsk_acquisition_channel?: string | null;
+    mrsk_business_dependencies?: unknown;
     mrsk_main_concern?: string | null;
     mrsk_success_condition?: string | null;
   } | null;

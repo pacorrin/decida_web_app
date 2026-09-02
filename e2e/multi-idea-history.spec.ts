@@ -75,6 +75,9 @@ async function completarOnboarding(
   await selectOptionCard(page, "hasTalkedToCustomers", "true");
   await selectOptionCard(page, "competitionLevel", "alta");
   await selectOptionCard(page, "acquisitionChannel", "referidos");
+  await page
+    .locator('input[name="businessDependencies"][value="cliente_unico"]')
+    .check({ force: true });
   await page.fill(
     "#mainConcern",
     "Depender de pocos clientes y competir con agencias baratas."

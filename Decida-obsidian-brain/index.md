@@ -52,8 +52,9 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 ## Decisiones
 | Página | Resumen |
 |---|---|
-| [[wiki/decisiones/evolucion-del-producto]] | Registro vivo de brechas Notion vs código (7 confirmadas) |
+| [[wiki/decisiones/evolucion-del-producto]] | Registro vivo de brechas Notion vs código (9 confirmadas) |
 | [[wiki/decisiones/plan-lanzamiento-60-90-dias]] | Auditoría de código, puntos críticos, plan de 12 semanas y estrategia comercial |
+| [[wiki/decisiones/alcance-campos-restantes-sprint-2]] | Qué campos del onboarding entran al MVP y cuáles se posponen (2026-08-28) |
 
 ## Reuniones
 | Página | Resumen |

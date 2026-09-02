@@ -238,3 +238,68 @@ Los 3 archivos e2e (`onboarding.spec.ts`, `multi-idea-history.spec.ts`, `onboard
 Actualizado: `wiki/experiencia/flujo-de-onboarding.md` (tabla de pasos + sección nueva), `wiki/framework/scoring-engine.md` (red flag + blend), `wiki/producto/gaps-onboarding-vs-framework.md` (dimensión 2 + punto 11 hecho), `wiki/decisiones/plan-lanzamiento-60-90-dias.md`, `wiki/decisiones/evolucion-del-producto.md` (entrada #8), `wiki/overview.md`.
 
 Nota operativa: el assessment de prueba `cmtbj31wj0010t86zj4299ls3` quedó completado con productos de prueba en la BD local. El dev server se reinició (era necesario para que Prisma cargara la columna nueva) y ahora corre bajo el preview de la sesión.
+
+## [2026-08-28] decision | Alcance de los campos restantes del onboarding — CAC y modelo de ingreso fuera del MVP
+
+El usuario pidió un análisis de los 4 campos pendientes del Sprint 2 (dependencias del negocio, granularidad "¿habló con clientes?", modelo de ingreso, CAC): qué funcionalidad/manejo de información implica cada uno y si conviene meterlo al MVP. Criterio usado: solo entra lo que vuelve creíble una dimensión del rubric; el resto es enriquecimiento y se pospone (alineado con el "riesgo estratégico" del PRD).
+
+Veredicto y decisión del usuario:
+- **Dependencias del negocio** (`mrsk_business_dependencies`) → **entra a Sprint 2**. Arregla la dimensión 4 (Riesgo), la menos cubierta. Multi-select en `evaluacion`, penalización en `riskScore`, 2 red flags determinísticas del checklist del rubric. Sin migración (la columna existe).
+- **Granularidad "¿habló con clientes?"** → **entra a Sprint 2**. El sí/no vale 35 de ~75 pts del `commercialScore` (dimensión de 25%) — acantilado binario. Se cambia por los 5 niveles del Question Bank original.
+- **Modelo de ingreso** → **fuera del MVP**, a Sprint 3. Sin LTV en el motor determinístico solo desbloquea 1 red flag; es enriquecimiento.
+- **CAC** → **fuera del MVP**, a post-beta. No es input del rubric, necesita el modelo de ingreso primero (falsas alarmas en suscripción), y es la estimación menos confiable del assessment.
+
+Creado: `wiki/decisiones/alcance-campos-restantes-sprint-2.md` (análisis completo por campo). Actualizado: `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (Sprint 2 recortado a los 2 críticos; subsección "Sprint 3 — campos de onboarding pospuestos" con los 3 diferidos; filas de la tabla de sprints), `wiki/producto/gaps-onboarding-vs-framework.md` (resumen priorizado renumerado + filas de dimensión 2/3), `wiki/overview.md`, `index.md`. Sin cambios de código.
+
+## [2026-08-28] decision | Diseño de "dependencias del negocio" (Sprint 2, imprescindible #3)
+
+El usuario pidió planear el punto de dependencias del negocio. Se exploró el patrón actual (paso `evaluacion`, multi-select tipo `enjoyedActivities`, `detectFinancialRedFlags`, tests) y se cerraron 4 decisiones con preguntas:
+
+1. **Opciones**: la lista completa **menos "personas clave"** → 6 dependencias + "ninguna": proveedor único · 1-2 clientes = mayoría de ingresos · plataforma externa (Instagram/Amazon/Uber/App Store) · permiso/licencia/regulación · ubicación física específica · inventario que caduca o se deprecia rápido.
+2. **UI**: grid de checkboxes en 2 columnas (patrón de `enjoyedActivities`), no tarjetas apiladas. Va en el `FieldSet` "Mercado y riesgos" del paso `evaluacion` — no un paso nuevo.
+3. **Scoring**: penalización ponderada al `riskScore` — plataforma +6, permiso +6, las otras 4 +3 c/u, tope +16.
+4. **Red flags determinísticas (3)**: plataforma ("ten plan alterno"), permiso ("investígalo antes de invertir"), cliente único ("si uno se va, el negocio tambalea"). Sin follow-up de "¿ya tienes plan B?" por dependencia — deliberado, sería demasiado.
+
+Otros puntos del diseño: `mrsk_business_dependencies Json?` ya existe → sin migración; nueva función `detectDependencyRedFlags()` hermana de `detectFinancialRedFlags()`, mergeada en `ascs_red_flags`; contexto de dependencias a la IA (`buildAssessmentContext` + prompt `strengths_risks`).
+
+Plan de implementación completo en `.claude/plans/` (artefacto de ingeniería). El trabajo se planeó en plan mode, así que esta documentación en el brain quedó pendiente hasta ahora.
+
+Actualizado: `wiki/decisiones/alcance-campos-restantes-sprint-2.md` (tabla de diseño decidido en la sección de dependencias), `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (Sprint 2 imprescindible #3), `wiki/producto/gaps-onboarding-vs-framework.md` (dimensión 4 + resumen priorizado). Estado: **diseñado, no implementado**. Sin cambios de código.
+
+## [2026-08-28] build | Dependencias del negocio implementadas (Sprint 2, imprescindible #3)
+
+Se implementó el diseño decidido antes (ver entrada `decision` del 2026-08-28). Sin commitear al cierre.
+
+- **Input**: `BUSINESS_DEPENDENCY_OPTIONS` en `src/lib/onboarding/options.ts` (6 + "ninguna"); grid de checkboxes en el `FieldSet` "Mercado y riesgos" del paso `evaluacion` (`evaluation-form.tsx`), después del canal de adquisición. `evaluationMarketSchema` gana `businessDependencies: z.array(z.string()).min(1)`; `saveEvaluation` lo parsea con `formData.getAll` y lo persiste en `mrsk_business_dependencies` (columna JSON que ya existía, **sin migración**).
+- **Scoring** (`src/lib/scoring/types.ts`): `DEPENDENCY_RISK_WEIGHTS` (plataforma 6, permiso 6, proveedor/cliente_unico/ubicacion/inventario 3), `dependencyRiskPenalty()` con tope `DEPENDENCY_PENALTY_CAP = 16`, sumado al `riskScore` junto a la penalización de sobre-exposición. `detectDependencyRedFlags()` — 3 red flags (plataforma, permiso, cliente único); las otras 3 opciones penalizan pero no emiten flag.
+- **Pipeline** (`src/lib/scoring/index.ts`): `runScoringPipeline` mergea `[...detectFinancialRedFlags, ...detectDependencyRedFlags]` en `ascs_red_flags` (determinísticas primero). `buildAssessmentContext` pasa las dependencias declaradas al prompt de interpretación.
+- **Reporte** (`src/lib/ai/generate-report.ts`): `ctx.dependencies` alimenta el prompt `strengths_risks`.
+- **Tests**: +9 en `types.test.ts` (`riskScore — business-dependency penalty` con deltas exactos 65→71→77→81/cap, y `detectDependencyRedFlags`). Total 28, `tsc` y `eslint` limpios (los 5 errores de eslint son preexistentes).
+
+Verificado end-to-end con Playwright (cookie sembrada sobre `cmtbj31wj…`): el grid renderiza sus 7 casillas, `mrsk_business_dependencies` se guarda como `["cliente_unico","plataforma","permiso"]`, y la sección "Riesgos" del reporte muestra las 3 red flags de dependencia después de las 3 financieras (7 entradas totales en `ascs_red_flags`). El `riskScore` de ese assessment ya estaba clampeado a 100 por sobre-exposición extrema; los tests unitarios prueban el +N exacto sobre un caso con margen. Docker Desktop estaba caído al inicio de la sesión — se relanzó con `open -a Docker`. Dev server reiniciado bajo el preview.
+
+Actualizado: `wiki/framework/scoring-engine.md` (sección "Penalizaciones al riskScore" + red flags de dependencia + "datos ignorados"), `wiki/producto/gaps-onboarding-vs-framework.md` (dimensión 4: dependencias/concentración/regulatorias ✅, solo queda reversibilidad; resumen priorizado #3), `wiki/decisiones/alcance-campos-restantes-sprint-2.md` (marcado HECHO), `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (Sprint 2 #3 ✅), `wiki/experiencia/flujo-de-onboarding.md` (sección nueva del paso `evaluacion`), `wiki/overview.md`.
+
+## [2026-09-02] build | Las 3 secciones JSON del reporte estaban rotas al 100% — arregladas
+
+El usuario reportó que la sección **Fortalezas** casi siempre mostraba un solo bullet inútil ("Tu idea tiene elementos a favor según tu perfil"). Resultó no ser un prompt vago sino un bug con **33 de 33 reportes afectados**, y con tres defectos derivados de una sola causa.
+
+**Causa raíz**: `strengths_risks` y `validation_plan` piden JSON, pero se generaban con `generateText()` (sin `response_format: json_object`) bajo un `BASE_SYSTEM` que instruye "Puedes usar formato Markdown". El modelo obedecía, cercaba el JSON en un bloque ```` ```json ````, `JSON.parse` tronaba y el `catch {}` **mudo** guardaba los textos hardcodeados. El retry sólo envuelve la llamada al API; el parseo corre fuera de su alcance.
+
+**Los tres defectos (verificados en BD):** `arep_strengths` genérico 33/33 · `arep_validation_plan` hardcodeado 33/33 · `arep_risks` idéntico a `ascs_red_flags` en 32/33, y como el renderer hacía `[...risks, ...redFlags]`, **cada riesgo salía duplicado en pantalla** (defecto que el usuario no había notado). Además el reporte real entregaba **menos que su propio preview de venta**: `/ejemplo` ya usaba las formas ricas que pide el diseño de Notion.
+
+Decisiones con el usuario: fortalezas con `{título + por qué importa}` como `/ejemplo`; arreglar las 3 secciones; y respaldo **determinístico** en vez de texto genérico.
+
+Implementado (sin commitear):
+- **`src/lib/ai/schemas/report-sections.ts`** (nuevo) — `strengthsRisksSchema` y `validationPlanSchema` + system prompts dedicados **sin instrucción de Markdown**, con las reglas de calidad del diseño (cada fortaleza cita un dato real; cada riesgo trae su acción; no inventar). Las secciones ahora van por `generateJson` + Zod, el patrón que ya usaban las 4 llamadas de IA que sí funcionaban.
+- **`src/lib/scoring/strengths.ts`** (nuevo) — `detectDeterministicStrengths()`, 15 reglas en 4 tiers (los números del usuario → evidencia de mercado → ausencia de fragilidad → preferencias declaradas), cap 5. Cada copy cita el dato real. Si nada dispara devuelve `[]` y el reporte muestra un **estado vacío honesto**: nunca se fabrica una fortaleza. Se usa como respaldo y como piso de calidad (sólo si la IA devuelve menos de 3 — toparlo siempre producía casi-duplicados tipo "Margen bruto **del** 60%" junto a "Margen bruto **de** 60%", detectado y corregido en la verificación).
+- **`src/lib/scoring/ranges.ts`** (nuevo) — techos de rango, formatters, helpers de dependencias y mapas de etiquetas, extraídos de `types.ts`; de paso elimina la duplicación de `LOSS_RANGE_LABELS`/`CAPITAL_RANGE_LABELS` que ya existía en `scoring/index.ts`.
+- **`src/lib/report/sections.ts`** (nuevo) — tipos `ReportStrength`/`ReportRisk`/`ValidationWeek` y `parseStored*` retrocompatibles (leen tanto `string[]` viejo como los objetos nuevos, y tanto `{week1,week2}` como `{weeks:[...]}`). Zod-free a propósito para no arrastrar la capa de IA al render.
+- **`generate-report.ts`** — secciones JSON separadas del pipeline de texto, `catch` con `logReportGenerationError` (el silencio es lo que dejó pasar 33 reportes), se quitó `risks = interpretation.red_flags`, `REPORT_PROMPT_VERSION` → `v1.1.0`, y el prompt de fortalezas recibe las determinísticas como "hechos verificados".
+- **`result-report.tsx`** — fortalezas y riesgos como tarjetas al estilo `/ejemplo` (riesgos con "Cómo reducirlo"), red flags determinísticas en su propio bloque "Alertas detectadas en tus números" (esto elimina la duplicación), y plan de 4 semanas con título por semana.
+
+**Verificación**: `tsc` limpio, **45 tests** (+17: 8 de fortalezas determinísticas, 9 de los parsers), eslint sin errores nuevos. Corrido end-to-end contra el modelo real dos veces: `arep_prompt_version=v1.1.0`, 5 fortalezas / 3 riesgos / 4 semanas, y `arep_risks ≠ ascs_red_flags`. También se comprobó el respaldo: para ese assessment real, si la IA fallara, el usuario vería 5 fortalezas con sus números ($180 de margen, 60%, "10 a 20 horas", "4/5") en vez del bullet vacío.
+
+**Los 33 reportes viejos se dejan** — son datos de prueba locales (sin clientes reales, todos los pagos son `placeholder`), y la forma nueva no se puede sintetizar desde los strings guardados. El renderer los muestra sin romperse por el parseo retrocompatible.
+
+Nota de sesión: a media tarea Bash perdió el acceso a `~/Documents` (permiso de macOS, no el sandbox); el usuario lo restauró. Documentación actualizada: `wiki/experiencia/reporte-de-resultado.md`, `wiki/framework/prompts-de-ia.md`, `wiki/decisiones/evolucion-del-producto.md` (#9), `wiki/overview.md`, `index.md`.
