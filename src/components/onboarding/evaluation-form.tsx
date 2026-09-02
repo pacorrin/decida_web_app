@@ -25,7 +25,7 @@ import {
   FIXED_COST_OPTIONS,
   COMPETITION_OPTIONS,
   CHANNEL_OPTIONS,
-  HAS_TALKED_TO_CUSTOMERS_OPTIONS,
+  CUSTOMER_EVIDENCE_LEVEL_OPTIONS,
   BUSINESS_DEPENDENCY_OPTIONS,
 } from "@/lib/onboarding/options";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
@@ -42,12 +42,13 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
   const mkt = assessment.market_risk_inputs;
   const v = state.values;
 
-  const talkedToCustomersFallback =
-    mkt?.mrsk_has_talked_to_customers === true
-      ? "true"
+  const customerEvidenceFallback =
+    mkt?.mrsk_customer_evidence_level ??
+    (mkt?.mrsk_has_talked_to_customers === true
+      ? "4_10"
       : mkt?.mrsk_has_talked_to_customers === false
-        ? "false"
-        : "";
+        ? "ninguno"
+        : "");
 
   const dependencyValues = fieldValues(
     v,
@@ -118,13 +119,17 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
           <Field>
             <FieldLabel>¿Has hablado con clientes potenciales?</FieldLabel>
             <OptionCardGroup
-              name="hasTalkedToCustomers"
-              options={HAS_TALKED_TO_CUSTOMERS_OPTIONS}
-              defaultValue={fieldValue(v, "hasTalkedToCustomers", talkedToCustomersFallback)}
+              name="customerEvidenceLevel"
+              options={CUSTOMER_EVIDENCE_LEVEL_OPTIONS}
+              defaultValue={fieldValue(
+                v,
+                "customerEvidenceLevel",
+                customerEvidenceFallback
+              )}
               layout="stack"
               columns={1}
               required
-              ariaLabel="¿Has hablado con clientes?"
+              ariaLabel="Evidencia de clientes"
             />
           </Field>
 

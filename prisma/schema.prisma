@@ -181,6 +181,7 @@ model market_risk_inputs {
   mrsk_id                    String  @id @default(cuid())
   mrsk_asmt_id               String  @unique
   mrsk_has_talked_to_customers Boolean?
+  mrsk_customer_evidence_level String?
   mrsk_competition_level     String?
   mrsk_acquisition_channel   String?
   mrsk_business_dependencies Json?

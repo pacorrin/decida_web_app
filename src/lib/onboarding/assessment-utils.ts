@@ -45,6 +45,7 @@ export type AssessmentBase = assessments & {
   market_risk_inputs?: {
     mrsk_id: string;
     mrsk_has_talked_to_customers?: boolean | null;
+    mrsk_customer_evidence_level?: string | null;
     mrsk_competition_level?: string | null;
     mrsk_acquisition_channel?: string | null;
     mrsk_business_dependencies?: unknown;

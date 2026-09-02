@@ -6,10 +6,13 @@ import {
 import {
   ACCEPTABLE_LOSS_CEILING,
   CAPITAL_RANGE_CEILING,
+  CUSTOMER_EVIDENCE_COMMERCIAL_POINTS,
+  CUSTOMER_EVIDENCE_RISK_DELTA,
   dependencyRiskPenalty,
   formatMoney,
   parseDependencies,
   rangeCeiling,
+  resolveCustomerEvidenceLevel,
 } from "./ranges";
 
 export type DimensionKey =
@@ -261,8 +264,12 @@ export function calculateDeterministicScores(
       (metrics.paybackMonths && metrics.paybackMonths <= 12 ? 20 : 0)
   );
 
+  const customerEvidenceLevel = market
+    ? resolveCustomerEvidenceLevel(market)
+    : "ninguno";
+
   const commercialScore = clampScore(
-    (market?.mrsk_has_talked_to_customers ? 35 : 10) +
+    (CUSTOMER_EVIDENCE_COMMERCIAL_POINTS[customerEvidenceLevel] ?? 10) +
       scoreFromRange(market?.mrsk_competition_level, {
         baja: 25,
         media: 18,
@@ -292,7 +299,7 @@ export function calculateDeterministicScores(
         "50k_100k": 50,
         mas_100k: 65,
       }) +
-      (market?.mrsk_has_talked_to_customers ? 10 : 0) +
+      (CUSTOMER_EVIDENCE_RISK_DELTA[customerEvidenceLevel] ?? 0) +
       overExposurePenalty +
       dependencyPenalty
   );

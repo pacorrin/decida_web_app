@@ -16,7 +16,19 @@ import {
   detectFinancialRedFlags,
   detectDependencyRedFlags,
 } from "./types";
-import { CAPITAL_RANGE_LABELS, LOSS_RANGE_LABELS } from "./ranges";
+import {
+  CAPITAL_RANGE_LABELS,
+  LOSS_RANGE_LABELS,
+  resolveCustomerEvidenceLevel,
+} from "./ranges";
+
+const CUSTOMER_EVIDENCE_CONTEXT_LABELS: Record<string, string> = {
+  ninguno: "no ha hablado con ningún cliente potencial",
+  "1_3": "ha hablado con 1 a 3 clientes potenciales",
+  "4_10": "ha hablado con 4 a 10 clientes potenciales",
+  mas_10: "ha hablado con más de 10 clientes potenciales",
+  ya_clientes: "ya tiene clientes que compraron o apartaron",
+};
 
 export {
   calculateDeterministicScores,
@@ -54,6 +66,12 @@ function buildAssessmentContext(assessment: AssessmentWithRelations): string {
     investment > 0 && `Inversión inicial estimada: $${Math.round(investment).toLocaleString("es-MX")} MXN`,
     capitalLabel && `Capital disponible declarado: ${capitalLabel} MXN`,
     lossLabel && `Pérdida que toleraría sin afectar su estabilidad: ${lossLabel} MXN`,
+    assessment.market_risk_inputs &&
+      `Evidencia de clientes: ${
+        CUSTOMER_EVIDENCE_CONTEXT_LABELS[
+          resolveCustomerEvidenceLevel(assessment.market_risk_inputs)
+        ]
+      }`,
     dependencyContextLine(assessment),
     assessment.market_risk_inputs?.mrsk_main_concern &&
       `Preocupación principal: ${assessment.market_risk_inputs.mrsk_main_concern}`,

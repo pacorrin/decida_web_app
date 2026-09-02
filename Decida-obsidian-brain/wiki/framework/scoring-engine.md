@@ -48,7 +48,9 @@ Catálogo de diseño (Notion): inversión inicial > capital disponible · invers
 
 ## Penalizaciones al `riskScore` (alto = más riesgo)
 
-`calculateDeterministicScores` suma al `riskScore`, además del `100 - scoreFromRange(pérdida aceptable) + bono si habló con clientes`:
+`calculateDeterministicScores` suma al `riskScore`, además del `100 - scoreFromRange(pérdida aceptable) + delta de evidencia de clientes`:
+
+**Evidencia de clientes** (_2026-09-02_, reemplaza el viejo `+10 si habló con clientes`, que estaba mal firmado — subía el riesgo por hablar): `CUSTOMER_EVIDENCE_RISK_DELTA` en `ranges.ts` — `ninguno` +8, `1_3` +5, `4_10` +3, `mas_10` +2, `ya_clientes` **−8**. Semántica: hablar con prospectos no prueba demanda (apenas mueve el riesgo); solo tener clientes que ya compraron lo reduce. El mismo nivel alimenta un gradiente en `commercialScore` (`CUSTOMER_EVIDENCE_COMMERCIAL_POINTS`: 10 → 38), reemplazando el acantilado binario de 35 pts. Se guarda en `mrsk_customer_evidence_level`; el bool `mrsk_has_talked_to_customers` se mantiene sincronizado. Ver [[../decisiones/alcance-campos-restantes-sprint-2#Granularidad «¿habló con clientes?» — HECHA (2026-09-02)]].
 
 **Sobre-exposición: inversión vs. capital declarado** (_2026-08-27_):
 - `+12` si `finp_initial_investment` supera el techo de `aprf_acceptable_loss_range`
@@ -76,6 +78,7 @@ El código real (`buildAssessmentContext()`) construye un contexto de texto más
 - `pfit_uncertainty_comfort_score` y `pfit_process_comfort_score` — **ya conectados** al `personalFitScore` (commit `43d1112`, +2 a +10 pts cada uno). Ya no son dato muerto.
 - `mrsk_business_dependencies` — **ya capturado y conectado** (2026-08-28): grid de checkboxes en `evaluacion`, penalización ponderada al `riskScore` + 3 red flags. Ver arriba.
 - `pfit_avoided_activities` — sigue sin capturarse (movido a Sprint 3, falta definir su uso). Ver mapeo completo en [[../producto/gaps-onboarding-vs-framework]].
+- `mrsk_customer_evidence_level` — **capturado y conectado** (2026-09-02): 5 niveles, gradiente en `commercialScore` y `riskScore`. Ver arriba.
 
 ## Ver también
 [[dimensiones-de-viabilidad]] · [[prompts-de-ia]] · [[criterios-de-evaluacion]] · [[../arquitectura/modelo-de-datos]] · [[../producto/gaps-onboarding-vs-framework]]

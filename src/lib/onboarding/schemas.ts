@@ -75,8 +75,18 @@ export const productsSchema = z.object({
     .max(10, "Máximo 10 productos o servicios"),
 });
 
+export const CUSTOMER_EVIDENCE_LEVELS = [
+  "ninguno",
+  "1_3",
+  "4_10",
+  "mas_10",
+  "ya_clientes",
+] as const;
+
+export type CustomerEvidenceLevel = (typeof CUSTOMER_EVIDENCE_LEVELS)[number];
+
 export const evaluationMarketSchema = z.object({
-  hasTalkedToCustomers: z.enum(["true", "false"]),
+  customerEvidenceLevel: z.enum(CUSTOMER_EVIDENCE_LEVELS),
   competitionLevel: z.string().min(1),
   acquisitionChannel: z.string().min(1),
   businessDependencies: z

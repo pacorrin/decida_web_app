@@ -72,7 +72,7 @@ async function completarOnboarding(
 
   await page.fill("#initialInvestment", "6000");
   await selectOptionCard(page, "fixedMonthlyCostsRange", "menos_5k");
-  await selectOptionCard(page, "hasTalkedToCustomers", "true");
+  await selectOptionCard(page, "customerEvidenceLevel", "4_10");
   await selectOptionCard(page, "competitionLevel", "alta");
   await selectOptionCard(page, "acquisitionChannel", "referidos");
   await page

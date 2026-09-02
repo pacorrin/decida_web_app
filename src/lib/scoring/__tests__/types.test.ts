@@ -130,8 +130,8 @@ describe("Bug Condition Exploration Tests", () => {
     const riskDimension = result.dimensions.find((d) => d.key === "risk_level");
 
     expect(riskDimension).toBeDefined();
-    // Correct formula: 100 - scoreFromRange("menos_5k" → 10) + 0 = 90
-    // Bug formula:     100 - scoreFromRange(null → 50) + 0 = 50
+    // Correct formula: 100 - scoreFromRange("menos_5k" → 10) + 8 (evidence "ninguno") = 98
+    // Bug formula:     100 - scoreFromRange(null → 50) + 8 = 58
     expect(riskDimension!.score).toBeGreaterThanOrEqual(80);
   });
 
@@ -281,10 +281,11 @@ describe("Preservation Tests", () => {
     expect(result).toBeDefined();
     expect(result!.dimensions).toHaveLength(6);
 
-    // riskScore fallback: scoreFromRange(null) = 50 → clamp(100 - 50 + 0) = 50
+    // riskScore fallback: scoreFromRange(null) = 50, plus +8 for customer
+    // evidence "ninguno" (fixture never talked to customers) → clamp(100 - 50 + 8) = 58
     const riskDim = result!.dimensions.find((d) => d.key === "risk_level");
     expect(riskDim).toBeDefined();
-    expect(riskDim!.score).toBe(50);
+    expect(riskDim!.score).toBe(58);
   });
 
   /**
@@ -441,7 +442,8 @@ describe("detectFinancialRedFlags", () => {
 
 describe("riskScore — over-exposure adjustment", () => {
   it("raises the risk score when the investment exceeds capital and acceptable loss", () => {
-    // "20k_50k" acceptable loss → base risk = 100 - 35 + 0 = 65
+    // "20k_50k" acceptable loss + "ninguno" customer evidence (+8) →
+    // base risk = 100 - 35 + 8 = 73
     const within = calculateDeterministicScores(
       withFinancials(30_000, {
         aprf_acceptable_loss_range: "20k_50k",
@@ -458,8 +460,8 @@ describe("riskScore — over-exposure adjustment", () => {
     const risk = (r: ReturnType<typeof calculateDeterministicScores>) =>
       r.dimensions.find((d) => d.key === "risk_level")!.score;
 
-    expect(risk(within)).toBe(65);
-    expect(risk(over)).toBe(85);
+    expect(risk(within)).toBe(73);
+    expect(risk(over)).toBe(93);
   });
 
   it("does not change the risk score for older assessments without the ranges", () => {
@@ -469,10 +471,78 @@ describe("riskScore — over-exposure adjustment", () => {
         aprf_capital_available_range: null,
       })
     );
-    // scoreFromRange(null) → 50 → clamp(100 - 50 + 0 + 0) = 50
+    // scoreFromRange(null) → 50, +8 for "ninguno" customer evidence →
+    // clamp(100 - 50 + 8 + 0 + 0) = 58
     expect(
       result.dimensions.find((d) => d.key === "risk_level")!.score
-    ).toBe(50);
+    ).toBe(58);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CUSTOMER EVIDENCE — commercialScore gradient + riskScore delta (Question Bank F1)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function withEvidence(level: string | null): AssessmentWithRelations {
+  const base = makeAssessment({ assessment_profile: makeProfile() });
+  return {
+    ...base,
+    market_risk_inputs: {
+      ...base.market_risk_inputs!,
+      mrsk_customer_evidence_level: level,
+      mrsk_has_talked_to_customers: level != null && level !== "ninguno",
+    },
+  };
+}
+
+const dimOf = (a: AssessmentWithRelations, key: string) =>
+  calculateDeterministicScores(a).dimensions.find((d) => d.key === key)!.score;
+
+describe("customerEvidence — commercialScore gradient", () => {
+  it("rises monotonically from 'ninguno' to 'ya_clientes'", () => {
+    const scores = [
+      "ninguno",
+      "1_3",
+      "4_10",
+      "mas_10",
+      "ya_clientes",
+    ].map((l) => dimOf(withEvidence(l), "commercial_viability"));
+
+    for (let i = 1; i < scores.length; i++) {
+      expect(scores[i]).toBeGreaterThan(scores[i - 1]);
+    }
+  });
+
+  it("keeps 'ninguno' at the old boolean-'no' value (10 pts)", () => {
+    // competition "media" (18) + channel present (15) + evidence 10 = 43
+    expect(dimOf(withEvidence("ninguno"), "commercial_viability")).toBe(43);
+  });
+
+  it("no longer treats 'a quick chat' the same as 'paying customers'", () => {
+    expect(dimOf(withEvidence("1_3"), "commercial_viability")).not.toBe(
+      dimOf(withEvidence("ya_clientes"), "commercial_viability")
+    );
+  });
+});
+
+describe("customerEvidence — riskScore delta", () => {
+  it("lowers risk only once there are real customers", () => {
+    const none = dimOf(withEvidence("ninguno"), "risk_level");
+    const chat = dimOf(withEvidence("1_3"), "risk_level");
+    const clients = dimOf(withEvidence("ya_clientes"), "risk_level");
+
+    expect(chat).toBeLessThan(none); // talking helps a little
+    expect(clients).toBeLessThan(chat); // paying customers help more
+    expect(clients).toBeLessThan(dimOf(withEvidence("mas_10"), "risk_level"));
+  });
+
+  it("falls back to the legacy boolean when the level is absent", () => {
+    // legacy `true` → treated as "4_10"
+    const legacyYes = withEvidence(null);
+    legacyYes.market_risk_inputs!.mrsk_has_talked_to_customers = true;
+    expect(dimOf(legacyYes, "risk_level")).toBe(
+      dimOf(withEvidence("4_10"), "risk_level")
+    );
   });
 });
 
@@ -481,8 +551,9 @@ describe("riskScore — over-exposure adjustment", () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function withDependencies(deps: string[]): AssessmentWithRelations {
-  // makeProfile() → aprf_acceptable_loss_range "20k_50k" and no over-exposure,
-  // so base riskScore = clamp(100 - 35 + 0 + 0) = 65 with plenty of headroom.
+  // makeProfile() → aprf_acceptable_loss_range "20k_50k" and no over-exposure;
+  // the fixture's customer evidence is "ninguno" (+8), so base riskScore =
+  // clamp(100 - 35 + 8 + 0) = 73 with plenty of headroom.
   const base = makeAssessment({ assessment_profile: makeProfile() });
   return {
     ...base,
@@ -499,14 +570,14 @@ const riskOf = (a: AssessmentWithRelations) =>
 
 describe("riskScore — business-dependency penalty", () => {
   it("adds nothing when there are no dependencies", () => {
-    expect(riskOf(withDependencies([]))).toBe(65);
-    expect(riskOf(withDependencies(["ninguna"]))).toBe(65);
+    expect(riskOf(withDependencies([]))).toBe(73);
+    expect(riskOf(withDependencies(["ninguna"]))).toBe(73);
   });
 
   it("weights platform and permit higher than the rest", () => {
-    expect(riskOf(withDependencies(["plataforma"]))).toBe(71); // +6
-    expect(riskOf(withDependencies(["plataforma", "permiso"]))).toBe(77); // +12
-    expect(riskOf(withDependencies(["proveedor"]))).toBe(68); // +3
+    expect(riskOf(withDependencies(["plataforma"]))).toBe(79); // +6
+    expect(riskOf(withDependencies(["plataforma", "permiso"]))).toBe(85); // +12
+    expect(riskOf(withDependencies(["proveedor"]))).toBe(76); // +3
   });
 
   it("caps the penalty at +16", () => {
@@ -521,7 +592,7 @@ describe("riskScore — business-dependency penalty", () => {
           "ubicacion",
         ])
       )
-    ).toBe(81);
+    ).toBe(89);
   });
 
   it("leaves other dimensions untouched", () => {

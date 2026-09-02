@@ -132,9 +132,23 @@ export const CHANNEL_OPTIONS: SelectOption[] = [
   { value: "otro", label: "Otro" },
 ];
 
-export const HAS_TALKED_TO_CUSTOMERS_OPTIONS: SelectOption[] = [
-  { value: "true", label: "Sí" },
-  { value: "false", label: "No, aún no" },
+/**
+ * Customer-evidence gradient (Question Bank F1). Replaces the old yes/no
+ * `HAS_TALKED_TO_CUSTOMERS_OPTIONS`: the binary answer was a 35-point cliff in
+ * `commercialScore` where "tomé un café con un amigo" and "tengo 15 clientes
+ * pagando" scored identically. `mrsk_has_talked_to_customers` is still written
+ * (derived: any level but `ninguno` → true) for backward compatibility.
+ * Kept in sync with CUSTOMER_EVIDENCE_LEVELS in `src/lib/scoring/ranges.ts`.
+ */
+export const CUSTOMER_EVIDENCE_LEVEL_OPTIONS: SelectOption[] = [
+  { value: "ninguno", label: "No, todavía no he hablado con nadie" },
+  { value: "1_3", label: "Sí, con 1 a 3 personas" },
+  { value: "4_10", label: "Sí, con 4 a 10 personas" },
+  { value: "mas_10", label: "Sí, con más de 10 personas" },
+  {
+    value: "ya_clientes",
+    label: "Ya tengo clientes que compraron o apartaron",
+  },
 ];
 
 export const BUSINESS_DEPENDENCY_OPTIONS: SelectOption[] = [

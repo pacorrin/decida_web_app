@@ -47,7 +47,7 @@ Antes, `calculateDeterministicScores` calculaba `riskScore` a partir de `profile
 ### 3. Viabilidad comercial (25%) — funcional pero con menos granularidad que el diseño original
 | Rubric/criterios pide | Estado en código |
 |---|---|
-| ¿Ya habló con clientes? | ⚠️ Capturado pero degradado a `true/false`. El Question Bank original (05) tenía niveles: 0, 1-3, 4-10, >10, ya tengo clientes. El sí/no vale 35 de ~75 pts del `commercialScore` — acantilado binario. **Entra a Sprint 2** (decisión 2026-08-28). |
+| ¿Ya habló con clientes? | ✅ **HECHO (2026-09-02)** — 5 niveles (`ninguno`/`1_3`/`4_10`/`mas_10`/`ya_clientes`) en `mrsk_customer_evidence_level`; gradiente en `commercialScore` (10→38) y en `riskScore` (delta +8 … −8, con el signo corregido: solo `ya_clientes` baja el riesgo). Bool `mrsk_has_talked_to_customers` se mantiene sincronizado. Ver [[../decisiones/alcance-campos-restantes-sprint-2#Granularidad «¿habló con clientes?» — HECHA (2026-09-02)]]. |
 | Nivel de competencia | ✅ `competitionLevel` |
 | Canal de adquisición | ✅ `acquisitionChannel` |
 | Costo de adquisición de clientes (CAC) | ❌ Solo se captura el *canal*, no su *costo*. **Pospuesto a post-beta** (decisión 2026-08-28) — no es input del rubric, necesita el modelo de ingreso primero, estimación pre-lanzamiento poco confiable. Ver [[../decisiones/alcance-campos-restantes-sprint-2#CAC — NO en esta etapa]] |
@@ -88,7 +88,7 @@ Horas/semana, horario, horizonte de ingreso esperado: todos capturados y usados 
 3. ~~Agregar dependencias del negocio (`mrsk_business_dependencies`)~~ — ✅ **HECHO (2026-08-28)**. Ver [[../decisiones/alcance-campos-restantes-sprint-2#Detalle]].
 
 **Vale la pena en el mismo sprint (bajo costo, cierra gaps de señal):**
-4. Restaurar granularidad de "¿habló con clientes?" (niveles, no solo sí/no) — entra a Sprint 2.
+4. ~~Restaurar granularidad de "¿habló con clientes?" (niveles, no solo sí/no)~~ — ✅ hecho 2026-09-02.
 5. ~~Usar `uncertaintyComfortScore` y `processComfortScore` en el cálculo~~ — ✅ commit `43d1112`.
 
 **Pedidos por el usuario el 2026-08-26:**

@@ -74,7 +74,7 @@ type Evaluacion = {
     | "15k_30k"
     | "30k_50k"
     | "mas_50k";
-  hasTalkedToCustomers: "true" | "false";
+  customerEvidenceLevel: "ninguno" | "1_3" | "4_10" | "mas_10" | "ya_clientes";
   competitionLevel: "baja" | "media" | "alta";
   acquisitionChannel:
     | "redes_sociales"
@@ -139,7 +139,7 @@ const SCENARIOS: Scenario[] = [
       variableCostPerSale: "24",
       estimatedMonthlySales: "1600",
       fixedMonthlyCostsRange: "30k_50k",
-      hasTalkedToCustomers: "false",
+      customerEvidenceLevel: "ninguno",
       competitionLevel: "alta",
       acquisitionChannel: "presencial",
       businessDependencies: ["ubicacion", "inventario"],
@@ -178,7 +178,7 @@ const SCENARIOS: Scenario[] = [
       variableCostPerSale: "90",
       estimatedMonthlySales: "35",
       fixedMonthlyCostsRange: "5k_15k",
-      hasTalkedToCustomers: "true",
+      customerEvidenceLevel: "4_10",
       competitionLevel: "media",
       acquisitionChannel: "redes_sociales",
       businessDependencies: ["ninguna"],
@@ -217,7 +217,7 @@ const SCENARIOS: Scenario[] = [
       variableCostPerSale: "1500",
       estimatedMonthlySales: "4",
       fixedMonthlyCostsRange: "menos_5k",
-      hasTalkedToCustomers: "true",
+      customerEvidenceLevel: "4_10",
       competitionLevel: "alta",
       acquisitionChannel: "referidos",
       businessDependencies: ["cliente_unico"],
@@ -256,7 +256,7 @@ const SCENARIOS: Scenario[] = [
       variableCostPerSale: "360",
       estimatedMonthlySales: "110",
       fixedMonthlyCostsRange: "15k_30k",
-      hasTalkedToCustomers: "false",
+      customerEvidenceLevel: "ninguno",
       competitionLevel: "alta",
       acquisitionChannel: "publicidad",
       businessDependencies: ["plataforma", "inventario"],
@@ -295,7 +295,7 @@ const SCENARIOS: Scenario[] = [
       variableCostPerSale: "40",
       estimatedMonthlySales: "70",
       fixedMonthlyCostsRange: "menos_5k",
-      hasTalkedToCustomers: "true",
+      customerEvidenceLevel: "4_10",
       competitionLevel: "media",
       acquisitionChannel: "redes_sociales",
       businessDependencies: ["plataforma"],
@@ -334,7 +334,7 @@ const SCENARIOS: Scenario[] = [
       variableCostPerSale: "560",
       estimatedMonthlySales: "85",
       fixedMonthlyCostsRange: "30k_50k",
-      hasTalkedToCustomers: "true",
+      customerEvidenceLevel: "4_10",
       competitionLevel: "media",
       acquisitionChannel: "redes_sociales",
       businessDependencies: ["permiso", "inventario"],
@@ -471,7 +471,7 @@ async function completarEvaluacion(page: Page, scenario: Scenario): Promise<void
     await page.fill("#initialInvestment", e.initialInvestment);
     await selectOptionCard(page, "fixedMonthlyCostsRange", e.fixedMonthlyCostsRange);
 
-    await selectOptionCard(page, "hasTalkedToCustomers", e.hasTalkedToCustomers);
+    await selectOptionCard(page, "customerEvidenceLevel", e.customerEvidenceLevel);
     await selectOptionCard(page, "competitionLevel", e.competitionLevel);
     await selectOptionCard(page, "acquisitionChannel", e.acquisitionChannel);
 

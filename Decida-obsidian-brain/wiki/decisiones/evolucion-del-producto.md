@@ -64,6 +64,12 @@ Mapeo completo del resto de campos del onboarding aún pendientes en [[../produc
 **Arreglo**: `generateJson` + system prompts sin Markdown + validación Zod + logging + fortalezas determinísticas de respaldo. Ver [[../experiencia/reporte-de-resultado#🔴→✅ Las 3 secciones JSON estaban rotas al 100% (arreglado 2026-09-02)]].
 **Estado**: implementado y verificado contra el modelo real. Sin commitear al cierre.
 
+## 10. "¿Habló con clientes?" — de sí/no a gradiente + fix de signo en riskScore (2026-09-02)
+**Notion / Question Bank F1**: la pregunta tenía 5 niveles ("No … más de 10 … ya tengo clientes interesados").
+**Código (hasta 2026-09-02)**: degradado a `Boolean`. El sí/no valía **35 vs 10 pts** del `commercialScore` (dimensión 25%) — "un café con un amigo" y "15 clientes pagando" puntuaban igual. Además el `riskScore` sumaba `+10 si habló`, un término **mal firmado**: hablar con gente subía el riesgo calculado.
+**Arreglo**: columna nueva `mrsk_customer_evidence_level` (5 niveles), bool sincronizado por retrocompat. Gradiente en `commercialScore` (10→38) y en `riskScore` (`ninguno` +8 … `ya_clientes` −8) con la semántica correcta: hablar con prospectos ≠ demanda probada, solo clientes reales bajan el riesgo. Cierra el último punto de Sprint 2. Ver [[alcance-campos-restantes-sprint-2#Granularidad «¿habló con clientes?» — HECHA (2026-09-02)]].
+**Estado**: implementado y verificado (`tsc` limpio, 50 tests, e2e actualizados). Sin commitear al cierre.
+
 ## Patrón general observado
 En casi todos los casos, el código **construyó más resiliencia y más superficie de producto** de lo que el PRD original consideraba necesario para un MVP de validación (ver la advertencia explícita en [[../producto/prd#Riesgo estratégico]]: *"el mayor riesgo es construir demasiada funcionalidad antes de confirmar que la gente paga"*). Ninguna fuente ingerida (Notion o repo) documenta si esto respondió a feedback real de clientes pagados o fue trabajo anticipado. **Esta es la pregunta más valiosa para la primera minuta de reunión que se ingiera** — ver [[../reuniones/minutas]].
 

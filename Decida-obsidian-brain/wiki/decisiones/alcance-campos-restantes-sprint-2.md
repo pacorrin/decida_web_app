@@ -17,7 +17,7 @@ Para cada campo pendiente: **¿vuelve creíble una dimensión del rubric de 6 di
 | Campo | ¿Arregla una dimensión del rubric? | Costo | Decisión |
 |---|---|---|---|
 | **Dependencias del negocio** (`mrsk_business_dependencies`) | ✅ Riesgo (15%) — la dimensión con menos sustento; hoy solo refleja capital/pérdida | Medio (sin migración, la columna existe) | ✅ **HECHO (2026-08-28)** |
-| **Granularidad "¿habló con clientes?"** | ✅ Comercial (25%) — el sí/no es un acantilado binario de 35 pts | Bajo (~1 h) | **Entra a Sprint 2** |
+| **Granularidad "¿habló con clientes?"** | ✅ Comercial (25%) — el sí/no es un acantilado binario de 35 pts | Bajo (~1 h) | ✅ **HECHO (2026-09-02)** |
 | **Modelo de ingreso** (único/recurrente/suscripción/…) | Parcial — desbloquea 1 red flag ("reemplazar empleo sin ingreso recurrente"), no arregla nada roto | Bajo | **NO en esta etapa** (Sprint 3) |
 | **CAC** (costo de adquisición de clientes) | ❌ No es un input puntuado del rubric | Medio + ambiguo | **NO en esta etapa** (post-beta) |
 
@@ -43,10 +43,14 @@ Para cada campo pendiente: **¿vuelve creíble una dimensión del rubric de 6 di
 
 **Implementado el 2026-08-28** (sin commitear al cierre de la sesión). Fuentes: `src/lib/onboarding/options.ts` (`BUSINESS_DEPENDENCY_OPTIONS`), `evaluationMarketSchema`, `saveEvaluation`, `src/components/onboarding/evaluation-form.tsx`, `src/lib/scoring/types.ts` (`dependencyRiskPenalty`, `detectDependencyRedFlags`), `src/lib/scoring/index.ts`, `src/lib/ai/generate-report.ts`. +9 tests en `src/lib/scoring/__tests__/types.test.ts` (28 total). Verificado end-to-end: el grid renderiza, `mrsk_business_dependencies` se guarda como array JSON, y las 3 red flags de dependencia aparecen en `ascs_red_flags` (después de las financieras) y en la sección "Riesgos" del reporte.
 
-### Granularidad "¿habló con clientes?" — ENTRA
-- **Captura**: reemplazar el sí/no por 5 niveles del Question Bank original (0 · 1–3 · 4–10 · >10 · "ya tengo clientes"). En `evaluacion`.
-- **Uso**: hoy el booleano vale **35 de ~75 puntos** del `commercialScore` (dimensión de 25%) + 10 del `riskScore`. "Tomé un café con un amigo" y "tengo 15 clientes pagando" puntúan idéntico. Se cambia por un gradiente en ambas fórmulas; "ya tengo clientes" pasa a fortaleza en el reporte.
-- **Por qué entra**: mejor valor/costo de todos. El acantilado binario es un bug de precisión real en un tool cuya credibilidad depende de que el score discrimine. Puede necesitar una columna nueva chica (`mrsk_customer_evidence_level`) o sobrecargar el campo bool.
+### Granularidad "¿habló con clientes?" — HECHA (2026-09-02)
+- **Captura**: el sí/no se reemplazó por 5 niveles (`ninguno` · `1_3` · `4_10` · `mas_10` · `ya_clientes`), del Question Bank F1. Sigue en el paso `evaluacion`, mismo `OptionCardGroup`.
+- **BD (decisión del usuario 2026-09-02)**: columna nueva `mrsk_customer_evidence_level String?` (`pnpm db:push`, sin migración commiteada). El bool `mrsk_has_talked_to_customers` **se sigue escribiendo** (derivado: cualquier nivel ≠ `ninguno` → `true`) para no romper filas/reportes viejos ni `detectDeterministicStrengths`. `resolveCustomerEvidenceLevel()` en `ranges.ts` resuelve el nivel tolerando filas viejas (bool `true` → se trata como `4_10`).
+- **`commercialScore`**: el término binario `talked ? 35 : 10` pasó a gradiente `CUSTOMER_EVIDENCE_COMMERCIAL_POINTS` — `ninguno` 10 (igual que el "no" viejo, no mueve assessments previos), `1_3` 18, `4_10` 26, `mas_10` 32, `ya_clientes` 38.
+- **`riskScore`**: el `+10 si habló` estaba **mal firmado** (subía el riesgo por hablar). Se reemplazó por `CUSTOMER_EVIDENCE_RISK_DELTA` con la semántica que pidió el usuario: hablar con prospectos casi no mueve el riesgo (`ninguno` +8, `1_3` +5, `4_10` +3, `mas_10` +2) y **solo tener clientes reales lo baja** (`ya_clientes` −8). Esto corre el `riskScore` base de los assessments sin contacto de clientes +8 respecto a antes (los tests de dependencias/sobre-exposición se reajustaron).
+- **IA**: `buildAssessmentContext` (`scoring/index.ts`) ahora pasa "Evidencia de clientes: …" al prompt de interpretación.
+- **Pendiente menor (Sprint 3)**: hacer que `ya_clientes` genere una fortaleza propia más fuerte en `detectDeterministicStrengths` (hoy dispara la genérica "Ya hablaste con clientes potenciales" para todo nivel ≠ `ninguno`).
+- Fuentes: `src/lib/onboarding/options.ts` (`CUSTOMER_EVIDENCE_LEVEL_OPTIONS`), `src/lib/onboarding/schemas.ts` (`CUSTOMER_EVIDENCE_LEVELS`, `evaluationMarketSchema`), `src/lib/scoring/ranges.ts`, `src/lib/scoring/types.ts`, `src/app/analizar/actions.ts` (`saveEvaluation`), `src/components/onboarding/evaluation-form.tsx`. +7 tests en `src/lib/scoring/__tests__/types.test.ts` (35 total), e2e actualizados.
 
 ### Modelo de ingreso — NO en esta etapa
 - El motor determinístico **no calcula LTV**, así que el impacto directo es chico: desbloquea la red flag "quiere reemplazar empleo sin ingresos recurrentes probados" y mejora la narrativa de la IA. No arregla nada roto.
@@ -60,7 +64,7 @@ Para cada campo pendiente: **¿vuelve creíble una dimensión del rubric de 6 di
 
 ## Resultado
 
-**Sprint 2 cierra con**: ✅ dependencias del negocio (hecho 2026-08-28) + granularidad "¿habló con clientes?" (pendiente).
+**Sprint 2 cierra con**: ✅ dependencias del negocio (hecho 2026-08-28) + ✅ granularidad "¿habló con clientes?" (hecho 2026-09-02). **Sprint 2 completo.**
 **Movido a Sprint 3**: modelo de ingreso, `pfit_avoided_activities`.
 **Post-beta**: CAC.
 

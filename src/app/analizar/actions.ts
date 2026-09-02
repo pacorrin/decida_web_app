@@ -588,7 +588,7 @@ export async function saveEvaluation(
   });
 
   const marketParsed = evaluationMarketSchema.safeParse({
-    hasTalkedToCustomers: formData.get("hasTalkedToCustomers"),
+    customerEvidenceLevel: formData.get("customerEvidenceLevel"),
     competitionLevel: formData.get("competitionLevel"),
     acquisitionChannel: formData.get("acquisitionChannel"),
     businessDependencies: formData.getAll("businessDependencies"),
@@ -625,7 +625,8 @@ export async function saveEvaluation(
     where: { mrsk_asmt_id: assessment.asmt_id },
     create: {
       mrsk_asmt_id: assessment.asmt_id,
-      mrsk_has_talked_to_customers: mkt.hasTalkedToCustomers === "true",
+      mrsk_customer_evidence_level: mkt.customerEvidenceLevel,
+      mrsk_has_talked_to_customers: mkt.customerEvidenceLevel !== "ninguno",
       mrsk_competition_level: mkt.competitionLevel,
       mrsk_acquisition_channel: mkt.acquisitionChannel,
       mrsk_business_dependencies: mkt.businessDependencies,
@@ -633,7 +634,8 @@ export async function saveEvaluation(
       mrsk_success_condition: mkt.successCondition,
     },
     update: {
-      mrsk_has_talked_to_customers: mkt.hasTalkedToCustomers === "true",
+      mrsk_customer_evidence_level: mkt.customerEvidenceLevel,
+      mrsk_has_talked_to_customers: mkt.customerEvidenceLevel !== "ninguno",
       mrsk_competition_level: mkt.competitionLevel,
       mrsk_acquisition_channel: mkt.acquisitionChannel,
       mrsk_business_dependencies: mkt.businessDependencies,

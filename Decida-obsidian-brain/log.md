@@ -303,3 +303,17 @@ Implementado (sin commitear):
 **Los 33 reportes viejos se dejan** — son datos de prueba locales (sin clientes reales, todos los pagos son `placeholder`), y la forma nueva no se puede sintetizar desde los strings guardados. El renderer los muestra sin romperse por el parseo retrocompatible.
 
 Nota de sesión: a media tarea Bash perdió el acceso a `~/Documents` (permiso de macOS, no el sandbox); el usuario lo restauró. Documentación actualizada: `wiki/experiencia/reporte-de-resultado.md`, `wiki/framework/prompts-de-ia.md`, `wiki/decisiones/evolucion-del-producto.md` (#9), `wiki/overview.md`, `index.md`.
+
+## [2026-09-02] query | Granularidad "¿habló con clientes?" — último punto de Sprint 2
+
+Pregunta: qué falta de Sprint 2. Respuesta desde `wiki/decisiones/alcance-campos-restantes-sprint-2.md`: solo la granularidad de "¿habló con clientes?" (dependencias del negocio ya estaba hecho; modelo de ingreso y `pfit_avoided_activities` → Sprint 3; CAC → post-beta).
+
+Implementado en el mismo turno (código):
+- `mrsk_customer_evidence_level String?` nuevo (`db:push`), 5 niveles `ninguno/1_3/4_10/mas_10/ya_clientes` (Question Bank F1). Bool `mrsk_has_talked_to_customers` sincronizado (nivel ≠ `ninguno` → true) para retrocompat.
+- `commercialScore`: gradiente 10→38 en vez del acantilado binario 35/10.
+- `riskScore`: se corrigió el signo del término de clientes (antes `+10 si habló` subía el riesgo). Ahora `ninguno` +8 … `ya_clientes` −8. Decisión del usuario: hablar con prospectos ≠ demanda probada.
+- `resolveCustomerEvidenceLevel()` en `ranges.ts` tolera filas viejas.
+- IA: `buildAssessmentContext` pasa "Evidencia de clientes: …".
+- Archivos: `options.ts`, `schemas.ts`, `ranges.ts`, `scoring/types.ts`, `scoring/index.ts`, `actions.ts`, `evaluation-form.tsx`, `assessment-utils.ts`, `prisma/schema.prisma`. Tests: +7 en `scoring/__tests__/types.test.ts` (35), e2e (`onboarding.spec.ts`, `multi-idea-history.spec.ts`, `onboarding-ux-audit.spec.ts`) actualizados. `tsc` limpio, 50 tests verdes. Sin commitear.
+
+Wiki actualizado: `alcance-campos-restantes-sprint-2.md`, `gaps-onboarding-vs-framework.md`, `framework/scoring-engine.md`, `decisiones/evolucion-del-producto.md` (#10). Sin páginas nuevas (no toca `index.md`).

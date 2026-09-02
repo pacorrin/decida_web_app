@@ -79,6 +79,64 @@ export function dependencyRiskPenalty(deps: string[]): number {
   return Math.min(total, DEPENDENCY_PENALTY_CAP);
 }
 
+/**
+ * Customer-evidence gradient (Question Bank F1) — replaces the yes/no cliff.
+ * Kept in sync with CUSTOMER_EVIDENCE_LEVEL_OPTIONS in
+ * `src/lib/onboarding/options.ts` and CUSTOMER_EVIDENCE_LEVELS in
+ * `src/lib/onboarding/schemas.ts`.
+ */
+export const CUSTOMER_EVIDENCE_LEVELS = [
+  "ninguno",
+  "1_3",
+  "4_10",
+  "mas_10",
+  "ya_clientes",
+] as const;
+
+/**
+ * Points contributed to `commercialScore` (higher = better). The old boolean
+ * gave 10 (no) / 35 (yes); `ninguno` keeps 10 so pre-gradient assessments are
+ * unaffected, and `ya_clientes` tops out slightly above the old "yes".
+ */
+export const CUSTOMER_EVIDENCE_COMMERCIAL_POINTS: Record<string, number> = {
+  ninguno: 10,
+  "1_3": 18,
+  "4_10": 26,
+  mas_10: 32,
+  ya_clientes: 38,
+};
+
+/**
+ * Delta applied to `riskScore` (higher = riskier). Talking to a handful of
+ * prospects is NOT proof of demand, so it barely moves risk; only real paying
+ * customers (`ya_clientes`) reduce it, and never having checked demand at all
+ * (`ninguno`) is itself a risk. Replaces the old `+10 when talked` term (which
+ * was mis-signed — it raised risk for talking).
+ */
+export const CUSTOMER_EVIDENCE_RISK_DELTA: Record<string, number> = {
+  ninguno: 8,
+  "1_3": 5,
+  "4_10": 3,
+  mas_10: 2,
+  ya_clientes: -8,
+};
+
+/**
+ * Resolves the customer-evidence level for an assessment, tolerating older rows
+ * that only have the boolean `mrsk_has_talked_to_customers`. Legacy `true` maps
+ * to `4_10` (a meaningful but unquantified "yes"); `false`/missing → `ninguno`.
+ */
+export function resolveCustomerEvidenceLevel(market: {
+  mrsk_customer_evidence_level?: string | null;
+  mrsk_has_talked_to_customers?: boolean | null;
+}): string {
+  const level = market.mrsk_customer_evidence_level;
+  if (level && (CUSTOMER_EVIDENCE_LEVELS as readonly string[]).includes(level)) {
+    return level;
+  }
+  return market.mrsk_has_talked_to_customers ? "4_10" : "ninguno";
+}
+
 /** Sentence-fragment labels — see the file header for why these are separate. */
 export const LOSS_RANGE_LABELS: Record<string, string> = {
   menos_5k: "menos de $5,000",
