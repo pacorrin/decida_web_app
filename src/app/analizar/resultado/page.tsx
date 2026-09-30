@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
 import { ResultReport } from "@/components/onboarding/result-report";
 import { enforceStepAccess } from "@/lib/onboarding/guard";
+import { getCurrentUser } from "@/lib/auth/session-server";
+import { hasFullAccess } from "@/lib/subscription/access";
 import { AutoRefresh } from "@/components/onboarding/auto-refresh";
 import {
   ONBOARDING_STEPS,
@@ -20,6 +22,8 @@ const PHASE_LABELS = {
 export default async function ResultadoPage() {
   const assessment = await enforceStepAccess("resultado");
   if (!assessment) return null;
+
+  const user = await getCurrentUser();
 
   const shouldAutoRefresh = 
     assessment.asmt_status === "in_progress" && 
@@ -88,7 +92,10 @@ export default async function ResultadoPage() {
           )}
         </div>
         {shouldAutoRefresh && <AutoRefresh />}
-        <ResultReport assessment={assessment} />
+        <ResultReport
+          assessment={assessment}
+          access={hasFullAccess(user) ? "full" : "free"}
+        />
       </main>
     </div>
   );

@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { ResultReport } from "@/components/onboarding/result-report";
 import { getCurrentUser } from "@/lib/auth/session-server";
 import { getAssessmentById } from "@/lib/onboarding/session-server";
+import { hasFullAccess } from "@/lib/subscription/access";
 import { ArrowLeft } from "lucide-react";
 
 type PageProps = {
@@ -46,6 +47,7 @@ export default async function CuentaEvaluacionDetallePage({ params }: PageProps)
 
       <ResultReport
         assessment={assessment}
+        access={hasFullAccess(user) ? "full" : "free"}
         showFeedback={false}
         showAnalyzeAnother={false}
       />

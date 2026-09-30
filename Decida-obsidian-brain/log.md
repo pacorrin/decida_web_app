@@ -376,3 +376,19 @@ A pedido del usuario, el despliegue en Railway sale del Sprint 3 y queda como S5
 ## [2026-09-28] query | Despliegue movido al inicio del Sprint 4
 
 El despliegue en Railway pasa de S5-00 a **S4-00**: es la primera tarea de la beta y se hace antes de invitar usuarios, después de probar todo en local. Actualizado: `wiki/tareas/tablero.md` y la referencia en `wiki/tareas/sprint-3.md`.
+
+## [2026-09-29] query | Nueva categoría Competencia: análisis de ValaIdea
+
+El usuario pidió investigar al competidor **ValaIdea** (https://www.valaidea.com/) y documentarlo como nueva categoría. Se revisó el sitio público el 2026-09-29 con WebFetch y `curl` (sin navegador): home, `/pricing`, `/help`, `/tools/idea-scorecard`, `/explore`, `/blog`, `/terms`, `/contact`, `sitemap.xml`. Todo lo registrado son afirmaciones de su sitio; lo que no aparece se marcó como *no encontrado en el sitio* (testimonios, número de usuarios, prensa, equipo).
+
+Hallazgos clave: sprint de validación de 7 días por $29 USD pago único (hipótesis con IA → landing mínima → 15 comunidades sugeridas → señales de vistas/clics/registros → veredicto Proceed / Iterate / Kill con umbrales públicos y override justificado); scorecard gratuito sin registro de 4 dimensiones; solo inglés/USD; valida demanda, no viabilidad integral — complementario más que sustituto de Decida.
+
+Páginas nuevas: `wiki/competencia/competencia.md` (hub) y `wiki/competencia/valaidea.md`. Actualizado: `CLAUDE.md` (carpeta `competencia/` en la estructura y tipo `competencia` en el frontmatter), `index.md` (sección Competencia), `wiki/overview.md` (fila en Mapa del producto). Candidato detectado sin revisar: Validea (validea.dev).
+
+## [2026-09-29] query | Competencia: análisis de Validea (validea.dev)
+
+A pedido del usuario se investigó **Validea** (https://validea.dev/), que estaba en "Candidatos por revisar". **El sitio no estaba accesible el 2026-09-29**: el dominio no resolvía (DNS `NXDOMAIN` desde el box y la Mac), WebFetch daba error 500 y no hay capturas en archive.org. La página se construyó solo con fragmentos del propio sitio indexados por el buscador (home y `/resources`), marcados como afirmaciones suyas de fecha incierta.
+
+Hallazgos clave: genera sitios de validación Astro + Cloudflare con SEO programático, captura de email, fake-door pricing y encuesta post-registro; para indie hackers técnicos de SaaS; $9 / $29 / $79 USD al mes con prueba de 30 días (otra página suya dice $19 / $49 / $99 — inconsistencia anotada); se declara "early access"; no emite veredicto. Ideas nuevas para Decida: fake-door pricing y "dónde encontrar a quién probar" en el plan de validación, SEO de contenido en español por tipo de negocio, encuesta corta post-registro, canal B2B2C con consultores/incubadoras.
+
+Página nueva: `wiki/competencia/validea.md`. Actualizado: `wiki/competencia/competencia.md` (Validea a la tabla, comparación ValaIdea vs Validea vs Decida, patrones, candidatos), `index.md` (sección Competencia). Candidato nuevo: **Validea en validea.co** (otro producto, reporte de IA con score; más parecido a Decida; respondía 503 el 2026-09-29). Pendiente: re-revisar validea.dev si vuelve a estar en línea.

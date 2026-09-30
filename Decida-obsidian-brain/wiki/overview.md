@@ -54,6 +54,7 @@ La pregunta que resuelve: **¿Vale la pena esta idea para mí, ahora, con mis re
 | Decisiones | [[decisiones/evolucion-del-producto]] | Dónde y por qué el código se separó del PRD |
 | Decisiones | [[decisiones/plan-lanzamiento-60-90-dias]] | Plan de 12 semanas con fechas, prioridades y estrategia comercial |
 | Reuniones | [[reuniones/minutas]] | Estado de las minutas (aún no hay para Decida) |
+| Competencia | [[competencia/competencia]] | Competidores analizados y qué nos sirve de cada uno |
 | — | [[glosario]] | Términos clave del negocio |
 
 ## Los 6 pilares de decisión (resumen ultra-rápido)

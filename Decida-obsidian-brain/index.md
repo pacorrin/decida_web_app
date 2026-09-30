@@ -55,6 +55,13 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | [[wiki/tareas/tablero]] | Estado por sprint, orden recomendado para retomar, tareas de Sprints 4-5 y decisiones pendientes |
 | [[wiki/tareas/sprint-3]] | Checklist del Sprint 3 (suscripción + freemium, Resend, monitoreo, analytics, landing, PDF) |
 
+## Competencia
+| Página | Resumen |
+|---|---|
+| [[wiki/competencia/competencia]] | Índice de competidores, comparación ValaIdea vs Validea vs Decida y candidatos por revisar |
+| [[wiki/competencia/valaidea]] | ValaIdea: sprint de 7 días ($29 USD) que valida demanda con landing + comunidades; ideas adaptables para Decida y diferencias |
+| [[wiki/competencia/validea]] | Validea (validea.dev): sitios de validación con SEO programático, fake-door pricing y encuesta ($9–$79 USD/mes); sitio caído al revisarlo, basado en fragmentos del buscador |
+
 ## Decisiones
 | Página | Resumen |
 |---|---|
