@@ -18,13 +18,13 @@ Leyenda: ⬜ Pendiente · 🟦 En curso · 🟢 Cerrado · 🔴 Atrasado
 |---|---|---|---|---|
 | 1 | 10 ago – 23 ago | Cuentas, login, email | 🟢 Cerrado (lo único pendiente, el dominio de Resend, pasó a S3-09) | — |
 | 2 | 24 ago – 6 sep | Dashboard `/cuenta` + pulir onboarding | 🟢 Cerrado el 2 sep | — |
-| 3 | 7 sep – 20 sep | Suscripción + freemium, hardening para la beta | 🟦 En curso (S3-01 y S3-02 hechas en local el 29 sep) | [[sprint-3]] |
+| 3 | 7 sep – 20 sep | Suscripción + freemium, hardening para la beta | 🟦 En curso (S3-01 a S3-03 hechas en local el 29 sep) | [[sprint-3]] |
 | 4 | 21 sep – 11 oct | Beta cerrada con cuentas reales | 🔴 No ha arrancado (depende del Sprint 3) | [[#Sprint 4 — Beta cerrada]] |
 | 5 | 12 oct – 1 nov | Pago real, panel admin, lanzamiento | ⬜ Pendiente | [[#Sprint 5 — Cierre y lanzamiento]] |
 
 ## Orden recomendado para retomar
 
-1. **Suscripción y freemium**: S3-03 a S3-08 de [[sprint-3]] (S3-01 y S3-02 ya están en local).
+1. **Suscripción y freemium**: S3-04 a S3-08 de [[sprint-3]] (S3-01 a S3-03 ya están en local).
 2. **Dominio propio en Resend** (S3-09): sin él no puede registrarse nadie más que tú, así que bloquea la beta.
 3. **Monitoreo de errores con Sentry y analytics del embudo** (S3-10, S3-11).
 4. **Landing y copy** con el modelo nuevo (S3-12, S3-13).

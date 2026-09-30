@@ -6,7 +6,7 @@ updated: 2026-09-29
 
 # Sprint 3 — tareas
 
-**Fechas objetivo**: 7 sep – 20 sep 2026 · **Estado**: 🟦 en curso (S3-01 y S3-02 hechas en local el 29 sep; sin commit).
+**Fechas objetivo**: 7 sep – 20 sep 2026 · **Estado**: 🟦 en curso (S3-01 a S3-03 hechas en local el 29 sep; sin commit).
 Reglas de negocio de la suscripción y el freemium: [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]]. Aquí solo va qué hacer, dónde y cuándo se da por hecho.
 
 Las tareas están en el orden recomendado de ejecución. Cada una está pensada para caber en una sesión corta.
@@ -23,8 +23,9 @@ Las tareas están en el orden recomendado de ejecución. Cada una está pensada 
 - [x] **S3-02 Verificación única de acceso completo.** Un helper (p. ej. en `src/lib/subscription/`) que responda si la cuenta tiene acceso completo: suscripción activa, o cancelada pero todavía dentro del periodo pagado.
   - Hecho cuando: tiene tests en Vitest (`pnpm test`) para activa, cancelada dentro del periodo, cancelada vencida y sin suscripción.
   - Hecho el 2026-09-29: `hasFullAccess` en `src/lib/subscription/access.ts`. Ocho casos en Vitest con `now` fijo. `past_due` pierde el acceso de inmediato, sin días de gracia. Ninguna pantalla la usa todavía (S3-03 y S3-04).
-- [ ] **S3-03 Vista recortada del reporte.** Modo recortado en `src/components/onboarding/result-report.tsx`: recomendación, semáforos de las 6 dimensiones y el riesgo principal. El resto de las secciones se cubre con un bloque de CTA a suscripción, reusando el estilo de `/ejemplo`.
+- [x] **S3-03 Vista recortada del reporte.** Modo recortado en `src/components/onboarding/result-report.tsx`: recomendación, semáforos de las 6 dimensiones y el riesgo principal. El resto de las secciones se cubre con un bloque de CTA a suscripción, reusando el estilo de `/ejemplo`.
   - Hecho cuando: el mismo reporte se ve completo o recortado según un solo parámetro.
+  - Hecho el 2026-09-29: prop `access` (`"full"` por defecto, `"free"` a mano). En free, el índice solo lista lo visible y el texto bloqueado no va en el HTML. El botón apunta a `/analizar/pago`. Ninguna página lo pasa todavía (S3-04).
 - [ ] **S3-04 Aplicar el gate en las dos vistas del reporte.** `src/app/analizar/resultado/page.tsx` y `src/app/cuenta/(dashboard)/evaluaciones/[id]/page.tsx` usan S3-02 para decidir el modo.
   - Hecho cuando: una cuenta sin suscripción ve la vista recortada en las dos rutas, y al activar la suscripción ve completas todas sus evaluaciones, incluidas las viejas.
 - [ ] **S3-05 Límite de 1 evaluación activa.** Guard en `startAssessmentForCurrentUser` (`src/app/analizar/actions.ts`) y en el paso `contacto`: si la cuenta ya tiene una evaluación y no tiene acceso completo, llevar a la pantalla de planes.

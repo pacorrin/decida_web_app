@@ -16,7 +16,19 @@ const SECTIONS = [
   { id: "feedback", label: "Tu opinión" },
 ] as const;
 
-export function ReportToc({ className }: { className?: string }) {
+export type ReportTocSectionId = (typeof SECTIONS)[number]["id"];
+
+export function ReportToc({
+  className,
+  sectionIds,
+}: {
+  className?: string;
+  sectionIds?: readonly ReportTocSectionId[];
+}) {
+  const sections = sectionIds
+    ? SECTIONS.filter((section) => sectionIds.includes(section.id))
+    : SECTIONS;
+
   return (
     <nav
       aria-label="Contenido del reporte"
@@ -26,7 +38,7 @@ export function ReportToc({ className }: { className?: string }) {
         Contenido
       </p>
       <ol className="space-y-1">
-        {SECTIONS.map((section, index) => (
+        {sections.map((section, index) => (
           <li key={section.id}>
             <Link
               href={`#${section.id}`}

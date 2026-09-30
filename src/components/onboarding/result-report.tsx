@@ -1,7 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReportSection } from "@/components/report/report-section";
 import { SignalBadge, formatCurrency } from "@/components/report/signal-badge";
-import { ReportToc } from "@/components/report/report-toc";
+import { ReportToc, type ReportTocSectionId } from "@/components/report/report-toc";
+import { PrimaryCtaButton } from "@/components/landing/cta-link";
 import {
   RECOMMENDATION_LABELS,
   SIGNAL_LABELS,
@@ -60,17 +61,33 @@ const DIMENSION_MAP = [
   },
 ];
 
+const FULL_REPORT_INCLUDES = [
+  "Resumen ejecutivo",
+  "Entendimiento del negocio",
+  "Análisis financiero",
+  "Fortalezas",
+  "El resto de los riesgos",
+  "Compatibilidad personal",
+  "Tiempo y operación",
+  "Escalabilidad",
+  "Plan de validación",
+  "Recomendación final",
+] as const;
+
 type ResultReportProps = {
   assessment: AssessmentWithRelations;
   showFeedback?: boolean;
   showAnalyzeAnother?: boolean;
+  access?: "full" | "free";
 };
 
 export function ResultReport({
   assessment,
   showFeedback = true,
   showAnalyzeAnother = true,
+  access = "full",
 }: ResultReportProps) {
+  const isFree = access === "free";
   const report = assessment.assessment_report;
   const scores = assessment.assessment_score;
   const financial = assessment.financial_inputs;
@@ -84,6 +101,17 @@ export function ResultReport({
     | RecommendationType
     | null
     | undefined;
+  const visibleRisks = isFree ? risks.slice(0, 1) : risks;
+  const showRiskSection = isFree
+    ? visibleRisks.length > 0
+    : risks.length > 0 || redFlags.length > 0;
+  const tocSectionIds: ReportTocSectionId[] | undefined = isFree
+    ? [
+        ...(scores ? (["viabilidad"] as const) : []),
+        ...(visibleRisks.length > 0 ? (["riesgos"] as const) : []),
+        ...(report && showFeedback ? (["feedback"] as const) : []),
+      ]
+    : undefined;
 
   if (assessment.asmt_status === "failed") {
     return <ReportErrorState assessmentId={assessment.asmt_id} />;
@@ -114,11 +142,11 @@ export function ResultReport({
       <div className="min-w-0 space-y-2">
         {/* Table of Contents - Mobile */}
         <div className="lg:hidden">
-          <ReportToc className="mb-8" />
+          <ReportToc className="mb-8" sectionIds={tocSectionIds} />
         </div>
 
         {/* Executive Summary */}
-        {report?.arep_executive_summary && (
+        {!isFree && report?.arep_executive_summary && (
           <ReportSection id="resumen" title="Resumen ejecutivo" className="pt-0 md:pt-2">
             <Markdown 
               content={report.arep_executive_summary} 
@@ -133,6 +161,17 @@ export function ResultReport({
               </div>
             )}
           </ReportSection>
+        )}
+
+        {isFree && recommendation && (
+          <div className="border-b border-border/60 py-10 pt-0 md:pt-2">
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+              <p className="text-sm font-medium text-primary">Recomendación</p>
+              <p className="mt-1 text-lg font-semibold">
+                {RECOMMENDATION_LABELS[recommendation]}
+              </p>
+            </div>
+          </div>
         )}
 
         {/* Viability Signals */}
@@ -173,7 +212,7 @@ export function ResultReport({
         )}
 
         {/* Business Understanding */}
-        {report?.arep_business_understanding && (
+        {!isFree && report?.arep_business_understanding && (
           <ReportSection id="negocio" title="Entendimiento del negocio">
             <Markdown 
               content={report.arep_business_understanding} 
@@ -183,7 +222,7 @@ export function ResultReport({
         )}
 
         {/* Financial Snapshot */}
-        {financial && (
+        {!isFree && financial && (
           <ReportSection id="financiero" title="Análisis financiero">
             {/* Financial Metrics Cards */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -425,7 +464,7 @@ export function ResultReport({
         )}
 
         {/* Strengths */}
-        {report && (
+        {!isFree && report && (
           <ReportSection id="fortalezas" title="Fortalezas">
             {strengths.length > 0 ? (
               <div className="grid gap-4 sm:grid-cols-2">
@@ -467,11 +506,11 @@ export function ResultReport({
         )}
 
         {/* Risks */}
-        {(risks.length > 0 || redFlags.length > 0) && (
+        {showRiskSection && (
           <ReportSection id="riesgos" title="Riesgos">
-            {risks.length > 0 && (
+            {visibleRisks.length > 0 && (
               <div className="grid gap-4">
-                {risks.map((risk, i) => (
+                {visibleRisks.map((risk, i) => (
                   <Card key={i} className="border-amber-200/50">
                     <CardHeader className="pb-2">
                       <CardTitle className="flex items-start gap-2 text-base text-amber-950">
@@ -487,7 +526,7 @@ export function ResultReport({
                         </CardDescription>
                       )}
                     </CardHeader>
-                    {risk.howToReduce && (
+                    {!isFree && risk.howToReduce && (
                       <CardContent>
                         <p className="text-sm">
                           <span className="font-medium text-primary">
@@ -504,7 +543,7 @@ export function ResultReport({
               </div>
             )}
 
-            {redFlags.length > 0 && (
+            {!isFree && redFlags.length > 0 && (
               <div className="mt-6">
                 <p className="mb-3 text-sm font-medium text-primary">
                   Alertas detectadas en tus números
@@ -526,7 +565,7 @@ export function ResultReport({
         )}
 
         {/* Personal Fit */}
-        {report?.arep_personal_fit_analysis && (
+        {!isFree && report?.arep_personal_fit_analysis && (
           <ReportSection id="personal" title="Compatibilidad personal">
             <Markdown 
               content={report.arep_personal_fit_analysis} 
@@ -536,7 +575,7 @@ export function ResultReport({
         )}
 
         {/* Time & Operation */}
-        {report?.arep_time_operation_analysis && (
+        {!isFree && report?.arep_time_operation_analysis && (
           <ReportSection id="tiempo" title="Tiempo y operación">
             <Markdown 
               content={report.arep_time_operation_analysis} 
@@ -546,7 +585,7 @@ export function ResultReport({
         )}
 
         {/* Scalability */}
-        {report?.arep_scalability_analysis && (
+        {!isFree && report?.arep_scalability_analysis && (
           <ReportSection id="escalabilidad" title="Escalabilidad">
             <Card className="border-border/70">
               <CardHeader>
@@ -566,7 +605,7 @@ export function ResultReport({
         )}
 
         {/* Validation Plan */}
-        {validationPlan.length > 0 && (
+        {!isFree && validationPlan.length > 0 && (
           <ReportSection id="validacion" title="Plan de validación">
             <div className="grid gap-4 sm:grid-cols-2">
               {validationPlan.map((week) => (
@@ -592,8 +631,10 @@ export function ResultReport({
           </ReportSection>
         )}
 
+        {isFree && report && <FullReportCta />}
+
         {/* Final Recommendation */}
-        {report?.arep_final_recommendation_text && (
+        {!isFree && report?.arep_final_recommendation_text && (
           <ReportSection id="recomendacion" title="Recomendación final">
             <Markdown 
               content={report.arep_final_recommendation_text} 
@@ -613,7 +654,9 @@ export function ResultReport({
 
         {report && showFeedback && (
           <ReportSection id="feedback" title="¿Te fue útil este diagnóstico?">
-            <FeedbackForm assessment={assessment} />
+            <FeedbackForm
+              assessment={isFree ? assessmentWithoutPaidCopy(assessment) : assessment}
+            />
           </ReportSection>
         )}
 
@@ -630,9 +673,60 @@ export function ResultReport({
       {/* Table of Contents - Desktop */}
       <aside className="hidden lg:block">
         <div className="sticky top-24">
-          <ReportToc />
+          <ReportToc sectionIds={tocSectionIds} />
         </div>
       </aside>
+    </div>
+  );
+}
+
+function assessmentWithoutPaidCopy(
+  assessment: AssessmentWithRelations,
+): AssessmentWithRelations {
+  return {
+    ...assessment,
+    assessment_report: null,
+    financial_inputs: null,
+    assessment_score: assessment.assessment_score
+      ? { ...assessment.assessment_score, ascs_red_flags: [] }
+      : null,
+  };
+}
+
+function FullReportCta() {
+  return (
+    <div className="border-b border-border/60 py-10 md:py-14">
+      <Card className="border-[#6baed6]/30 bg-accent/20">
+        <CardHeader>
+          <CardTitle className="text-primary">
+            El reporte completo incluye
+          </CardTitle>
+          <CardDescription>
+            Suscríbete para leer el resto de este diagnóstico.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {FULL_REPORT_INCLUDES.map((title) => (
+              <li
+                key={title}
+                className="flex items-start gap-2 text-sm text-muted-foreground"
+              >
+                <CheckCircle2
+                  className="mt-0.5 size-4 shrink-0 text-secondary"
+                  aria-hidden
+                />
+                {title}
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <PrimaryCtaButton href="/analizar/pago">
+              Suscribirme para ver el reporte completo
+            </PrimaryCtaButton>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
