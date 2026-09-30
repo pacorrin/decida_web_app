@@ -1,7 +1,7 @@
 ---
 type: decision-log
 tags: [decida, sprint-2, onboarding, scoring, alcance]
-updated: 2026-08-28
+updated: 2026-09-02
 ---
 
 # Alcance de los campos restantes del onboarding (Sprint 2)

@@ -1,7 +1,7 @@
 ---
 type: experiencia
 tags: [decida, reporte, output]
-updated: 2026-09-02
+updated: 2026-09-07
 ---
 
 # Reporte de resultado
@@ -67,5 +67,27 @@ El usuario reportó que la sección **Fortalezas** casi siempre mostraba un solo
 
 > Los 33 reportes viejos se dejaron como están: son datos de prueba locales (el producto no ha lanzado, no hay clientes reales) y la forma nueva no se puede sintetizar desde los strings guardados. El renderer los muestra sin romperse.
 
+## Vista freemium (recortada) — decidida 2026-09-07
+
+Con el cambio a **modelo de suscripción + freemium** ([[../producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)]]), el reporte tiene ahora **dos vistas sobre el mismo dato**:
+
+| | Freemium (cuenta gratis, 1 evaluación activa) | Suscriptor |
+|---|---|---|
+| Generación | Reporte **completo** por detrás (mismo pipeline scoring + IA) | Igual |
+| Qué se muestra | Card de **recomendación** (1 de las 4 etiquetas) · **snapshot de semáforos de las 6 dimensiones** · **1 riesgo** (el principal) | Las 13 secciones completas + herramientas de pago (PDF, etc.) |
+| El resto | Bloqueado, con CTA a suscripción sobre financiero / fortalezas / plan de validación / fit personal / escalabilidad / tabla de productos / riesgos adicionales | — |
+
+Es **gating de render, no de generación** — el reporte completo ya vive en BD (`assessment_reports`), la vista freemium simplemente no lo pinta. El onboarding, el scoring y el pipeline de IA **no cambian** (decidido 2026-09-07): el freemium responde el cuestionario completo y su reporte se genera y guarda igual que el de un suscriptor. Reusar el lenguaje visual de bloques de pago de `/ejemplo`.
+
+Encaja con la "Regla de UX crítica de resultados" de arriba: la vista freemium **es** justamente la card superior (recomendación + diagnóstico corto + snapshot + riesgo principal) que el diseño ya pedía mostrar primero — el corte natural cae donde el diseño de Notion ya ponía el "CTA a reporte completo".
+
+**Desbloqueo retroactivo**: cuando el usuario paga la suscripción, se le habilita el modo completo para **todas sus evaluaciones**, incluidas las que generó antes como freemium — el gate mira el estado de suscripción de la cuenta, no un flag por-evaluación. Al **cancelar** (sin reembolso, suscripción mensual) el acceso completo se mantiene hasta el fin del periodo pagado y luego revierte a esta vista recortada. Ver [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]].
+
+## Propuesto (2026-09-02, sin acotar): chat de mejora sobre el reporte
+
+El usuario pidió agregar al plan un **chat asistido por IA en la página de resultado**, para después de terminado el flujo: el usuario conversa sobre el reporte, la IA le señala los puntos que no especificó —o decidió no especificar— y le hace ver por qué importan. Sería la versión conversacional e interactiva de la sección 7 ("Risks and Blind Spots").
+
+Está **sin acotar** y reabre un punto que el backlog de Notion marcaba fuera de alcance ("chat IA complejo"). Preguntas abiertas (¿solo explica o también deja completar datos y re-corre el scoring?, persistencia, control de costo, plan de pago) y ubicación tentativa en [[../decisiones/plan-lanzamiento-60-90-dias#B. Chat de mejora sobre la página de resultado (post-flujo, asistido por IA)]] · divergencia registrada en [[../decisiones/evolucion-del-producto#11. Chat de iteración sobre el reporte — reabre un "fuera de alcance" de Notion (2026-09-02)]].
+
 ## Ver también
-[[../framework/scoring-engine]] · [[../framework/prompts-de-ia]] · [[../arquitectura/manejo-de-errores-y-reembolsos]]
+[[../framework/scoring-engine]] · [[../framework/prompts-de-ia]] · [[../arquitectura/manejo-de-errores-y-reembolsos]] · [[../decisiones/plan-lanzamiento-60-90-dias]]

@@ -317,3 +317,62 @@ Implementado en el mismo turno (código):
 - Archivos: `options.ts`, `schemas.ts`, `ranges.ts`, `scoring/types.ts`, `scoring/index.ts`, `actions.ts`, `evaluation-form.tsx`, `assessment-utils.ts`, `prisma/schema.prisma`. Tests: +7 en `scoring/__tests__/types.test.ts` (35), e2e (`onboarding.spec.ts`, `multi-idea-history.spec.ts`, `onboarding-ux-audit.spec.ts`) actualizados. `tsc` limpio, 50 tests verdes. Sin commitear.
 
 Wiki actualizado: `alcance-campos-restantes-sprint-2.md`, `gaps-onboarding-vs-framework.md`, `framework/scoring-engine.md`, `decisiones/evolucion-del-producto.md` (#10). Sin páginas nuevas (no toca `index.md`).
+
+## [2026-09-02] query | Dos mejoras nuevas del usuario agregadas al plan
+
+El usuario pidió agregar al plan dos mejoras de producto (no acotadas aún):
+1. **Pulir la idea — 2ª iteración** en el paso «Así entendimos tu idea». Mejora de fondo de `refineIdea`, más allá del arreglo de transcripción de `0259101`. Falta que el usuario liste los dolores puntuales.
+2. **Chat de mejora sobre la página de resultado** (post-flujo, IA): conversar sobre el reporte para identificar los puntos que el usuario no especificó —o decidió no especificar— y ver reflejado por qué importan. Versión conversacional de "Risks and Blind Spots".
+
+Brecha marcada: (2) reabre "chat IA complejo", que el backlog de Notion (09) pone **explícitamente fuera de alcance** del MVP. Registrada en `evolucion-del-producto.md` #11. Riesgo estratégico del PRD (construir de más antes de validar pago) + costo de API recurrente → candidata a plan de pago y/o post-beta.
+
+Ambas quedan **sin acotar**: necesitan sesión de alcance con el usuario (formato de `alcance-campos-restantes-sprint-2.md`) antes de estimarse o entrar a un sprint.
+
+Páginas actualizadas: `decisiones/plan-lanzamiento-60-90-dias.md` (sección nueva "Mejoras de producto pedidas el 2026-09-02" + Sprint 2 marcado cerrado), `producto/roadmap-y-backlog.md`, `decisiones/evolucion-del-producto.md` (#11), `experiencia/reporte-de-resultado.md`, `experiencia/flujo-de-onboarding.md`, `overview.md`. Sin páginas nuevas.
+
+## [2026-09-07] decision | Modelo de cobro definido: suscripción + freemium — agregado al Sprint 3
+
+El usuario cerró la decisión de "modelo de cobro" que estaba abierta desde 2026-08-05. **Decida se cobra por suscripción**, no por análisis único; el nivel más barato es **$99 MXN** (el "Starter" de la hipótesis de Notion), los demás niveles quedan pendientes. Debajo hay una **capa freemium** pensada como embudo de conversión.
+
+Alcance aclarado con 4 preguntas directas:
+- **Cobro real**: NO en el Sprint 3 — solo se rediseñan las pantallas de pago (de "pago único simulado" a "elige plan / suscríbete") y se construye el gating freemium/suscriptor. La integración de cobro recurrente real (Stripe / Mercado Pago) se mantiene en el Sprint 5. `savePayment` sigue simulado.
+- **Vista freemium del reporte**: se genera completo por detrás, pero solo se muestra recomendación + snapshot de semáforos de las 6 dimensiones + 1 riesgo (el principal). El resto bloqueado con CTA a suscripción. Es gating de render, no de generación — el reporte completo ya vive en `assessment_reports`.
+- **Límite freemium**: 1 evaluación activa a la vez (no "1 de por vida" ni "1 al mes").
+- **Cuenta**: el freemium requiere crear cuenta (el paso `contacto` ya lo hace); no hay generación anónima.
+
+Quedó **sin acotar** (mini-sesión de alcance en el Sprint 3): qué campos/pasos del onboarding se recortan para freemium (con la tensión anotada: menos inputs → más fallbacks del motor → reporte "completo" de peor calidad real), si suscribirse desbloquea evaluaciones freemium viejas, cómo cambia la promesa de reembolso con suscripción, y si el $99 es mensual o anual.
+
+Solo documentación, sin cambios de código. Actualizado: `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (decisión de producto v3 + fila y subsección nuevas del Sprint 3 + P2 #9 + checkpoint 20 sep + historial de priorización), `wiki/producto/pricing-y-gtm.md` (sección "Modelo de cobro decidido" + nota en landing copy + estado real), `wiki/decisiones/evolucion-del-producto.md` (#12), `wiki/experiencia/reporte-de-resultado.md` (sección "Vista freemium (recortada)"), `wiki/experiencia/flujo-de-onboarding.md` (sección "Ruta reducida de freemium"), `wiki/overview.md` (gap de pago + estado de desarrollo Sprint 3). Sin páginas nuevas (no toca `index.md`).
+
+## [2026-09-07] decision | Modelo de suscripción — puntos faltantes cerrados
+
+El usuario resolvió los 4 puntos que habían quedado sin acotar en la decisión anterior del mismo día:
+
+1. **Onboarding freemium: NO se recorta.** El usuario freemium responde el cuestionario completo (los 9 pasos), a propósito, para que vea todos los puntos que Decida evalúa. El reporte se genera y se guarda completo igual que hoy. Lo único que cambia es la vista del resultado. Esto elimina la tensión anotada de "menos inputs → más fallbacks del motor" — ya no aplica.
+2. **Desbloqueo retroactivo.** Al pagar la suscripción se habilita el modo completo para todas las evaluaciones del usuario, incluidas las que hizo como freemium. El gate mira el estado de suscripción de la cuenta, no un flag por evaluación → gating de render con una sola condición.
+3. **Sin reembolsos, solo cancelación.** Suscripción mensual. Al cancelar, el acceso completo se mantiene hasta el fin del periodo ya pagado (`subscription_current_period_end`) y luego revierte a la vista freemium. El `docs/REFUND_PROCESS.md` y la garantía de reembolso de pago único quedan obsoletos.
+4. **$99 = mensual.**
+
+Consecuencia de diseño: el alcance técnico del Sprint 3 se reduce a **estado de suscripción en `users` + gating de render + pantallas de pago**. Onboarding, scoring, pipeline de IA y guardado del reporte no se tocan.
+
+Solo documentación. Actualizado: `wiki/decisiones/plan-lanzamiento-60-90-dias.md` (tabla de decisiones + alcance técnico + "Puntos cerrados con el usuario" reemplaza a "Pendiente de acotar"), `wiki/producto/pricing-y-gtm.md` (reglas de freemium y de suscripción + $99/mes), `wiki/experiencia/flujo-de-onboarding.md` (sección renombrada "Freemium NO recorta el onboarding"), `wiki/experiencia/reporte-de-resultado.md` (desbloqueo retroactivo + cancelación), `wiki/arquitectura/manejo-de-errores-y-reembolsos.md` (sección nueva "Cambio a suscripción — cancelación, sin reembolsos" + nota de obsolescencia), `wiki/decisiones/evolucion-del-producto.md` (#12 refinado). Sin páginas nuevas.
+
+## [2026-09-28] query | Nuevo apartado de tareas: tablero y Sprint 3
+
+El usuario pidió un apartado **solo de tareas**, separado del contexto y las reglas de negocio, para retomar el proyecto tras casi 4 semanas sin commits (último: 2026-09-02). Se mantienen las **fechas originales** del plan (decisión del usuario): Sprint 3 queda 🔴 sin empezar y Sprint 4 sin arrancar.
+
+Páginas nuevas: `wiki/tareas/tablero.md` (estado por sprint, orden recomendado, tareas de Sprints 4-5, decisiones pendientes D-01 a D-05) y `wiki/tareas/sprint-3.md` (checklist S3-00 a S3-15 con criterio de "hecho" y rutas de código verificadas el 2026-09-28). Orden recomendado: suscripción + freemium → dominio Resend → monitoreo y analytics → landing y copy → PDF. Verificado en código: no hay herramienta de analytics ni de monitoreo instalada; «$99» de pago único sigue en 5 archivos de landing/ejemplo; la promesa de reembolso sigue en 4 archivos.
+
+Actualizado: `index.md` (sección Tareas), `CLAUDE.md` (carpeta `tareas/` en la estructura y tipo `tareas` en el frontmatter).
+
+## [2026-09-28] query | Sentry elegido para monitoreo; despliegue en Railway agregado al Sprint 3
+
+El usuario eligió **Sentry** para el monitoreo de errores (S3-10). También confirmó que la app **no está desplegada** en ningún lado y que el destino es **Railway**, así que se agregó la tarea S3-16 (despliegue) como prerequisito de la beta. Riesgo anotado: la migración de `prisma/migrations/` está desincronizada con `schema.prisma` y hay que regenerarla antes de producción. Actualizado: `wiki/tareas/sprint-3.md` y `wiki/tareas/tablero.md`.
+
+## [2026-09-28] query | Despliegue movido al Sprint 5
+
+A pedido del usuario, el despliegue en Railway sale del Sprint 3 y queda como S5-00 en `wiki/tareas/tablero.md`: se despliega todo al final, después de las pruebas locales y las features. El criterio de "hecho" de S3-10 (Sentry) pasa a validarse en local.
+
+## [2026-09-28] query | Despliegue movido al inicio del Sprint 4
+
+El despliegue en Railway pasa de S5-00 a **S4-00**: es la primera tarea de la beta y se hace antes de invitar usuarios, después de probar todo en local. Actualizado: `wiki/tareas/tablero.md` y la referencia en `wiki/tareas/sprint-3.md`.

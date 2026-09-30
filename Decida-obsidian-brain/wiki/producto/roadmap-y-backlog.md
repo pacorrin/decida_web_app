@@ -1,7 +1,7 @@
 ---
 type: product
 tags: [decida, roadmap, backlog]
-updated: 2026-08-05
+updated: 2026-09-07
 ---
 
 # Roadmap y Backlog
@@ -51,6 +51,17 @@ El plan de Notion preveía launch de un MVP mínimo en 4 semanas y luego iterar.
 - Refactors de UX del onboarding y remoción de preguntas (señal de iteración basada en algo — feedback real o juicio de producto; no hay fuente que documente el "por qué" de estos cambios).
 
 Esto es exactamente el riesgo que el propio PRD (ver [[prd#Riesgo estratégico]]) advertía evitar: *"construir demasiada funcionalidad antes de confirmar que la gente paga."* No es necesariamente un error — pero es una señal para verificar en la próxima conversación con el usuario si ya hay evidencia de pago real que justifique este alcance.
+
+## Ideas nuevas del usuario — pendientes de alcance (2026-09-02)
+
+Dos mejoras planteadas por el usuario tras cerrar Sprint 2. Ambas abren un **segundo momento de iteración asistida por IA** sobre puntos donde hoy el producto es de una sola pasada. Registro y preguntas abiertas en [[../decisiones/plan-lanzamiento-60-90-dias#Mejoras de producto pedidas el 2026-09-02 (pendientes de alcance)]].
+
+1. **Pulir la idea — 2ª iteración** en el paso «Así entendimos tu idea». El commit `0259101` arregló el bug de transcripción; esto es mejora de fondo de `refineIdea`. Falta que el usuario liste qué se siente pobre hoy. Fase gratis, no toca scoring.
+2. **Chat de mejora sobre la página de resultado.** Post-flujo: el usuario conversa con la IA sobre el reporte para identificar los puntos que no especificó (o decidió no especificar) y ver reflejado por qué importan — versión conversacional de la sección "Risks and Blind Spots". ⚠️ Reabre "chat IA complejo", que el backlog de Notion pone **explícitamente fuera de alcance** del MVP (ver arriba en esta página y [[../decisiones/evolucion-del-producto#11. Chat de iteración sobre el reporte — reabre un "fuera de alcance" de Notion (2026-09-02)]]). Costo de API recurrente → candidato a plan de pago y/o a post-beta.
+
+## Cambio de modelo de negocio (2026-09-07)
+
+El usuario definió el modelo de cobro: **suscripción + freemium** ($99 el nivel más barato, resto pendiente). El "Now" del backlog original —"CTA con precio", "pago"— asumía **pago único**; ahora el pago es una suscripción y hay un nivel gratuito con captura reducida y reporte recortado como embudo. Las pantallas de pago y el gating entran al Sprint 3; el cobro recurrente real sigue en el Sprint 5. Ver [[pricing-y-gtm#Modelo de cobro decidido (2026-09-07)]] · [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]] · [[../decisiones/evolucion-del-producto#12. De pago único a suscripción + freemium (2026-09-07)]].
 
 ## Ver también
 [[prd]] · [[pricing-y-gtm]] · [[../decisiones/evolucion-del-producto]]

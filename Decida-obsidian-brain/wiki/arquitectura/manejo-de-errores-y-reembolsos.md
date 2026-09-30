@@ -1,7 +1,7 @@
 ---
 type: arquitectura
 tags: [decida, errores, reembolsos, confiabilidad]
-updated: 2026-08-05
+updated: 2026-09-07
 ---
 
 # Manejo de errores y reembolsos
@@ -32,10 +32,21 @@ started → paid → in_progress → report_generated ✓
 3. Intentar retry manual vía interfaz admin.
 4. Si sigue fallando → procesar reembolso vía proveedor de pago → actualizar `paym_status` y `asmt_payment_status` a `refunded` → notificar al usuario por email (plantilla documentada) → documentar el caso.
 
-> Nota de coherencia con [[../producto/pricing-y-gtm]]: este proceso de reembolso está documentado para un **pago real** vía proveedor, pero el paso de pago en producción hoy es **simulado**. Punto a aclarar en la próxima conversación con el usuario: ¿el proceso de reembolso ya se ejecutó alguna vez, o es documentación preparada para cuando se active el pago real?
+> Nota de coherencia con [[../producto/pricing-y-gtm]]: este proceso de reembolso está documentado para un **pago real único** vía proveedor, pero el paso de pago en producción hoy es **simulado**. Con el cambio a suscripción (2026-09-07, ver abajo) este proceso **queda obsoleto**: ya no habrá reembolsos.
+
+## Cambio a suscripción (2026-09-07) — cancelación, sin reembolsos
+
+El [[../producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)|modelo de cobro pasó a suscripción mensual + freemium]]. Decisión del usuario sobre esta capa:
+
+- **No se manejan reembolsos.** El `docs/REFUND_PROCESS.md` y la garantía "si no se genera tu reporte, te reembolsamos" dejan de aplicar bajo el modelo de suscripción.
+- **Solo cancelación de suscripción.** Al cancelar, el acceso al modo completo se mantiene hasta el **fin del periodo ya pagado** (`subscription_current_period_end`); después la cuenta revierte a la vista freemium recortada. No hay prorrateo ni devolución.
+- La UI de error del reporte (`report-error-state.tsx`) hoy muestra la garantía de reembolso de forma prominente — ese copy hay que **revisarlo** cuando se implemente el modelo de suscripción (el retry automático/manual y el logging siguen igual de válidos; lo que cambia es la promesa comercial, no la resiliencia técnica).
+- Qué se le ofrece a un suscriptor cuya generación de reporte falla de forma irrecuperable (¿crédito?, ¿mes gratis?, ¿nada más el retry?) **queda pendiente de definir** — es una pregunta menor porque el reporte se genera post-onboarding y el retry cubre casi todos los casos.
+
+Esto entra como parte del Sprint 3 (pantallas de pago + gating); la lógica real de cancelación vive junto a la integración de cobro recurrente del Sprint 5. Ver [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]].
 
 ## Deuda pendiente reconocida en el propio doc
 Integración con Sentry/Datadog/PagerDuty · dashboard admin para ver assessments fallidos · notificación por email cuando el reporte esté listo · reembolso automatizado vía API del proveedor de pago.
 
 ## Ver también
-[[../experiencia/reporte-de-resultado]] · [[../framework/prompts-de-ia]] · [[../producto/pricing-y-gtm]] · [[modelo-de-datos]]
+[[../experiencia/reporte-de-resultado]] · [[../framework/prompts-de-ia]] · [[../producto/pricing-y-gtm]] · [[modelo-de-datos]] · [[../decisiones/plan-lanzamiento-60-90-dias]]

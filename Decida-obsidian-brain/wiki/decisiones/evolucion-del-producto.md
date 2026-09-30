@@ -1,7 +1,7 @@
 ---
 type: decision-log
 tags: [decida, decisiones, evolucion]
-updated: 2026-09-02
+updated: 2026-09-07
 ---
 
 # Evolución del producto — dónde el código se separó del PRD
@@ -69,6 +69,21 @@ Mapeo completo del resto de campos del onboarding aún pendientes en [[../produc
 **Código (hasta 2026-09-02)**: degradado a `Boolean`. El sí/no valía **35 vs 10 pts** del `commercialScore` (dimensión 25%) — "un café con un amigo" y "15 clientes pagando" puntuaban igual. Además el `riskScore` sumaba `+10 si habló`, un término **mal firmado**: hablar con gente subía el riesgo calculado.
 **Arreglo**: columna nueva `mrsk_customer_evidence_level` (5 niveles), bool sincronizado por retrocompat. Gradiente en `commercialScore` (10→38) y en `riskScore` (`ninguno` +8 … `ya_clientes` −8) con la semántica correcta: hablar con prospectos ≠ demanda probada, solo clientes reales bajan el riesgo. Cierra el último punto de Sprint 2. Ver [[alcance-campos-restantes-sprint-2#Granularidad «¿habló con clientes?» — HECHA (2026-09-02)]].
 **Estado**: implementado y verificado (`tsc` limpio, 50 tests, e2e actualizados). Sin commitear al cierre.
+
+## 11. Chat de iteración sobre el reporte — reabre un "fuera de alcance" de Notion (2026-09-02)
+**Notion / backlog** ([[../../raw/notion/09-product-backlog]]): **"chat IA complejo" está en la lista de "explícitamente fuera de alcance"** del MVP; "asesor IA" aparece solo en "Future SaaS".
+**Idea del usuario (2026-09-02)**: un chat asistido por IA en la página de resultado (post-flujo) para conversar sobre el reporte, identificar los puntos que el usuario no especificó —o decidió no especificar— y hacerle ver por qué importan. Es la versión conversacional de la sección "Risks and Blind Spots" del reporte.
+**Lectura**: divergencia deliberada, no descuido. El producto ya se adelantó a varias "Future Entities" (cuentas, historial, dashboard) sin que ninguna fuente documente si respondió a feedback real. Este chat sube la apuesta porque además de superficie de producto es **costo de API recurrente por usuario** — choca de frente con la advertencia de [[../producto/prd#Riesgo estratégico]].
+**Estado**: idea registrada, **sin acotar**. Pendiente: sesión de alcance + decisión de si se ata a un plan de pago y/o se pospone a post-beta. Ver [[plan-lanzamiento-60-90-dias#B. Chat de mejora sobre la página de resultado (post-flujo, asistido por IA)]].
+**Relacionada** (no divergente): el usuario también pidió una 2ª iteración de mejora sobre "pulir la idea" en el paso «Así entendimos tu idea» — eso es mejora de una función que ya existe, no reapertura de alcance.
+
+## 12. De pago único a suscripción + freemium (2026-09-07)
+**Notion**: hipótesis de precios de **pago único** por análisis (Starter $99 / Pro $299 / Expert $799–999), con estrategia de lanzamiento a un solo precio de $99. El backlog no contempla un nivel gratuito ni gating de resultado.
+**Código (hoy)**: `/analizar/pago` = pago único simulado; el reporte se muestra completo tras "pagar".
+**Decisión del usuario (2026-09-07)**: el modelo pasa a **suscripción mensual** ($99/mes el nivel más barato, resto pendiente) con una **capa freemium** debajo: cuenta gratis, **1 evaluación activa a la vez**, **onboarding completo sin recortar** (que el usuario vea todo lo que se evalúa), y **reporte generado y guardado completo pero mostrado recortado** (recomendación + semáforos + 1 riesgo; el resto tras suscribirse). Al pagar, **desbloqueo retroactivo** de todas las evaluaciones previas. Sin reembolsos: solo cancelación, con acceso hasta el fin del mes pagado.
+**Alcance inmediato (Sprint 3)**: solo **estado de suscripción + pantallas de pago + gating de render**. El onboarding, el scoring, el pipeline de IA y el guardado del reporte **no se tocan**. La **integración de cobro recurrente real** (Stripe / Mercado Pago) sigue simulada y se mantiene en el Sprint 5.
+**Lectura**: es la primera vez que se define el modelo de negocio con precisión — hasta ahora "pago" era un placeholder deliberado. El diseño quedó deliberadamente conservador: al no recortar el onboarding, el freemium y el suscriptor generan exactamente el mismo reporte y el único punto de divergencia es el render — bajo riesgo técnico. La apuesta de conversión ("cuánto enseñar gratis sin quemar la confianza") solo la valida la beta. La garantía de reembolso de pago único de [[manejo-de-errores-y-reembolsos]] queda obsoleta.
+**Estado**: decidido, **no implementado**. Detalle en [[plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]] · [[../producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)]] · [[../experiencia/reporte-de-resultado#Vista freemium (recortada) — decidida 2026-09-07]].
 
 ## Patrón general observado
 En casi todos los casos, el código **construyó más resiliencia y más superficie de producto** de lo que el PRD original consideraba necesario para un MVP de validación (ver la advertencia explícita en [[../producto/prd#Riesgo estratégico]]: *"el mayor riesgo es construir demasiada funcionalidad antes de confirmar que la gente paga"*). Ninguna fuente ingerida (Notion o repo) documenta si esto respondió a feedback real de clientes pagados o fue trabajo anticipado. **Esta es la pregunta más valiosa para la primera minuta de reunión que se ingiera** — ver [[../reuniones/minutas]].

@@ -1,7 +1,7 @@
 ---
 type: experiencia
 tags: [decida, onboarding, ux]
-updated: 2026-08-28
+updated: 2026-09-07
 ---
 
 # Flujo de onboarding — diseño vs implementado
@@ -67,6 +67,10 @@ Al seleccionar supuestos, escribir aclaraciones y darle a **"Pulir mi idea con I
 
 > Nota de estado: el commit agrega **un error nuevo de eslint** `react-hooks/set-state-in-effect` en `idea-confirmation.tsx` (el `useEffect` de `rotateState` sigue el mismo patrón que el de `refineState`, que ya tenía ese error preexistente). `tsc --noEmit` limpio.
 
+### Propuesto (2026-09-02, sin acotar): 2ª iteración de "pulir la idea"
+
+El usuario pidió agregar al plan una **mejora de fondo de `refineIdea`**, más allá del arreglo de transcripción de `0259101`: que "pulir la idea con IA" mejore de verdad la comprensión y el planteamiento (¿preguntar de vuelta cuando la idea es ambigua?, ¿señalar qué partes siguen sin sustento?, ¿cuántas rondas tienen sentido?). Falta que el usuario liste los dolores puntuales de la salida actual antes de acotarlo. Registro y ángulos candidatos en [[../decisiones/plan-lanzamiento-60-90-dias#A. Segunda iteración de "pulir la idea" en «Así entendimos tu idea»]].
+
 ## El paso «productos» — catálogo de lo que se piensa vender (2026-08-28)
 
 Paso nuevo (`/analizar/productos`, "Tus productos y servicios"), entre `ajuste` y `evaluacion`. Cubre el punto 5 de Sprint 2 ("sección de productos/servicios a vender con su precio"). Fuentes: `src/app/analizar/productos/page.tsx`, `src/components/onboarding/products-form.tsx`, `src/lib/onboarding/products.ts`, `saveProducts` en `src/app/analizar/actions.ts`.
@@ -101,6 +105,17 @@ Al `FieldSet` "Mercado y riesgos" del paso `evaluacion` se le agregó un grid de
 
 ## Paso "ajuste" — no existía en el diseño original
 `ajuste` (fase diagnóstico, ~3 min) no tiene equivalente directo en los 12 pasos de Notion. Por el nombre ("Ajuste personal") probablemente corresponde a lo que Notion llamaba "Personal Work Fit" (Step 4) — pero movido de antes-del-pago a después-del-pago, y separado de "perfil" como su propio paso. A verificar leyendo `src/app/analizar/ajuste/page.tsx` en una próxima sesión si se necesita el detalle exacto de qué preguntas contiene hoy.
+
+## Freemium NO recorta el onboarding (decidido 2026-09-07)
+
+Con el [[../producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)|modelo de suscripción + freemium]], el usuario tuvo que decidir si el freemium usaba un onboarding más corto. **Decisión: no.** El freemium recorre **el mismo flujo completo de 9 pasos** que un suscriptor — la intención es que el usuario **vea todos los puntos que Decida evalúa** aunque su reporte se muestre resumido. Sin ruta condicional, sin pasos "solo suscriptor", sin campos opcionales nuevos.
+
+Lo único que cambia con el modelo de negocio:
+- El paso `pago` pasa de "pago simulado (beta)" a "elige tu plan" (freemium visible como opción, suscripción $99/mes como upsell).
+- Guard de **1 evaluación activa a la vez** para cuentas sin suscripción — controla *cuántas veces* se puede iniciar el flujo, no *qué* pide el flujo.
+- El corte está **solo en el render del reporte** (ver [[reporte-de-resultado#Vista freemium (recortada) — decidida 2026-09-07]]); el scoring, el pipeline de IA y el guardado en `assessment_reports` son idénticos a hoy.
+
+Esto elimina la tensión de "menos inputs → más fallbacks del motor" que se había anotado: el reporte del freemium es **exactamente igual de completo por detrás**, solo se muestra menos.
 
 ## Principio de UX que se mantiene sin cambios
 "El onboarding debe sentirse como una conversación inteligente, no como una encuesta pesada." Y de los wireframes: no mostrar un score numérico global primero en resultados — llevar con recomendación + diagnóstico narrativo de 3 líneas. Ver [[reporte-de-resultado]].

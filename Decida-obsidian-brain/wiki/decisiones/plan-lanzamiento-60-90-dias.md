@@ -1,7 +1,7 @@
 ---
 type: decision-log
 tags: [decida, roadmap, lanzamiento, gtm, usuarios]
-updated: 2026-08-28
+updated: 2026-09-07
 ---
 
 # Plan de lanzamiento — 60/90 días
@@ -21,6 +21,13 @@ Si el trabajo real empieza en otra fecha, desplaza todas las fechas de abajo por
 > El pago real se pospone deliberadamente. Prioridad: cerrar desarrollo del núcleo (cuentas + dashboard) primero; el modelo de cobro (por análisis único, suscripción, planes Starter/Pro/Expert de [[../producto/pricing-y-gtm]]) todavía requiere análisis del usuario antes de comprometerse a una implementación. El pago simulado se mantiene mientras tanto.
 
 Esto invierte el orden P0 original de esta página (que ponía "pago real" primero) — ver histórico de la decisión anterior más abajo en [[#Historial de la priorización]].
+
+## Decisión de producto (2026-09-07) — el modelo de cobro es **suscripción + freemium**
+> El usuario definió el modelo que estaba pendiente desde 2026-08-05: **Decida se cobra por suscripción**, no por análisis único. La suscripción más barata es **$99 MXN** (el "Starter" de la hipótesis de Notion). Los demás niveles quedan **pendientes de definir**. Debajo de la suscripción hay una **versión freemium** con captura de datos reducida y resultado recortado, diseñada como embudo hacia la suscripción.
+>
+> **Qué entra al Sprint 3**: rediseñar las pantallas de pago del modelo "pago único simulado" al modelo "elige plan / suscríbete", y construir el **gating** entre lo que ve un usuario freemium y lo que ve un suscriptor. **El cobro recurrente real (Stripe / Mercado Pago) NO entra al Sprint 3** — sigue simulado (`savePayment`) y su integración se mantiene en el Sprint 5. Ver [[#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]] y [[../producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)]].
+
+Esto **reactiva parcialmente el P2 #9** ("pago real") antes de lo previsto, pero solo la capa de producto/UX; la integración de cobro sigue en el Sprint 5.
 
 ## Hallazgos verificados en código (2026-08-05, siguen vigentes)
 - `savePayment` (`src/app/analizar/actions.ts:269-306`) marca `asmt_payment_status`/`paym_status` como `paid` incondicionalmente — no llama a ningún proveedor de pago. **Se mantiene así a propósito** mientras se define el modelo de cobro.
@@ -58,7 +65,7 @@ Esto conecta directamente con el nivel 2 de éxito de producto de `PRODUCT.md` (
 8. Cerrar y commitear el trabajo de landing en curso.
 
 **P2 — deliberadamente pospuesto:**
-9. Pago real — a la espera de que se defina el modelo de cobro (análisis único vs. suscripción vs. planes).
+9. Pago real — **modelo de cobro decidido el 2026-09-07: suscripción + freemium** (ver [[#Decisión de producto (2026-09-07) — el modelo de cobro es suscripción + freemium]]). Las **pantallas** de pago y el **gating** freemium/suscriptor se adelantan al Sprint 3; la **integración de cobro recurrente real** (Stripe / Mercado Pago) sigue en el Sprint 5.
 10. Panel de administración (soporte/reembolsos) — después del dashboard de usuario, cuando haya volumen real.
 
 ## Plan de trabajo (revisado, con fechas)
@@ -66,8 +73,8 @@ Esto conecta directamente con el nivel 2 de éxito de producto de `PRODUCT.md` (
 | Sprint | Semanas | Fechas objetivo | Foco | Entregables | Estado |
 |---|---|---|---|---|---|
 | 1 | 1-2 | ~~10 ago – 23 ago~~ **inició 5 ago** 2026 | Fundamentos de cuenta | Email transaccional funcionando, tabla `users`, registro/login/reset de password | 🟦 En curso (arrancó 5 días antes de lo previsto) |
-| 2 | 3-4 | 24 ago – 6 sep 2026 | Dashboard de usuario + pulir onboarding del análisis | ~~Assessments vinculados a cuenta~~ (adelantado a Sprint 1), ~~`/mis-evaluaciones` → dashboard `/cuenta`~~ (`43d1112`), **cerrar los gaps críticos del onboarding vs. el rubric** (~~dependencias del negocio~~ hecho 2026-08-28; falta: granularidad "¿habló con clientes?"), ~~corregir errores del paso "Así entendimos tu idea"~~ (`0259101`), ~~catálogo de productos/precios~~ (paso `productos`, 2026-08-28) | ⬜ Pendiente |
-| 3 | 5-6 | 7 sep – 20 sep 2026 | Hardening independiente de pago | PDF real, analytics del funnel, monitoreo de errores, landing cerrada, **+ campos de onboarding pospuestos del Sprint 2** (`pfit_avoided_activities`, modelo de ingreso) | ⬜ Pendiente |
+| 2 | 3-4 | 24 ago – 6 sep 2026 | Dashboard de usuario + pulir onboarding del análisis | ~~Assessments vinculados a cuenta~~ (adelantado a Sprint 1), ~~`/mis-evaluaciones` → dashboard `/cuenta`~~ (`43d1112`), **cerrar los gaps críticos del onboarding vs. el rubric** (~~dependencias del negocio~~ hecho 2026-08-28; ~~granularidad "¿habló con clientes?"~~ hecho 2026-09-02), ~~corregir errores del paso "Así entendimos tu idea"~~ (`0259101`), ~~catálogo de productos/precios~~ (paso `productos`, 2026-08-28) | 🟢 Cerrado a tiempo (2026-09-02) |
+| 3 | 5-6 | 7 sep – 20 sep 2026 | Hardening independiente de pago + modelo de suscripción | PDF real, analytics del funnel, monitoreo de errores, landing cerrada, **+ campos de onboarding pospuestos del Sprint 2** (`pfit_avoided_activities`, modelo de ingreso), **+ rediseño de las pantallas de pago a modelo suscripción + gating freemium** (cobro recurrente real sigue en Sprint 5) | ⬜ Pendiente |
 | 4 | 7-9 | 21 sep – 11 oct 2026 | Beta cerrada con cuentas reales | Grupo pequeño con registro real (pago sigue simulado), feedback sobre valor del historial/cuenta, **en paralelo: análisis y decisión del modelo de pricing** (trabajo del usuario, no de desarrollo) | ⬜ Pendiente |
 | 5 | 10-12 | 12 oct – 1 nov 2026 | Cierre y lanzamiento | Integrar pago real según el modelo ya decidido, panel admin mínimo (ahora con volumen real que gestionar), lanzamiento público controlado | ⬜ Pendiente |
 
@@ -106,7 +113,7 @@ Pulido de UX/robustez sobre lo ya entregado, a pedido del usuario:
 ## Checkpoints clave (fechas duras para revisar tú solo si vas bien)
 - **2026-08-23** — Sprint 1 debe estar cerrado: cuentas y email funcionando de verdad.
 - **2026-09-06** — Sprint 2 cerrado: dashboard de historial en producción + onboarding pulido con las preguntas críticas del rubric recuperadas + errores del paso "Así entendimos tu idea" corregidos.
-- **2026-09-20** — Sprint 3 cerrado: PDF, analytics y monitoreo listos; landing commiteada. Producto listo para invitar gente real.
+- **2026-09-20** — Sprint 3 cerrado: PDF, analytics y monitoreo listos; landing commiteada; **pantallas de pago en modelo suscripción + gating freemium funcionando (cobro simulado)**. Producto listo para invitar gente real.
 - **2026-10-11** — Beta cerrada corrida y con feedback recogido; modelo de pricing ya decidido.
 - **2026-11-01** — Fin de la ventana de 90 días: pago real integrado, lanzamiento público controlado activo. Meta cualitativa/cuantitativa: retención visible en cuentas (Sprints 1-4) + primeros clientes pagados reales (Sprint 5), según el criterio ya explicado en la nota de abajo.
 
@@ -120,7 +127,7 @@ Auditoría completa campo por campo contra [[../../raw/notion/17-rubric-6-dimens
 3. ✅ **HECHO (2026-08-28)** — Dependencias del negocio: grid de checkboxes en el paso `evaluacion`, 6 opciones + "ninguna" (proveedor · 1-2 clientes = mayoría · plataforma externa · permiso/regulación · ubicación física · inventario perecedero), penalización ponderada al `riskScore` (plataforma/permiso +6, resto +3, tope +16) y 3 red flags determinísticas (`detectDependencyRedFlags()`). Verificado end-to-end. Arregla la dimensión 4 (Riesgo), la menos cubierta. Detalle en [[alcance-campos-restantes-sprint-2#Detalle]] y [[../framework/scoring-engine#Penalizaciones al riskScore (alto = más riesgo)]].
 
 **Alto valor, bajo costo:**
-4. Restaurar granularidad de "¿ya habló con clientes?" (niveles, no solo sí/no) — el sí/no es un acantilado binario de 35 pts en `commercialScore`.
+4. ✅ **HECHO (2026-09-02)** — Granularidad de "¿ya habló con clientes?": 5 niveles (`ninguno`/`1_3`/`4_10`/`mas_10`/`ya_clientes`) en `mrsk_customer_evidence_level`, gradiente en `commercialScore` (10→38) y en `riskScore` (delta +8…−8, con el signo del término de clientes corregido). Bool `mrsk_has_talked_to_customers` sincronizado por retrocompat. Detalle en [[alcance-campos-restantes-sprint-2#Granularidad «¿habló con clientes?» — HECHA (2026-09-02)]].
 5. ✅ **HECHO** — `uncertaintyComfortScore` y `processComfortScore` ya se conectan al `personalFitScore` (commit `43d1112`).
 
 **Movido al Sprint 3 (2026-08-28)** — no arreglan nada roto, no entran al MVP:
@@ -165,6 +172,85 @@ Un select (a nivel negocio o por producto en el paso `productos`). Sin LTV en el
 ### CAC (post-beta, no Sprint 3 fijo)
 Ver [[alcance-campos-restantes-sprint-2#CAC — NO en esta etapa]]. Depende del modelo de ingreso y de saber si la gente puede responderlo con sentido.
 
+## Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)
+
+Agregado el 2026-09-07 a pedido del usuario. Cierra la decisión de "modelo de cobro" que estaba abierta desde 2026-08-05. **Solo producto/UX + gating de datos — sin integración de cobro recurrente real** (eso sigue en el Sprint 5; `savePayment` en `src/app/analizar/actions.ts` se mantiene simulado).
+
+### Decisiones tomadas con el usuario (2026-09-07)
+
+| Punto | Decisión |
+|---|---|
+| **Modelo** | Suscripción, no pago único. Más barata: **$99 MXN** (el "Starter" de [[../producto/pricing-y-gtm]]). Otros niveles: **pendientes de definir** — no se diseñan en este sprint. |
+| **Freemium — acceso** | **Requiere cuenta.** El paso `contacto` ya crea la cuenta (flujo existente del módulo de usuarios) — no hay generación anónima. |
+| **Freemium — límite** | **1 evaluación activa a la vez.** Para iniciar otra, hay que suscribirse. No es "1 de por vida" ni "1 al mes" — es una sola evaluación gratuita viva por cuenta. |
+| **Freemium — captura** | **El onboarding NO se recorta** (decisión 2026-09-07). El usuario freemium completa el flujo entero de 9 pasos, exactamente igual que hoy — la intención es que **vea todos los puntos que se evalúan**. El reporte se genera y se guarda completo como siempre. **Lo único que cambia es qué se le muestra.** Cero cambios en el onboarding, el scoring y el pipeline de IA. |
+| **Freemium — resultado** | El reporte **se genera y guarda completo** (mismo pipeline), pero la vista freemium **solo muestra**: card de recomendación (una de las 4 etiquetas) + **snapshot de semáforos de las 6 dimensiones** + **1 riesgo** (el principal). El resto (financiero, fortalezas, plan de validación, análisis por dimensión, fit personal, escalabilidad, tabla de productos) queda **bloqueado con CTA a suscripción**. |
+| **Suscriptor** | Ve el reporte completo (las 13 secciones) + herramientas que se vayan sumando (PDF, etc.). **Al pagar se habilita el modo completo de forma retroactiva**: todas las evaluaciones que el usuario ya generó como freemium se desbloquean, no solo las nuevas. El gating mira el estado de suscripción de la cuenta, no un flag por-evaluación. |
+| **Periodicidad** | **Suscripción mensual** ($99/mes). |
+| **Cancelación / reembolsos** | **Solo cancelación, sin reembolsos.** Al cancelar, el acceso completo se mantiene hasta el **fin del periodo ya pagado** (la fecha límite del último mes pagado); después vuelve a vista freemium. No hay devolución de dinero. |
+| **Cobro real** | **Fuera de este sprint.** Pantalla de "elige plan / suscríbete" apunta al flujo simulado. Integración Stripe / Mercado Pago recurrente → Sprint 5. |
+
+### Alcance técnico implicado (dirección, no spec)
+
+Todo el trabajo se concentra en **estado de suscripción + gating de render**. El onboarding, el scoring, el pipeline de IA y el guardado del reporte **no se tocan**.
+
+- **Estado de suscripción en `users`** (o tabla aparte): algo como `subscription_status` / `subscription_tier` / `subscription_current_period_end`. Por ahora lo setea el flujo simulado; en Sprint 5 lo setea el webhook del proveedor. La `subscription_current_period_end` es la que sostiene el "acceso hasta fin de mes pagado" tras cancelar.
+- **Gating del reporte** (`src/components/**/result-report.tsx` y la vista `/cuenta/evaluaciones/[id]`): un modo "recortado" que renderiza solo recomendación + semáforos + riesgo principal, con bloques de pago sobre el resto. El reporte completo ya existe en BD — es cuestión de **qué se renderiza**, no de qué se genera. Reusar el lenguaje visual de `/ejemplo`. El gate es **una sola condición**: `¿la cuenta tiene suscripción activa (o dentro del periodo pagado)?` → completo; si no → recortado. Aplica igual a evaluaciones nuevas y viejas → **desbloqueo retroactivo automático** al suscribirse.
+- **Límite de "1 evaluación activa"**: guard en `startAssessmentForCurrentUser` / el paso `contacto` — si la cuenta ya tiene una evaluación y no hay suscripción activa, bloquear y llevar a la pantalla de planes. (El onboarding en sí no cambia; lo que se controla es **cuántas veces** se puede iniciar.)
+- **Cancelación**: acción que marca la suscripción como "cancelada al final del periodo" sin cortar el acceso de inmediato — el gate sigue devolviendo "completo" mientras `now < subscription_current_period_end`. Sin flujo de reembolso.
+- **Pantallas de pago**: el paso `pago` (hoy "pago simulado (beta)") pasa a "elige tu plan" con la suscripción de $99/mes y el freemium como opción visible. Copy de [[../experiencia/landing-y-copy]] y el CTA de la landing ("Analizar mi idea por $99 MXN") hay que revisarlos para el modelo freemium + suscripción.
+
+### Puntos cerrados con el usuario (2026-09-07)
+
+1. **Onboarding freemium**: no se recorta nada — flujo completo, el usuario ve todo lo que se evalúa; solo cambia lo que se le muestra al final. El reporte se guarda completo como siempre.
+2. **Evaluaciones freemium viejas**: al pagar se desbloquean **todas** de forma retroactiva (el gate mira el estado de la cuenta, no la evaluación).
+3. **Reembolsos / cancelación**: solo cancelación, **sin reembolsos**. Suscripción mensual; el acceso completo se mantiene hasta el fin del periodo pagado y luego revierte a freemium.
+4. **Precio $99**: **mensual**.
+
+> ⚠️ **Nota de riesgo estratégico**: esto adelanta superficie de monetización antes de la beta cerrada del Sprint 4. El riesgo es acotado porque **es infraestructura de cobro + gating, no features nuevas ni cambios al motor** — pero el freemium recortado sí es una apuesta de conversión que solo la beta puede validar. Ver [[../producto/prd#Riesgo estratégico]].
+
+## Mejoras de producto pedidas el 2026-09-02 (pendientes de alcance)
+
+Dos ideas nuevas del usuario, planteadas después de cerrar Sprint 2. **Ninguna está aún acotada** — las dos necesitan una sesión de alcance con el usuario (mismo formato que [[alcance-campos-restantes-sprint-2]]: qué entra al MVP, qué se pospone, criterio explícito) antes de estimarlas o meterlas a un sprint fijo. Aquí se registra la intención y las preguntas abiertas, no una solución.
+
+Ambas comparten un mismo hilo: hoy el producto es **una sola pasada** — el usuario responde el onboarding, recibe el reporte y ahí termina la conversación. El usuario quiere abrir un **segundo momento de iteración asistida por IA** en dos puntos del flujo.
+
+### A. Segunda iteración de "pulir la idea" en «Así entendimos tu idea»
+
+El paso `confirmacion` ya tuvo un pase grande en el commit `0259101` (2026-08-26), que arregló que "Pulir mi idea con IA" pegara las aclaraciones crudas como transcripción — ver [[../experiencia/flujo-de-onboarding#El paso «confirmacion» («Así entendimos tu idea») — pulido de IA (2026-08-26)]]. Eso resolvió un **bug**; esto es una **mejora de fondo** sobre la misma acción (`refineIdea` en `src/app/analizar/actions.ts`, prompt en `src/lib/ai/prompts/idea-refinement.ts`).
+
+- **Qué pide el usuario**: que "pulir la idea" mejore de verdad la comprensión y el planteamiento de la idea, no solo que reescriba sin muletillas.
+- **Pendiente de que el usuario concrete**: qué se siente pobre hoy en la salida de `refineIdea`. Sin esa lista de dolores puntuales no se puede acotar (igual que las dependencias del negocio necesitaron el detalle de diseño del 2026-08-28 antes de implementarse).
+- **Ángulos candidatos a validar con el usuario**: ¿el pulido debería **hacer preguntas de vuelta** cuando la idea es ambigua, en lugar de asumir? ¿Debería señalar explícitamente qué partes de la idea siguen sin sustento? ¿Cuántas rondas de pulido tienen sentido antes de que se vuelva ruido? Relación con "Analizar más" (`rotateIdeaAssumptions`), que hoy solo rota supuestos.
+- **Dónde caería**: iteración sobre la fase gratis del onboarding; no toca scoring. Bajo/medio costo según el alcance.
+
+### B. Chat de mejora sobre la página de resultado (post-flujo, asistido por IA)
+
+Una vez terminado el flujo y generado el reporte, el usuario quiere poder **conversar con la IA sobre el resultado** para mejorar los distintos puntos del reporte y de la evaluación.
+
+- **Propósito declarado por el usuario**: que el chat ayude a **identificar los puntos pobres del assessment** — lo que el usuario no especificó, o decidió no especificar — y que **el usuario vea reflejado por qué esos puntos importan**. Es, en esencia, un explorador interactivo de puntos ciegos.
+- **Conexión con el diseño**: encaja de lleno con la sección 7 del reporte, "Risks and Blind Spots", que [[../experiencia/reporte-de-resultado]] marca como **la sección más importante**. El chat sería la versión conversacional de esa sección.
+- **Dónde viviría**: la vista `/analizar/resultado` (y probablemente también `/cuenta/evaluaciones/[id]`, para retomar una evaluación vieja).
+
+> ⚠️ **Brecha con el diseño original**: el backlog de Notion ([[../../raw/notion/09-product-backlog]]) lista **"chat IA complejo" como explícitamente fuera de alcance** del MVP, y "asesor IA" aparece recién en "Future SaaS". Esta idea reabre ese punto. No es necesariamente un error —el producto ya se ha adelantado a varias "Future Entities" (cuentas, historial)— pero es una divergencia deliberada que hay que decidir a ojos abiertos. Registrada en [[evolucion-del-producto#11. Chat de iteración sobre el reporte — reabre un "fuera de alcance" de Notion (2026-09-02)]].
+
+> ⚠️ **Riesgo estratégico del PRD**: [[../producto/prd#Riesgo estratégico]] advierte contra *"construir demasiada funcionalidad antes de confirmar que la gente paga"*. Un chat con IA sobre el reporte es superficie de producto y **costo de API recurrente por usuario** (ver [[../framework/prompts-de-ia#AI Cost Control (por qué se diseñó así)]]). Candidato natural a: (a) atarlo a un plan de pago (Pro/Expert de [[../producto/pricing-y-gtm]]), y/o (b) posponerlo hasta después de la beta cerrada del Sprint 4, cuando haya señal de que el reporte de una sola pasada ya genera valor suficiente.
+
+- **Preguntas abiertas para la sesión de alcance**:
+  - ¿El chat **solo explica** (Q&A de solo lectura sobre por qué un punto importa), o también **deja completar los datos faltantes** y **re-corre el scoring/reporte** con la información nueva? Lo segundo es mucho más grande y toca el motor determinístico.
+  - ¿Cómo decide el chat cuáles son "los puntos pobres"? Candidato: aprovechar las señales que ya existen — campos de onboarding sin responder, `ascs_red_flags`, dimensiones con score bajo, `whyItMatters`/`howToReduce` ya generados.
+  - ¿Se persiste la conversación? ¿Por assessment, ligada a `user_id`?
+  - ¿Límite de mensajes / control de costo? ¿Modelo barato vs. el de razonamiento del reporte?
+  - Guardrails: el chat hereda los del reporte (no prometer éxito, no inventar datos de mercado, no asesoría legal/fiscal) — ver [[../framework/prompts-de-ia#Guardrails (nunca decir)]].
+- **Tamaño estimado (grueso, sin acotar)**: es la más grande de las dos por mucho. Probablemente **su propio sprint**, no un punto dentro de otro. Si incluye re-correr el scoring, más todavía.
+
+### Ubicación tentativa en el plan
+
+| Mejora | Depende de | Ubicación tentativa |
+|---|---|---|
+| A · Pulir la idea (2ª iteración) | Que el usuario liste los dolores puntuales | Sprint 3 o una iteración de pulido, según alcance |
+| B · Chat sobre el reporte | Sesión de alcance + decisión de pricing + señal de valor de la beta | **Post-Sprint 4** (después de la beta cerrada), o antes solo si se decide como feature de un plan de pago. Su propio sprint. |
+
 ## Estrategias comerciales (sin cambios respecto a la versión anterior)
 1. `/ejemplo` como imán de leads.
 2. Concierge antes que escala para los primeros 10-20 usuarios.
@@ -179,6 +265,7 @@ Ver [[alcance-campos-restantes-sprint-2#CAC — NO en esta etapa]]. Depende del 
 ## Historial de la priorización
 - **2026-08-05 (v1)**: pago real como P0 #1, historial/dashboard no mencionado como prioridad nueva (ya existía como feature rota, ver [[../arquitectura/historial-de-evaluaciones]]).
 - **2026-08-05 (v2, esta versión)**: usuario pide priorizar módulo de usuarios/cuentas + dashboard de historial; pago baja a P2 explícitamente hasta definir modelo de cobro.
+- **2026-09-07 (v3)**: usuario define el modelo de cobro = **suscripción + freemium** ($99 el nivel más barato, resto pendiente). Las pantallas de pago y el gating freemium/suscriptor se adelantan al Sprint 3; la integración de cobro recurrente real sigue en el Sprint 5.
 
 ## Ver también
 [[evolucion-del-producto]] · [[../producto/pricing-y-gtm]] · [[../arquitectura/manejo-de-errores-y-reembolsos]] · [[../arquitectura/historial-de-evaluaciones]] · [[../arquitectura/modelo-de-datos]] · [[../overview]]

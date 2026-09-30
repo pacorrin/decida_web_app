@@ -49,6 +49,12 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 |---|---|
 | [[wiki/marca/sistema-de-diseno]] | "Diagnóstico en Papel Blanco" — paleta, tipografía, reglas |
 
+## Tareas
+| Página | Resumen |
+|---|---|
+| [[wiki/tareas/tablero]] | Estado por sprint, orden recomendado para retomar, tareas de Sprints 4-5 y decisiones pendientes |
+| [[wiki/tareas/sprint-3]] | Checklist del Sprint 3 (suscripción + freemium, Resend, monitoreo, analytics, landing, PDF) |
+
 ## Decisiones
 | Página | Resumen |
 |---|---|

@@ -1,7 +1,7 @@
 ---
 type: overview
 tags: [decida, hub]
-updated: 2026-09-02
+updated: 2026-09-07
 ---
 
 # Decida — Overview
@@ -66,22 +66,26 @@ Salida siempre es una de 4: **Proceed small test / Validate first / Adjust idea 
 
 - No existen minutas de reuniones de Decida en Notion todavía — ver [[reuniones/minutas]].
 - No hay evidencia de clientes reales, testimonios o métricas de validación registradas en ninguna fuente (ni Notion ni código) — `PRODUCT.md` lo marca explícitamente como "no fabricar".
-- El pago en producción es simulado (beta), y se pospuso deliberadamente hasta definir el modelo de cobro — ver [[producto/pricing-y-gtm]] y [[decisiones/plan-lanzamiento-60-90-dias]].
+- El pago en producción es simulado (beta). **Modelo de cobro decidido el 2026-09-07: suscripción + freemium** ($99 el nivel más barato). Las pantallas de pago + el gating freemium/suscriptor entran al Sprint 3; el cobro recurrente real (Stripe / Mercado Pago) sigue en el Sprint 5 — ver [[producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)]] y [[decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]].
 - ~~El score de "Nivel de riesgo" está roto en producción~~ — ✅ resuelto (commit `43d1112` + cruce inversión-vs-capital y red flags determinísticas del 2026-08-27). Ver [[framework/scoring-engine]].
 - `/mis-evaluaciones` fue reemplazado por `/cuenta` (commit `43d1112`) — la migración del sistema passwordless viejo ya no es un gap abierto.
 
 > ✅ **Bug del reporte resuelto (2026-09-02)**: Fortalezas, Riesgos y Plan de validación fallaban su parseo JSON en el 100% de los reportes y caían a textos genéricos. Ver [[experiencia/reporte-de-resultado#🔴→✅ Las 3 secciones JSON estaban rotas al 100% (arreglado 2026-09-02)]].
 
-## Estado de desarrollo (actualizado 2026-08-28)
+## Estado de desarrollo (actualizado 2026-09-02)
 
 Hay un plan activo de lanzamiento en 60-90 días con fechas y checkpoints — ver [[decisiones/plan-lanzamiento-60-90-dias]].
 
 **Sprint 1** (fundamentos de cuenta): prácticamente cerrado — auth con contraseña, dashboard `/cuenta`, recuperación de contraseña en wizard de 3 pantallas. Pendiente real no-código = verificar un dominio propio en Resend antes de la beta.
 
-**Sprint 2** (pulir onboarding): en curso.
+**Sprint 2** (pulir onboarding): ✅ **cerrado 2026-09-02**.
 - ✅ Pulido del paso "Así entendimos tu idea" (commit `0259101`).
 - ✅ Score de "Nivel de riesgo" arreglado + cruce inversión-vs-capital + red flags determinísticas (commits `43d1112`, `936351d`).
 - ✅ Paso nuevo `productos` — catálogo de productos/servicios con precio/costo/volumen; absorbe los campos únicos de precio de `evaluacion` (2026-08-28, sin commitear al cierre).
 - ✅ Dependencias del negocio — grid de checkboxes en `evaluacion`, penalización ponderada al `riskScore` + 3 red flags (2026-08-28, sin commitear).
-- Pendiente para cerrar Sprint 2: solo granularidad de "¿habló con clientes?" (5 niveles vs. sí/no). Decisión de alcance en [[decisiones/alcance-campos-restantes-sprint-2]].
+- ✅ Granularidad de "¿habló con clientes?" — 5 niveles en `mrsk_customer_evidence_level`, gradiente en `commercialScore` y `riskScore` (2026-09-02, sin commitear). Ver [[decisiones/alcance-campos-restantes-sprint-2]].
 - Fuera del MVP (2026-08-28): `pfit_avoided_activities` y modelo de ingreso → Sprint 3; CAC → post-beta.
+
+**Sprint 3** (hardening + modelo de suscripción, ventana 7–20 sep): ⬜ en curso. PDF real, analytics, monitoreo de errores, landing cerrada, campos de onboarding pospuestos (`pfit_avoided_activities`, modelo de ingreso), **+ agregado 2026-09-07: rediseño de pantallas de pago a modelo suscripción + gating freemium** (cobro recurrente real sigue en Sprint 5). Ver [[decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]].
+
+**Mejoras nuevas del usuario (2026-09-02), sin acotar**: (a) 2ª iteración de "pulir la idea" en «Así entendimos tu idea»; (b) chat asistido por IA sobre la página de resultado para explorar puntos ciegos — reabre "chat IA complejo" (fuera de alcance en Notion). Registro en [[decisiones/plan-lanzamiento-60-90-dias#Mejoras de producto pedidas el 2026-09-02 (pendientes de alcance)]].

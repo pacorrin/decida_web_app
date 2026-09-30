@@ -41,6 +41,9 @@ wiki/
 │   └── sistema-de-diseno.md
 ├── decisiones/
 │   └── evolucion-del-producto.md    ← registro vivo de brechas Notion vs código
+├── tareas/                          ← solo tareas y avance, sin reglas de negocio
+│   ├── tablero.md                   ← estado por sprint y orden para retomar
+│   └── sprint-3.md                  ← checklist del sprint en curso
 └── reuniones/
     └── minutas.md                   ← índice; hoy documenta que NO hay minutas de Decida aún
 ```
@@ -52,7 +55,7 @@ Cuando una categoría crezca (ej. varias minutas reales), conviértela en carpet
 Cada página lleva frontmatter:
 ```yaml
 ---
-type: overview | product | framework | experiencia | arquitectura | marca | decision-log | reuniones | reference | concept
+type: overview | product | framework | experiencia | arquitectura | marca | decision-log | reuniones | tareas | reference | concept
 tags: [decida, ...]
 updated: YYYY-MM-DD
 ---
