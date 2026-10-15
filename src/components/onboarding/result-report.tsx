@@ -780,7 +780,7 @@ function LockedSection({
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">{description}</p>
             <Link
-              href="/analizar/pago"
+              href="/cuenta/suscripcion"
               className="text-sm font-medium text-primary underline-offset-4 hover:underline"
             >
               Desbloquear con la suscripción
@@ -837,7 +837,7 @@ function FullReportCta() {
             ))}
           </ul>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <PrimaryCtaButton href="/analizar/pago">
+            <PrimaryCtaButton href="/cuenta/suscripcion">
               Suscribirme para ver el reporte completo
             </PrimaryCtaButton>
           </div>

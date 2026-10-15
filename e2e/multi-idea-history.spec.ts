@@ -24,13 +24,13 @@ test.describe("Multi-idea y historial", () => {
     await expect(page.getByTestId("analyze-another-idea")).toBeVisible();
     await page.getByTestId("analyze-another-idea").click();
 
-    await expect(page).toHaveURL(/\/analizar\/pago\?limite=1/, {
+    await expect(page).toHaveURL(/\/cuenta\/suscripcion\?limite=1/, {
       timeout: 30_000,
     });
     await expect(
       page.getByText("La cuenta gratuita incluye una evaluación y ya la usaste.")
     ).toBeVisible();
-    await expect(page.getByTestId("payment-submit")).toBeVisible();
+    await expect(page.getByTestId("subscribe-submit")).toBeVisible();
   });
 
   test("el historial en /cuenta lista la evaluación y abre su reporte recortado", async ({

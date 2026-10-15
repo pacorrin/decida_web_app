@@ -26,7 +26,7 @@ Todas las tablas usan **prefijos de 4 letras** por entidad en snake_case (`asmt_
 | `market_risk_inputs` | `mrsk_` | 1:1 | Validación con clientes, competencia, canal, dependencias |
 | `assessment_scores` | `ascs_` | 1:1 | Scores + señales por dimensión, recomendación final, red flags, versión |
 | `assessment_reports` | `arep_` | 1:1 | Contenido generado del reporte, modelo/prompt usado |
-| `payments` | `paym_` | 1:N | Registro(s) de pago |
+| `payments` | `paym_` | 1:N | Registro(s) de pago. Desde 2026-10-14 también pertenece a la cuenta (`paym_user_id`); `paym_asmt_id` es opcional |
 | `feedback` | `fdbk_` | 1:1 | Encuesta post-reporte (rating, claridad, utilidad, testimonio) |
 | `verification_codes` | `vc_` | — | Códigos de verificación por email (no ligado a assessment); reutilizada para 3 propósitos: `history_access`, `signup_verification`, `password_reset` |
 | `history_sessions` | `hses_` | — | Sesiones de acceso a `/mis-evaluaciones` por email (mecanismo passwordless, ver [[historial-de-evaluaciones]]) |
@@ -35,7 +35,7 @@ Todas las tablas usan **prefijos de 4 letras** por entidad en snake_case (`asmt_
 
 > Suscripción en `users` (S3-07, 2026-10-14): `user_subscription_status` (none/active/canceled/past_due), `user_subscription_period_end` y `user_subscription_canceled_at`. Cancelar solo cambia el estado y la fecha de cancelación; el acceso completo llega hasta `period_end` (ver [[manejo-de-errores-y-reembolsos]]).
 >
-> S3-06 (2026-10-14): suscribirse (simulado) escribe en `users`: `status=active`, `plan=monthly`, `period_end` = ahora + 1 mes, `canceled_at=null`, `provider=simulated`, `provider_id=sim_<user>_<ts>`, y crea una fila en `payments` (`paym_provider=simulated`, $99 MXN) ligada a la evaluación desde la que se suscribió. Ya no se toca `asmt_status`/`asmt_payment_status` al suscribirse; el flujo no depende de ellos. Sin cambios de schema.
+> S3-06 (2026-10-14): suscribirse (simulado) escribe en `users`: `status=active`, `plan=monthly`, `period_end` = ahora + 1 mes, `canceled_at=null`, `provider=simulated`, `provider_id=sim_<user>_<ts>`, y crea una fila en `payments` (`paym_provider=simulated`, $99 MXN) ligada a la cuenta (`paym_user_id`) y, si se suscribió desde el onboarding, a esa evaluación. Ya no se toca `asmt_status`/`asmt_payment_status` al suscribirse; el flujo no depende de ellos. Cambio de schema posterior (2026-10-14): `paym_asmt_id` pasó a opcional y se agregó `paym_user_id`, para suscribirse desde `/cuenta/suscripcion` sin evaluación.
 
 Esto coincide casi 1:1 con las "Core Entities" que Notion proponía como alternativa más escalable — con adiciones que Notion no contemplaba: `verification_codes` y `history_sessions` (que sostienen [[historial-de-evaluaciones]]), y ahora `users`/`user_sessions` (que sostienen [[modulo-de-usuarios-y-autenticacion]]).
 

@@ -95,7 +95,7 @@ test.describe("Freemium → suscripción → cancelación", () => {
     await test.step("Segunda evaluación: límite freemium → planes con aviso", async () => {
       await page.goto("/cuenta");
       await page.getByRole("button", { name: "Analizar una idea" }).click();
-      await expect(page).toHaveURL(/\/analizar\/pago\?limite=1/, {
+      await expect(page).toHaveURL(/\/cuenta\/suscripcion\?limite=1/, {
         timeout: 30_000,
       });
       await expect(
@@ -107,15 +107,19 @@ test.describe("Freemium → suscripción → cancelación", () => {
         page.getByTestId("account-assessment-list").locator("li")
       ).toHaveCount(1);
       await page.getByRole("button", { name: "Analizar una idea" }).click();
-      await expect(page).toHaveURL(/\/analizar\/pago\?limite=1/, {
+      await expect(page).toHaveURL(/\/cuenta\/suscripcion\?limite=1/, {
         timeout: 30_000,
       });
     });
 
     await test.step("Suscripción simulada ($99 MXN/mes)", async () => {
-      await expect(page.getByTestId("payment-submit")).toContainText("$99");
-      await page.getByTestId("payment-submit").click();
-      await expect(page).toHaveURL(/\/analizar\/perfil/, { timeout: 30_000 });
+      await expect(page.getByTestId("subscribe-submit")).toContainText("$99");
+      await page.getByTestId("subscribe-submit").click();
+      await expect(page.getByTestId("subscription-status")).toContainText(
+        /Activa, se renueva el/,
+        { timeout: 30_000 }
+      );
+      await expect(page).toHaveURL(/\/cuenta\/suscripcion/);
 
       const sub = await getUserSubscription(email);
       expect(sub.status).toBe("active");

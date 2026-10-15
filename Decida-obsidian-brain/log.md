@@ -418,3 +418,7 @@ Actualizado: `wiki/tareas/sprint-3.md` (S3-06 hecha), `wiki/tareas/tablero.md`, 
 Se auditó la cobertura (74 tests) y se completaron los huecos: `ensureAssessmentForCurrentUser` con Prisma/cookies mockeados, ciclo de vida de la suscripción en el tiempo y la acción `cancelSubscription` (ahora 92 tests Vitest). Se repararon los tres specs e2e existentes (contraseña en `contacto`, `payment-free`, historial en `/cuenta`) y se agregó `e2e/subscription-flow.spec.ts` con el recorrido freemium → límite → suscripción → desbloqueo retroactivo → cancelación → vencimiento por SQL; 14/14 e2e en verde. Bug real hallado y corregido: `step="10"` en precio/costo de `products-form.tsx` bloqueaba valores que no fueran múltiplos de 10. El «Internal Server Error» de `/analizar/confirmacion` no se reprodujo; probable ruido del entorno (había un `next dev` huérfano colgado).
 
 Actualizado: `wiki/tareas/sprint-3.md` (S3-08 hecha), `wiki/tareas/tablero.md`, `wiki/arquitectura/stack-tecnico.md`.
+
+## [2026-10-14] query | Página de suscripción dentro de la cuenta
+
+El usuario notó que «Suscribirme» en `/cuenta/perfil` llevaba a `/analizar/idea`, porque apuntaba al paso de pago del onboarding. Se creó `/cuenta/suscripcion` con el estado de la suscripción, la comparación de planes, suscribirse (simulado), cancelar y reactivar, y se redirigieron los enlaces (perfil, candados del reporte, límite de 1 evaluación). `payments` ahora puede pertenecer a una cuenta sin evaluación (`paym_user_id`, `paym_asmt_id` opcional). Actualizado: `wiki/tareas/sprint-3.md`.

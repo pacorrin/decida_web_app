@@ -1,3 +1,4 @@
+import type { users } from "@/generated/prisma/client";
 import { hasFullAccess } from "./access";
 
 export const SUBSCRIPTION_PLAN_ID = "monthly";
@@ -58,3 +59,26 @@ export function shouldActivate(
   if (user.user_subscription_status === "active") return !hasFullAccess(user, now);
   return true; // none, past_due o canceled (re-suscripción)
 }
+
+/**
+ * Una suscripción cancelada que todavía está dentro del periodo pagado se
+ * reactiva sin cobro y sin mover `period_end`: ya pagó ese periodo.
+ */
+export function canReactivate(
+  user: Pick<
+    users,
+    "user_subscription_status" | "user_subscription_period_end"
+  >,
+  now: Date = new Date(),
+): boolean {
+  return (
+    user.user_subscription_status === "canceled" &&
+    !!user.user_subscription_period_end &&
+    user.user_subscription_period_end > now
+  );
+}
+
+export const REACTIVATION = {
+  user_subscription_status: "active",
+  user_subscription_canceled_at: null,
+} as const;

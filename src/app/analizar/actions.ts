@@ -30,14 +30,8 @@ import {
   type RefineIdeaState,
 } from "@/lib/onboarding/schemas";
 import type { z } from "zod";
-import {
-  SIMULATED_PROVIDER,
-  SUBSCRIPTION_CURRENCY,
-  SUBSCRIPTION_PLAN_ID,
-  SUBSCRIPTION_PRICE_MXN,
-  buildSimulatedActivation,
-  shouldActivate,
-} from "@/lib/subscription/activate";
+import { SUBSCRIPTION_PLAN_ID } from "@/lib/subscription/activate";
+import { activateSimulatedSubscription } from "@/lib/subscription/subscribe";
 import {
   getCurrentAssessment,
   getAssessmentById,
@@ -410,24 +404,7 @@ export async function savePayment(
     };
   }
 
-  if (shouldActivate(user)) {
-    const now = new Date();
-    await prisma.users.update({
-      where: { user_id: user.user_id },
-      data: buildSimulatedActivation(user.user_id, now),
-    });
-
-    await prisma.payments.create({
-      data: {
-        paym_asmt_id: assessment.asmt_id,
-        paym_provider: SIMULATED_PROVIDER,
-        paym_amount: SUBSCRIPTION_PRICE_MXN,
-        paym_currency: SUBSCRIPTION_CURRENCY,
-        paym_status: "paid",
-        paym_paid_at: now,
-      },
-    });
-  }
+  await activateSimulatedSubscription(user, assessment.asmt_id);
 
   redirectToStep("perfil");
 }

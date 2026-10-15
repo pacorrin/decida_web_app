@@ -49,7 +49,7 @@ export async function ensureAssessmentForCurrentUser(): Promise<EnsureAssessment
   });
 
   if (decision === "limit") {
-    // Point the cookie at their evaluation so the plans screen is reachable.
+    // Leave the cookie on their existing evaluation, not on a new one.
     if (latest) await setAssessmentCookie(latest.asmt_id);
     return { status: "limit_reached" };
   }

@@ -1,4 +1,6 @@
-export const PLANS_PATH = "/analizar/pago?limite=1";
+/** Pantalla de planes de la cuenta (no depende de ninguna evaluación). */
+export const SUBSCRIPTION_PATH = "/cuenta/suscripcion";
+export const PLANS_PATH = `${SUBSCRIPTION_PATH}?limite=1`;
 
 export type AssessmentStartDecision = "create" | "resume" | "limit";
 

@@ -86,8 +86,16 @@ export default async function PerfilPage() {
               esa fecha.
             </p>
           )}
+          {(sub.kind === "active" || sub.kind === "canceled") && (
+            <Link
+              href="/cuenta/suscripcion"
+              className="inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
+            >
+              Ver planes y detalles
+            </Link>
+          )}
           {(sub.kind === "none" || sub.kind === "expired") && (
-            <Link href="/analizar/pago" className={buttonVariants()}>
+            <Link href="/cuenta/suscripcion" className={buttonVariants()}>
               Suscribirme
             </Link>
           )}

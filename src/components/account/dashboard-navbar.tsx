@@ -50,6 +50,9 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
             <DropdownMenuItem render={<Link href="/cuenta/perfil" />}>
               Perfil
             </DropdownMenuItem>
+            <DropdownMenuItem render={<Link href="/cuenta/suscripcion" />}>
+              Suscripción
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               data-testid="dashboard-logout"

@@ -250,7 +250,8 @@ model assessment_reports {
 
 model payments {
   paym_id                String         @id @default(cuid())
-  paym_asmt_id           String
+  paym_asmt_id           String?
+  paym_user_id           String?
   paym_provider          String
   paym_provider_session_id String?
   paym_provider_payment_id String?
@@ -261,9 +262,11 @@ model payments {
   paym_paid_at           DateTime?
   paym_raw_payload       Json?
 
-  assessment assessments @relation(fields: [paym_asmt_id], references: [asmt_id], onDelete: Cascade)
+  assessment assessments? @relation(fields: [paym_asmt_id], references: [asmt_id], onDelete: Cascade)
+  user       users?       @relation(fields: [paym_user_id], references: [user_id], onDelete: SetNull)
 
   @@index([paym_asmt_id])
+  @@index([paym_user_id])
   @@index([paym_status])
   @@map("payments")
 }
@@ -286,6 +289,7 @@ model users {
 
   user_sessions user_sessions[]
   assessments   assessments[]
+  payments      payments[]
 
   @@map("users")
 }
