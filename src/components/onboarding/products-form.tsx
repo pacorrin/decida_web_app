@@ -198,7 +198,7 @@ export function ProductsForm({
                     type="number"
                     inputMode="decimal"
                     min={0}
-                    step="10"
+                    step="any"
                     value={row.price}
                     onChange={(e) => update(row.id, { price: e.target.value })}
                     required
@@ -216,7 +216,7 @@ export function ProductsForm({
                     type="number"
                     inputMode="decimal"
                     min={0}
-                    step="10"
+                    step="any"
                     value={row.variableCost}
                     onChange={(e) =>
                       update(row.id, { variableCost: e.target.value })

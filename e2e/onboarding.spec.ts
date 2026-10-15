@@ -1,4 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
+import { E2E_PASSWORD } from "./db-helpers";
+import { cleanupTrackedData, trackedEmail } from "./test-data";
 
 /**
  * E2E del onboarding de análisis de una idea de negocio (`/analizar`).
@@ -348,8 +350,7 @@ const SCENARIOS: Scenario[] = [
 
 /** Correo único por corrida para no chocar con datos previos. */
 function uniqueEmail(): string {
-  const stamp = `${Date.now()}${Math.floor(Math.random() * 100000)}`;
-  return `e2e.onboarding+${stamp}@decida.test`;
+  return trackedEmail("e2e.onboarding");
 }
 
 async function selectOptionCard(
@@ -357,9 +358,13 @@ async function selectOptionCard(
   name: string,
   value: string
 ): Promise<void> {
-  await page
-    .locator(`[data-testid="option-card-${name}-${value}"]`)
-    .check({ force: true });
+  const card = page.locator(`[data-testid="option-card-${name}-${value}"]`);
+  // Las tarjetas son radios controlados por React: un clic antes de la
+  // hidratación se pierde ("did not change its state"), así que se reintenta.
+  await expect(async () => {
+    await card.check({ force: true, timeout: 3_000 });
+    await expect(card).toBeChecked({ timeout: 1_000 });
+  }).toPass({ timeout: 20_000 });
 }
 
 async function completarContacto(page: Page): Promise<void> {
@@ -374,6 +379,7 @@ async function completarContacto(page: Page): Promise<void> {
     await page.fill("#email", uniqueEmail());
     await page.fill("#phone", "5512345678");
     await page.selectOption("#country", "MX");
+    await page.fill("#password", E2E_PASSWORD);
     await page.check("#acceptedTerms");
 
     await page.getByRole("button", { name: "Continuar" }).click();
@@ -408,9 +414,10 @@ async function completarConfirmacion(page: Page): Promise<void> {
 }
 
 async function completarPago(page: Page): Promise<void> {
-  await test.step("Paso 4 · Pago simulado (beta)", async () => {
+  await test.step("Paso 4 · Planes (continuar gratis)", async () => {
     await expect(page.getByText(/pago\s+simulado/i)).toBeVisible();
-    await page.getByTestId("payment-submit").click();
+    // Freemium: se sigue el onboarding sin suscribirse; el reporte sale recortado.
+    await page.getByTestId("payment-free").click();
     await expect(page).toHaveURL(/\/analizar\/perfil/, { timeout: 30_000 });
   });
 }
@@ -513,6 +520,12 @@ async function verificarResultado(page: Page): Promise<void> {
       page.getByRole("heading", { name: "Semáforos por dimensión" })
     ).toBeVisible();
 
+    // Cuenta gratuita: vista recortada con secciones bloqueadas.
+    await expect(page.getByText("Lo que desbloquea la suscripción")).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Desbloquear con la suscripción" })
+    ).toHaveCount(4);
+
     // No debe caer en el estado de error de generación.
     await expect(
       page.getByRole("heading", { name: "Error al generar tu reporte" })
@@ -520,19 +533,25 @@ async function verificarResultado(page: Page): Promise<void> {
   });
 }
 
+/** Los radios del feedback son `sr-only`: a veces quedan fuera del viewport. */
+async function marcarRadioSrOnly(page: Page, name: string): Promise<void> {
+  const radio = page.getByRole("radio", { name });
+  await expect(async () => {
+    await radio.scrollIntoViewIfNeeded();
+    await radio.check({ force: true, timeout: 3_000 });
+    await expect(radio).toBeChecked({ timeout: 1_000 });
+  }).toPass({ timeout: 15_000 });
+}
+
 async function enviarFeedback(page: Page): Promise<void> {
   await test.step("Feedback del diagnóstico", async () => {
     // Los radios son sr-only; se marcan con force.
-    await page
-      .getByRole("radio", { name: "5 — Muy útil" })
-      .check({ force: true });
+    await marcarRadioSrOnly(page, "5 — Muy útil");
     await page.fill(
       "#feedback-comment",
       "Muy claro y accionable, me ayudó a entender los números."
     );
-    await page
-      .getByRole("radio", { name: "Sí, la recomendaría" })
-      .check({ force: true });
+    await marcarRadioSrOnly(page, "Sí, la recomendaría");
 
     await page.getByRole("button", { name: "Enviar feedback" }).click();
 
@@ -543,6 +562,10 @@ async function enviarFeedback(page: Page): Promise<void> {
 }
 
 test.describe("Onboarding de análisis de idea — múltiples giros", () => {
+  test.afterAll(async () => {
+    await cleanupTrackedData();
+  });
+
   for (const scenario of SCENARIOS) {
     test(`genera diagnóstico para: ${scenario.nombre}`, async ({ page }) => {
       await completarContacto(page);
@@ -568,6 +591,7 @@ test.describe("Onboarding de análisis de idea — múltiples giros", () => {
     await page.fill("#email", uniqueEmail());
     await page.fill("#phone", "123"); // < 8 caracteres
     await page.selectOption("#country", "MX");
+    await page.fill("#password", E2E_PASSWORD);
     await page.check("#acceptedTerms");
 
     await page.getByRole("button", { name: "Continuar" }).click();

@@ -3,12 +3,9 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { setAssessmentCookie } from "@/lib/onboarding/session-server";
-import { getStepBySlug } from "@/lib/onboarding/steps";
 import {
   clearHistorySessionCookie,
   createHistorySession,
-  getHistorySession,
 } from "@/lib/history/session-server";
 import {
   normalizeEmail,
@@ -117,31 +114,6 @@ export async function verifyHistoryCode(
 export async function signOutHistory(): Promise<void> {
   await clearHistorySessionCookie();
   redirect("/mis-evaluaciones");
-}
-
-export async function startNewAssessmentFromHistory(): Promise<void> {
-  const session = await getHistorySession();
-  if (!session) {
-    redirect("/mis-evaluaciones");
-  }
-
-  const latest = await prisma.assessments.findFirst({
-    where: { asmt_email: session.hses_email },
-    orderBy: { asmt_created_at: "desc" },
-  });
-
-  const newAssessment = await prisma.assessments.create({
-    data: {
-      asmt_email: session.hses_email,
-      asmt_name: latest?.asmt_name ?? null,
-      asmt_phone: latest?.asmt_phone ?? null,
-      asmt_country: latest?.asmt_country ?? null,
-      asmt_started_at: new Date(),
-    },
-  });
-
-  await setAssessmentCookie(newAssessment.asmt_id);
-  redirect(getStepBySlug("contacto").path);
 }
 
 export async function getHistoryAssessments(email: string) {

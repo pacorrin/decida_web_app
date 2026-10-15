@@ -1,6 +1,5 @@
 import {
   isIdeaConfirmed,
-  isPaid,
   type AssessmentBase,
 } from "./assessment-utils";
 import {
@@ -46,10 +45,9 @@ export function getResumeStep(
     return "confirmacion";
   }
 
-  if (!isPaid(assessment)) {
-    return "pago";
-  }
-
+  // Freemium: ya no se bloquea el onboarding esperando un pago. La pantalla
+  // de planes (pago) se ofrece tras confirmar la idea, pero el usuario puede
+  // continuar gratis; lo que cambia es lo que ve del reporte (gate por cuenta).
   if (!isSituationComplete(assessment.assessment_profile)) {
     return "perfil";
   }
@@ -99,9 +97,9 @@ export function canAccessStep(
     "evaluacion",
     "resultado",
   ];
-  if (paidSteps.includes(slug) && isPaid(assessment)) {
+  if (paidSteps.includes(slug) && isIdeaConfirmed(assessment)) {
     const prerequisites: Record<string, boolean> = {
-      perfil: isPaid(assessment),
+      perfil: true,
       ajuste: isSituationComplete(assessment.assessment_profile),
       productos: isFitComplete(assessment.personal_fit_answers),
       evaluacion: hasProducts(assessment),

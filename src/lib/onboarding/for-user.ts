@@ -9,6 +9,13 @@ import {
   type AssessmentWithRelations,
 } from "./session-server";
 import { isAssessmentCompleted } from "./assessment-utils";
+import { hasFullAccess } from "@/lib/subscription/access";
+import { decideAssessmentStart } from "@/lib/subscription/limits";
+
+export type EnsureAssessmentResult =
+  | { status: "anonymous" }
+  | { status: "limit_reached" }
+  | { status: "ready"; assessment: AssessmentWithRelations };
 
 /**
  * If a user is logged in, returns an assessment tied to their account —
@@ -16,9 +23,9 @@ import { isAssessmentCompleted } from "./assessment-utils";
  * them, otherwise provisioning a fresh one pre-filled from their profile.
  * Returns null for anonymous visitors (no-op, existing flow applies).
  */
-export async function ensureAssessmentForCurrentUser(): Promise<AssessmentWithRelations | null> {
+export async function ensureAssessmentForCurrentUser(): Promise<EnsureAssessmentResult> {
   const user = await getCurrentUser();
-  if (!user) return null;
+  if (!user) return { status: "anonymous" };
 
   const current = await getCurrentAssessment();
   if (
@@ -26,7 +33,30 @@ export async function ensureAssessmentForCurrentUser(): Promise<AssessmentWithRe
     current.asmt_user_id === user.user_id &&
     !isAssessmentCompleted(current)
   ) {
-    return current;
+    return { status: "ready", assessment: current };
+  }
+
+  const latestRow = await prisma.assessments.findFirst({
+    where: { asmt_user_id: user.user_id },
+    orderBy: { asmt_created_at: "desc" },
+    select: { asmt_id: true },
+  });
+  const latest = latestRow ? await getAssessmentById(latestRow.asmt_id) : null;
+
+  const decision = decideAssessmentStart({
+    fullAccess: hasFullAccess(user),
+    latest: latest ? { completed: isAssessmentCompleted(latest) } : null,
+  });
+
+  if (decision === "limit") {
+    // Point the cookie at their evaluation so the plans screen is reachable.
+    if (latest) await setAssessmentCookie(latest.asmt_id);
+    return { status: "limit_reached" };
+  }
+
+  if (decision === "resume" && latest) {
+    await setAssessmentCookie(latest.asmt_id);
+    return { status: "ready", assessment: latest };
   }
 
   const assessment = await prisma.assessments.create({
@@ -40,5 +70,8 @@ export async function ensureAssessmentForCurrentUser(): Promise<AssessmentWithRe
   });
 
   await setAssessmentCookie(assessment.asmt_id);
-  return getAssessmentById(assessment.asmt_id);
+  const created = await getAssessmentById(assessment.asmt_id);
+  return created
+    ? { status: "ready", assessment: created }
+    : { status: "anonymous" };
 }

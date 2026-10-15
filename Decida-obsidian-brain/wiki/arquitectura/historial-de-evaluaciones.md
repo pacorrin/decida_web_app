@@ -20,6 +20,8 @@ Esta feature es el ejemplo más claro de un **non-goal explícito de Notion que 
 - **`history_sessions`** (`hses_email`, `hses_token`, expiración) — una vez verificado, se emite un token de sesión temporal para listar y reabrir sus assessments completados, sin necesidad de una cuenta con contraseña.
 - Rutas: `/mis-evaluaciones` (lista) y `/mis-evaluaciones/[id]` (detalle de una evaluación).
 
+> Actualización 2026-10-14: la sección de perfil de la cuenta (`/cuenta/perfil`) ahora incluye un bloque «Suscripción» con el estado (Sin suscripción / Activa / Cancelada con fecha de fin de acceso / Vencida), el botón para cancelar y el enlace a `/analizar/pago` para suscribirse. Ver [[manejo-de-errores-y-reembolsos#Cambio a suscripción (2026-09-07) — cancelación, sin reembolsos]].
+
 Esto es un login **ligero** — no contradice del todo el non-goal "sin login completo" del PRD (no hay contraseñas, roles, ni perfil de usuario tradicional), pero sí contradice explícitamente "sin historial de evaluaciones".
 
 ## Por qué probablemente se construyó

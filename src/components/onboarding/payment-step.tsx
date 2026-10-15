@@ -11,19 +11,39 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ValueChecklist } from "@/components/onboarding/value-checklist";
 import { BackButton } from "@/components/onboarding/step-navigation";
-import { savePayment, saveAndContinueLater } from "@/app/analizar/actions";
+import {
+  savePayment,
+  continueFree,
+  saveAndContinueLater,
+} from "@/app/analizar/actions";
 import {
   PAYMENT_ANCHOR_COPY,
-  PAYMENT_GUARANTEE_COPY,
+  PAYMENT_CANCEL_COPY,
+  PAYMENT_FREE_FEATURES,
+  PAYMENT_PAID_FEATURES,
 } from "@/lib/onboarding/copy";
-import { PAYMENT_PLANS } from "@/lib/onboarding/options";
 import { getRemainingMinutes } from "@/lib/onboarding/steps";
 import type { ActionState } from "@/lib/onboarding/schemas";
-import { ShieldCheck, CreditCard } from "lucide-react";
+import { CheckCircle2, CreditCard, ShieldCheck } from "lucide-react";
 
 const initialState: ActionState = { success: false };
+
+function FeatureList({ items }: { items: readonly string[] }) {
+  return (
+    <ul className="space-y-2.5 text-sm">
+      {items.map((item) => (
+        <li key={item} className="flex items-start gap-2">
+          <CheckCircle2
+            className="mt-0.5 size-4 shrink-0 text-secondary"
+            aria-hidden
+          />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export function PaymentStep() {
   const [state, action, pending] = useActionState(savePayment, initialState);
@@ -37,74 +57,84 @@ export function PaymentStep() {
         simulado. Tu progreso está guardado.
       </div>
 
-      <ValueChecklist />
+      <div className="space-y-1">
+        <h1 className="text-2xl font-semibold text-primary">Elige tu plan</h1>
+        <p className="text-sm text-muted-foreground">{PAYMENT_ANCHOR_COPY}</p>
+      </div>
 
-      <p className="text-sm text-muted-foreground">{PAYMENT_ANCHOR_COPY}</p>
-
-      <form action={action} className="space-y-4">
-        <input type="hidden" name="planId" value="starter" />
-
-        <Card className="border-primary/30 shadow-lg shadow-primary/5">
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xl">Starter</CardTitle>
-              <Badge variant="secondary">Recomendado</Badge>
-            </div>
-            <CardDescription>Diagnóstico inmediato y reporte completo</CardDescription>
-            <p className="pt-2 text-4xl font-semibold text-primary">
-              $99{" "}
-              <span className="text-lg font-medium text-muted-foreground">MXN</span>
-            </p>
+            <CardTitle className="text-xl">Gratis</CardTitle>
+            <CardDescription>Para probar con tu primera idea</CardDescription>
+            <p className="pt-2 text-4xl font-semibold text-primary">$0</p>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
-            <p className="flex items-center gap-2">
-              <ShieldCheck className="size-4 text-[#6baed6]" aria-hidden />
-              {PAYMENT_GUARANTEE_COPY}
+          <CardContent className="space-y-3">
+            <FeatureList items={PAYMENT_FREE_FEATURES} />
+            <p className="text-sm text-muted-foreground">
+              Te faltan ~{remaining} min de preguntas. El reporte se guarda
+              completo y lo desbloqueas cuando te suscribas.
             </p>
-            <p className="flex items-center gap-2">
-              <CreditCard className="size-4 text-[#6baed6]" aria-hidden />
-              Mercado Pago y tarjeta (próximamente)
-            </p>
-            <p>Te faltan ~{remaining} min de preguntas para tu diagnóstico completo.</p>
           </CardContent>
           <CardFooter>
-            <Button
-              type="submit"
-              disabled={pending}
-              size="lg"
-              className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
-              data-testid="payment-submit"
-            >
-              {pending
-                ? "Procesando..."
-                : "Continuar y obtener mi análisis — $99 MXN"}
-            </Button>
+            <form action={continueFree} className="w-full">
+              <Button
+                type="submit"
+                variant="outline"
+                size="lg"
+                className="w-full"
+                data-testid="payment-free"
+              >
+                Continuar gratis
+              </Button>
+            </form>
           </CardFooter>
         </Card>
 
-        {state.message && (
-          <p className="text-sm text-destructive">{state.message}</p>
-        )}
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          {PAYMENT_PLANS.filter((p) => !p.available).map((plan) => (
-            <Card key={plan.id} className="opacity-50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">{plan.name}</CardTitle>
-                <CardDescription>{plan.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-lg font-semibold text-primary">
-                  ${plan.price} {plan.currency}
-                </p>
-                <Badge variant="outline" className="mt-2">
-                  Próximamente
-                </Badge>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </form>
+        <form action={action} className="contents">
+          <input type="hidden" name="planId" value="monthly" />
+          <Card className="border-primary/30 shadow-lg shadow-primary/5">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl">Suscripción</CardTitle>
+                <Badge variant="secondary">Recomendado</Badge>
+              </div>
+              <CardDescription>Reporte completo, sin límite de ideas</CardDescription>
+              <p className="pt-2 text-4xl font-semibold text-primary">
+                $99{" "}
+                <span className="text-lg font-medium text-muted-foreground">
+                  MXN / mes
+                </span>
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <FeatureList items={PAYMENT_PAID_FEATURES} />
+              <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                <ShieldCheck className="size-4 text-[#6baed6]" aria-hidden />
+                {PAYMENT_CANCEL_COPY}
+              </p>
+              <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                <CreditCard className="size-4 text-[#6baed6]" aria-hidden />
+                Mercado Pago y tarjeta (próximamente)
+              </p>
+            </CardContent>
+            <CardFooter className="flex-col items-stretch gap-2">
+              <Button
+                type="submit"
+                disabled={pending}
+                size="lg"
+                className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                data-testid="payment-submit"
+              >
+                {pending ? "Procesando..." : "Suscribirme — $99 MXN/mes"}
+              </Button>
+              {state.message && (
+                <p className="text-sm text-destructive">{state.message}</p>
+              )}
+            </CardFooter>
+          </Card>
+        </form>
+      </div>
 
       <form action={saveAndContinueLater}>
         <Button type="submit" variant="ghost" className="w-full text-muted-foreground">

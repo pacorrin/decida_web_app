@@ -30,7 +30,14 @@ import {
   type RefineIdeaState,
 } from "@/lib/onboarding/schemas";
 import type { z } from "zod";
-import { PAYMENT_PLANS } from "@/lib/onboarding/options";
+import {
+  SIMULATED_PROVIDER,
+  SUBSCRIPTION_CURRENCY,
+  SUBSCRIPTION_PLAN_ID,
+  SUBSCRIPTION_PRICE_MXN,
+  buildSimulatedActivation,
+  shouldActivate,
+} from "@/lib/subscription/activate";
 import {
   getCurrentAssessment,
   getAssessmentById,
@@ -40,11 +47,12 @@ import { isAssessmentCompleted } from "@/lib/onboarding/assessment-utils";
 import { getStepBySlug } from "@/lib/onboarding/steps";
 import { getResumeStep } from "@/lib/onboarding/navigation";
 import { ensureAssessmentForCurrentUser } from "@/lib/onboarding/for-user";
+import { PLANS_PATH } from "@/lib/subscription/limits";
 import { blendProducts } from "@/lib/onboarding/products";
 import { prisma } from "@/lib/prisma";
 import { createUser, findUserByEmail, updateUserPassword, markEmailVerified } from "@/lib/auth/users";
 import { normalizeEmail } from "@/lib/auth/verification";
-import { createUserSession } from "@/lib/auth/session-server";
+import { createUserSession, getCurrentUser } from "@/lib/auth/session-server";
 import {
   logReportGenerationError,
   logReportGenerationRetry,
@@ -83,11 +91,14 @@ function validationError(
  * created every time a "Analizar mi idea" link merely scrolled into view).
  */
 export async function startAssessmentForCurrentUser(): Promise<void> {
-  const assessment = await ensureAssessmentForCurrentUser();
-  if (!assessment) {
+  const result = await ensureAssessmentForCurrentUser();
+  if (result.status === "limit_reached") {
+    redirect(PLANS_PATH);
+  }
+  if (result.status === "anonymous") {
     redirectToStep("contacto");
   }
-  redirect(getStepBySlug(getResumeStep(assessment)).path);
+  redirect(getStepBySlug(getResumeStep(result.assessment)).path);
 }
 
 export async function saveContact(
@@ -372,6 +383,11 @@ export async function editIdeaRedirect(): Promise<void> {
   redirectToStep("idea");
 }
 
+/**
+ * «Suscribirme» (simulado, sin pasarela): activa la suscripción de la CUENTA
+ * ($99 MXN/mes). El gate de reportes mira la cuenta (`hasFullAccess`), así
+ * que desbloquea todas las evaluaciones, también las anteriores.
+ */
 export async function savePayment(
   _prev: ActionState,
   formData: FormData
@@ -379,41 +395,46 @@ export async function savePayment(
   const assessment = await requireAssessment();
 
   const parsed = paymentSchema.safeParse({
-    planId: formData.get("planId") ?? "starter",
+    planId: formData.get("planId") ?? SUBSCRIPTION_PLAN_ID,
   });
 
   if (!parsed.success) {
     return validationError(parsed.error, formData);
   }
 
-  const plan = PAYMENT_PLANS.find((p) => p.id === parsed.data.planId);
-  if (!plan?.available) {
+  const user = await getCurrentUser();
+  if (!user) {
     return {
       success: false,
-      message: "Este plan no está disponible aún.",
+      message: "Inicia sesión para suscribirte.",
     };
   }
 
-  await prisma.assessments.update({
-    where: { asmt_id: assessment.asmt_id },
-    data: {
-      asmt_status: "paid",
-      asmt_payment_status: "paid",
-      asmt_payment_provider: "placeholder",
-    },
-  });
+  if (shouldActivate(user)) {
+    const now = new Date();
+    await prisma.users.update({
+      where: { user_id: user.user_id },
+      data: buildSimulatedActivation(user.user_id, now),
+    });
 
-  await prisma.payments.create({
-    data: {
-      paym_asmt_id: assessment.asmt_id,
-      paym_provider: "placeholder",
-      paym_amount: plan.price,
-      paym_currency: plan.currency,
-      paym_status: "paid",
-      paym_paid_at: new Date(),
-    },
-  });
+    await prisma.payments.create({
+      data: {
+        paym_asmt_id: assessment.asmt_id,
+        paym_provider: SIMULATED_PROVIDER,
+        paym_amount: SUBSCRIPTION_PRICE_MXN,
+        paym_currency: SUBSCRIPTION_CURRENCY,
+        paym_status: "paid",
+        paym_paid_at: now,
+      },
+    });
+  }
 
+  redirectToStep("perfil");
+}
+
+/** «Continuar gratis»: sigue el onboarding sin suscribirse (freemium). */
+export async function continueFree(): Promise<void> {
+  await requireAssessment();
   redirectToStep("perfil");
 }
 
@@ -814,16 +835,9 @@ export async function startNewAssessment(): Promise<void> {
     redirectToStep("resultado");
   }
 
-  const newAssessment = await prisma.assessments.create({
-    data: {
-      asmt_email: assessment.asmt_email,
-      asmt_name: assessment.asmt_name,
-      asmt_phone: assessment.asmt_phone,
-      asmt_country: assessment.asmt_country,
-      asmt_started_at: new Date(),
-    },
-  });
-
-  await setAssessmentCookie(newAssessment.asmt_id);
-  redirectToStep("contacto");
+  // Same path as any other "start an evaluation" entry point, so the new
+  // assessment is owned by the account and the freemium limit applies.
+  // Without an account nothing is created here: saveContact creates the
+  // account and its assessment.
+  await startAssessmentForCurrentUser();
 }

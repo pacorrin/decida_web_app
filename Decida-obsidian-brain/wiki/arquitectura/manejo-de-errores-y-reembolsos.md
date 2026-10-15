@@ -43,7 +43,9 @@ El [[../producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)|modelo de c
 - La UI de error del reporte (`report-error-state.tsx`) hoy muestra la garantía de reembolso de forma prominente — ese copy hay que **revisarlo** cuando se implemente el modelo de suscripción (el retry automático/manual y el logging siguen igual de válidos; lo que cambia es la promesa comercial, no la resiliencia técnica).
 - Qué se le ofrece a un suscriptor cuya generación de reporte falla de forma irrecuperable (¿crédito?, ¿mes gratis?, ¿nada más el retry?) **queda pendiente de definir** — es una pregunta menor porque el reporte se genera post-onboarding y el retry cubre casi todos los casos.
 
-Esto entra como parte del Sprint 3 (pantallas de pago + gating); la lógica real de cancelación vive junto a la integración de cobro recurrente del Sprint 5. Ver [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]].
+**Implementado el 2026-10-14 (S3-07):** en `/cuenta/perfil` la cuenta puede cancelar (confirmación con aviso de sin reembolso). `planCancellation` (`src/lib/subscription/cancel.ts`) solo permite cancelar desde `active`, fija `user_subscription_status = canceled` y `user_subscription_canceled_at`, y **no modifica `user_subscription_period_end`**; la acción `cancelSubscription` (`src/app/cuenta/(dashboard)/perfil/actions.ts`) es idempotente. El acceso lo sigue decidiendo `hasFullAccess` (`access.ts`): completo hasta `period_end`, freemium después. Cuando exista cobro recurrente (Sprint 5), cancelar también deberá avisar al proveedor (`user_subscription_provider_id`); hoy solo cambia la BD.
+
+Esto entra como parte del Sprint 3 (pantallas de pago + gating); la integración con el proveedor de cobro recurrente vive en el Sprint 5. Ver [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]].
 
 ## Deuda pendiente reconocida en el propio doc
 Integración con Sentry/Datadog/PagerDuty · dashboard admin para ver assessments fallidos · notificación por email cuando el reporte esté listo · reembolso automatizado vía API del proveedor de pago.

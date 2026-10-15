@@ -27,9 +27,9 @@ export const STEP_COPY: Record<OnboardingStepSlug, StepCopy> = {
       "Mientras más precisa sea tu idea, más útil será tu diagnóstico.",
   },
   pago: {
-    title: "Continúa con tu diagnóstico personalizado",
+    title: "Elige tu plan",
     subtitle:
-      "Ya entendimos tu idea. Ahora profundizamos en tu situación para darte un análisis realmente tuyo.",
+      "Ya entendimos tu idea. Sigue gratis o suscríbete para desbloquear el reporte completo.",
     reassurance: "Tu progreso está guardado.",
   },
   perfil: {
@@ -70,10 +70,24 @@ export const IDEA_PLACEHOLDER =
   "Ejemplo: Quiero iniciar un servicio de detailing móvil los fines de semana para clientes residenciales que buscan limpieza y cuidado de autos a domicilio.";
 
 export const PAYMENT_ANCHOR_COPY =
-  "Menos que un mes probando una mala idea sin validar.";
+  "Menos que un mes probando una mala idea sin validar. Sigue con tu evaluación gratis o desbloquea el reporte completo con la suscripción.";
 
-export const PAYMENT_GUARANTEE_COPY =
-  "Si no se genera tu reporte, te reembolsamos.";
+export const PAYMENT_CANCEL_COPY =
+  "Cancela cuando quieras: conservas el acceso hasta el fin del periodo pagado.";
+
+export const PAYMENT_FREE_FEATURES = [
+  "Una evaluación completa de tu idea",
+  "Resumen y semáforos por dimensión",
+  "Tu negocio, fortalezas y riesgos sin mitigación",
+  "Vista parcial de lo financiero y del plan de validación",
+] as const;
+
+export const PAYMENT_PAID_FEATURES = [
+  "Evaluaciones ilimitadas",
+  "Compatibilidad personal, tiempo y operación, y escalabilidad",
+  "Recomendación final y mitigaciones de cada riesgo",
+  "Alertas, desglose financiero y plan de validación completo",
+] as const;
 
 export const TRANSITION_AFTER_AJUSTE = {
   title: "¡Ya casi terminamos!",

@@ -1,4 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
+import { E2E_PASSWORD } from "./db-helpers";
+import { cleanupTrackedData, trackedEmail } from "./test-data";
 
 /**
  * Auditoría UX del onboarding: mide tiempos por paso, cuenta campos,
@@ -31,13 +33,17 @@ async function selectOptionCard(
   name: string,
   value: string
 ): Promise<void> {
-  await page
-    .locator(`[data-testid="option-card-${name}-${value}"]`)
-    .check({ force: true });
+  const card = page.locator(`[data-testid="option-card-${name}-${value}"]`);
+  // Las tarjetas son radios controlados por React: un clic antes de la
+  // hidratación se pierde ("did not change its state"), así que se reintenta.
+  await expect(async () => {
+    await card.check({ force: true, timeout: 3_000 });
+    await expect(card).toBeChecked({ timeout: 1_000 });
+  }).toPass({ timeout: 20_000 });
 }
 
 function uniqueEmail(): string {
-  return `ux.audit+${Date.now()}@decida.test`;
+  return trackedEmail("ux.audit");
 }
 
 async function contarCampos(page: Page) {
@@ -75,6 +81,10 @@ async function medirPaso(
 }
 
 test.describe("Auditoría UX del onboarding", () => {
+  test.afterAll(async () => {
+    await cleanupTrackedData();
+  });
+
   test("métricas de fricción y orientación por paso", async ({ page }) => {
     const metricas: StepMetric[] = [];
     const tiemposEspera: { evento: string; ms: number }[] = [];
@@ -101,6 +111,7 @@ test.describe("Auditoría UX del onboarding", () => {
     await page.fill("#email", uniqueEmail());
     await page.fill("#phone", "5512345678");
     await page.selectOption("#country", "MX");
+    await page.fill("#password", E2E_PASSWORD);
     await page.check("#acceptedTerms");
 
     metricas.push(
@@ -146,7 +157,7 @@ test.describe("Auditoría UX del onboarding", () => {
           page.getByRole("heading", { name: "Así entendimos tu idea" })
         ).toBeVisible();
         // Verificar que hay resumen visible
-        await expect(page.getByText("Nuestro entendimiento")).toBeVisible();
+        await expect(page.getByText("Nuestro entendimiento", { exact: true })).toBeVisible();
       })
     );
 
@@ -157,7 +168,7 @@ test.describe("Auditoría UX del onboarding", () => {
       })
     );
 
-    // --- Paso 4: Pago ---
+    // --- Paso 4: Planes (se continúa en el plan gratuito) ---
     metricas.push(
       await medirPaso(page, "4 · Pago", async () => {
         await expect(page.getByText(/pago\s+simulado/i)).toBeVisible();
@@ -167,8 +178,7 @@ test.describe("Auditoría UX del onboarding", () => {
 
     metricas.push(
       await medirPaso(page, "4→5 · Pago → Perfil", async () => {
-        await page
-        await page.getByTestId("payment-submit").click();
+        await page.getByTestId("payment-free").click();
         await expect(page).toHaveURL(/\/analizar\/perfil/, { timeout: 30_000 });
       })
     );
@@ -377,6 +387,7 @@ test.describe("Auditoría UX del onboarding", () => {
     await page.fill("#email", uniqueEmail());
     await page.fill("#phone", "12");
     await page.selectOption("#country", "MX");
+    await page.fill("#password", E2E_PASSWORD);
     await page.check("#acceptedTerms");
     await page.getByRole("button", { name: "Continuar" }).click();
 
@@ -393,6 +404,7 @@ test.describe("Auditoría UX del onboarding", () => {
     await page.fill("#email", uniqueEmail());
     await page.fill("#phone", "5512345678");
     await page.selectOption("#country", "MX");
+    await page.fill("#password", E2E_PASSWORD);
     await page.check("#acceptedTerms");
     await page.getByRole("button", { name: "Continuar" }).click();
     await expect(page).toHaveURL(/\/analizar\/idea/, { timeout: 30_000 });
@@ -420,12 +432,13 @@ test.describe("Auditoría UX del onboarding", () => {
   test("pasos de perfil en adelante tienen navegación Atrás", async ({
     page,
   }) => {
-    // Reutilizamos flujo rápido hasta perfil (requiere pago simulado)
+    // Reutilizamos flujo rápido hasta perfil (plan gratuito, sin suscribirse)
     await page.goto("/analizar/contacto");
     await page.fill("#name", "Back Test");
     await page.fill("#email", uniqueEmail());
     await page.fill("#phone", "5512345678");
     await page.selectOption("#country", "MX");
+    await page.fill("#password", E2E_PASSWORD);
     await page.check("#acceptedTerms");
     await page.getByRole("button", { name: "Continuar" }).click();
     await expect(page).toHaveURL(/\/analizar\/idea/, { timeout: 30_000 });
@@ -437,8 +450,7 @@ test.describe("Auditoría UX del onboarding", () => {
     await page.getByTestId("idea-confirm").click();
     await expect(page).toHaveURL(/\/analizar\/pago/, { timeout: 30_000 });
 
-    await page
-    await page.getByTestId("payment-submit").click();
+    await page.getByTestId("payment-free").click();
     await expect(page).toHaveURL(/\/analizar\/perfil/, { timeout: 30_000 });
 
     // El botón usa BackButton con data-testid

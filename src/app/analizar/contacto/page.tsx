@@ -6,7 +6,7 @@ import { getCurrentUser } from "@/lib/auth/session-server";
 
 export default async function ContactoPage() {
   const assessment = await enforceStepAccess("contacto");
-  const user = assessment ? null : await getCurrentUser();
+  const user = await getCurrentUser();
 
   return (
     <OnboardingShell currentSlug="contacto">

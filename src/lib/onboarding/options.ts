@@ -177,29 +177,3 @@ export const BUSINESS_DEPENDENCY_OPTIONS: SelectOption[] = [
   },
 ];
 
-export const PAYMENT_PLANS = [
-  {
-    id: "starter",
-    name: "Starter",
-    price: 99,
-    currency: "MXN",
-    description: "Diagnóstico inmediato y reporte básico",
-    available: true,
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    price: 299,
-    currency: "MXN",
-    description: "Reporte detallado + PDF + escenarios financieros",
-    available: false,
-  },
-  {
-    id: "expert",
-    name: "Expert",
-    price: 799,
-    currency: "MXN",
-    description: "Revisión personalizada + sesión de 30 min",
-    available: false,
-  },
-] as const;

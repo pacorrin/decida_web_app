@@ -18,14 +18,14 @@ Leyenda: ⬜ Pendiente · 🟦 En curso · 🟢 Cerrado · 🔴 Atrasado
 |---|---|---|---|---|
 | 1 | 10 ago – 23 ago | Cuentas, login, email | 🟢 Cerrado (lo único pendiente, el dominio de Resend, pasó a S3-09) | — |
 | 2 | 24 ago – 6 sep | Dashboard `/cuenta` + pulir onboarding | 🟢 Cerrado el 2 sep | — |
-| 3 | 7 sep – 20 sep | Suscripción + freemium, hardening para la beta | 🟦 En curso (S3-01 a S3-04 hechas en local el 29 sep) | [[sprint-3]] |
+| 3 | 7 sep – 20 sep | Suscripción + freemium, hardening para la beta | 🟦 En curso (S3-01 a S3-04 hechas el 29 sep, S3-05, S3-06, S3-07 y S3-08 el 14 oct) | [[sprint-3]] |
 | 4 | 21 sep – 11 oct | Beta cerrada con cuentas reales | 🔴 No ha arrancado (depende del Sprint 3) | [[#Sprint 4 — Beta cerrada]] |
 | 5 | 12 oct – 1 nov | Pago real, panel admin, lanzamiento | ⬜ Pendiente | [[#Sprint 5 — Cierre y lanzamiento]] |
 
 ## Orden recomendado para retomar
 
-1. **Suscripción y freemium**: S3-05 a S3-08 de [[sprint-3]] (S3-01 a S3-04 ya están en local).
-2. **Dominio propio en Resend** (S3-09): sin él no puede registrarse nadie más que tú, así que bloquea la beta.
+1. **Suscripción y freemium**: S3-01 a S3-08 ya están en local, con pruebas (Vitest + e2e, ver [[sprint-3]]); falta commitear y probar en un entorno compartido.
+2. **Dominio propio en Resend** (S3-09): sin él no puede registrarse nadie más que tú, así que bloquea la beta. Guía lista en [[correo-transaccional-resend]]; falta tu verificación del dominio.
 3. **Monitoreo de errores con Sentry y analytics del embudo** (S3-10, S3-11).
 4. **Landing y copy** con el modelo nuevo (S3-12, S3-13).
 5. **PDF real** (S3-14), al final: no es necesario para arrancar la beta.

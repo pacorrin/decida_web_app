@@ -1,6 +1,18 @@
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/session-server";
+import { buttonVariants } from "@/components/ui/button";
+import { CancelSubscription } from "@/components/account/cancel-subscription";
+import { describeSubscription } from "@/lib/subscription/cancel";
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat("es-MX", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
 
 export const metadata = {
   title: "Perfil | Decida",
@@ -16,6 +28,18 @@ export default async function PerfilPage() {
     { label: "Correo electrónico", value: user.user_email },
     { label: "Teléfono", value: user.user_phone ?? "—" },
   ];
+
+  const sub = describeSubscription(user);
+  const subLabel =
+    sub.kind === "active"
+      ? sub.renewsAt
+        ? `Activa, se renueva el ${formatDate(sub.renewsAt)}`
+        : "Activa"
+      : sub.kind === "canceled"
+        ? `Cancelada, acceso hasta el ${formatDate(sub.accessUntil)}`
+        : sub.kind === "expired"
+          ? "Vencida"
+          : "Sin suscripción";
 
   return (
     <div className="max-w-md space-y-6">
@@ -39,6 +63,34 @@ export default async function PerfilPage() {
               <p className="text-sm text-foreground">{field.value}</p>
             </div>
           ))}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Suscripción</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-muted-foreground">Estado</p>
+            <p className="text-sm text-foreground">{subLabel}</p>
+          </div>
+          {sub.kind === "active" && (
+            <CancelSubscription
+              accessUntil={sub.renewsAt ? formatDate(sub.renewsAt) : null}
+            />
+          )}
+          {sub.kind === "canceled" && (
+            <p className="text-sm text-muted-foreground">
+              No se te volverá a cobrar. Mantienes el reporte completo hasta
+              esa fecha.
+            </p>
+          )}
+          {(sub.kind === "none" || sub.kind === "expired") && (
+            <Link href="/analizar/pago" className={buttonVariants()}>
+              Suscribirme
+            </Link>
+          )}
         </CardContent>
       </Card>
     </div>

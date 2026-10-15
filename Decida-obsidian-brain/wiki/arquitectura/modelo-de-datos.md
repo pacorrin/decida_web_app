@@ -33,6 +33,10 @@ Todas las tablas usan **prefijos de 4 letras** por entidad en snake_case (`asmt_
 | `users` | `user_` | 1:N con `assessments` (`asmt_user_id`) | Cuenta con email + contraseña. Agregada 2026-08-05, Sprint 1 — ver [[modulo-de-usuarios-y-autenticacion]] |
 | `user_sessions` | `usess_` | — | Sesión de cuenta autenticada (cookie httpOnly + token), agregada junto con `users` |
 
+> Suscripción en `users` (S3-07, 2026-10-14): `user_subscription_status` (none/active/canceled/past_due), `user_subscription_period_end` y `user_subscription_canceled_at`. Cancelar solo cambia el estado y la fecha de cancelación; el acceso completo llega hasta `period_end` (ver [[manejo-de-errores-y-reembolsos]]).
+>
+> S3-06 (2026-10-14): suscribirse (simulado) escribe en `users`: `status=active`, `plan=monthly`, `period_end` = ahora + 1 mes, `canceled_at=null`, `provider=simulated`, `provider_id=sim_<user>_<ts>`, y crea una fila en `payments` (`paym_provider=simulated`, $99 MXN) ligada a la evaluación desde la que se suscribió. Ya no se toca `asmt_status`/`asmt_payment_status` al suscribirse; el flujo no depende de ellos. Sin cambios de schema.
+
 Esto coincide casi 1:1 con las "Core Entities" que Notion proponía como alternativa más escalable — con adiciones que Notion no contemplaba: `verification_codes` y `history_sessions` (que sostienen [[historial-de-evaluaciones]]), y ahora `users`/`user_sessions` (que sostienen [[modulo-de-usuarios-y-autenticacion]]).
 
 > Actualización (mismo día): `users` y `assessments` ya están vinculados (`asmt_user_id`, `onDelete: SetNull`, indexado). Esto estaba asignado a Sprint 2 en la primera versión de esta nota; se adelantó el mismo día a pedido del usuario, junto con la integración al onboarding — ver [[modulo-de-usuarios-y-autenticacion#Integración con el onboarding (mismo día)]].

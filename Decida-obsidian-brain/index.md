@@ -42,6 +42,7 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | [[wiki/arquitectura/manejo-de-errores-y-reembolsos]] | Retry, logging, proceso de reembolso (DEC-10) |
 | [[wiki/arquitectura/historial-de-evaluaciones]] | `/mis-evaluaciones` — non-goal original superado (en migración al módulo de cuentas) |
 | [[wiki/arquitectura/modulo-de-usuarios-y-autenticacion]] | Cuentas email+contraseña, sesiones, email transaccional, integración con onboarding — Sprint 1, 2026-08-05 |
+| [[wiki/arquitectura/correo-transaccional-resend]] | Correos que manda la app, checklist para verificar dominio en Resend (DNS), pruebas y errores típicos — S3-09, 2026-10-14 |
 | [[wiki/arquitectura/dashboard-de-cuenta]] | Navbar + sidebar + rutas del panel `/cuenta` (route group, dropdown-menu nuevo) — 2026-08-05 |
 
 ## Marca

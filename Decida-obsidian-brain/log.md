@@ -392,3 +392,29 @@ A pedido del usuario se investigó **Validea** (https://validea.dev/), que estab
 Hallazgos clave: genera sitios de validación Astro + Cloudflare con SEO programático, captura de email, fake-door pricing y encuesta post-registro; para indie hackers técnicos de SaaS; $9 / $29 / $79 USD al mes con prueba de 30 días (otra página suya dice $19 / $49 / $99 — inconsistencia anotada); se declara "early access"; no emite veredicto. Ideas nuevas para Decida: fake-door pricing y "dónde encontrar a quién probar" en el plan de validación, SEO de contenido en español por tipo de negocio, encuesta corta post-registro, canal B2B2C con consultores/incubadoras.
 
 Página nueva: `wiki/competencia/validea.md`. Actualizado: `wiki/competencia/competencia.md` (Validea a la tabla, comparación ValaIdea vs Validea vs Decida, patrones, candidatos), `index.md` (sección Competencia). Candidato nuevo: **Validea en validea.co** (otro producto, reporte de IA con score; más parecido a Decida; respondía 503 el 2026-09-29). Pendiente: re-revisar validea.dev si vuelve a estar en línea.
+
+## [2026-10-14] query | S3-07 Cancelar suscripción desde /cuenta
+
+Se implementó la cancelación de suscripción en `/cuenta/perfil` (bloque «Suscripción» con estado en español, confirmación sin reembolso y enlace a `/analizar/pago` si no hay suscripción). Lógica pura en `src/lib/subscription/cancel.ts` (solo desde `active`, no toca `period_end`, idempotente) y server action `cancelSubscription`; el acceso sigue decidido por `hasFullAccess`. Probado a mano (active → cancelada con acceso hasta la fecha) y con tests Vitest; no probado el cruce real de la fecha de fin en el navegador.
+
+Actualizado: `wiki/tareas/sprint-3.md` (S3-07 hecha), `wiki/tareas/tablero.md`, `wiki/arquitectura/manejo-de-errores-y-reembolsos.md`, `wiki/arquitectura/historial-de-evaluaciones.md`, `wiki/arquitectura/modelo-de-datos.md`.
+
+## [2026-10-14] query | S3-09 Dominio propio en Resend: preparación
+
+Se auditó el correo transaccional: solo se envían dos correos (código de registro y código de restablecer contraseña, `src/app/cuenta/actions.ts`). Sin `RESEND_API_KEY` se imprime en consola en desarrollo y se lanza error en producción. Hallazgos: si Resend rechaza el envío, `sendEmail` lanza error; en el registro (`signUp`) no se captura y el usuario ve el error genérico de Next.js, mientras que en recuperar contraseña se captura a propósito y el usuario ve el mensaje genérico. El default `onboarding@decida.app` no se cambió porque no hay fuente que confirme que `decida.app` es nuestro dominio.
+
+Cambios de código: `src/lib/email/resend.ts` registra un mensaje claro cuando Resend rechaza el envío, y `.env.example` documenta `RESEND_FROM_EMAIL`. No se tocaron los flujos de auth.
+
+Página nueva: `wiki/arquitectura/correo-transaccional-resend.md` (checklist para el usuario, cómo probar, errores típicos, nota para S4-00). Actualizado: `wiki/tareas/sprint-3.md` (S3-09 sigue sin marcar, con nota de preparación), `wiki/tareas/tablero.md`, `index.md`. Falta la acción manual: verificar el dominio en Resend y definir las variables.
+
+## [2026-10-14] query | S3-06 Pantalla «Elige tu plan»
+
+El paso de pago pasó de pago único simulado a freemium + suscripción $99 MXN/mes simulada. Lógica pura en `src/lib/subscription/activate.ts` (con tests) y `savePayment` ahora actualiza la suscripción de la cuenta en `users` y registra un `payments` simulado; nueva acción `continueFree`. Decisión sobre el bloqueo: `getResumeStep`/`canAccessStep` ya no exigen `isPaid`, así el onboarding continúa sin suscribirse y el corte queda solo en el reporte (`hasFullAccess`). Copy sin promesa de reembolso. No se probó el desbloqueo retroactivo en navegador; los e2e existentes ya fallaban por la contraseña de `contacto` (S3-08).
+
+Actualizado: `wiki/tareas/sprint-3.md` (S3-06 hecha), `wiki/tareas/tablero.md`, `wiki/experiencia/flujo-de-onboarding.md`, `wiki/producto/pricing-y-gtm.md`, `wiki/arquitectura/modelo-de-datos.md`.
+
+## [2026-10-14] query | S3-08 Pruebas del flujo completo
+
+Se auditó la cobertura (74 tests) y se completaron los huecos: `ensureAssessmentForCurrentUser` con Prisma/cookies mockeados, ciclo de vida de la suscripción en el tiempo y la acción `cancelSubscription` (ahora 92 tests Vitest). Se repararon los tres specs e2e existentes (contraseña en `contacto`, `payment-free`, historial en `/cuenta`) y se agregó `e2e/subscription-flow.spec.ts` con el recorrido freemium → límite → suscripción → desbloqueo retroactivo → cancelación → vencimiento por SQL; 14/14 e2e en verde. Bug real hallado y corregido: `step="10"` en precio/costo de `products-form.tsx` bloqueaba valores que no fueran múltiplos de 10. El «Internal Server Error» de `/analizar/confirmacion` no se reprodujo; probable ruido del entorno (había un `next dev` huérfano colgado).
+
+Actualizado: `wiki/tareas/sprint-3.md` (S3-08 hecha), `wiki/tareas/tablero.md`, `wiki/arquitectura/stack-tecnico.md`.

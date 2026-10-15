@@ -48,7 +48,7 @@ export const personalFitSchema = z.object({
 });
 
 export const paymentSchema = z.object({
-  planId: z.enum(["starter", "pro", "expert"]),
+  planId: z.enum(["monthly"]),
 });
 
 export const evaluationFinancialSchema = z.object({

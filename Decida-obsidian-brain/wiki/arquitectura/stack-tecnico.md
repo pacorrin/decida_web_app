@@ -1,7 +1,7 @@
 ---
 type: arquitectura
 tags: [decida, stack, tecnico]
-updated: 2026-08-05
+updated: 2026-10-14
 ---
 
 # Stack técnico
@@ -17,7 +17,7 @@ Fuente: [[../../raw/notion/08-technical-architecture-v1]] · `package.json` · `
 - **shadcn** + Tailwind CSS 4 para UI
 - **react-markdown** + `remark-gfm` + `rehype-raw` — renderizado markdown en respuestas de IA
 - **embla-carousel-react** — carrusel en landing
-- **Playwright** — pruebas end-to-end (`test:e2e`)
+- **Playwright** — pruebas end-to-end (`test:e2e`); **Vitest** — pruebas de lógica (`vitest run`). Ver «Cómo correr las pruebas» abajo
 - **Resend** — email transaccional (agregado 2026-08-05); **bcryptjs** — hashing de contraseñas (agregado 2026-08-05). Ver [[modulo-de-usuarios-y-autenticacion]]
 
 Esto es notablemente más específico y "productizado" que la hipótesis original de Notion ("Next.js, TypeScript, Server Actions, base de datos simple o JSON, Stripe o Mercado Pago, IA barata, PDF").
@@ -39,6 +39,12 @@ Esto es notablemente más específico y "productizado" que la hipótesis origina
 - La migración commiteada en `prisma/migrations/` puede quedar desincronizada del schema — usar `pnpm db:push` para sincronizar en desarrollo, no `prisma migrate deploy`.
 - `OPENAI_API_KEY` es opcional: el resumen/refinamiento de idea y el reporte tienen fallbacks determinísticos, así que el flujo completa sin IA (con contenido degradado).
 - PostgreSQL corre en Docker (`decida-postgres`, puerto 5432, user/pass/db = `decida`).
+
+## Cómo correr las pruebas (añadido 2026-10-14, S3-08)
+- **Lógica (Vitest):** `npx vitest run` — busca `src/**/*.test.ts`, no necesita BD ni servidor (Prisma, cookies y `server-only` se mockean con `vi.mock`). Cubre acceso (`hasFullAccess`), límite freemium, activación y cancelación de la suscripción y `ensureAssessmentForCurrentUser`.
+- **Recorridos (Playwright):** `pnpm test:e2e` (specs en `e2e/`). Requiere PostgreSQL arriba (`sudo docker compose up -d`), esquema con `pnpm db:push` y `.env`. Levanta su propio `pnpm dev` salvo que ya haya algo en :3000 (se reutiliza: asegúrate de que responda; un dev server colgado hace fallar todo). 1 worker, ~4 min; con `OPENAI_API_KEY` llama a OpenAI de verdad.
+- Los specs crean cuentas `@decida.test` y las borran en `afterAll` (`e2e/test-data.ts`, `cleanupTestData` en `e2e/db-helpers.ts`). `e2e/subscription-flow.spec.ts` es el recorrido freemium → suscripción → cancelación.
+- Gotcha: los radios de tarjeta son controlados por React; un clic antes de hidratar se pierde, por eso `selectOptionCard` reintenta.
 
 ## Ver también
 [[modelo-de-datos]] · [[manejo-de-errores-y-reembolsos]] · [[modulo-de-usuarios-y-autenticacion]] · [[../framework/scoring-engine]]
