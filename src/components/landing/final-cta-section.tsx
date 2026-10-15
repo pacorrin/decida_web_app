@@ -22,7 +22,7 @@ export function FinalCtaSection() {
             href="/analizar"
             className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
           >
-            Analizar mi idea — $99 MXN
+            Analizar mi idea gratis
           </PrimaryCtaButton>
         </div>
       </div>

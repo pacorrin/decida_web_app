@@ -740,7 +740,7 @@ export default function ExampleReportPage() {
                     </p>
                     <div className="flex flex-col gap-3 sm:flex-row">
                       <PrimaryCtaButton href="/analizar">
-                        Analizar mi idea por $99 MXN
+                        Analizar mi idea gratis
                       </PrimaryCtaButton>
                     </div>
                   </CardContent>

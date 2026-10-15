@@ -43,12 +43,12 @@ export function ReportErrorState({ assessmentId }: ReportErrorStateProps) {
 
               <div className="rounded-lg border border-red-200 bg-white/50 p-4">
                 <p className="text-sm font-medium text-red-900 mb-2">
-                  Garantía de reembolso
+                  Tus respuestas están guardadas
                 </p>
                 <p className="text-sm text-red-800">
-                  Si no puedes obtener tu reporte después de reintentar, te 
-                  reembolsamos tu pago completo. Por favor, contacta a nuestro 
-                  equipo de soporte con el código:{" "}
+                  No perdiste tu avance. Si después de reintentar sigues sin
+                  ver tu reporte, contacta a nuestro equipo de soporte con el
+                  código:{" "}
                   <code className="rounded bg-red-100 px-1.5 py-0.5 font-mono text-xs">
                     {assessmentId}
                   </code>
@@ -111,7 +111,7 @@ export function ReportErrorState({ assessmentId }: ReportErrorStateProps) {
               revisará el problema. Mientras tanto, puedes:
             </p>
             <ul className="list-disc list-inside space-y-1 ml-2">
-              <li>Hacer clic en "Reintentar generación" (recomendado)</li>
+              <li>Hacer clic en &quot;Reintentar generación&quot; (recomendado)</li>
               <li>Esperar unos minutos y recargar la página</li>
               <li>Contactar a soporte si el problema persiste</li>
             </ul>

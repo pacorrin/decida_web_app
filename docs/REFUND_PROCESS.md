@@ -1,3 +1,5 @@
+> **OBSOLETO (2026-10-15).** Decida pasó a freemium + suscripción mensual sin reembolsos (decisión del 2026-09-07). Este proceso, y la garantía «Si no se genera tu reporte, te reembolsamos», ya no aplican. Se conserva solo como referencia histórica.
+
 # Refund Process for Failed Report Generation
 
 This document outlines the process for handling refunds when report generation fails for a paid assessment.

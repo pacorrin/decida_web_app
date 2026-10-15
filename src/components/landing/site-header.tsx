@@ -82,7 +82,7 @@ export function SiteHeader() {
               ))}
               <div className="pt-4">
                 <PrimaryCtaButton href="/analizar">
-                  Analizar mi idea por $99 MXN
+                  Analizar mi idea gratis
                 </PrimaryCtaButton>
               </div>
             </nav>

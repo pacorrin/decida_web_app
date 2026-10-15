@@ -422,3 +422,11 @@ Actualizado: `wiki/tareas/sprint-3.md` (S3-08 hecha), `wiki/tareas/tablero.md`, 
 ## [2026-10-14] query | Página de suscripción dentro de la cuenta
 
 El usuario notó que «Suscribirme» en `/cuenta/perfil` llevaba a `/analizar/idea`, porque apuntaba al paso de pago del onboarding. Se creó `/cuenta/suscripcion` con el estado de la suscripción, la comparación de planes, suscribirse (simulado), cancelar y reactivar, y se redirigieron los enlaces (perfil, candados del reporte, límite de 1 evaluación). `payments` ahora puede pertenecer a una cuenta sin evaluación (`paym_user_id`, `paym_asmt_id` opcional). Actualizado: `wiki/tareas/sprint-3.md`.
+
+## [2026-10-15] query | S3-12, S3-13 y validación de Sentry (S3-10)
+
+Landing y copy alineados con freemium + suscripción: CTA «Analizar mi idea gratis», sección de precios con dos planes, sin promesa de reembolso (error de reporte, `/terminos`, `PRODUCT.md`); `docs/REFUND_PROCESS.md` marcado obsoleto. Sentry ya estaba instalado por el usuario; se validó la configuración y se conectó `logReportGenerationError` a Sentry. S3-10 sigue abierta hasta ver el evento en el panel. Actualizado: `wiki/tareas/sprint-3.md`.
+
+## [2026-10-15] query | S3-10 cerrada
+
+El usuario confirmó que el error de prueba llegó a Sentry. Se borraron `src/app/sentry-example-page` y `src/app/api/sentry-example-api`. Pendiente para producción: DSN a variable de entorno, bajar `tracesSampleRate` y `SENTRY_AUTH_TOKEN` en Railway.

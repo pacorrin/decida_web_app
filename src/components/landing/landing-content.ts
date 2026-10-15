@@ -54,11 +54,18 @@ export const REPORT_INCLUDES = [
   "Recomendación: avanzar, ajustar o pausar",
 ] as const;
 
-export const PRICING_INCLUDES = [
-  "Diagnóstico de una idea",
-  "Reporte con señales por dimensión",
-  "Riesgos y próximos pasos de validación",
-  "Recomendación final accionable",
+export const PRICING_FREE_INCLUDES = [
+  "Una evaluación completa de tu idea",
+  "Resumen y semáforos por dimensión",
+  "Tu negocio, fortalezas y riesgos principales",
+  "Vista parcial de lo financiero y del plan de validación",
+] as const;
+
+export const PRICING_PAID_INCLUDES = [
+  "Evaluaciones ilimitadas",
+  "Compatibilidad personal, tiempo y operación, y escalabilidad",
+  "Recomendación final y cómo reducir cada riesgo",
+  "Alertas, desglose financiero y plan de validación completo",
 ] as const;
 
 export const FOR_YOU_ITEMS = [

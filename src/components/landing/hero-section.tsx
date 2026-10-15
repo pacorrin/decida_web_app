@@ -27,15 +27,15 @@ export function HeroSection() {
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <PrimaryCtaButton href="/analizar">
-              Analizar mi idea — $99 MXN
+              Analizar mi idea gratis
             </PrimaryCtaButton>
             <CtaLink href="/ejemplo" variant="outline">
               Ver ejemplo de reporte
             </CtaLink>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
-            ~10–15 minutos. Estimaciones básicas; no necesitas ser experto en
-            finanzas.
+            ~10–15 minutos. Tu primera evaluación es gratis. Estimaciones
+            básicas; no necesitas ser experto en finanzas.
           </p>
         </div>
 

@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/nextjs";
+
 type LogLevel = "info" | "warn" | "error" | "critical";
 
 type LogContext = {
@@ -54,6 +56,7 @@ export function logReportGenerationError(
   }
 
   sendAlertToTeam(logMessage, context);
+  captureInSentry(message, context);
 }
 
 export function logReportGenerationRetry(
@@ -87,4 +90,34 @@ function sendAlertToTeam(message: string, context: LogContext): void {
       }
     );
   }
+}
+
+/**
+ * Los reportes fallidos llegan a Sentry como error, agrupados por la etiqueta
+ * `area:report-generation`. Se omite el correo del usuario: el assessmentId
+ * basta para encontrar el caso. Sin DSN configurado Sentry no envía nada.
+ */
+function captureInSentry(message: string, context: LogContext): void {
+  const { email: _email, ...safeMetadata } = (context.metadata ?? {}) as Record<
+    string,
+    unknown
+  >;
+  void _email;
+
+  Sentry.captureException(
+    context.error instanceof Error ? context.error : new Error(message),
+    {
+      level: "error",
+      tags: { area: "report-generation" },
+      extra: {
+        message,
+        assessmentId: context.assessmentId,
+        userId: context.userId,
+        ...safeMetadata,
+        ...(context.error && !(context.error instanceof Error)
+          ? { rawError: String(context.error) }
+          : {}),
+      },
+    }
+  );
 }

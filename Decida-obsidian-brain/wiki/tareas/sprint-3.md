@@ -53,15 +53,19 @@ Las tareas están en el orden recomendado de ejecución. Cada una está pensada 
 
 ## 3. Visibilidad para la beta
 
-- [ ] **S3-10 Monitoreo de errores con Sentry** (decidido el 2026-09-28). Instalar con `npx @sentry/wizard -i nextjs` (servidor, navegador y server actions) y conectar `logReportGenerationError` para que los reportes fallidos lleguen como alerta. El DSN va como variable de entorno (en Railway cuando se despliegue, ver S4-00).
+- [x] **S3-10 Monitoreo de errores con Sentry** (decidido el 2026-09-28). Instalar con `npx @sentry/wizard -i nextjs` (servidor, navegador y server actions) y conectar `logReportGenerationError` para que los reportes fallidos lleguen como alerta. El DSN va como variable de entorno (en Railway cuando se despliegue, ver S4-00).
   - Hecho cuando: un error forzado en local aparece en el panel de Sentry.
+  - Validado el 2026-10-15 (instalación hecha por el usuario con el wizard): `next.config.ts`, `src/instrumentation.ts`, `src/instrumentation-client.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts` y `global-error.tsx` están en su lugar y `/api/sentry-example-api` responde 500 sin errores de inicialización. Conectado `logReportGenerationError` a `Sentry.captureException` (etiqueta `area:report-generation`, sin el correo del usuario; 3 tests). El usuario confirmó el 2026-10-15 que el evento forzado llegó al panel de Sentry; las páginas de ejemplo ya se borraron.
+  - Pendientes antes de producción: DSN hoy está escrito en los 3 archivos de configuración (pasarlo a variable de entorno), `tracesSampleRate: 1` es alto para producción, `SENTRY_AUTH_TOKEN` en Railway para subir source maps.
 - [ ] **S3-11 Analytics del embudo.** Hoy no hay ninguna herramienta instalada. Eventos mínimos: visita a la landing, clic en el CTA, cuenta creada, onboarding completado, reporte visto y clic en suscribirse.
   - Hecho cuando: un recorrido completo de prueba deja los 6 eventos registrados.
 
 ## 4. Landing y copy
 
-- [ ] **S3-12 CTA del modelo freemium.** Cambiar el «$99 MXN» de pago único en `src/components/landing/hero-section.tsx`, `final-cta-section.tsx`, `pricing-section.tsx`, `site-header.tsx` y `src/app/ejemplo/page.tsx`.
-- [ ] **S3-13 Quitar la promesa de reembolso.** Revisar `src/components/onboarding/report-error-state.tsx`, `src/lib/onboarding/copy.ts`, `src/components/landing/pricing-section.tsx` y `src/app/terminos/page.tsx`. `docs/REFUND_PROCESS.md` queda obsoleto.
+- [x] **S3-12 CTA del modelo freemium.** Cambiar el «$99 MXN» de pago único en `src/components/landing/hero-section.tsx`, `final-cta-section.tsx`, `pricing-section.tsx`, `site-header.tsx` y `src/app/ejemplo/page.tsx`.
+  - Hecho el 2026-10-15: los CTA «Analizar mi idea — $99 MXN» pasaron a «Analizar mi idea gratis» (hero, CTA final, menú móvil y `/ejemplo`). La sección de precios (`pricing-section.tsx`) ahora muestra dos planes: Gratis $0 y Suscripción $99 MXN/mes, con listas en `landing-content.ts` (`PRICING_FREE_INCLUDES`, `PRICING_PAID_INCLUDES`). Se borró `value-checklist.tsx`, que ya nadie usaba.
+- [x] **S3-13 Quitar la promesa de reembolso.** Revisar `src/components/onboarding/report-error-state.tsx`, `src/lib/onboarding/copy.ts`, `src/components/landing/pricing-section.tsx` y `src/app/terminos/page.tsx`. `docs/REFUND_PROCESS.md` queda obsoleto.
+  - Hecho el 2026-10-15: sin promesa de reembolso en `report-error-state.tsx` (ahora «Tus respuestas están guardadas» + código de soporte), `/terminos` («Planes, suscripción y cancelación», sin reembolsos ni prorrateo) y `PRODUCT.md`. `docs/REFUND_PROCESS.md` quedó marcado como obsoleto; `docs/FLOW_DIAGRAMS.md` e `IMPLEMENTATION_SUMMARY.md` siguen mencionando la garantía como historia. Revisar el texto legal de `/terminos` antes del lanzamiento.
 - [ ] **S3-15 Confirmar si la landing se da por cerrada.** Al 28 sep no hay cambios de código sin commit, así que el trabajo de landing que estaba en curso parece estar ya commiteado. Solo falta confirmarlo.
 
 ## 5. Al final del sprint

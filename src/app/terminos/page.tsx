@@ -82,11 +82,17 @@ export default function TerminosPage() {
         </ul>
       </LegalSection>
 
-      <LegalSection title="Pagos y reembolsos">
+      <LegalSection title="Planes, suscripción y cancelación">
         <p>
-          Los planes y precios se muestran en el flujo de evaluación. Durante la
-          fase beta, el pago puede ser simulado. Las políticas de reembolso
-          aplicables se comunicarán al momento de habilitar pagos reales.
+          Decida ofrece un plan gratuito, que incluye una evaluación, y una
+          suscripción mensual de pago (hoy $99 MXN al mes) con reporte completo
+          y evaluaciones ilimitadas. Puedes cancelar la suscripción en cualquier
+          momento desde tu cuenta: conservas el acceso completo hasta el fin del
+          periodo ya pagado y después tu cuenta vuelve al plan gratuito.
+        </p>
+        <p>
+          No hacemos reembolsos ni prorrateos por el periodo ya pagado. Durante
+          la fase beta, el pago es simulado y no se realiza ningún cargo.
         </p>
       </LegalSection>
 

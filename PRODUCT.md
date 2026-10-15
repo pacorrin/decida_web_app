@@ -46,7 +46,7 @@ It does **not** tell users which business to open. Neighboring “idea generator
 - Guided assessment flow and personalized report (executive summary, viability signals by dimension, strengths/risks, basic financial view, personal fit, validation next steps, final recommendation).
 - Supports physical, digital, services, product, franchise, side hustle, and independent project ideas.
 - Example report surface for preview before paying.
-- Simulated beta payment (commitment step); refund promise if the report fails to generate.
+- Freemium: the free plan includes one evaluation with a trimmed report; the $99 MXN/month subscription (simulated in beta) unlocks the full report and unlimited evaluations. Cancel anytime, access kept until the end of the paid period; no refunds.
 
 **Constraints / non-goals:**
 - No success guarantee.
@@ -69,7 +69,7 @@ It does **not** tell users which business to open. Neighboring “idea generator
 
 ## Evidence on Hand
 
-- Marketing and product copy in `src/components/landing/` (problem, audience, FAQ, pricing beta $99 MXN, what the report includes).
+- Marketing and product copy in `src/components/landing/` (problem, audience, FAQ, free plan + $99 MXN/month subscription, what the report includes).
 - Runnable onboarding under `src/app/analizar/*` and example report under `/ejemplo`.
 - History access under `/mis-evaluaciones`.
 - Internal docs under `docs/` (implementation notes, flow diagrams)—engineering evidence, not customer proof.
