@@ -3,6 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
+import posthog from "posthog-js";
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -19,3 +20,24 @@ Sentry.init({
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
+
+const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
+
+// Analytics del embudo (S3-11). Sin clave, PostHog queda apagado y no pasa nada.
+if (posthogKey && posthogHost) {
+  posthog.init(posthogKey, {
+    api_host: posthogHost,
+    // Solo los eventos del embudo y las vistas de página: sin autocaptura,
+    // sin grabación de pantalla (los formularios contienen la idea del
+    // usuario) y sin captura de excepciones (de eso se encarga Sentry).
+    autocapture: false,
+    disable_session_recording: true,
+    capture_exceptions: false,
+    capture_dead_clicks: false,
+    disable_surveys: true,
+    capture_pageview: "history_change",
+    // Las visitas anónimas no crean persona; se unen al hacer identify.
+    person_profiles: "identified_only",
+  });
+}

@@ -1,4 +1,9 @@
-import OpenAI from "openai";
+import "server-only";
+
+import { randomUUID } from "node:crypto";
+import { OpenAI as PostHogOpenAI } from "@posthog/ai/openai";
+import NativeOpenAI from "openai";
+import { getPostHogClient } from "@/lib/analytics/server";
 import {
   IDEA_SUMMARY_SYSTEM_PROMPT,
   buildIdeaSummaryUserPrompt,
@@ -26,16 +31,52 @@ import {
   type IdeaSummaryResult,
 } from "./schemas/idea-summary";
 
-const globalForOpenAI = globalThis as unknown as { openai: OpenAI | undefined };
+// El cliente de PostHog envuelve al de OpenAI y expone la misma API.
+type OpenAIClient = NativeOpenAI;
 
-function getOpenAIClient(): OpenAI {
+export type AiObservabilityContext = {
+  distinctId?: string | null;
+  sessionId: string;
+  traceId: string;
+};
+
+const globalForOpenAI = globalThis as unknown as {
+  openai: OpenAIClient | undefined;
+};
+
+export function createAiObservabilityContext(
+  sessionId: string,
+  distinctId?: string | null
+): AiObservabilityContext {
+  return {
+    distinctId,
+    sessionId: sessionId.replace(/[^A-Za-z0-9_~.@()!'|:-]/g, "-"),
+    traceId: randomUUID(),
+  };
+}
+
+function getOpenAIClient(): OpenAIClient {
   if (!process.env.OPENAI_API_KEY) {
     throw new Error("OPENAI_API_KEY is not configured");
   }
   if (!globalForOpenAI.openai) {
-    globalForOpenAI.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const posthog = getPostHogClient();
+    globalForOpenAI.openai = posthog
+      ? new PostHogOpenAI({ apiKey: process.env.OPENAI_API_KEY, posthog })
+      : new NativeOpenAI({ apiKey: process.env.OPENAI_API_KEY });
   }
   return globalForOpenAI.openai;
+}
+
+function getObservabilityParams(
+  context?: AiObservabilityContext
+): Record<string, unknown> {
+  if (!context || !getPostHogClient()) return {};
+  return {
+    posthogDistinctId: context.distinctId ?? undefined,
+    posthogProperties: { $ai_session_id: context.sessionId },
+    posthogTraceId: context.traceId,
+  };
 }
 
 export function getNarrativeModel(): string {
@@ -55,7 +96,8 @@ export function getReasoningEffort(): "low" | "medium" | "high" {
 export async function generateText(
   systemPrompt: string,
   userPrompt: string,
-  model = getNarrativeModel()
+  model = getNarrativeModel(),
+  observability?: AiObservabilityContext
 ): Promise<string> {
   const client = getOpenAIClient();
   const response = await client.chat.completions.create({
@@ -65,7 +107,8 @@ export async function generateText(
       { role: "user", content: userPrompt },
     ],
     temperature: 0.4,
-  });
+    ...getObservabilityParams(observability),
+  } as NativeOpenAI.Chat.ChatCompletionCreateParamsNonStreaming);
   const content = response.choices[0]?.message?.content;
   if (!content) throw new Error("Empty response from OpenAI");
   return content;
@@ -74,7 +117,8 @@ export async function generateText(
 export async function generateJson<T>(
   systemPrompt: string,
   userPrompt: string,
-  model = getNarrativeModel()
+  model = getNarrativeModel(),
+  observability?: AiObservabilityContext
 ): Promise<T> {
   const client = getOpenAIClient();
   const response = await client.chat.completions.create({
@@ -85,7 +129,8 @@ export async function generateJson<T>(
     ],
     response_format: { type: "json_object" },
     temperature: 0.3,
-  });
+    ...getObservabilityParams(observability),
+  } as NativeOpenAI.Chat.ChatCompletionCreateParamsNonStreaming);
   const content = response.choices[0]?.message?.content;
   if (!content) throw new Error("Empty response from OpenAI");
   return JSON.parse(content) as T;
@@ -93,7 +138,8 @@ export async function generateJson<T>(
 
 export async function generateReasoningJson<T>(
   systemPrompt: string,
-  userPrompt: string
+  userPrompt: string,
+  observability?: AiObservabilityContext
 ): Promise<T> {
   const client = getOpenAIClient();
   const model = getReasoningModel();
@@ -107,18 +153,22 @@ export async function generateReasoningJson<T>(
     ],
     response_format: { type: "json_object" },
     reasoning_effort: effort,
-  } as OpenAI.Chat.ChatCompletionCreateParamsNonStreaming);
+    ...getObservabilityParams(observability),
+  } as NativeOpenAI.Chat.ChatCompletionCreateParamsNonStreaming);
   const content = response.choices[0]?.message?.content;
   if (!content) throw new Error("Empty response from OpenAI reasoning");
   return JSON.parse(content) as T;
 }
 
 export async function generateIdeaSummary(
-  description: string
+  description: string,
+  observability?: AiObservabilityContext
 ): Promise<IdeaSummaryResult> {
   const raw = await generateJson<unknown>(
     IDEA_SUMMARY_SYSTEM_PROMPT,
-    buildIdeaSummaryUserPrompt(description)
+    buildIdeaSummaryUserPrompt(description),
+    getNarrativeModel(),
+    observability
   );
   return ideaSummarySchema.parse(raw);
 }
@@ -256,10 +306,13 @@ export async function generateIdeaRefinement(input: {
   selectedAssumptions: AssumptionItem[];
   clarifications: Record<string, string>;
   currentStructured?: StructuredUnderstanding | null;
+  observability?: AiObservabilityContext;
 }): Promise<IdeaRefinementResult> {
   const raw = await generateJson<unknown>(
     IDEA_REFINEMENT_SYSTEM_PROMPT,
-    buildIdeaRefinementUserPrompt(input)
+    buildIdeaRefinementUserPrompt(input),
+    getNarrativeModel(),
+    input.observability
   );
   const parsed = ideaRefinementSchema.parse(raw);
   return {
@@ -475,10 +528,13 @@ export async function generateIdeaAssumptionsRotation(input: {
   currentSummary: string;
   structured?: StructuredUnderstanding | null;
   previousAssumptions: AssumptionItem[];
+  observability?: AiObservabilityContext;
 }): Promise<IdeaAssumptionsRotateResult> {
   const raw = await generateJson<unknown>(
     IDEA_ASSUMPTIONS_ROTATE_SYSTEM_PROMPT,
-    buildIdeaAssumptionsRotateUserPrompt(input)
+    buildIdeaAssumptionsRotateUserPrompt(input),
+    getNarrativeModel(),
+    input.observability
   );
   return ideaAssumptionsRotateSchema.parse(raw);
 }

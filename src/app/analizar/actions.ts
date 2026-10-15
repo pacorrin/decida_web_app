@@ -5,6 +5,7 @@ import {
   generateFallbackIdeaSummary,
   generateFallbackIdeaRefinement,
   generateFallbackIdeaAssumptionsRotation,
+  createAiObservabilityContext,
   generateIdeaRefinement,
   generateIdeaAssumptionsRotation,
   generateIdeaSummary,
@@ -44,6 +45,8 @@ import { ensureAssessmentForCurrentUser } from "@/lib/onboarding/for-user";
 import { PLANS_PATH } from "@/lib/subscription/limits";
 import { blendProducts } from "@/lib/onboarding/products";
 import { prisma } from "@/lib/prisma";
+import { trackServer } from "@/lib/analytics/server";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { createUser, findUserByEmail, updateUserPassword, markEmailVerified } from "@/lib/auth/users";
 import { normalizeEmail } from "@/lib/auth/verification";
 import { createUserSession, getCurrentUser } from "@/lib/auth/session-server";
@@ -137,6 +140,9 @@ export async function saveContact(
     : await createUser({ email: normalizedEmail, password, name, phone });
   await markEmailVerified(user.user_id);
   await createUserSession(user.user_id);
+  await trackServer(user.user_id, ANALYTICS_EVENTS.accountCreated, {
+    source: "onboarding",
+  });
 
   const existing = await getCurrentAssessment();
   let asmtId: string;
@@ -186,10 +192,14 @@ export async function saveIdea(
   }
 
   const { description } = parsed.data;
+  const observability = createAiObservabilityContext(
+    assessment.asmt_id,
+    assessment.asmt_user_id
+  );
 
   let summaryResult;
   try {
-    summaryResult = await generateIdeaSummary(description);
+    summaryResult = await generateIdeaSummary(description, observability);
   } catch {
     summaryResult = generateFallbackIdeaSummary(description);
   }
@@ -265,6 +275,10 @@ export async function refineIdea(
     };
   }
 
+  const observability = createAiObservabilityContext(
+    assessment.asmt_id,
+    assessment.asmt_user_id
+  );
   let refinement;
   let usedFallback = false;
   try {
@@ -274,6 +288,7 @@ export async function refineIdea(
       selectedAssumptions,
       clarifications: parsed.data.clarifications ?? {},
       currentStructured: payload.structured,
+      observability,
     });
   } catch (error) {
     usedFallback = true;
@@ -331,6 +346,10 @@ export async function rotateIdeaAssumptions(
   const payload = unpackIdeaAiPayload(idea.bide_ai_detected_assumptions);
   const previousAssumptions = payload.assumptions;
 
+  const observability = createAiObservabilityContext(
+    assessment.asmt_id,
+    assessment.asmt_user_id
+  );
   let rotation;
   try {
     rotation = await generateIdeaAssumptionsRotation({
@@ -338,6 +357,7 @@ export async function rotateIdeaAssumptions(
       currentSummary: idea.bide_ai_summary,
       structured: payload.structured,
       previousAssumptions,
+      observability,
     });
   } catch {
     rotation = generateFallbackIdeaAssumptionsRotation(previousAssumptions);
@@ -404,7 +424,12 @@ export async function savePayment(
     };
   }
 
-  await activateSimulatedSubscription(user, assessment.asmt_id);
+  const activated = await activateSimulatedSubscription(user, assessment.asmt_id);
+  if (activated) {
+    await trackServer(user.user_id, ANALYTICS_EVENTS.subscriptionActivated, {
+      entry_point: "onboarding",
+    });
+  }
 
   redirectToStep("perfil");
 }
@@ -650,16 +675,29 @@ export async function saveEvaluation(
   const refreshed = await getAssessmentById(assessment.asmt_id);
   if (!refreshed) redirectToStep("contacto");
 
+  await trackServer(
+    refreshed.asmt_user_id,
+    ANALYTICS_EVENTS.onboardingCompleted,
+    { assessmentId: assessment.asmt_id }
+  );
+
+  const observability = createAiObservabilityContext(
+    refreshed.asmt_id,
+    refreshed.asmt_user_id
+  );
+
+
   try {
     const { deterministic, interpretation } =
-      await runScoringPipeline(refreshed);
-    await generateReport(refreshed, deterministic, interpretation);
-    
+      await runScoringPipeline(refreshed, observability);
+    await generateReport(refreshed, deterministic, interpretation, observability);
+
     logReportGenerationSuccess("Report generated successfully", {
       assessmentId: assessment.asmt_id,
       metadata: { email: assessment.asmt_email },
     });
   } catch (error) {
+
     logReportGenerationError("Report generation failed during evaluation", {
       assessmentId: assessment.asmt_id,
       error,
@@ -704,6 +742,12 @@ export async function retryReportGeneration(): Promise<ActionState> {
     metadata: { previousStatus: assessment.asmt_status },
   });
 
+  const observability = createAiObservabilityContext(
+    refreshed.asmt_id,
+    refreshed.asmt_user_id
+  );
+
+
   try {
     await prisma.assessments.update({
       where: { asmt_id: assessment.asmt_id },
@@ -711,8 +755,8 @@ export async function retryReportGeneration(): Promise<ActionState> {
     });
 
     const { deterministic, interpretation } =
-      await runScoringPipeline(refreshed);
-    await generateReport(refreshed, deterministic, interpretation);
+      await runScoringPipeline(refreshed, observability);
+    await generateReport(refreshed, deterministic, interpretation, observability);
 
     logReportGenerationSuccess("Report generated successfully on retry", {
       assessmentId: assessment.asmt_id,
@@ -723,6 +767,7 @@ export async function retryReportGeneration(): Promise<ActionState> {
       message: "Reporte generado exitosamente.",
     };
   } catch (error) {
+
     logReportGenerationError("Report generation retry failed", {
       assessmentId: assessment.asmt_id,
       error,
@@ -793,6 +838,12 @@ export async function saveFeedback(
       fdbk_comment: data.comment ?? null,
       fdbk_testimonial_consent: data.testimonialConsent ?? false,
     },
+  });
+
+  await trackServer(assessment.asmt_user_id, ANALYTICS_EVENTS.feedbackSubmitted, {
+    rating: data.rating,
+    would_recommend: data.wouldRecommend === "true",
+    testimonial_consent: data.testimonialConsent ?? false,
   });
 
   return {

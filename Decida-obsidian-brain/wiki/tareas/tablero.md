@@ -18,7 +18,7 @@ Leyenda: ⬜ Pendiente · 🟦 En curso · 🟢 Cerrado · 🔴 Atrasado
 |---|---|---|---|---|
 | 1 | 10 ago – 23 ago | Cuentas, login, email | 🟢 Cerrado (lo único pendiente, el dominio de Resend, pasó a S3-09) | — |
 | 2 | 24 ago – 6 sep | Dashboard `/cuenta` + pulir onboarding | 🟢 Cerrado el 2 sep | — |
-| 3 | 7 sep – 20 sep | Suscripción + freemium, hardening para la beta | 🟦 En curso (S3-01 a S3-04 hechas el 29 sep, S3-05, S3-06, S3-07 y S3-08 el 14 oct) | [[sprint-3]] |
+| 3 | 7 sep – 20 sep | Suscripción + freemium, hardening para la beta | 🟦 En curso (S3-01 a S3-04 hechas el 29 sep, S3-05 a S3-08 el 14 oct, S3-10 a S3-13 el 15 oct) | [[sprint-3]] |
 | 4 | 21 sep – 11 oct | Beta cerrada con cuentas reales | 🔴 No ha arrancado (depende del Sprint 3) | [[#Sprint 4 — Beta cerrada]] |
 | 5 | 12 oct – 1 nov | Pago real, panel admin, lanzamiento | ⬜ Pendiente | [[#Sprint 5 — Cierre y lanzamiento]] |
 
@@ -26,8 +26,8 @@ Leyenda: ⬜ Pendiente · 🟦 En curso · 🟢 Cerrado · 🔴 Atrasado
 
 1. **Suscripción y freemium**: S3-01 a S3-08 ya están en local, con pruebas (Vitest + e2e, ver [[sprint-3]]); falta commitear y probar en un entorno compartido.
 2. **Dominio propio en Resend** (S3-09): sin él no puede registrarse nadie más que tú, así que bloquea la beta. Guía lista en [[correo-transaccional-resend]]; falta tu verificación del dominio.
-3. **Monitoreo de errores con Sentry y analytics del embudo** (S3-10, S3-11).
-4. **Landing y copy** con el modelo nuevo (S3-12, S3-13).
+3. ~~Monitoreo de errores con Sentry y analytics del embudo~~ (S3-10 y S3-11 hechas el 15 oct; se sigue puliendo la analítica).
+4. ~~Landing y copy con el modelo nuevo~~ (S3-12 y S3-13 hechas el 15 oct).
 5. **PDF real** (S3-14), al final: no es necesario para arrancar la beta.
 
 ## Sprint 4 — Beta cerrada
@@ -35,6 +35,13 @@ Leyenda: ⬜ Pendiente · 🟦 En curso · 🟢 Cerrado · 🔴 Atrasado
 - [ ] S4-00 **Desplegar en Railway** (decidido el 2026-09-28: primera tarea de la beta, antes de invitar usuarios; todo se prueba antes en local). Postgres en Railway, variables de entorno (`DATABASE_URL`, `OPENAI_API_KEY`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, DSN de Sentry) y dominio.
   - Ojo: la migración de `prisma/migrations/` está desincronizada con `schema.prisma` (le faltan `asmt_name` y `asmt_phone`). Hay que regenerar una migración limpia antes del primer despliegue.
   - Hecho cuando: el flujo completo (registro → onboarding → reporte) funciona en la URL de Railway.
+  - **Notas de despliegue (checklist de variables y pasos):**
+    - **Sentry:** `SENTRY_DSN` y `NEXT_PUBLIC_SENTRY_DSN` (mismo valor; la pública se incrusta al construir, así que debe existir **antes del build**) y `SENTRY_AUTH_TOKEN` para subir source maps. El token ya existe: el wizard lo guardó en `.env.sentry-build-plugin` (local, ignorado por git). Hay que copiar su valor a una variable de Railway a mano; si no se quiere reutilizar, se genera uno nuevo en Sentry → Settings → Auth Tokens. Nunca pegarlo en chat ni commitearlo.
+    - **PostHog:** `NEXT_PUBLIC_POSTHOG_KEY` (clave pública `phc_…`, también antes del build) y `NEXT_PUBLIC_POSTHOG_HOST`.
+    - **Resend:** `RESEND_API_KEY` y `RESEND_FROM_EMAIL` con el dominio ya verificado (ver [[../arquitectura/correo-transaccional-resend]]).
+    - **Base de datos y IA:** `DATABASE_URL` del Postgres de Railway y `OPENAI_API_KEY`.
+    - **Migración:** regenerar una migración limpia de Prisma antes del primer despliegue (la carpeta `prisma/migrations/` está desincronizada con `schema.prisma`: faltan `asmt_name`, `asmt_phone` y los cambios de `payments` del 2026-10-14).
+    - **Después del despliegue:** repetir la prueba de Resend con un correo ajeno, forzar un error para confirmar que llega a Sentry en producción y revisar que lleguen los eventos del embudo a PostHog.
 - [ ] S4-01 Definir el grupo de beta (quiénes y cuántos) y cómo se les invita.
 - [ ] S4-02 Invitar al grupo y confirmar que cada persona pudo crear su cuenta.
 - [ ] S4-03 Recoger feedback sobre el valor del reporte, la cuenta y el historial.

@@ -49,6 +49,9 @@ export default defineConfig({
     url: BASE_URL,
     reuseExistingServer: !isCI,
     timeout: 180_000,
+    // Las pruebas crean cuentas y reportes falsos: sin clave de PostHog no
+    // ensucian los embudos reales (solo aplica si Playwright levanta el servidor).
+    env: { NEXT_PUBLIC_POSTHOG_KEY: "", NEXT_PUBLIC_POSTHOG_HOST: "" },
     stdout: "pipe",
     stderr: "pipe",
   },

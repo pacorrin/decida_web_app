@@ -26,6 +26,8 @@ import { createUserSession, clearUserSessionCookie } from "@/lib/auth/session-se
 import { verifyPassword } from "@/lib/auth/password";
 import { sendEmail } from "@/lib/email/resend";
 import { prisma } from "@/lib/prisma";
+import { trackServer } from "@/lib/analytics/server";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { verificationCodeEmail } from "@/lib/email/templates";
 
 export type AuthActionState = {
@@ -132,6 +134,9 @@ export async function verifySignup(
 
   await markEmailVerified(user.user_id);
   await createUserSession(user.user_id);
+  await trackServer(user.user_id, ANALYTICS_EVENTS.accountCreated, {
+    source: "registro",
+  });
 
   redirect("/cuenta");
 }
@@ -177,6 +182,7 @@ export async function logIn(
   }
 
   await createUserSession(user.user_id);
+  await trackServer(user.user_id, ANALYTICS_EVENTS.userLoggedIn);
   redirect(safeNextPath(formData.get("next")));
 }
 

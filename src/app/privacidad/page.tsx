@@ -92,12 +92,20 @@ export default function PrivacidadPage() {
             <strong className="text-foreground">Cookies de preferencia:</strong>{" "}
             recuerdan configuraciones básicas de la interfaz cuando apliquen.
           </li>
+          <li>
+            <strong className="text-foreground">Analítica de uso:</strong>{" "}
+            usamos PostHog para contar visitas y medir en qué paso del flujo
+            abandonan las personas (por ejemplo, cuántas crean una cuenta o
+            ven su reporte). Guarda un identificador en tu navegador y, si
+            tienes cuenta, el identificador interno de tu cuenta. No enviamos
+            tu correo, tu teléfono ni el texto de tu idea, y no grabamos tu
+            pantalla.
+          </li>
         </ul>
         <p>
-          No usamos cookies de publicidad ni de seguimiento de terceros en esta
-          versión del producto. Puedes configurar tu navegador para rechazar
-          cookies, aunque algunas funciones del diagnóstico podrían dejar de
-          funcionar correctamente.
+          No usamos cookies de publicidad. Puedes configurar tu navegador para
+          rechazar cookies, aunque algunas funciones del diagnóstico podrían
+          dejar de funcionar correctamente.
         </p>
       </LegalSection>
 

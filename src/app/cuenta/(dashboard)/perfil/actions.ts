@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth/session-server";
 import { prisma } from "@/lib/prisma";
 import { CANCEL_MESSAGES, planCancellation } from "@/lib/subscription/cancel";
+import { trackServer } from "@/lib/analytics/server";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 
 export type CancelSubscriptionState = {
   success: boolean;
@@ -36,5 +38,7 @@ export async function cancelSubscription(
   if (count === 0) {
     return { success: false, message: CANCEL_MESSAGES.already_canceled };
   }
+
+  await trackServer(user.user_id, ANALYTICS_EVENTS.subscriptionCancelled);
   return { success: true, message: "Suscripción cancelada." };
 }

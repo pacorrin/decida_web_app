@@ -1,6 +1,16 @@
-import Link from "next/link";
+"use client";
+
+import { TrackedLink } from "@/components/analytics/tracked-link";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+/** Ir a la pantalla de suscripción cuenta como «clic en suscribirse». */
+function eventForHref(href: string) {
+  return href.startsWith("/cuenta/suscripcion")
+    ? ANALYTICS_EVENTS.subscribeClicked
+    : ANALYTICS_EVENTS.ctaClicked;
+}
 
 type CtaLinkProps = {
   href: string;
@@ -16,8 +26,10 @@ export function CtaLink({
   className,
 }: CtaLinkProps) {
   return (
-    <Link
+    <TrackedLink
       href={href}
+      event={eventForHref(href)}
+      eventProps={{ href }}
       className={cn(
         buttonVariants({
           variant: variant === "outline" ? "outline" : "secondary",
@@ -32,7 +44,7 @@ export function CtaLink({
       )}
     >
       {children}
-    </Link>
+    </TrackedLink>
   );
 }
 
@@ -47,7 +59,13 @@ export function PrimaryCtaButton({
 }) {
   return (
     <Button
-      render={<Link href={href} />}
+      render={
+        <TrackedLink
+          href={href}
+          event={eventForHref(href)}
+          eventProps={{ href }}
+        />
+      }
       nativeButton={false}
       className={cn(
         "min-h-11 w-full bg-secondary px-6 text-base text-secondary-foreground hover:bg-secondary/90 sm:w-auto",

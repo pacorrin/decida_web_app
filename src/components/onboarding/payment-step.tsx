@@ -26,6 +26,8 @@ import {
 import { getRemainingMinutes } from "@/lib/onboarding/steps";
 import type { ActionState } from "@/lib/onboarding/schemas";
 import { CheckCircle2, CreditCard, ShieldCheck } from "lucide-react";
+import { track } from "@/lib/analytics/client";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 
 const initialState: ActionState = { success: false };
 
@@ -125,6 +127,9 @@ export function PaymentStep() {
                 size="lg"
                 className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
                 data-testid="payment-submit"
+                onClick={() =>
+                  track(ANALYTICS_EVENTS.subscribeClicked, { location: "onboarding_plan" })
+                }
               >
                 {pending ? "Procesando..." : "Suscribirme — $99 MXN/mes"}
               </Button>

@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logOut } from "@/app/cuenta/actions";
+import { resetAnalytics } from "@/lib/analytics/client";
 
 type DashboardNavbarProps = {
   user: { user_name: string | null; user_email: string };
@@ -57,6 +58,7 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
             <DropdownMenuItem
               data-testid="dashboard-logout"
               onClick={() => {
+                resetAnalytics();
                 startTransition(() => {
                   void logOut();
                 });

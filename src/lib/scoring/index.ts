@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import {
   generateReasoningJson,
   getReasoningModel,
+  type AiObservabilityContext,
 } from "@/lib/ai/openai";
 import {
   SCORING_INTERPRET_SYSTEM_PROMPT,
@@ -96,12 +97,14 @@ function dependencyContextLine(
 
 async function interpretScores(
   scores: Record<string, number>,
-  context: string
+  context: string,
+  observability?: AiObservabilityContext
 ): Promise<ScoringInterpretResult> {
   try {
     const raw = await generateReasoningJson<unknown>(
       SCORING_INTERPRET_SYSTEM_PROMPT,
-      buildScoringInterpretPrompt(scores, context)
+      buildScoringInterpretPrompt(scores, context),
+      observability
     );
     return scoringInterpretSchema.parse(raw);
   } catch {
@@ -109,7 +112,10 @@ async function interpretScores(
   }
 }
 
-export async function runScoringPipeline(assessment: AssessmentWithRelations) {
+export async function runScoringPipeline(
+  assessment: AssessmentWithRelations,
+  observability?: AiObservabilityContext
+) {
   const deterministic = calculateDeterministicScores(assessment);
   const scoresMap = Object.fromEntries(
     deterministic.dimensions.map((d) => [d.key, d.score])
@@ -117,7 +123,8 @@ export async function runScoringPipeline(assessment: AssessmentWithRelations) {
 
   const interpretation = await interpretScores(
     scoresMap,
-    buildAssessmentContext(assessment)
+    buildAssessmentContext(assessment),
+    observability
   );
 
   // Deterministic flags (investment vs. declared capital / acceptable loss,

@@ -21,10 +21,13 @@ import { PricingSection } from "@/components/landing/pricing-section";
 import { FaqSection } from "@/components/landing/faq-section";
 import { FinalCtaSection } from "@/components/landing/final-cta-section";
 import { SiteFooter } from "@/components/landing/site-footer";
+import { TrackEvent } from "@/components/analytics/track-event";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 
 export default function HomePage() {
   return (
     <>
+      <TrackEvent event={ANALYTICS_EVENTS.landingViewed} />
       <SiteHeader />
       <main id="contenido-principal">
         <HeroSection />

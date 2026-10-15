@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
+import { TrackedLink } from "@/components/analytics/tracked-link";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { getCurrentUser } from "@/lib/auth/session-server";
 import { buttonVariants } from "@/components/ui/button";
 import { CancelSubscription } from "@/components/account/cancel-subscription";
@@ -95,9 +97,14 @@ export default async function PerfilPage() {
             </Link>
           )}
           {(sub.kind === "none" || sub.kind === "expired") && (
-            <Link href="/cuenta/suscripcion" className={buttonVariants()}>
+            <TrackedLink
+              href="/cuenta/suscripcion"
+              event={ANALYTICS_EVENTS.subscribeClicked}
+              eventProps={{ location: "perfil" }}
+              className={buttonVariants()}
+            >
               Suscribirme
-            </Link>
+            </TrackedLink>
           )}
         </CardContent>
       </Card>

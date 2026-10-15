@@ -2,6 +2,8 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
+import { track } from "@/lib/analytics/client";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import {
   subscribe,
   type SubscribeState,
@@ -20,6 +22,9 @@ export function SubscribeButton({ label }: { label: string }) {
         disabled={pending}
         className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
         data-testid="subscribe-submit"
+        onClick={() =>
+          track(ANALYTICS_EVENTS.subscribeClicked, { location: "cuenta_suscripcion" })
+        }
       >
         {pending ? "Procesando..." : label}
       </Button>

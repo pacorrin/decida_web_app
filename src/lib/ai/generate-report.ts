@@ -1,4 +1,9 @@
-import { generateJson, generateText, getNarrativeModel } from "@/lib/ai/openai";
+import {
+  generateJson,
+  generateText,
+  getNarrativeModel,
+  type AiObservabilityContext,
+} from "@/lib/ai/openai";
 import { prisma } from "@/lib/prisma";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import { parseStoredProducts } from "@/lib/onboarding/products";
@@ -135,18 +140,24 @@ const SECTION_PROMPTS: Record<
 async function generateSection(
   key: string,
   ctx: ReportContext,
+  observability?: AiObservabilityContext,
   retryCount = 0
 ): Promise<string> {
   const promptFn = SECTION_PROMPTS[key];
   if (!promptFn) throw new Error(`Unknown section: ${key}`);
   
   try {
-    return await generateText(BASE_SYSTEM, promptFn(ctx));
+    return await generateText(
+      BASE_SYSTEM,
+      promptFn(ctx),
+      getNarrativeModel(),
+      observability
+    );
   } catch (error) {
     if (retryCount < MAX_RETRIES) {
       console.warn(`Retrying section ${key} (attempt ${retryCount + 1}/${MAX_RETRIES})`);
       await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS * (retryCount + 1)));
-      return generateSection(key, ctx, retryCount + 1);
+      return generateSection(key, ctx, observability, retryCount + 1);
     }
     throw new Error(`Failed to generate section ${key} after ${MAX_RETRIES} retries: ${error}`);
   }
@@ -160,7 +171,8 @@ async function generateSection(
  */
 async function generateStrengthsRisks(
   ctx: ReportContext,
-  verifiedFacts: string[]
+  verifiedFacts: string[],
+  observability?: AiObservabilityContext
 ) {
   const raw = await generateJson<unknown>(
     STRENGTHS_RISKS_SYSTEM_PROMPT,
@@ -173,12 +185,17 @@ async function generateStrengthsRisks(
       dependencies: ctx.dependencies,
       interpretation: ctx.interpretation,
       verifiedFacts,
-    })
+    }),
+    getNarrativeModel(),
+    observability
   );
   return strengthsRisksSchema.parse(raw);
 }
 
-async function generateValidationPlan(ctx: ReportContext) {
+async function generateValidationPlan(
+  ctx: ReportContext,
+  observability?: AiObservabilityContext
+) {
   const raw = await generateJson<unknown>(
     VALIDATION_PLAN_SYSTEM_PROMPT,
     buildValidationPlanPrompt({
@@ -186,7 +203,9 @@ async function generateValidationPlan(ctx: ReportContext) {
       interpretation: ctx.interpretation,
       products: ctx.products,
       profile: ctx.profile,
-    })
+    }),
+    getNarrativeModel(),
+    observability
   );
   return validationPlanSchema.parse(raw);
 }
@@ -219,7 +238,8 @@ function mergeStrengths(
 export async function generateReport(
   assessment: AssessmentWithRelations,
   deterministic: DeterministicScoreResult,
-  interpretation: ScoringInterpretResult
+  interpretation: ScoringInterpretResult,
+  observability?: AiObservabilityContext
 ) {
   const ctx = buildContext(assessment, deterministic, interpretation);
   const model = getNarrativeModel();
@@ -245,22 +265,22 @@ export async function generateReport(
     strengthsRisks,
     validationWeeks,
   ] = await Promise.all([
-    generateSection("executive_summary", ctx),
-    generateSection("business_understanding", ctx),
-    generateSection("financial_analysis", ctx),
-    generateSection("personal_fit_analysis", ctx),
-    generateSection("time_operation_analysis", ctx),
-    generateSection("scalability_analysis", ctx),
-    generateSection("final_recommendation", ctx),
+    generateSection("executive_summary", ctx, observability),
+    generateSection("business_understanding", ctx, observability),
+    generateSection("financial_analysis", ctx, observability),
+    generateSection("personal_fit_analysis", ctx, observability),
+    generateSection("time_operation_analysis", ctx, observability),
+    generateSection("scalability_analysis", ctx, observability),
+    generateSection("final_recommendation", ctx, observability),
 
-    generateStrengthsRisks(ctx, verifiedFacts).catch((error) => {
+    generateStrengthsRisks(ctx, verifiedFacts, observability).catch((error) => {
       logReportGenerationError(
         "strengths_risks: respuesta de IA inválida, usando fortalezas determinísticas",
         { assessmentId: assessment.asmt_id, error }
       );
       return null;
     }),
-    generateValidationPlan(ctx).catch((error) => {
+    generateValidationPlan(ctx, observability).catch((error) => {
       logReportGenerationError("validation_plan: respuesta de IA inválida", {
         assessmentId: assessment.asmt_id,
         error,

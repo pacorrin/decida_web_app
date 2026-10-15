@@ -16,7 +16,9 @@ import {
   parseStoredStrengths,
   parseStoredValidationPlan,
 } from "@/lib/report/sections";
-import Link from "next/link";
+import { TrackedLink } from "@/components/analytics/tracked-link";
+import { TrackEvent } from "@/components/analytics/track-event";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import {
   CheckCircle2,
   AlertTriangle,
@@ -155,6 +157,12 @@ export function ResultReport({
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_220px] lg:gap-14">
       <div className="min-w-0 space-y-2">
+        {report && (
+          <TrackEvent
+            event={ANALYTICS_EVENTS.reportViewed}
+            props={{ access: isFree ? "free" : "full" }}
+          />
+        )}
         {/* Table of Contents - Mobile */}
         <div className="lg:hidden">
           <ReportToc className="mb-8" sectionIds={tocSectionIds} />
@@ -779,12 +787,14 @@ function LockedSection({
           />
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">{description}</p>
-            <Link
+            <TrackedLink
+              event={ANALYTICS_EVENTS.subscribeClicked}
+              eventProps={{ location: "report_lock" }}
               href="/cuenta/suscripcion"
               className="text-sm font-medium text-primary underline-offset-4 hover:underline"
             >
               Desbloquear con la suscripción
-            </Link>
+            </TrackedLink>
           </div>
         </CardContent>
       </Card>

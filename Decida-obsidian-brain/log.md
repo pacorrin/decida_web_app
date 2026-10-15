@@ -434,3 +434,15 @@ El usuario confirmó que el error de prueba llegó a Sentry. Se borraron `src/ap
 ## [2026-10-15] query | Sentry listo para producción
 
 El DSN pasó de estar escrito en los 3 archivos de configuración a variables de entorno (`SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`) y las trazas bajan a 10% en producción. Pendiente en S4-00: cargar las variables y `SENTRY_AUTH_TOKEN` en Railway.
+
+## [2026-10-15] query | S3-11: analytics con PostHog (código listo) y notas de despliegue
+
+PostHog elegido por ser gratuito y traer embudos. Instalados posthog-js y posthog-node; 6 eventos conectados en landing, CTA, alta de cuenta, fin del onboarding, vista del reporte y clic en suscribirse. Falta la clave del proyecto para probarlo. Se actualizó `/privacidad`. A pedido del usuario, `wiki/tareas/tablero.md` (S4-00) ahora tiene el checklist de variables y pasos de Railway, incluida la nota del token de Sentry.
+
+## [2026-10-15] query | PostHog: revisión del wizard
+
+El wizard de PostHog agregó autocaptura, grabación de pantalla, correo y nombre como propiedades de persona, prompts de IA guardados, logs OpenTelemetry y un layout raíz dinámico. Se revirtió o apagó todo lo que contradecía `/privacidad` o degradaba la app, y se conservaron los eventos extra y la observabilidad de IA en modo privado. Detalle en `wiki/tareas/sprint-3.md` (S3-11). S3-11 sigue abierta hasta ver los eventos en PostHog.
+
+## [2026-10-15] query | S3-11 cerrada
+
+El usuario confirmó que llegan `report_viewed`, `identify` y los pageviews a PostHog y pidió dar la tarea por hecha; quedan por confirmar 5 eventos del embudo y se agregarán más eventos en una iteración posterior. Actualizado: `wiki/tareas/sprint-3.md`.
