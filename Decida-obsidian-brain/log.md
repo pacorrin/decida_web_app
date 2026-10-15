@@ -430,3 +430,7 @@ Landing y copy alineados con freemium + suscripción: CTA «Analizar mi idea gra
 ## [2026-10-15] query | S3-10 cerrada
 
 El usuario confirmó que el error de prueba llegó a Sentry. Se borraron `src/app/sentry-example-page` y `src/app/api/sentry-example-api`. Pendiente para producción: DSN a variable de entorno, bajar `tracesSampleRate` y `SENTRY_AUTH_TOKEN` en Railway.
+
+## [2026-10-15] query | Sentry listo para producción
+
+El DSN pasó de estar escrito en los 3 archivos de configuración a variables de entorno (`SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`) y las trazas bajan a 10% en producción. Pendiente en S4-00: cargar las variables y `SENTRY_AUTH_TOKEN` en Railway.
