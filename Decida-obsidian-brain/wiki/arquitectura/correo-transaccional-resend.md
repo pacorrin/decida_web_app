@@ -38,7 +38,7 @@ Remitente: variable `RESEND_FROM_EMAIL`; si falta, el código usa `Decida <onboa
 3. **Copia los registros DNS que Resend te muestre** (SPF, DKIM y los que indique) a tu registrador, exactamente como aparecen: tipo, nombre y valor. No inventes ni retoques valores; si el registrador añade solo el subdominio al nombre, no lo repitas. Opcional pero recomendado: añade un registro DMARC (`_dmarc`) con política `p=none` para empezar; Resend explica el formato en su documentación.
 4. **Espera la verificación**: pulsa Verify en Resend. Puede tardar de minutos a horas. El dominio debe quedar en estado **Verified**.
 5. **Crea una API key de envío para producción**: Resend → API Keys → Create, permiso *Sending access*, limitada a ese dominio. Guárdala solo en variables de entorno, nunca en el repo ni en el vault.
-6. **Define el remitente**: `RESEND_FROM_EMAIL="Decida <no-reply@mail.tu-dominio.com>"` (formato `Nombre <dirección@dominio-verificado>`; el dominio debe ser el verificado).
+6. **Define el remitente**: `RESEND_FROM_EMAIL="Decida <hello@tu-dominio.com>"` (formato `Nombre <dirección@dominio-verificado>`; el dominio debe ser el verificado).
 7. **Configura las variables**:
    - Local: en `.env` (gitignored) pon `RESEND_API_KEY` y `RESEND_FROM_EMAIL`, y reinicia `pnpm dev`.
    - Railway: las mismas dos variables en el servicio de la app (ver nota de S4-00 abajo).

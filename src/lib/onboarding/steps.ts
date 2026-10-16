@@ -54,7 +54,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     phase: "pago",
     order: 4,
     label: "Pago",
-    phaseLabel: "Compromiso",
+    phaseLabel: "Plan",
     estimatedMinutes: 1,
     path: "/analizar/pago",
   },
@@ -113,15 +113,47 @@ export function getStepBySlug(slug: OnboardingStepSlug): OnboardingStep {
   return step;
 }
 
-export function getStepProgress(slug: OnboardingStepSlug): number {
-  const step = getStepBySlug(slug);
-  return Math.round((step.order / ONBOARDING_STEPS.length) * 100);
+/**
+ * Quien ya tiene suscripción no pasa por la pantalla de planes: el conteo de
+ * pasos, el avance y los minutos restantes se calculan sin ese paso para que
+ * el recorrido sea consistente (1, 2, 3, 4… sin saltos).
+ */
+export type FlowOptions = { skipPlan?: boolean };
+
+export function getFlowSteps(opts: FlowOptions = {}): OnboardingStep[] {
+  return ONBOARDING_STEPS.filter((s) => !(opts.skipPlan && s.slug === "pago"));
 }
 
-export function getRemainingMinutes(fromSlug: OnboardingStepSlug): number {
+export function getFlowPhases(opts: FlowOptions = {}): OnboardingPhase[] {
+  return PHASE_ORDER.filter((p) => !(opts.skipPlan && p === "pago"));
+}
+
+export function getStepTotal(opts: FlowOptions = {}): number {
+  return getFlowSteps(opts).length;
+}
+
+/** Número de paso visible (1-based) dentro del recorrido de la cuenta. */
+export function getStepNumber(
+  slug: OnboardingStepSlug,
+  opts: FlowOptions = {}
+): number {
+  const index = getFlowSteps(opts).findIndex((s) => s.slug === slug);
+  return index === -1 ? getStepBySlug(slug).order : index + 1;
+}
+
+export function getStepProgress(
+  slug: OnboardingStepSlug,
+  opts: FlowOptions = {}
+): number {
+  return Math.round((getStepNumber(slug, opts) / getStepTotal(opts)) * 100);
+}
+
+export function getRemainingMinutes(
+  fromSlug: OnboardingStepSlug,
+  opts: FlowOptions = {}
+): number {
   const step = getStepBySlug(fromSlug);
-  return ONBOARDING_STEPS.filter((s) => s.order >= step.order).reduce(
-    (sum, s) => sum + s.estimatedMinutes,
-    0
-  );
+  return getFlowSteps(opts)
+    .filter((s) => s.order >= step.order)
+    .reduce((sum, s) => sum + s.estimatedMinutes, 0);
 }

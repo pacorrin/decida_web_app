@@ -13,7 +13,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CancelSubscription } from "@/components/account/cancel-subscription";
+import { PortalButton } from "@/components/account/portal-button";
 import { SubscribeButton } from "@/components/account/subscribe-button";
+import { CheckoutNotice } from "@/components/account/checkout-notice";
+import { resolveCheckoutReturn } from "@/lib/subscription/checkout-return";
+import { isStripeEnabled } from "@/lib/stripe/config";
 import { describeSubscription } from "@/lib/subscription/cancel";
 import {
   PAYMENT_CANCEL_COPY,
@@ -53,13 +57,28 @@ function FeatureList({ items }: { items: readonly string[] }) {
 export default async function SuscripcionPage({
   searchParams,
 }: {
-  searchParams: Promise<{ limite?: string }>;
+  searchParams: Promise<{ limite?: string; checkout?: string; session_id?: string }>;
 }) {
-  const user = await getCurrentUser();
-  if (!user) redirect("/cuenta/iniciar-sesion");
+  const initialUser = await getCurrentUser();
+  if (!initialUser) redirect("/cuenta/iniciar-sesion");
 
-  const { limite } = await searchParams;
+  const { limite, checkout, session_id } = await searchParams;
+  const stripeEnabled = isStripeEnabled();
+  const resolvedCheckout = await resolveCheckoutReturn(
+    initialUser.user_id,
+    { checkout, session_id },
+    "account",
+  );
+  // Si la activación acaba de ocurrir, relee la cuenta para mostrar el estado nuevo.
+  const user =
+    resolvedCheckout === "activated" ? ((await getCurrentUser()) ?? initialUser) : initialUser;
   const sub = describeSubscription(user);
+  // El aviso verde solo tiene sentido mientras la suscripción sigue activa: si
+  // la persona cancela con `?checkout=success` todavía en la URL, no se muestra.
+  const checkoutState =
+    resolvedCheckout === "activated" && sub.kind !== "active"
+      ? "none"
+      : resolvedCheckout;
   const isActive = sub.kind === "active";
   const isCanceled = sub.kind === "canceled";
   const canSubscribe = sub.kind === "none" || sub.kind === "expired";
@@ -75,10 +94,14 @@ export default async function SuscripcionPage({
         </p>
       </div>
 
-      <div className="rounded-xl border border-[#6baed6]/30 bg-accent/50 px-4 py-3 text-sm text-muted-foreground">
-        <span className="font-medium text-primary">Modo beta</span> — pago
-        simulado, no se hace ningún cargo.
-      </div>
+      {!stripeEnabled && (
+        <div className="rounded-xl border border-[#6baed6]/30 bg-accent/50 px-4 py-3 text-sm text-muted-foreground">
+          <span className="font-medium text-primary">Modo beta</span> — pago
+          simulado, no se hace ningún cargo.
+        </div>
+      )}
+
+      <CheckoutNotice state={checkoutState} />
 
       {limite === "1" && (
         <div
@@ -103,6 +126,8 @@ export default async function SuscripcionPage({
                   : "Activa"
                 : `Cancelada, acceso hasta el ${formatDate(sub.accessUntil)}`}
             </p>
+            {user.user_subscription_provider === "stripe" &&
+              user.user_stripe_customer_id && <PortalButton />}
             {isActive && (
               <CancelSubscription
                 accessUntil={sub.renewsAt ? formatDate(sub.renewsAt) : null}
@@ -138,7 +163,9 @@ export default async function SuscripcionPage({
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl">Suscripción</CardTitle>
               {isActive || isCanceled ? (
-                <Badge variant="secondary">Tu plan</Badge>
+                <Badge variant="secondary">
+                  {isCanceled ? "Cancelada" : "Tu plan"}
+                </Badge>
               ) : (
                 <Badge variant="secondary">Recomendado</Badge>
               )}
@@ -159,7 +186,9 @@ export default async function SuscripcionPage({
             </p>
             <p className="flex items-center gap-2 text-sm text-muted-foreground">
               <CreditCard className="size-4 text-[#6baed6]" aria-hidden />
-              Mercado Pago y tarjeta (próximamente)
+              {stripeEnabled
+                ? "Pago seguro con Stripe"
+                : "Pago simulado (beta)"}
             </p>
           </CardContent>
           <CardFooter className="flex-col items-stretch gap-2">
@@ -167,7 +196,7 @@ export default async function SuscripcionPage({
               <SubscribeButton label="Suscribirme — $99 MXN/mes" />
             )}
             {isCanceled && (
-              <SubscribeButton label="Reactivar suscripción" />
+              <SubscribeButton label="Reactivar suscripción" mode="reactivate" />
             )}
             {isActive && (
               <Link href="/cuenta" className={buttonVariants({ variant: "outline", size: "lg" })}>

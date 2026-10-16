@@ -78,7 +78,7 @@ export function ReportErrorState({ assessmentId }: ReportErrorStateProps) {
                 </form>
 
                 <a
-                  href={`mailto:soporte@decida.app?subject=Error%20generando%20reporte&body=Código%20de%20evaluación:%20${assessmentId}`}
+                  href={`mailto:hello@decida.mx?subject=Error%20generando%20reporte&body=Código%20de%20evaluación:%20${assessmentId}`}
                   className="inline-flex h-8 items-center justify-center rounded-lg border border-border bg-background px-2.5 text-sm font-medium hover:bg-muted hover:text-foreground w-full sm:w-auto"
                 >
                   Contactar soporte

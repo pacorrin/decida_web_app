@@ -4,18 +4,21 @@ import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
 import {
   ONBOARDING_STEPS,
-  PHASE_ORDER,
   type OnboardingPhase,
   type OnboardingStepSlug,
+  getFlowPhases,
   getStepBySlug,
+  getStepNumber,
   getStepProgress,
+  getStepTotal,
   getRemainingMinutes,
 } from "@/lib/onboarding/steps";
+import { useOnboardingFlow } from "@/components/onboarding/flow-context";
 import { STEP_COPY } from "@/lib/onboarding/copy";
 
 const PHASE_LABELS: Record<OnboardingPhase, string> = {
   gratis: "Gratis",
-  pago: "Compromiso",
+  pago: "Plan",
   diagnostico: "Diagnóstico",
 };
 
@@ -25,10 +28,12 @@ type OnboardingShellProps = {
 };
 
 export function OnboardingShell({ currentSlug, children }: OnboardingShellProps) {
+  const { skipPlan } = useOnboardingFlow();
+  const flow = { skipPlan };
   const step = getStepBySlug(currentSlug);
   const copy = STEP_COPY[currentSlug];
-  const progress = getStepProgress(currentSlug);
-  const remaining = getRemainingMinutes(currentSlug);
+  const progress = getStepProgress(currentSlug, flow);
+  const remaining = getRemainingMinutes(currentSlug, flow);
   const showRemaining = currentSlug !== "resultado" && remaining > 0;
 
   return (
@@ -46,7 +51,7 @@ export function OnboardingShell({ currentSlug, children }: OnboardingShellProps)
             data-testid="onboarding-step-indicator"
           >
             <span>
-              Paso {step.order} de {ONBOARDING_STEPS.length}
+              Paso {getStepNumber(currentSlug, flow)} de {getStepTotal(flow)}
             </span>
             {showRemaining && (
               <span data-testid="onboarding-remaining-time">
@@ -57,7 +62,7 @@ export function OnboardingShell({ currentSlug, children }: OnboardingShellProps)
         </div>
         <div className="mx-auto max-w-2xl px-4 pb-3 sm:px-6">
           <div className="mb-2 flex gap-2">
-            {PHASE_ORDER.map((phase) => (
+            {getFlowPhases(flow).map((phase) => (
               <span
                 key={phase}
                 className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${

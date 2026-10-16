@@ -7,15 +7,17 @@ import { hasFullAccess } from "@/lib/subscription/access";
 import { AutoRefresh } from "@/components/onboarding/auto-refresh";
 import {
   ONBOARDING_STEPS,
-  PHASE_ORDER,
+  getFlowPhases,
   getStepBySlug,
+  getStepNumber,
   getStepProgress,
+  getStepTotal,
 } from "@/lib/onboarding/steps";
 import { STEP_COPY } from "@/lib/onboarding/copy";
 
 const PHASE_LABELS = {
   gratis: "Gratis",
-  pago: "Compromiso",
+  pago: "Plan",
   diagnostico: "Diagnóstico",
 } as const;
 
@@ -31,7 +33,8 @@ export default async function ResultadoPage() {
 
   const step = getStepBySlug("resultado");
   const copy = STEP_COPY["resultado"];
-  const progress = getStepProgress("resultado");
+  const flow = { skipPlan: hasFullAccess(user) };
+  const progress = getStepProgress("resultado", flow);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-accent/20 via-background to-background">
@@ -52,13 +55,13 @@ export default async function ResultadoPage() {
               Mi cuenta
             </Link>
             <span className="text-xs text-muted-foreground">
-              Paso {step.order} de {ONBOARDING_STEPS.length}
+              Paso {getStepNumber("resultado", flow)} de {getStepTotal(flow)}
             </span>
           </div>
         </div>
         <div className="mx-auto max-w-5xl px-4 pb-3 sm:px-6 lg:px-8">
           <div className="mb-2 flex gap-2">
-            {PHASE_ORDER.map((phase) => (
+            {getFlowPhases(flow).map((phase) => (
               <span
                 key={phase}
                 className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${

@@ -1,17 +1,13 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  cancelSubscription,
-  type CancelSubscriptionState,
-} from "@/app/cuenta/(dashboard)/perfil/actions";
-
-const initial: CancelSubscriptionState = { success: false };
+import { runActionWithToast } from "@/lib/ui/toast-action";
+import { cancelSubscription } from "@/app/cuenta/(dashboard)/perfil/actions";
 
 export function CancelSubscription({ accessUntil }: { accessUntil: string | null }) {
   const [confirming, setConfirming] = useState(false);
-  const [state, action, pending] = useActionState(cancelSubscription, initial);
+  const [pending, startTransition] = useTransition();
 
   if (!confirming) {
     return (
@@ -23,7 +19,17 @@ export function CancelSubscription({ accessUntil }: { accessUntil: string | null
 
   return (
     <form
-      action={action}
+      onSubmit={(e) => {
+        e.preventDefault();
+        startTransition(async () => {
+          await runActionWithToast(() => cancelSubscription({ success: false }), {
+            loading: "Cancelando tu suscripción…",
+            success: accessUntil
+              ? `Suscripción cancelada. Conservas el acceso completo hasta el ${accessUntil}.`
+              : "Suscripción cancelada. Conservas el acceso hasta el fin de tu periodo.",
+          });
+        });
+      }}
       className="space-y-3 rounded-lg border border-border bg-muted/40 p-4"
     >
       <p className="text-sm font-medium text-foreground">
@@ -34,11 +40,6 @@ export function CancelSubscription({ accessUntil }: { accessUntil: string | null
         {accessUntil ? ` hasta el ${accessUntil}` : " hasta que termine tu periodo"}
         ; después tu cuenta pasa a la vista gratuita.
       </p>
-      {state.message && !state.success && (
-        <p role="alert" className="text-sm text-destructive">
-          {state.message}
-        </p>
-      )}
       <div className="flex gap-2">
         <Button type="submit" variant="destructive" disabled={pending}>
           {pending ? "Cancelando…" : "Sí, cancelar suscripción"}

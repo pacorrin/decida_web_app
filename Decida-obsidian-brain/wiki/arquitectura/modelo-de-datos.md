@@ -41,6 +41,8 @@ Esto coincide casi 1:1 con las "Core Entities" que Notion proponía como alterna
 
 > Actualización (mismo día): `users` y `assessments` ya están vinculados (`asmt_user_id`, `onDelete: SetNull`, indexado). Esto estaba asignado a Sprint 2 en la primera versión de esta nota; se adelantó el mismo día a pedido del usuario, junto con la integración al onboarding — ver [[modulo-de-usuarios-y-autenticacion#Integración con el onboarding (mismo día)]].
 
+> S3-16 (2026-10-16, Stripe): `users.user_stripe_customer_id` (único) guarda el Customer de Stripe; con `user_subscription_provider='stripe'`, `user_subscription_provider_id` es el id de la suscripción (`sub_…`). `payments` tiene `@@unique([paym_provider, paym_provider_payment_id])`: para Stripe, `paym_provider_payment_id` es el id de la factura (`in_…`) y da idempotencia al webhook. Ver [[pagos-con-stripe]].
+
 ## Enums
 - `assessment_status`: `started` → `paid` → `in_progress` → `completed` | `report_generated` | `failed`
   > Nota: `completed` es legado (mantenido por compatibilidad); el flujo real usa `report_generated` o `failed` como estados terminales — ver [[manejo-de-errores-y-reembolsos]].

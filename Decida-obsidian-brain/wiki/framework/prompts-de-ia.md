@@ -60,3 +60,27 @@ Cada resultado guarda `promptVersion`, `aiModelUsed`, `scoringVersion` — visib
 
 ## Ver también
 [[scoring-engine]] · [[dimensiones-de-viabilidad]] · [[../experiencia/reporte-de-resultado]] · [[../arquitectura/manejo-de-errores-y-reembolsos]]
+
+## Calidad del reporte — v1.2.0 (2026-10-16)
+
+Tras la prueba manual del onboarding ([[../tareas/prueba-onboarding-2026-10-16]]) se corrigió el contenido generado por IA. `REPORT_PROMPT_VERSION` pasó a `v1.2.0`.
+
+**Causa raíz del «riesgo 94 Favorable».** El puntaje de `risk_level` se calcula con **alto = más riesgo** (ver [[scoring-engine#Penalizaciones al `riskScore` (alto = más riesgo)]]), pero el prompt que asignaba los semáforos (`SCORING_INTERPRET_SYSTEM_PROMPT`) decía lo contrario («score alto = menos riesgo = green»). El texto del reporte acertaba («riesgo alto») y el semáforo estaba mal. Arreglos:
+- El prompt describe bien la dirección (≤30 verde, 31–60 amarillo, >60 rojo en riesgo).
+- `enforceSignals` (`src/lib/ai/schemas/scoring-interpret.ts`, aplicado en `runScoringPipeline`): los 6 semáforos salen de los puntajes con umbrales fijos; la IA solo puede **empeorar** el de riesgo (inversión sobre capital o pérdida tolerada), nunca mejorarlo. 
+- La tarjeta de riesgo del reporte aclara «más puntos = más riesgo».
+
+**Contexto que recibe la IA** (`src/lib/ai/report-context.ts`):
+- Cada puntaje viaja con su `lectura` y su `semaforo`; la IA no debe contradecirlos.
+- `buildFounderProfile`: datos de **la persona que emprende** con etiquetas legibles y rotulados «NO describen al cliente» (antes la IA tomaba el capital del emprendedor como perfil del cliente). Ahora incluye las respuestas de «tipo de trabajo» (actividades que disfruta, preferencia de trabajo, comodidad vendiendo/incertidumbre/procesos, contratación).
+
+**Reglas del sistema (`BASE_SYSTEM`)**: hablar siempre de «tú»; hablar de la idea concreta (nada de consejos de e-commerce o freelancing genéricos); no repetir el título de la sección; sin LaTeX; todo en español («alertas», no «red flags»). Los prompts de «Compatibilidad personal», «Tiempo y operación» y «Escalabilidad» piden razonar sobre lo que exige ESTE negocio.
+
+**Red de seguridad** (`sanitizeSectionMarkdown`): quita el encabezado inicial repetido, fórmulas LaTeX en crudo y «Red Flags».
+
+**Redundancias**: el resumen ya no enumera alertas; `ascs_red_flags` guarda solo las alertas **calculadas sobre los números** (las que propone la IA salen como riesgos con su mitigación); se quitó el título «Análisis de escalabilidad» que duplicaba el de la sección.
+
+**Verificado** regenerando el reporte de la prueba con OpenAI real: semáforo de riesgo «Riesgo elevado» coherente con el texto, secciones en segunda persona y específicas del negocio de viandas, sin LaTeX ni encabezados duplicados. Tests: `report-context.test.ts` y `scoring-interpret.test.ts`.
+
+**Pendientes**: «Compatibilidad personal» a veces cita la viabilidad comercial como brecha personal; las evaluaciones ya guardadas conservan su semáforo anterior (no se recalculan); revisar si el puntaje de riesgo 94 es demasiado alto para este caso (el cálculo suma +8 por no tener clientes y penaliza dependencias; eso es de scoring, no de prompts).
+

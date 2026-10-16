@@ -91,8 +91,12 @@ export default function TerminosPage() {
           periodo ya pagado y después tu cuenta vuelve al plan gratuito.
         </p>
         <p>
-          No hacemos reembolsos ni prorrateos por el periodo ya pagado. Durante
-          la fase beta, el pago es simulado y no se realiza ningún cargo.
+          No hacemos reembolsos ni prorrateos por el periodo ya pagado. Los
+          pagos de la suscripción los procesa Stripe, un procesador de pagos
+          externo; Decida no almacena los datos de tu tarjeta. Mientras el
+          cobro no esté habilitado en la plataforma (por ejemplo, durante la
+          fase beta), la suscripción se activa en modo simulado y no se
+          realiza ningún cargo.
         </p>
       </LegalSection>
 
@@ -121,10 +125,10 @@ export default function TerminosPage() {
           versión actualizada en esta página. Para dudas o reclamaciones escribe
           a{" "}
           <a
-            href="mailto:soporte@decida.app"
+            href="mailto:hello@decida.mx"
             className="text-primary underline underline-offset-4 hover:text-primary/80"
           >
-            soporte@decida.app
+            hello@decida.mx
           </a>
           .
         </p>

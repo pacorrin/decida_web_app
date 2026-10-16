@@ -21,10 +21,10 @@ export default function PrivacidadPage() {
           ideas de negocio disponible en este sitio. Para consultas sobre
           privacidad puedes escribir a{" "}
           <a
-            href="mailto:soporte@decida.app"
+            href="mailto:hello@decida.mx"
             className="text-primary underline underline-offset-4 hover:text-primary/80"
           >
-            soporte@decida.app
+            hello@decida.mx
           </a>
           .
         </p>
@@ -75,6 +75,16 @@ export default function PrivacidadPage() {
           No vendemos ni compartimos tu información personal con terceros para
           fines de marketing.
         </p>
+        <p>
+          Los pagos de la suscripción los procesa Stripe. Al pagar, tus datos
+          de tarjeta se capturan directamente en la página segura de Stripe:
+          Decida no los recibe ni los almacena. Compartimos con Stripe tu
+          correo electrónico para asociar el cobro a tu cuenta, y guardamos
+          únicamente identificadores del cliente y de la suscripción, los
+          montos y las fechas de cobro. Mientras el cobro no esté habilitado
+          (por ejemplo, en la fase beta) la suscripción es simulada y no se
+          comparte ningún dato con Stripe.
+        </p>
       </LegalSection>
 
       <LegalSection title="Cookies y almacenamiento local">
@@ -123,10 +133,10 @@ export default function PrivacidadPage() {
           Puedes solicitar acceso, rectificación, cancelación u oposición al
           tratamiento de tus datos personales escribiendo a{" "}
           <a
-            href="mailto:soporte@decida.app"
+            href="mailto:hello@decida.mx"
             className="text-primary underline underline-offset-4 hover:text-primary/80"
           >
-            soporte@decida.app
+            hello@decida.mx
           </a>
           . Responderemos conforme a la legislación aplicable en tu jurisdicción.
         </p>

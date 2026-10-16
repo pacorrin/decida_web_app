@@ -24,6 +24,7 @@ Esto es notablemente más específico y "productizado" que la hipótesis origina
 
 ## Lo que NO se implementó (vs hipótesis original)
 - **Pago real** (Stripe/Mercado Pago): no confirmado en el código — el paso `/analizar/pago` es un **pago simulado (beta)**, con promesa de reembolso si el reporte falla. Pospuesto a propósito, ver [[../producto/pricing-y-gtm]] y [[../decisiones/plan-lanzamiento-60-90-dias]].
+  - **Actualización 2026-10-16 (S3-16):** el cobro real con **Stripe** (SDK `stripe`, Checkout alojado + webhook) ya está implementado; sin `STRIPE_SECRET_KEY` se conserva el pago simulado. Ver [[pagos-con-stripe]]. Aún sin probar con claves reales.
 - **Generación de PDF**: no se confirmó un generador de PDF en la exploración de código realizada para este cerebro — a verificar en una próxima sesión (buscar en `src/lib` o dependencias como `puppeteer`/`react-pdf`).
 - **App móvil, multi-tenant, microservicios, Redis, colas**: siguen fuera de alcance, consistente con el diseño original.
 
@@ -48,3 +49,9 @@ Esto es notablemente más específico y "productizado" que la hipótesis origina
 
 ## Ver también
 [[modelo-de-datos]] · [[manejo-de-errores-y-reembolsos]] · [[modulo-de-usuarios-y-autenticacion]] · [[../framework/scoring-engine]]
+
+## Notificaciones (toasts)
+
+- Componente: `sonner` vía shadcn (`src/components/ui/sonner.tsx`, montado en `src/app/layout.tsx`, arriba al centro, tema claro porque la app no tiene modo oscuro). `shadcn add toast` está obsoleto; no usarlo.
+- Para acciones de servidor, usar `runActionWithToast` (`src/lib/ui/toast-action.ts`) dentro de `startTransition`, no `useActionState`: así el toast sale aunque el componente desaparezca al revalidar (p. ej. el botón de cancelar).
+

@@ -29,7 +29,8 @@ Asigna semáforos:
 - yellow: score 40-69
 - red: score < 40
 
-Para risk_level, la lógica es invertida: score alto = menos riesgo = green.
+Para risk_level, la lógica es INVERTIDA: el score mide el RIESGO (alto = MÁS riesgo), así que un score alto es malo.
+Para risk_level: score <= 30 = green, 31-60 = yellow, score > 60 = red. Ejemplo: risk_level 94 = riesgo muy alto = red.
 
 Si el contexto muestra que la inversión inicial estimada supera el capital disponible declarado o la pérdida que la persona toleraría, refléjalo en risk_level_signal (peor semáforo) y agrega una red flag concreta al respecto.
 
@@ -59,7 +60,7 @@ export function buildScoringInterpretPrompt(
   return `Scores calculados (NO modificar):\n${JSON.stringify(scores, null, 2)}\n\nContexto del usuario:\n${context}`;
 }
 
-function scoreToSignal(score: number, invert = false): "green" | "yellow" | "red" {
+export function scoreToSignal(score: number, invert = false): "green" | "yellow" | "red" {
   const effective = invert ? 100 - score : score;
   if (effective >= 70) return "green";
   if (effective >= 40) return "yellow";
@@ -92,5 +93,38 @@ export function fallbackScoringInterpret(
     red_flags: ["Análisis generado con reglas básicas — revisa los detalles."],
     reasoning_summary:
       "El diagnóstico se basó en tus respuestas y métricas calculadas. Te recomendamos validar los supuestos clave antes de invertir.",
+  };
+}
+
+type Signal = ScoringInterpretResult["risk_level_signal"];
+const SIGNAL_RANK: Record<Signal, number> = { green: 0, yellow: 1, red: 2 };
+const worse = (a: Signal, b: Signal): Signal =>
+  SIGNAL_RANK[a] >= SIGNAL_RANK[b] ? a : b;
+
+/**
+ * Los semáforos salen de los puntajes, no del criterio del modelo: el umbral
+ * es fijo (>= 70 verde, 40-69 amarillo, < 40 rojo; `risk_level` invertido
+ * porque ahí un puntaje alto es MÁS riesgo). Antes el prompt describía el
+ * riesgo al revés y un 94 de riesgo salía «Favorable». La IA solo puede
+ * EMPEORAR el semáforo de riesgo (inversión por encima del capital o de la
+ * pérdida tolerada); nunca mejorarlo.
+ */
+export function enforceSignals(
+  scores: Record<string, number>,
+  interpretation: ScoringInterpretResult,
+): ScoringInterpretResult {
+  const fromScore = (key: string, invert = false): Signal =>
+    scoreToSignal(scores[key] ?? 50, invert);
+  return {
+    ...interpretation,
+    personal_fit_signal: fromScore("personal_fit"),
+    financial_viability_signal: fromScore("financial_viability"),
+    commercial_viability_signal: fromScore("commercial_viability"),
+    risk_level_signal: worse(
+      fromScore("risk_level", true),
+      interpretation.risk_level_signal,
+    ),
+    time_fit_signal: fromScore("time_fit"),
+    scalability_signal: fromScore("scalability"),
   };
 }

@@ -112,9 +112,15 @@ export function canAccessStep(
 }
 
 export function getPreviousStep(
-  slug: OnboardingStepSlug
+  slug: OnboardingStepSlug,
+  opts: { skipPlan?: boolean } = {}
 ): OnboardingStepSlug | null {
   const step = getStepBySlug(slug);
   const prev = ONBOARDING_STEPS.find((s) => s.order === step.order - 1);
+  // Quien ya tiene suscripción no pasa por la pantalla de planes, tampoco al
+  // regresar (si no, «Atrás» lo mandaría a una pantalla que lo reenvía).
+  if (opts.skipPlan && prev?.slug === "pago") {
+    return getPreviousStep("pago", opts);
+  }
   return prev?.slug ?? null;
 }

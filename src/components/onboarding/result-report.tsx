@@ -24,7 +24,6 @@ import {
   AlertTriangle,
   AlertCircle,
   Lock,
-  TrendingUp,
 } from "lucide-react";
 import { ReportErrorState } from "@/components/onboarding/report-error-state";
 import { FeedbackForm } from "@/components/onboarding/feedback-form";
@@ -214,6 +213,8 @@ export function ResultReport({
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
                         {SIGNAL_LABELS[signal]}
+                        {dim.scoreKey === "ascs_risk_level_score" &&
+                          " · más puntos = más riesgo"}
                       </p>
                     </CardContent>
                   </Card>
@@ -638,20 +639,10 @@ export function ResultReport({
         {/* Scalability */}
         {!isFree && report?.arep_scalability_analysis && (
           <ReportSection id="escalabilidad" title="Escalabilidad">
-            <Card className="border-border/70">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <TrendingUp className="size-4 text-[#6baed6]" aria-hidden />
-                  Análisis de escalabilidad
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Markdown 
-                  content={report.arep_scalability_analysis} 
-                  className="text-sm leading-relaxed text-muted-foreground" 
-                />
-              </CardContent>
-            </Card>
+            <Markdown
+              content={report.arep_scalability_analysis}
+              className="text-sm leading-relaxed"
+            />
           </ReportSection>
         )}
         {isFree && report && (

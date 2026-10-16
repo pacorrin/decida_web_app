@@ -51,7 +51,13 @@ export default defineConfig({
     timeout: 180_000,
     // Las pruebas crean cuentas y reportes falsos: sin clave de PostHog no
     // ensucian los embudos reales (solo aplica si Playwright levanta el servidor).
-    env: { NEXT_PUBLIC_POSTHOG_KEY: "", NEXT_PUBLIC_POSTHOG_HOST: "" },
+    env: {
+      NEXT_PUBLIC_POSTHOG_KEY: "",
+      NEXT_PUBLIC_POSTHOG_HOST: "",
+      // Sin Stripe los e2e usan la suscripción simulada.
+      STRIPE_SECRET_KEY: "",
+      STRIPE_WEBHOOK_SECRET: "",
+    },
     stdout: "pipe",
     stderr: "pipe",
   },

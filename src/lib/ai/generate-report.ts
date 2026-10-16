@@ -20,6 +20,11 @@ function dependencyLabels(raw: unknown): string[] {
     .map((d) => DEPENDENCY_LABEL.get(d) ?? d);
 }
 import type { ScoringInterpretResult } from "@/lib/ai/schemas/scoring-interpret";
+import {
+  buildFounderProfile,
+  buildScoresForAi,
+  sanitizeSectionMarkdown,
+} from "@/lib/ai/report-context";
 import type { DeterministicScoreResult } from "@/lib/scoring/types";
 import { detectDeterministicStrengths } from "@/lib/scoring/strengths";
 import type {
@@ -43,23 +48,29 @@ import { logReportGenerationError } from "@/lib/logging/report-logger";
  * Rows written before that carry v1.0.0 and are read through the legacy branch
  * of `parseStored*` in `src/lib/report/sections.ts`.
  */
-export const REPORT_PROMPT_VERSION = "v1.1.0";
+export const REPORT_PROMPT_VERSION = "v1.2.0";
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
 
 const BASE_SYSTEM = `Eres un consultor de viabilidad de negocios para Decida.
-Escribe en español mexicano, tono claro, directo y accionable.
+Escribe en español mexicano, tono claro, directo y accionable. TODO el texto va en español (di "alertas", no "red flags").
 NO inventes números — usa SOLO los datos proporcionados.
 Sé honesto sobre riesgos. Máximo 3 párrafos cortos por sección.
 
-Puedes usar formato Markdown para mejorar la presentación:
-- **Negritas** para destacar puntos clave
-- *Cursivas* para énfasis
-- Listas con - o números para organizar información
-- Tablas cuando sea apropiado para presentar datos
-- > para citas o notas importantes
+Cómo hablar:
+- Háblale SIEMPRE de "tú" a la persona que emprende. Nunca digas "el usuario" ni "el emprendedor".
+- Habla de LA IDEA CONCRETA de la persona (su giro, su cliente, sus productos). Nunca des consejos genéricos de otros negocios (comercio electrónico, consultoría, freelancing) ni propongas cambiar de modelo.
+- Los datos de "emprendedor" describen a la persona que emprende; NO son el perfil de su cliente.
 
-Usa markdown de forma moderada y profesional.`;
+Cómo leer los puntajes (0 a 100):
+- En todas las dimensiones, puntaje alto = más favorable, EXCEPTO "Nivel de riesgo", donde puntaje alto = MÁS riesgo.
+- Cada dimensión trae su "semaforo" (verde, amarillo o rojo). No contradigas el semáforo ni la recomendación que se te da.
+- Cita un puntaje solo si ayuda, siempre con su significado correcto.
+
+Formato (Markdown):
+- NO escribas el título de la sección: el reporte ya lo muestra. Empieza directo con el contenido.
+- Si necesitas subtítulos usa "###" y solo si aportan. Puedes usar **negritas** y listas con "-".
+- NO uses fórmulas LaTeX ni símbolos de fórmula ni corchetes de fórmula. Escribe los cálculos en texto plano, por ejemplo: "695 − 385 = 310".`;
 
 type ReportContext = {
   idea: string;
@@ -89,28 +100,14 @@ function buildContext(
         })
       )
     ),
-    scores: JSON.stringify(
-      deterministic.dimensions.map((d) => ({
-        dimension: d.label,
-        score: d.score,
-      }))
-    ),
+    scores: JSON.stringify(buildScoresForAi(deterministic, interpretation)),
     metrics: JSON.stringify(deterministic.metrics),
     interpretation: JSON.stringify({
-      recommendation: interpretation.final_recommendation,
-      red_flags: interpretation.red_flags,
-      summary: interpretation.reasoning_summary,
+      recomendacion: interpretation.final_recommendation,
+      alertas: interpretation.red_flags,
+      resumen: interpretation.reasoning_summary,
     }),
-    profile: JSON.stringify({
-      goal: assessment.assessment_profile?.aprf_main_goal,
-      situation: assessment.assessment_profile?.aprf_current_situation,
-      capital: assessment.assessment_profile?.aprf_capital_available_range,
-      acceptableLoss: assessment.assessment_profile?.aprf_acceptable_loss_range,
-      initialInvestment: Number(
-        assessment.financial_inputs?.finp_initial_investment ?? 0
-      ) || null,
-      hours: assessment.assessment_profile?.aprf_hours_per_week_range,
-    }),
+    profile: JSON.stringify(buildFounderProfile(assessment)),
     dependencies: JSON.stringify(
       dependencyLabels(assessment.market_risk_inputs?.mrsk_business_dependencies)
     ),
@@ -122,19 +119,47 @@ const SECTION_PROMPTS: Record<
   (ctx: ReportContext) => string
 > = {
   executive_summary: (ctx) =>
-    `Escribe un resumen ejecutivo del diagnóstico.\nIdea: ${ctx.idea}\nScores: ${ctx.scores}\nInterpretación: ${ctx.interpretation}`,
+    `Escribe el resumen ejecutivo del diagnóstico: un párrafo de 4 a 5 oraciones que diga qué es la idea, cómo salió (apóyate en los semáforos) y cuál es la recomendación y por qué.
+No enumeres las alertas ni los riesgos uno por uno (van en otras secciones): menciónalos en una sola frase si hace falta.
+Idea: ${ctx.idea}
+Puntajes y semáforos: ${ctx.scores}
+Interpretación: ${ctx.interpretation}`,
   business_understanding: (ctx) =>
-    `Explica cómo entendemos el negocio del usuario y su propuesta de valor.\nIdea: ${ctx.idea}\nPerfil: ${ctx.profile}\nProductos/servicios que planea vender: ${ctx.products}`,
+    `Explica cómo entendemos el negocio y su propuesta de valor, en dos partes breves: (1) qué ofreces y por qué te compraría tu cliente; (2) quién es ese cliente.
+El cliente se describe SOLO con lo que dice la idea. Si la idea no precisa algo del cliente (edad, ingreso, hábitos), dilo como un supuesto por validar. Los datos del emprendedor NO son el perfil del cliente: no los uses para describirlo.
+Idea: ${ctx.idea}
+Productos/servicios que planeas vender: ${ctx.products}
+Emprendedor (solo como contexto de arranque): ${ctx.profile}`,
   financial_analysis: (ctx) =>
-    `Analiza la viabilidad financiera usando SOLO estas métricas: ${ctx.metrics}\nScores financieros: ${ctx.scores}\nProductos/servicios y sus precios/costos/volúmenes: ${ctx.products}\nComenta el margen por producto y si alguno se vende con pérdida.`,
+    `Analiza la viabilidad financiera usando SOLO estas métricas: ${ctx.metrics}
+Puntajes y semáforos: ${ctx.scores}
+Productos/servicios y sus precios/costos/volúmenes: ${ctx.products}
+Comenta el margen por producto, si alguno se vende con pérdida, el punto de equilibrio y la recuperación de la inversión. Escribe los cálculos en texto plano (sin fórmulas).`,
   personal_fit_analysis: (ctx) =>
-    `Analiza la compatibilidad entre la persona y este tipo de negocio.\nPerfil: ${ctx.profile}\nIdea: ${ctx.idea}`,
+    `Analiza qué tan bien encajas tú con ESTE negocio en particular. Primero piensa qué exige concretamente esta idea (tipo de trabajo, ventas, operación diaria, contratar o no) y compáralo con lo que sabemos de ti: actividades que disfrutas, preferencia de trabajo, comodidad vendiendo, tolerancia a la incertidumbre, comodidad con procesos y si contratarías.
+Da 2 puntos donde encajas y 2 brechas, cada brecha con una acción concreta.
+Idea: ${ctx.idea}
+Emprendedor (tú): ${ctx.profile}
+Puntajes y semáforos: ${ctx.scores}`,
   time_operation_analysis: (ctx) =>
-    `Analiza si el negocio cabe en el tiempo disponible del usuario.\nPerfil: ${ctx.profile}`,
+    `Analiza si ESTE negocio cabe en tu tiempo. Con la idea y las unidades mensuales, describe qué trabajo concreto implica (por ejemplo: producción, entregas, atención a clientes, compras) y compáralo con tus horas por semana y tu disponibilidad horaria. Di qué parte podría saturarte y cómo organizarla.
+No propongas otros modelos de negocio: trabaja con el que describió la persona. No inventes tiempos que no se desprendan de los datos; si estimas, di que es una estimación.
+Idea: ${ctx.idea}
+Productos/servicios y volumen mensual: ${ctx.products}
+Emprendedor (tú): ${ctx.profile}
+Puntajes y semáforos: ${ctx.scores}`,
   scalability_analysis: (ctx) =>
-    `Analiza el potencial de escalabilidad.\nIdea: ${ctx.idea}\nScores: ${ctx.scores}`,
+    `Analiza el potencial de crecimiento de ESTE negocio: qué lo haría crecer sin que crezca igual tu carga de trabajo, y qué lo frenaría (capacidad, dependencias, contratación). Usa tu preferencia de contratación y las dependencias declaradas.
+Idea: ${ctx.idea}
+Productos/servicios: ${ctx.products}
+Dependencias críticas: ${ctx.dependencies}
+Emprendedor (tú): ${ctx.profile}
+Puntajes y semáforos: ${ctx.scores}`,
   final_recommendation: (ctx) =>
-    `Escribe la recomendación final en 2 párrafos.\nInterpretación: ${ctx.interpretation}\nIdea: ${ctx.idea}`,
+    `Escribe la recomendación final en 2 párrafos: primero el veredicto, que debe coincidir con la recomendación de la interpretación, y luego los 2 o 3 siguientes pasos más importantes para tu caso, en orden.
+Interpretación: ${ctx.interpretation}
+Puntajes y semáforos: ${ctx.scores}
+Idea: ${ctx.idea}`,
 };
 
 async function generateSection(
@@ -147,11 +172,13 @@ async function generateSection(
   if (!promptFn) throw new Error(`Unknown section: ${key}`);
   
   try {
-    return await generateText(
-      BASE_SYSTEM,
-      promptFn(ctx),
-      getNarrativeModel(),
-      observability
+    return sanitizeSectionMarkdown(
+      await generateText(
+        BASE_SYSTEM,
+        promptFn(ctx),
+        getNarrativeModel(),
+        observability
+      )
     );
   } catch (error) {
     if (retryCount < MAX_RETRIES) {

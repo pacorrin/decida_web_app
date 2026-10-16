@@ -32,7 +32,7 @@ import {
 } from "@/lib/onboarding/schemas";
 import type { z } from "zod";
 import { SUBSCRIPTION_PLAN_ID } from "@/lib/subscription/activate";
-import { activateSimulatedSubscription } from "@/lib/subscription/subscribe";
+import { startSubscription } from "@/lib/subscription/start";
 import {
   getCurrentAssessment,
   getAssessmentById,
@@ -43,6 +43,7 @@ import { getStepBySlug } from "@/lib/onboarding/steps";
 import { getResumeStep } from "@/lib/onboarding/navigation";
 import { ensureAssessmentForCurrentUser } from "@/lib/onboarding/for-user";
 import { PLANS_PATH } from "@/lib/subscription/limits";
+import { hasFullAccess } from "@/lib/subscription/access";
 import { blendProducts } from "@/lib/onboarding/products";
 import { prisma } from "@/lib/prisma";
 import { trackServer } from "@/lib/analytics/server";
@@ -390,7 +391,9 @@ export async function confirmIdea(): Promise<void> {
     data: { bide_user_confirmed_summary: true },
   });
 
-  redirectToStep("pago");
+  // Quien ya tiene suscripción no necesita elegir plan.
+  const user = await getCurrentUser();
+  redirectToStep(hasFullAccess(user) ? "perfil" : "pago");
 }
 
 export async function editIdeaRedirect(): Promise<void> {
@@ -398,8 +401,8 @@ export async function editIdeaRedirect(): Promise<void> {
 }
 
 /**
- * «Suscribirme» (simulado, sin pasarela): activa la suscripción de la CUENTA
- * ($99 MXN/mes). El gate de reportes mira la cuenta (`hasFullAccess`), así
+ * «Suscribirme»: con Stripe habilitado redirige a Checkout; sin él, activa la
+ * suscripción simulada de la CUENTA ($99 MXN/mes). El gate de reportes mira la cuenta (`hasFullAccess`), así
  * que desbloquea todas las evaluaciones, también las anteriores.
  */
 export async function savePayment(
@@ -424,12 +427,12 @@ export async function savePayment(
     };
   }
 
-  const activated = await activateSimulatedSubscription(user, assessment.asmt_id);
-  if (activated) {
-    await trackServer(user.user_id, ANALYTICS_EVENTS.subscriptionActivated, {
-      entry_point: "onboarding",
-    });
-  }
+  const result = await startSubscription(user, {
+    returnTo: "onboarding",
+    assessmentId: assessment.asmt_id,
+  });
+  if (result.kind === "error") return { success: false, message: result.message };
+  if (result.kind === "redirect") redirect(result.url);
 
   redirectToStep("perfil");
 }

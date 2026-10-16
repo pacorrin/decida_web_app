@@ -446,3 +446,59 @@ El wizard de PostHog agregó autocaptura, grabación de pantalla, correo y nombr
 ## [2026-10-15] query | S3-11 cerrada
 
 El usuario confirmó que llegan `report_viewed`, `identify` y los pageviews a PostHog y pidió dar la tarea por hecha; quedan por confirmar 5 eventos del embudo y se agregarán más eventos en una iteración posterior. Actualizado: `wiki/tareas/sprint-3.md`.
+
+## [2026-10-16] query | S3-09 cerrada: dominio decida.mx verificado en Resend
+
+El usuario verificó decida.mx en Resend. El remitente local seguía siendo `@resend.dev`; se cambió a `Decida <no-reply@decida.mx>` (`.env`, valor por defecto del código y `.env.example`). Falta probar el envío a un correo ajeno. Las direcciones de soporte `@decida.app` en las páginas legales quedan por decidir.
+
+## [2026-10-16] query | Prueba de envío con decida.mx
+
+Se envió un correo de prueba a una dirección externa y Resend lo aceptó. Las direcciones de soporte cambiaron a `hello@decida.mx`. Falta confirmar la recepción.
+
+## [2026-10-16] query | Remitente de Resend: sin "no-reply"
+
+Resend avisó que usar `no-reply` baja la confianza del buzón y puede afectar la entrega. El remitente pasó a `Decida <hello@decida.mx>` (`.env`, valor por defecto y `.env.example`). El correo de prueba a un dominio externo ya llegó a la bandeja. El buzón `hello@decida.mx` debe existir para recibir respuestas.
+
+## [2026-10-16] query | Entrega confirmada con hello@decida.mx
+
+El usuario creó el buzón `hello@decida.mx`, se reenvió la prueba y Resend la marcó como Delivered en una bandeja externa. Pendiente: prueba del código de registro real y repetirla en Railway.
+
+## [2026-10-16] query | Migración de Prisma regenerada
+
+La carpeta `prisma/migrations/` solo tenía una migración de junio con 7 de las 14 tablas. Se reemplazó por una migración base (`20261016000000_baseline`) generada desde `schema.prisma`, que ya incluye `user_stripe_customer_id`, `paym_user_id` y el unique de pagos para el cobro con Stripe. Se verificó en una base vacía temporal (ya borrada) sin diferencias contra el schema. Nuevo script `pnpm db:deploy`. Actualizado: `wiki/tareas/tablero.md` (S4-00).
+
+## [2026-10-16] query | Pago real con Stripe
+
+Se integró Stripe (Checkout alojado, webhook, cancelar/reactivar contra Stripe, Customer Portal) para la suscripción de $99 MXN/mes; sin `STRIPE_SECRET_KEY` sigue el modo simulado. Probado con Vitest y el e2e simulado; no se probó contra Stripe real (faltan claves). Nueva página `wiki/arquitectura/pagos-con-stripe.md`; actualizados sprint-3 (S3-16), tablero (S5-01, S4-00), stack-tecnico, pricing-y-gtm y modelo-de-datos.
+
+## [2026-10-16] query | Correos de cobro
+
+La app no mandaba ningún correo al suscribirse, cancelar ni fallar un cobro. Se agregaron tres correos desde `billing@decida.mx` (activación, cancelación, cobro fallido), solo en modo Stripe y sin duplicados; el recibo de cada pago lo manda Stripe. Actualizado: `wiki/arquitectura/pagos-con-stripe.md`, `sprint-3.md`, `tablero.md`.
+
+## [2026-10-16] query | Correo de reactivación y aviso de Checkout
+
+Corregido el aviso «Pago recibido» que reaparecía tras cancelar (los parámetros de Checkout se quedaban en la URL) y agregado el correo al reactivar una suscripción cancelada. Actualizado: `wiki/arquitectura/pagos-con-stripe.md`.
+
+## [2026-10-16] query | Toasts en las acciones de suscripción
+
+`shadcn add toast` ya no es el componente vigente (shadcn lo reemplazó por Sonner) y además instaló un paquete suelto `cn` que se quitó. Se instaló `sonner` con `shadcn add sonner` y se montó `<Toaster>` en el layout raíz. Las acciones de suscripción (suscribirse, reactivar, cancelar, portal de pagos) muestran toast de espera, éxito o error con `runActionWithToast` (`src/lib/ui/toast-action.ts`); el regreso de Stripe Checkout (éxito, cancelado, inválido) también avisa por toast. El aviso «pendiente» sigue en línea porque se actualiza solo.
+
+## [2026-10-16] query | Prueba manual del onboarding con Claude in Chrome
+
+Recorrido completo con una idea de viandas: el flujo funciona, pero el reporte tiene problemas de contenido de IA (riesgo 94 «Favorable» descrito como alto, perfil del emprendedor tomado como cliente, secciones genéricas, LaTeX en crudo, redundancias). Detalle en `wiki/tareas/prueba-onboarding-2026-10-16.md`. No se probó la vista recortada (la cuenta tenía suscripción).
+
+## [2026-10-16] query | Calidad del reporte generado por IA (v1.2.0)
+
+Se corrigieron los problemas de la prueba del onboarding. Hallazgo principal: el semáforo de «Nivel de riesgo» estaba invertido (el prompt de interpretación decía «score alto = menos riesgo» y el motor calcula alto = más riesgo), por lo que un 94 salía «Favorable». Los semáforos ahora salen de los puntajes (`enforceSignals`); la IA recibe la lectura de cada puntaje, los datos del emprendedor rotulados y sus respuestas de «tipo de trabajo»; se quitó LaTeX, encabezados repetidos y redundancias. Detalle en `wiki/framework/prompts-de-ia.md`.
+
+## [2026-10-16] query | Detalles de interfaz del paso del plan
+
+Se quitó el título duplicado «Elige tu plan» y la pestaña «Compromiso» pasó a «Plan». Verificado en el navegador. Actualizado: `wiki/tareas/prueba-onboarding-2026-10-16.md`.
+
+## [2026-10-16] query | El plan se salta si ya hay suscripción
+
+El paso del plan seguía apareciendo en el onboarding para cuentas suscritas. Ahora `confirmIdea`, `/analizar/pago` y el botón «Atrás» lo saltan cuando `hasFullAccess` es verdadero. Verificado en el navegador con una cuenta suscrita. Actualizado: `wiki/experiencia/flujo-de-onboarding.md`.
+
+## [2026-10-16] query | Contador de pasos consistente para suscriptores
+
+Quien salta el plan ve «Paso 3 de 8», «Paso 4 de 8»… sin saltos, con avance y minutos restantes recalculados y sin la pestaña «Plan». Verificado en el navegador. Actualizado: `wiki/experiencia/flujo-de-onboarding.md`.

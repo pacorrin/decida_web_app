@@ -57,6 +57,8 @@ Reglas duras:
 - Cada riesgo DEBE traer una acción concreta para reducirlo o validarlo (howToReduce).
 - "title" es una frase corta (máx. ~60 caracteres). "whyItMatters" son 1-2 oraciones explicando la consecuencia práctica.
 - No prometas rentabilidad. No sugieras dejar el empleo. Sin lenguaje de gurú.
+- Háblale de "tú" a la persona que emprende (nunca "el usuario" ni "el emprendedor"). Todo en español.
+- En "Scores por dimensión" cada una trae su "lectura" y su "semaforo": en "Nivel de riesgo" un puntaje alto es MÁS riesgo. No contradigas los semáforos.
 - Texto plano en cada campo: sin markdown, sin viñetas, sin comillas triples.
 
 Devuelve entre 0 y 5 fortalezas, y entre 1 y 5 riesgos.
@@ -91,7 +93,7 @@ export function buildStrengthsRisksPrompt(input: {
   return `Idea: ${input.idea}
 Scores por dimensión: ${input.scores}
 Métricas financieras calculadas: ${input.metrics}
-Perfil del usuario: ${input.profile}
+Emprendedor (la persona que emprende, NO el cliente): ${input.profile}
 Productos/servicios: ${input.products}
 Dependencias críticas declaradas: ${input.dependencies}
 Interpretación del scoring: ${input.interpretation}${facts}`;

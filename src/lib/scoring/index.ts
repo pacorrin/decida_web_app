@@ -7,6 +7,7 @@ import {
 import {
   SCORING_INTERPRET_SYSTEM_PROMPT,
   buildScoringInterpretPrompt,
+  enforceSignals,
   fallbackScoringInterpret,
   scoringInterpretSchema,
   type ScoringInterpretResult,
@@ -121,10 +122,13 @@ export async function runScoringPipeline(
     deterministic.dimensions.map((d) => [d.key, d.score])
   );
 
-  const interpretation = await interpretScores(
+  const interpretation = enforceSignals(
     scoresMap,
-    buildAssessmentContext(assessment),
-    observability
+    await interpretScores(
+      scoresMap,
+      buildAssessmentContext(assessment),
+      observability
+    )
   );
 
   // Deterministic flags (investment vs. declared capital / acceptable loss,
@@ -168,7 +172,10 @@ export async function runScoringPipeline(
     ascs_time_fit_signal: interpretation.time_fit_signal,
     ascs_scalability_signal: interpretation.scalability_signal,
     ascs_final_recommendation: interpretation.final_recommendation,
-    ascs_red_flags: interpretation.red_flags,
+    // Solo las alertas calculadas sobre tus números: las que propone la IA ya
+    // salen como riesgos (con su mitigación) y mostrarlas también aquí las
+    // repetía en el reporte.
+    ascs_red_flags: deterministicRedFlags,
     ascs_calculated_metrics: deterministic.metrics,
     ascs_scoring_version: `${deterministic.scoringVersion}+${getReasoningModel()}`,
   };

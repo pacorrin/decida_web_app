@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getStepBySlug, type OnboardingStepSlug } from "@/lib/onboarding/steps";
 import { getPreviousStep } from "@/lib/onboarding/navigation";
+import { useOnboardingFlow } from "@/components/onboarding/flow-context";
 
 type BackButtonProps = {
   currentSlug: OnboardingStepSlug;
@@ -11,7 +12,8 @@ type BackButtonProps = {
 };
 
 export function BackButton({ currentSlug, className }: BackButtonProps) {
-  const prevSlug = getPreviousStep(currentSlug);
+  const { skipPlan } = useOnboardingFlow();
+  const prevSlug = getPreviousStep(currentSlug, { skipPlan });
   const prevPath = prevSlug ? getStepBySlug(prevSlug).path : null;
 
   if (!prevPath) return null;

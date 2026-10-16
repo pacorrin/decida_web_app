@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/analytics/server", () => ({ trackServer: vi.fn() }));
+vi.mock("@/lib/email/billing", () => ({ sendBillingEmail: vi.fn() }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 vi.mock("@/lib/auth/session-server", () => ({ getCurrentUser: mocks.getCurrentUser }));
 vi.mock("@/lib/prisma", () => ({ prisma: { users: { updateMany: mocks.updateMany } } }));

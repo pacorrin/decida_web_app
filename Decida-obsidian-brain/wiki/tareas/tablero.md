@@ -38,9 +38,11 @@ Leyenda: ⬜ Pendiente · 🟦 En curso · 🟢 Cerrado · 🔴 Atrasado
   - **Notas de despliegue (checklist de variables y pasos):**
     - **Sentry:** `SENTRY_DSN` y `NEXT_PUBLIC_SENTRY_DSN` (mismo valor; la pública se incrusta al construir, así que debe existir **antes del build**) y `SENTRY_AUTH_TOKEN` para subir source maps. El token ya existe: el wizard lo guardó en `.env.sentry-build-plugin` (local, ignorado por git). Hay que copiar su valor a una variable de Railway a mano; si no se quiere reutilizar, se genera uno nuevo en Sentry → Settings → Auth Tokens. Nunca pegarlo en chat ni commitearlo.
     - **PostHog:** `NEXT_PUBLIC_POSTHOG_KEY` (clave pública `phc_…`, también antes del build) y `NEXT_PUBLIC_POSTHOG_HOST`.
-    - **Resend:** `RESEND_API_KEY` y `RESEND_FROM_EMAIL` con el dominio ya verificado (ver [[../arquitectura/correo-transaccional-resend]]).
+    - **Resend:** `RESEND_API_KEY`, `RESEND_FROM_EMAIL` y `RESEND_BILLING_FROM_EMAIL` con el dominio ya verificado (ver [[../arquitectura/correo-transaccional-resend]]).
+    - **Stripe (S3-16):** `STRIPE_SECRET_KEY` (clave `sk_test_…`; `sk_live_…` al pasar a producción real), `STRIPE_WEBHOOK_SECRET` (`whsec_…` del endpoint de producción) y, opcional, `STRIPE_PRICE_ID`. Además, crear en Stripe el webhook de producción: Developers → Webhooks → URL `https://<dominio-de-railway>/api/stripe/webhook` con los eventos `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid` e `invoice.payment_failed`; el secreto de firma del endpoint va en `STRIPE_WEBHOOK_SECRET`. Verificar que `NEXT_PUBLIC_APP_URL` sea la URL pública. Guía completa en [[../arquitectura/pagos-con-stripe]].
     - **Base de datos y IA:** `DATABASE_URL` del Postgres de Railway y `OPENAI_API_KEY`.
-    - **Migración:** regenerar una migración limpia de Prisma antes del primer despliegue (la carpeta `prisma/migrations/` está desincronizada con `schema.prisma`: faltan `asmt_name`, `asmt_phone` y los cambios de `payments` del 2026-10-14).
+    - **Migración (hecho el 2026-10-16):** `prisma/migrations/` se regeneró como una sola migración base, `20261016000000_baseline`, que reemplaza a la vieja de junio (que solo traía 7 de las 14 tablas: faltaban `users`, sesiones, códigos de verificación, historial, etc., además de `asmt_name`, `asmt_phone` y los cambios de `payments`). Verificada aplicándola en una base vacía y comparando contra `schema.prisma`: sin diferencias. En Railway se aplica con `pnpm db:deploy` (`prisma migrate deploy`) antes de arrancar. Cada cambio de schema desde aquí necesita su propia migración (`prisma migrate dev`), no `db:push`.
+    - **Tu base local** (`decida`) se creó con `db:push` y conserva el registro de la migración vieja en `_prisma_migrations`; por eso `prisma migrate dev` te pedirá reiniciarla. Sigue usando `pnpm db:push` en local, o recrea la base si quieres alinearla.
     - **Después del despliegue:** repetir la prueba de Resend con un correo ajeno, forzar un error para confirmar que llega a Sentry en producción y revisar que lleguen los eventos del embudo a PostHog.
 - [ ] S4-01 Definir el grupo de beta (quiénes y cuántos) y cómo se les invita.
 - [ ] S4-02 Invitar al grupo y confirmar que cada persona pudo crear su cuenta.
@@ -50,7 +52,7 @@ Leyenda: ⬜ Pendiente · 🟦 En curso · 🟢 Cerrado · 🔴 Atrasado
 
 ## Sprint 5 — Cierre y lanzamiento
 
-- [ ] S5-01 Integrar el cobro recurrente real (Stripe o Mercado Pago) y que el webhook actualice la suscripción de la cuenta.
+- [x] S5-01 Integrar el cobro recurrente real (Stripe o Mercado Pago) y que el webhook actualice la suscripción de la cuenta. Adelantada a S3-16 (2026-10-16, Stripe; falta probarla con claves reales, ver [[../arquitectura/pagos-con-stripe]]).
 - [ ] S5-02 Panel de administración mínimo.
 - [ ] S5-03 Lanzamiento público controlado.
 
@@ -63,4 +65,4 @@ Leyenda: ⬜ Pendiente · 🟦 En curso · 🟢 Cerrado · 🔴 Atrasado
 - [ ] D-05 Niveles de suscripción superiores al de $99 (es la misma tarea que S4-05).
 
 ## Ver también
-[[sprint-3]] · [[../decisiones/plan-lanzamiento-60-90-dias]] · [[../producto/roadmap-y-backlog]] · [[../producto/pricing-y-gtm]] · [[../overview]]
+[[prueba-onboarding-2026-10-16]] · [[sprint-3]] · [[../decisiones/plan-lanzamiento-60-90-dias]] · [[../producto/roadmap-y-backlog]] · [[../producto/pricing-y-gtm]] · [[../overview]]

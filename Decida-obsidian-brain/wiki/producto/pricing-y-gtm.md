@@ -45,6 +45,8 @@ El freemium es explícitamente un **embudo de conversión**: dar suficiente señ
 > **Alcance en el Sprint 3**: rediseño de las pantallas de pago (de "pago único simulado" a "elige plan / suscríbete") + gating freemium/suscriptor. **La integración de cobro recurrente real (Stripe / Mercado Pago) NO** — sigue simulada y se mantiene en el Sprint 5. Ver [[../decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]].
 
 ## Estado real en producción
+> **Actualización 2026-10-16 (S3-16):** el cobro de $99 MXN/mes ya puede ser real con Stripe Checkout (webhook sincroniza `users`; cancelar = al fin del periodo, sin reembolsos). Sin claves de Stripe sigue el modo simulado descrito abajo. Ver [[../arquitectura/pagos-con-stripe]].
+
 El paso `/analizar/pago` ofrece desde S3-06 (2026-10-14) **«Gratis» o «Suscripción $99 MXN/mes»** y la suscripción es **simulada (beta)**: `savePayment` activa la suscripción de la cuenta (`users.user_subscription_*`, provider `simulated`, `period_end` = ahora + 1 mes) sin llamar a ningún proveedor. El cobro recurrente real sigue en el Sprint 5. (Lo que sigue describe el estado previo, de pago único:) `savePayment` marcaba el assessment como `paid`. No hay integración real con Stripe o Mercado Pago. Es un paso de "compromiso" con promesa de reembolso si el reporte llega a fallar (ver [[../arquitectura/manejo-de-errores-y-reembolsos]]). **El pricing real de mercado sigue sin validarse con dinero real** — y con el cambio a suscripción (2026-09-07), la promesa de reembolso de pago único hay que replantearla.
 
 ## Canales de venta propuestos (Notion, no confirmados como ejecutados)

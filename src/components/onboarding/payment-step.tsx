@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -47,22 +48,25 @@ function FeatureList({ items }: { items: readonly string[] }) {
   );
 }
 
-export function PaymentStep() {
+export function PaymentStep({ stripeEnabled = false }: { stripeEnabled?: boolean }) {
   const [state, action, pending] = useActionState(savePayment, initialState);
   const remaining = getRemainingMinutes("pago");
+  useEffect(() => {
+    if (state.message) toast.error(state.message);
+  }, [state]);
 
   return (
     <div className="space-y-6">
       <BackButton currentSlug="pago" />
-      <div className="rounded-xl border border-[#6baed6]/30 bg-accent/50 px-4 py-3 text-sm text-muted-foreground">
-        <span className="font-medium text-primary">Modo beta</span> — pago
-        simulado. Tu progreso está guardado.
-      </div>
+      {!stripeEnabled && (
+        <div className="rounded-xl border border-[#6baed6]/30 bg-accent/50 px-4 py-3 text-sm text-muted-foreground">
+          <span className="font-medium text-primary">Modo beta</span> — pago
+          simulado. Tu progreso está guardado.
+        </div>
+      )}
 
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold text-primary">Elige tu plan</h1>
-        <p className="text-sm text-muted-foreground">{PAYMENT_ANCHOR_COPY}</p>
-      </div>
+      {/* El título «Elige tu plan» lo pone el encabezado del paso (OnboardingShell). */}
+      <p className="text-sm text-muted-foreground">{PAYMENT_ANCHOR_COPY}</p>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
@@ -117,7 +121,7 @@ export function PaymentStep() {
               </p>
               <p className="flex items-center gap-2 text-sm text-muted-foreground">
                 <CreditCard className="size-4 text-[#6baed6]" aria-hidden />
-                Mercado Pago y tarjeta (próximamente)
+                {stripeEnabled ? "Pago seguro con Stripe" : "Pago simulado (beta)"}
               </p>
             </CardContent>
             <CardFooter className="flex-col items-stretch gap-2">

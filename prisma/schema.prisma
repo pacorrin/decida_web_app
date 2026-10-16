@@ -267,6 +267,7 @@ model payments {
 
   @@index([paym_asmt_id])
   @@index([paym_user_id])
+  @@unique([paym_provider, paym_provider_payment_id])
   @@index([paym_status])
   @@map("payments")
 }
@@ -284,6 +285,7 @@ model users {
   user_subscription_canceled_at     DateTime?
   user_subscription_provider        String?
   user_subscription_provider_id     String?
+  user_stripe_customer_id           String?             @unique
   user_created_at                   DateTime            @default(now())
   user_updated_at                   DateTime            @updatedAt
 

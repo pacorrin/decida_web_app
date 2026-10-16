@@ -126,3 +126,14 @@ A (perfil) · B (recursos — **B1/B2 de capital y pérdida removidos en producc
 
 ## Ver también
 [[../producto/prd]] · [[reporte-de-resultado]] · [[../decisiones/evolucion-del-producto]] · [[../marca/sistema-de-diseno]] · [[../framework/prompts-de-ia]] · [[../decisiones/plan-lanzamiento-60-90-dias]]
+
+## Quien ya tiene suscripción no ve el paso del plan (2026-10-16)
+
+La pantalla «Elige tu plan» (`/analizar/pago`) solo aplica a cuentas sin suscripción. Con acceso completo (`hasFullAccess`: activa, o cancelada con acceso vigente) se salta:
+- `confirmIdea` (`src/app/analizar/actions.ts`) manda directo a «Tu situación» en vez de al plan.
+- `/analizar/pago` redirige a donde iba el onboarding (`getResumeStep`), también si se entra por la URL.
+- «Atrás» desde «Tu situación» vuelve a «Así entendimos tu idea», no al plan: `getPreviousStep(slug, { skipPlan })` y un contexto (`flow-context.tsx`) que `src/app/analizar/layout.tsx` llena con el estado de la cuenta.
+- Quien se suscribe desde el plan sigue a «Tu situación», como antes. Para cambiar de plan o cancelar: `/cuenta/suscripcion`.
+
+**Recorrido consistente (mismo día):** para quien salta el plan, el contador, el avance, los minutos restantes y las pestañas se calculan sin ese paso: «Paso 3 de 8» (confirmación) → «Paso 4 de 8» (Tu situación) … «Paso 8 de 8» (resultado), y la pestaña «Plan» no aparece (solo «Gratis» y «Diagnóstico»). Helpers en `src/lib/onboarding/steps.ts` (`getStepNumber`, `getStepTotal`, `getStepProgress`, `getRemainingMinutes`, `getFlowPhases`, todos con `{ skipPlan }`); los usan `OnboardingShell` (cliente, vía `flow-context.tsx`) y la página de resultado (servidor). Tests: `steps-flow.test.ts`.
+
