@@ -39,3 +39,5 @@ Garantizado · hacerte rico · negocio perfecto · fórmula secreta · éxito se
 
 ## Ver también
 [[../producto/pricing-y-gtm]] · [[../marca/sistema-de-diseno]] · [[../producto/principios-de-producto]]
+
+Auditoría previa al despliegue (2026-10-16): [[auditoria-landing-2026-10-16]].

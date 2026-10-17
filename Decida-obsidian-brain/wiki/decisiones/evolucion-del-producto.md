@@ -85,6 +85,12 @@ Mapeo completo del resto de campos del onboarding aún pendientes en [[../produc
 **Lectura**: es la primera vez que se define el modelo de negocio con precisión — hasta ahora "pago" era un placeholder deliberado. El diseño quedó deliberadamente conservador: al no recortar el onboarding, el freemium y el suscriptor generan exactamente el mismo reporte y el único punto de divergencia es el render — bajo riesgo técnico. La apuesta de conversión ("cuánto enseñar gratis sin quemar la confianza") solo la valida la beta. La garantía de reembolso de pago único de [[manejo-de-errores-y-reembolsos]] queda obsoleta.
 **Estado**: decidido, **no implementado**. Detalle en [[plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]] · [[../producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)]] · [[../experiencia/reporte-de-resultado#Vista freemium (recortada) — decidida 2026-09-07]].
 
+## 13. Retención y ejecución como eje de producto (2026-10-16)
+**Notion**: el seguimiento de ejecución no aparece en ningún horizonte del backlog; el «plan de validación de 30 días» estaba en *Later (Pro Plan)*. El PRD define el éxito de nivel 2 como «pagan de nuevo para comparar otra idea».
+**Código (hoy)**: el reporte ya genera para todos un plan de validación de 4 semanas (`arep_validation_plan`, `src/lib/ai/schemas/report-sections.ts`), pero solo como texto de lectura: las tareas son strings en un `Json`, sin estado, sin recordatorios y sin registro de resultados. El freemium ve solo la semana 1.
+**Decisión / dirección del usuario (2026-10-16)**: reconoce que la retención se gana en la ejecución (seguimiento, recordatorios, pequeños logros) y no en el diagnóstico; la visión pasa de «analizador de ideas» a plataforma de ejecución y organización financiera.
+**Estado**: dirección definida, **sin alcance ni fecha**. Análisis de brecha técnica y orden sugerido en [[../producto/retencion-y-plan-de-ejecucion]].
+
 ## Patrón general observado
 En casi todos los casos, el código **construyó más resiliencia y más superficie de producto** de lo que el PRD original consideraba necesario para un MVP de validación (ver la advertencia explícita en [[../producto/prd#Riesgo estratégico]]: *"el mayor riesgo es construir demasiada funcionalidad antes de confirmar que la gente paga"*). Ninguna fuente ingerida (Notion o repo) documenta si esto respondió a feedback real de clientes pagados o fue trabajo anticipado. **Esta es la pregunta más valiosa para la primera minuta de reunión que se ingiera** — ver [[../reuniones/minutas]].
 

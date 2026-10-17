@@ -502,3 +502,15 @@ El paso del plan seguía apareciendo en el onboarding para cuentas suscritas. Ah
 ## [2026-10-16] query | Contador de pasos consistente para suscriptores
 
 Quien salta el plan ve «Paso 3 de 8», «Paso 4 de 8»… sin saltos, con avance y minutos restantes recalculados y sin la pestaña «Plan». Verificado en el navegador. Actualizado: `wiki/experiencia/flujo-de-onboarding.md`.
+
+## [2026-10-16] query | Retención, visión de plataforma y brecha hacia un plan de ejecución
+
+El usuario planteó que Decida va más allá del análisis (ejecución, finanzas, comunidad) y pidió documentar el insight de retención: los números fríos sirven para diagnosticar pero la ejecución necesita seguimiento, recordatorios y logros. Revisado el código: el plan de validación de 4 semanas ya existe pero sin estado, recordatorios ni resultados. Creado: `wiki/producto/retencion-y-plan-de-ejecucion.md`. Actualizado: `wiki/decisiones/evolucion-del-producto.md` (entrada 13), `index.md`, `wiki/overview.md`.
+
+## [2026-10-16] query | Auditoría de la landing
+
+Revisión en Chrome (escritorio y móvil) y contra el código antes del despliegue: 5 puntos que bloquean (aviso de pago simulado, plan de 2 vs 4 semanas, imagen OG en SVG, 10–15 vs 20 minutos, logo con «M»), copy que no refleja el modelo nuevo y mejoras de UX writing. Detalle en `wiki/experiencia/auditoria-landing-2026-10-16.md`.
+
+## [2026-10-16] query | Landing corregida antes del despliegue
+
+Se aplicaron los 5 bloqueos de la auditoría (aviso de pago según el modo de Stripe, plan de cuatro semanas, imagen OG en PNG, «15 a 20 minutos», logo `branding/logo_light.svg`) y el UX writing (titular, CTA único, menú, FAQ ampliado, etiquetas gratis/suscripción). `/privacidad` ahora lista proveedores. Nuevos sitemap y robots. S3-15 cerrada. Detalle en `wiki/experiencia/auditoria-landing-2026-10-16.md`.

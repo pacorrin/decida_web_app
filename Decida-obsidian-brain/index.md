@@ -18,6 +18,7 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | [[wiki/producto/pricing-y-gtm]] | Precios hipótesis vs pago simulado real, canales de venta |
 | [[wiki/producto/roadmap-y-backlog]] | Plan de 30-45 días vs línea de tiempo real (git) |
 | [[wiki/producto/gaps-onboarding-vs-framework]] | Mapeo campo por campo: rubric/criterios de Notion vs. lo que el onboarding captura hoy — incluye bug crítico del score de riesgo |
+| [[wiki/producto/retencion-y-plan-de-ejecucion]] | Insight de retención (la ejecución, no el diagnóstico), visión de plataforma y brecha técnica hacia un plan de ejecución con seguimiento |
 
 ## Framework (IP central)
 | Página | Resumen |

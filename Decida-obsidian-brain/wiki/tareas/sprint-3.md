@@ -78,7 +78,8 @@ Las tareas están en el orden recomendado de ejecución. Cada una está pensada 
   - Correos de cobro agregados el 2026-10-16: activación, cancelación y cobro fallido desde `billing@decida.mx` por Resend; el recibo de cada pago lo manda Stripe. Detalle en [[../arquitectura/pagos-con-stripe]].
   - Hecho el 2026-10-16: cobro de la suscripción de $99 MXN/mes con Stripe Checkout alojado y webhook que mantiene `users` sincronizado; cancelar/reactivar contra Stripe; sin `STRIPE_SECRET_KEY` sigue el modo simulado. Diseño y guía en [[../arquitectura/pagos-con-stripe]].
   - NO probado contra Stripe real (faltan claves): Checkout, retorno con `session_id`, firma real del webhook y Customer Portal. Verificado solo con Vitest (SDK mockeado) y el e2e simulado. Procedimiento manual: tarjeta 4242 4242 4242 4242 y `stripe listen --forward-to localhost:3000/api/stripe/webhook`.
-- [ ] **S3-15 Confirmar si la landing se da por cerrada.** Al 28 sep no hay cambios de código sin commit, así que el trabajo de landing que estaba en curso parece estar ya commiteado. Solo falta confirmarlo.
+- [x] **S3-15 Confirmar si la landing se da por cerrada.** Al 28 sep no hay cambios de código sin commit, así que el trabajo de landing que estaba en curso parece estar ya commiteado. Solo falta confirmarlo.
+  - Revisada y corregida el 2026-10-16: ver [[../experiencia/auditoria-landing-2026-10-16]]. Pendiente para después de la beta: prueba social y captura real del reporte.
 
 ## 5. Al final del sprint
 

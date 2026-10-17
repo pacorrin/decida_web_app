@@ -30,7 +30,7 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
           className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Decida, mi cuenta"
         >
-          <Image src="/logo.svg" alt="" width={28} height={28} aria-hidden />
+          <Image src="/logo.svg" alt="" width={44} height={27} aria-hidden />
           <span className="text-lg font-semibold tracking-tight text-primary">
             Decida
           </span>

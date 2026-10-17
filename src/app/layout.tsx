@@ -17,16 +17,23 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
   ),
-  title: "Decida | ¿Vale la pena tu idea de negocio?",
+  title: "Decida | ¿Tu idea vale el tiempo y el dinero que le vas a poner?",
   description:
-    "Obtén un diagnóstico inmediato de viabilidad basado en tu capital, tiempo, perfil personal, riesgos y números básicos. Antes de invertir.",
+    "Evalúa tu idea de negocio contra tu tiempo, tu presupuesto y tu riesgo. Tu primera evaluación es gratis: fortalezas, riesgos y qué validar antes de invertir.",
   openGraph: {
-    title: "Decida | Business Viability Assessment",
+    title: "Decida | ¿Tu idea vale el tiempo y el dinero que le vas a poner?",
     description:
-      "Analiza tu idea de negocio antes de invertir tiempo y dinero. Diagnóstico claro, directo y accionable.",
+      "Diagnóstico de viabilidad para tu idea de negocio: fortalezas, riesgos y qué validar antes de invertir. Tu primera evaluación es gratis.",
     type: "website",
     locale: "es_MX",
-    images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: "Decida" }],
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Decida: diagnóstico de viabilidad de tu idea de negocio",
+      },
+    ],
   },
 };
 

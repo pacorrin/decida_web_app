@@ -87,6 +87,38 @@ export default function PrivacidadPage() {
         </p>
       </LegalSection>
 
+      <LegalSection title="Proveedores que procesan datos por nosotros">
+        <p>
+          Para operar Decida usamos proveedores que tratan datos en nuestro
+          nombre y solo para ese fin:
+        </p>
+        <ul className="list-disc space-y-2 pl-5">
+          <li>
+            <strong className="text-foreground">OpenAI</strong> (inteligencia
+            artificial): procesa el texto de tu idea y tus respuestas para
+            interpretar tus resultados y redactar tu reporte.
+          </li>
+          <li>
+            <strong className="text-foreground">Stripe</strong>: procesa los
+            pagos de la suscripción (ver arriba).
+          </li>
+          <li>
+            <strong className="text-foreground">Resend</strong>: envía los
+            correos del servicio, como el código de verificación y los avisos de
+            tu suscripción.
+          </li>
+          <li>
+            <strong className="text-foreground">PostHog y Sentry</strong>:
+            analítica de uso y monitoreo de errores, sin enviar tu correo,
+            teléfono ni el texto de tu idea.
+          </li>
+          <li>
+            <strong className="text-foreground">Railway</strong>: aloja la
+            aplicación y la base de datos.
+          </li>
+        </ul>
+      </LegalSection>
+
       <LegalSection title="Cookies y almacenamiento local">
         <p>
           Utilizamos cookies y tecnologías similares estrictamente necesarias

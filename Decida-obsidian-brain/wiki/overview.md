@@ -70,6 +70,7 @@ Salida siempre es una de 4: **Proceed small test / Validate first / Adjust idea 
 - El pago en producción es simulado (beta). **Modelo de cobro decidido el 2026-09-07: suscripción + freemium** ($99 el nivel más barato). Las pantallas de pago + el gating freemium/suscriptor entran al Sprint 3; el cobro recurrente real (Stripe / Mercado Pago) sigue en el Sprint 5 — ver [[producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)]] y [[decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]].
 - ~~El score de "Nivel de riesgo" está roto en producción~~ — ✅ resuelto (commit `43d1112` + cruce inversión-vs-capital y red flags determinísticas del 2026-08-27). Ver [[framework/scoring-engine]].
 - `/mis-evaluaciones` fue reemplazado por `/cuenta` (commit `43d1112`) — la migración del sistema passwordless viejo ya no es un gap abierto.
+- **Retención sin diseñar (2026-10-16)**: el reporte entrega un plan de 4 semanas solo de lectura; no hay seguimiento, recordatorios ni registro de resultados. Ver [[producto/retencion-y-plan-de-ejecucion]].
 
 > ✅ **Bug del reporte resuelto (2026-09-02)**: Fortalezas, Riesgos y Plan de validación fallaban su parseo JSON en el 100% de los reportes y caían a textos genéricos. Ver [[experiencia/reporte-de-resultado#🔴→✅ Las 3 secciones JSON estaban rotas al 100% (arreglado 2026-09-02)]].
 

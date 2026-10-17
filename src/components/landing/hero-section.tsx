@@ -17,12 +17,13 @@ export function HeroSection() {
               id="hero-heading"
               className="text-balance text-3xl font-semibold leading-tight tracking-tight text-primary sm:text-4xl md:text-5xl"
             >
-              ¿Vale la pena arriesgar tu tiempo y dinero en esta idea?
+              ¿Tu idea vale el tiempo y el dinero que le vas a poner?
             </h1>
             <p className="max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               Decida evalúa tu idea de negocio contra tus condiciones reales:
               tiempo, presupuesto, perfil, mercado y riesgo — y te deja con una
-              decisión: avanzar, ajustar o pausar.
+              recomendación clara: probar a pequeña escala, validar primero,
+              ajustar o pausar.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -34,8 +35,8 @@ export function HeroSection() {
             </CtaLink>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
-            ~10–15 minutos. Tu primera evaluación es gratis. Estimaciones
-            básicas; no necesitas ser experto en finanzas.
+            15 a 20 minutos. Tu primera evaluación es gratis y tu idea es
+            privada. Usas estimaciones: no necesitas ser experto en finanzas.
           </p>
         </div>
 

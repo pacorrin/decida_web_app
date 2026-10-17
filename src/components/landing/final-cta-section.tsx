@@ -14,8 +14,8 @@ export function FinalCtaSection() {
           Evalúa tu idea bajo tus condiciones
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-pretty text-base leading-relaxed text-primary-foreground/85 sm:text-lg">
-          Diez a quince minutos para saber si conviene avanzar, ajustar o
-          pausar — antes de invertir más tiempo o dinero.
+          Entre 15 y 20 minutos para saber si conviene probar, validar,
+          ajustar o pausar — antes de invertir más tiempo o dinero.
         </p>
         <div className="mt-8 flex justify-center">
           <PrimaryCtaButton

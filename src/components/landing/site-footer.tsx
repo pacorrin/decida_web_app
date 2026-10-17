@@ -14,12 +14,21 @@ export function SiteFooter() {
               href="/"
               className="inline-flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <Image src="/logo.svg" alt="" width={24} height={24} aria-hidden />
+              <Image src="/logo.svg" alt="" width={40} height={24} aria-hidden />
               <span className="font-semibold text-primary">Decida</span>
             </Link>
             <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
               No es una plantilla. Es una herramienta para tomar mejores
               decisiones antes de invertir en una idea de negocio.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              ¿Dudas? Escríbenos a{" "}
+              <a
+                href="mailto:hello@decida.mx"
+                className="font-medium text-primary underline-offset-4 hover:underline"
+              >
+                hello@decida.mx
+              </a>
             </p>
             <p className="text-xs leading-relaxed text-muted-foreground">
               Este diagnóstico no reemplaza asesoría financiera, fiscal o legal
@@ -45,7 +54,7 @@ export function SiteFooter() {
         <Separator className="my-8" />
         <LegalFooterLinks className="mb-4 flex flex-wrap justify-center gap-x-4 gap-y-1" />
         <p className="text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Decida. Business Viability Assessment.
+          © {new Date().getFullYear()} Decida. Diagnóstico de viabilidad de negocios.
         </p>
       </div>
     </footer>

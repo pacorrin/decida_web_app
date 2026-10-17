@@ -1,5 +1,9 @@
 import { CtaLink } from "@/components/landing/cta-link";
-import { REPORT_INCLUDES } from "@/components/landing/landing-content";
+import {
+  HERO_JUDGMENT,
+  REPORT_INCLUDES,
+  REPORT_PLAN_LABELS,
+} from "@/components/landing/landing-content";
 import { SectionShell } from "@/components/landing/section-shell";
 import { CheckCircle2 } from "lucide-react";
 
@@ -18,15 +22,30 @@ export function ExampleResultSection() {
           </h3>
           <ul className="mt-5 space-y-3">
             {REPORT_INCLUDES.map((item) => (
-              <li key={item} className="flex items-start gap-2.5 text-sm sm:text-base">
+              <li key={item.text} className="flex items-start gap-2.5 text-sm sm:text-base">
                 <CheckCircle2
                   className="mt-0.5 size-4 shrink-0 text-[#6baed6]"
                   aria-hidden
                 />
-                <span className="leading-relaxed text-foreground">{item}</span>
+                <span className="leading-relaxed text-foreground">
+                  {item.text}{" "}
+                  <span
+                    className={
+                      item.plan === "paid"
+                        ? "ml-1 rounded-full bg-secondary/15 px-2 py-0.5 text-xs font-medium text-secondary-foreground"
+                        : "ml-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
+                    }
+                  >
+                    {REPORT_PLAN_LABELS[item.plan]}
+                  </span>
+                </span>
               </li>
             ))}
           </ul>
+          <p className="mt-4 text-sm text-muted-foreground">
+            Tu primera evaluación es gratis; el reporte completo y más ideas
+            se desbloquean con la suscripción.
+          </p>
         </div>
 
         <article className="rounded-xl border border-border/80 bg-card p-5 sm:p-6">
@@ -34,7 +53,7 @@ export function ExampleResultSection() {
             Ejemplo ilustrativo
           </p>
           <h3 className="mt-1 text-lg font-semibold text-primary">
-            Servicio de detailing móvil
+            {HERO_JUDGMENT.ideaTitle}
           </h3>
           <p className="mt-3 text-sm font-medium text-primary">
             Recomendación: validar antes de invertir más

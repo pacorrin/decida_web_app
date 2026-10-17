@@ -1,11 +1,11 @@
 export const NAV_LINKS = [
   { href: "#problema", label: "El problema" },
-  { href: "#mecanismo", label: "Cómo decide" },
+  { href: "#mecanismo", label: "Cómo funciona" },
   { href: "#ejemplo", label: "Ejemplo" },
   { href: "#para-quien", label: "¿Es para ti?" },
   { href: "#precio", label: "Precio" },
   { href: "#faq", label: "FAQ" },
-  { href: "/cuenta", label: "Mi cuenta" },
+  { href: "/cuenta", label: "Entrar" },
 ] as const;
 
 export const LEGAL_LINKS = [
@@ -44,15 +44,27 @@ export const MECHANISM_STEPS = [
   },
 ] as const;
 
-export const REPORT_INCLUDES = [
-  "Resumen ejecutivo del diagnóstico",
-  "Señales de viabilidad por dimensión",
-  "Fortalezas y riesgos concretos",
-  "Lectura financiera básica (márgenes y equilibrio)",
-  "Compatibilidad con tu forma de trabajar",
-  "Plan de validación de dos semanas",
-  "Recomendación: avanzar, ajustar o pausar",
-] as const;
+export type ReportInclude = {
+  text: string;
+  /** free: en el plan gratuito · partial: versión parcial gratis · paid: solo con suscripción */
+  plan: "free" | "partial" | "paid";
+};
+
+export const REPORT_PLAN_LABELS: Record<ReportInclude["plan"], string> = {
+  free: "Gratis",
+  partial: "Parcial gratis",
+  paid: "Suscripción",
+};
+
+export const REPORT_INCLUDES: readonly ReportInclude[] = [
+  { text: "Resumen ejecutivo del diagnóstico", plan: "free" },
+  { text: "Señales de viabilidad por dimensión", plan: "free" },
+  { text: "Fortalezas y riesgos concretos", plan: "free" },
+  { text: "Lectura financiera básica (márgenes y equilibrio)", plan: "partial" },
+  { text: "Compatibilidad con tu forma de trabajar", plan: "paid" },
+  { text: "Plan de validación de cuatro semanas", plan: "partial" },
+  { text: "Recomendación final y cómo reducir cada riesgo", plan: "paid" },
+];
 
 export const PRICING_FREE_INCLUDES = [
   "Una evaluación completa de tu idea",
@@ -84,6 +96,11 @@ export const NOT_FOR_YOU_ITEMS = [
 
 export const FAQ_ITEMS = [
   {
+    question: "¿Es gratis?",
+    answer:
+      "Tu primera evaluación es gratis y no pide tarjeta. Incluye el resumen, los semáforos por dimensión, tu negocio, fortalezas y riesgos principales. Para el reporte completo y más ideas te suscribes por $99 MXN al mes.",
+  },
+  {
     question: "¿Decida me dice qué negocio abrir?",
     answer:
       "No. Evalúa la idea que tú ya tienes. No inventa oportunidades ni elige por ti.",
@@ -101,7 +118,7 @@ export const FAQ_ITEMS = [
   {
     question: "¿Qué tipo de ideas puedo evaluar?",
     answer:
-      "Físicas, digitales, servicios, producto, franquicia, side hustle o proyectos independientes — una idea por evaluación.",
+      "Físicas, digitales, servicios, producto, franquicia, negocio secundario o proyectos independientes. Cada evaluación es de una idea; el plan gratuito incluye una y la suscripción no tiene límite.",
   },
   {
     question: "¿Qué pasa si el riesgo sale alto?",
@@ -109,22 +126,47 @@ export const FAQ_ITEMS = [
       "También es un resultado útil: puedes ajustar la idea, validar o pausar antes de perder dinero.",
   },
   {
+    question: "¿Cómo funciona la suscripción y cómo la cancelo?",
+    answer:
+      "Cuesta $99 MXN al mes y se paga con tarjeta a través de Stripe. Puedes cancelarla cuando quieras desde tu cuenta: conservas el acceso completo hasta el fin del periodo ya pagado. No hacemos reembolsos por el periodo pagado.",
+  },
+  {
+    question: "¿Qué pasa con mis evaluaciones si cancelo?",
+    answer:
+      "Se quedan guardadas en tu cuenta. Al terminar tu periodo vuelves a ver la versión gratuita de cada reporte, y si te suscribes de nuevo se desbloquean todas.",
+  },
+  {
+    question: "¿Mi idea es privada?",
+    answer:
+      "No vendemos ni compartimos tu información con terceros para marketing. Para generar el reporte, tus respuestas y el texto de tu idea los procesa por nosotros un proveedor de inteligencia artificial (OpenAI). Lo detallamos en el aviso de privacidad.",
+  },
+  {
+    question: "¿Usan inteligencia artificial?",
+    answer:
+      "Sí, pero con reglas claras: los puntajes y los cálculos financieros salen de reglas fijas aplicadas a tus respuestas, y la inteligencia artificial ayuda a interpretarlos y a redactar el reporte. No sustituye asesoría profesional.",
+  },
+  {
+    question: "¿Qué pasa si el reporte no se genera?",
+    answer:
+      "Tus respuestas quedan guardadas y puedes reintentar desde la misma pantalla. Si el problema sigue, escríbenos a hello@decida.mx con el código que te mostramos y lo revisamos.",
+  },
+  {
     question: "¿Cuánto tarda?",
-    answer: "Unos 10 a 15 minutos del diagnóstico guiado al reporte.",
+    answer: "Entre 15 y 20 minutos, del diagnóstico guiado al reporte.",
   },
 ] as const;
 
 /** Static hero proof — illustrative sample judgment (not live user data) */
 export const HERO_JUDGMENT = {
   ideaLabel: "Ejemplo ilustrativo",
-  ideaTitle: "Detailing móvil de autos",
+  ideaTitle: "Servicio de detailing móvil",
   recommendation: "Validar antes de invertir más",
   constraintNote:
     "Resultado cruzado con tiempo parcial, presupuesto acotado y canal aún poco claro.",
   signals: [
-    { label: "Ajuste de tiempo", tone: "ok" as const },
-    { label: "Viabilidad comercial", tone: "caution" as const },
-    { label: "Riesgo", tone: "watch" as const },
+    { label: "Ajuste de tiempo: favorable", tone: "ok" as const },
+    { label: "Viabilidad comercial: por validar", tone: "caution" as const },
+    { label: "Riesgo: moderado", tone: "watch" as const },
   ],
   nextStep:
     "Hablar con 10 clientes potenciales y cotizar costos reales antes de gastar más de $10,000 MXN.",

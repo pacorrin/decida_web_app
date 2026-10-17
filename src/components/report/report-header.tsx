@@ -22,7 +22,7 @@ export function ReportHeader() {
             className="hidden items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:flex"
             aria-label="Decida, inicio"
           >
-            <Image src="/logo.svg" alt="" width={24} height={24} aria-hidden />
+            <Image src="/logo.svg" alt="" width={40} height={24} aria-hidden />
             <span className="text-sm font-semibold text-primary">Decida</span>
           </Link>
         </div>
