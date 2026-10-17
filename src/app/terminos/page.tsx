@@ -13,7 +13,7 @@ export default function TerminosPage() {
   return (
     <LegalPageShell
       title="Términos de servicio"
-      description="Última actualización: julio de 2026"
+      description="Última actualización: octubre de 2026"
     >
       <LegalSection title="Aceptación de los términos">
         <p>
@@ -93,10 +93,7 @@ export default function TerminosPage() {
         <p>
           No hacemos reembolsos ni prorrateos por el periodo ya pagado. Los
           pagos de la suscripción los procesa Stripe, un procesador de pagos
-          externo; Decida no almacena los datos de tu tarjeta. Mientras el
-          cobro no esté habilitado en la plataforma (por ejemplo, durante la
-          fase beta), la suscripción se activa en modo simulado y no se
-          realiza ningún cargo.
+          externo; Decida no almacena los datos de tu tarjeta.
         </p>
       </LegalSection>
 

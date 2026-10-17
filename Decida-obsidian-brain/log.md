@@ -514,3 +514,7 @@ Revisión en Chrome (escritorio y móvil) y contra el código antes del desplieg
 ## [2026-10-16] query | Landing corregida antes del despliegue
 
 Se aplicaron los 5 bloqueos de la auditoría (aviso de pago según el modo de Stripe, plan de cuatro semanas, imagen OG en PNG, «15 a 20 minutos», logo `branding/logo_light.svg`) y el UX writing (titular, CTA único, menú, FAQ ampliado, etiquetas gratis/suscripción). `/privacidad` ahora lista proveedores. Nuevos sitemap y robots. S3-15 cerrada. Detalle en `wiki/experiencia/auditoria-landing-2026-10-16.md`.
+
+## [2026-10-16] query | Precios de la landing: sin aviso de pago y CTA de suscripción
+
+Se quitó por completo el aviso de pago bajo las tarjetas de precio (y `isStripeTestMode`), y el texto «Te suscribes desde tu cuenta…» se reemplazó por el botón «Desbloquear el reporte completo». Actualizado: `wiki/experiencia/auditoria-landing-2026-10-16.md`.

@@ -1,12 +1,13 @@
 export const NAV_LINKS = [
-  { href: "#problema", label: "El problema" },
-  { href: "#mecanismo", label: "Cómo funciona" },
-  { href: "#ejemplo", label: "Ejemplo" },
-  { href: "#para-quien", label: "¿Es para ti?" },
-  { href: "#precio", label: "Precio" },
-  { href: "#faq", label: "FAQ" },
-  { href: "/cuenta", label: "Entrar" },
+  { href: "/#problema", label: "El problema" },
+  { href: "/#mecanismo", label: "Cómo funciona" },
+  { href: "/#ejemplo", label: "Ejemplo" },
+  { href: "/#para-quien", label: "¿Es para ti?" },
+  { href: "/#precio", label: "Precio" },
+  { href: "/#faq", label: "FAQ" },
 ] as const;
+
+export const LOGIN_LINK = { href: "/cuenta", label: "Iniciar sesión" } as const;
 
 export const LEGAL_LINKS = [
   { href: "/privacidad", label: "Privacidad" },

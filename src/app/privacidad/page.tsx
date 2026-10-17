@@ -13,7 +13,7 @@ export default function PrivacidadPage() {
   return (
     <LegalPageShell
       title="Política de privacidad"
-      description="Última actualización: julio de 2026"
+      description="Última actualización: octubre de 2026"
     >
       <LegalSection title="Responsable del tratamiento">
         <p>
@@ -67,7 +67,7 @@ export default function PrivacidadPage() {
         <ul className="list-disc space-y-2 pl-5">
           <li>Generar y entregarte tu diagnóstico de viabilidad.</li>
           <li>Mantener tu sesión de evaluación y recuperar tu progreso.</li>
-          <li>Procesar pagos simulados o reales según el plan contratado.</li>
+          <li>Procesar el pago de tu suscripción.</li>
           <li>Mejorar la calidad del producto y la experiencia de usuario.</li>
           <li>Cumplir obligaciones legales y responder solicitudes de soporte.</li>
         </ul>
@@ -81,9 +81,7 @@ export default function PrivacidadPage() {
           Decida no los recibe ni los almacena. Compartimos con Stripe tu
           correo electrónico para asociar el cobro a tu cuenta, y guardamos
           únicamente identificadores del cliente y de la suscripción, los
-          montos y las fechas de cobro. Mientras el cobro no esté habilitado
-          (por ejemplo, en la fase beta) la suscripción es simulada y no se
-          comparte ningún dato con Stripe.
+          montos y las fechas de cobro.
         </p>
       </LegalSection>
 
@@ -102,20 +100,6 @@ export default function PrivacidadPage() {
             <strong className="text-foreground">Stripe</strong>: procesa los
             pagos de la suscripción (ver arriba).
           </li>
-          <li>
-            <strong className="text-foreground">Resend</strong>: envía los
-            correos del servicio, como el código de verificación y los avisos de
-            tu suscripción.
-          </li>
-          <li>
-            <strong className="text-foreground">PostHog y Sentry</strong>:
-            analítica de uso y monitoreo de errores, sin enviar tu correo,
-            teléfono ni el texto de tu idea.
-          </li>
-          <li>
-            <strong className="text-foreground">Railway</strong>: aloja la
-            aplicación y la base de datos.
-          </li>
         </ul>
       </LegalSection>
 
@@ -133,15 +117,6 @@ export default function PrivacidadPage() {
           <li>
             <strong className="text-foreground">Cookies de preferencia:</strong>{" "}
             recuerdan configuraciones básicas de la interfaz cuando apliquen.
-          </li>
-          <li>
-            <strong className="text-foreground">Analítica de uso:</strong>{" "}
-            usamos PostHog para contar visitas y medir en qué paso del flujo
-            abandonan las personas (por ejemplo, cuántas crean una cuenta o
-            ven su reporte). Guarda un identificador en tu navegador y, si
-            tienes cuenta, el identificador interno de tu cuenta. No enviamos
-            tu correo, tu teléfono ni el texto de tu idea, y no grabamos tu
-            pantalla.
           </li>
         </ul>
         <p>

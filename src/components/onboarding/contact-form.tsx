@@ -10,7 +10,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { LegalFooterLinks } from "@/components/legal/legal-footer-links";
+import { MexicoPhoneInput } from "@/components/onboarding/mexico-phone-input";
 import { StepNavigation } from "@/components/onboarding/step-navigation";
 import { saveContact } from "@/app/analizar/actions";
 import { fieldValue, isFieldChecked, type ActionState } from "@/lib/onboarding/schemas";
@@ -79,12 +79,10 @@ export function ContactForm({ assessment }: ContactFormProps) {
 
         <Field>
           <FieldLabel htmlFor="phone">Teléfono</FieldLabel>
-          <Input
+          <MexicoPhoneInput
             id="phone"
             name="phone"
-            type="tel"
             defaultValue={fieldValue(v, "phone", assessment?.asmt_phone ?? "")}
-            placeholder="+52 55 1234 5678"
             required
             aria-invalid={!!state.fieldErrors?.phone}
           />
@@ -172,8 +170,6 @@ export function ContactForm({ assessment }: ContactFormProps) {
       )}
 
       <StepNavigation currentSlug="contacto" isPending={pending} showBack={false} />
-
-      <LegalFooterLinks className="mt-8 justify-center border-t border-border/60 pt-6" />
     </form>
   );
 }

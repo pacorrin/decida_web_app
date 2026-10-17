@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { NAV_LINKS } from "@/components/landing/landing-content";
+import { LOGIN_LINK, NAV_LINKS } from "@/components/landing/landing-content";
 import { LegalFooterLinks } from "@/components/legal/legal-footer-links";
 import { Separator } from "@/components/ui/separator";
 
@@ -38,7 +38,7 @@ export function SiteFooter() {
           <nav aria-label="Enlaces del pie de página">
             <p className="mb-3 text-sm font-medium text-primary">Secciones</p>
             <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {NAV_LINKS.map((link) => (
+              {[...NAV_LINKS, LOGIN_LINK].map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -52,7 +52,7 @@ export function SiteFooter() {
           </nav>
         </div>
         <Separator className="my-8" />
-        <LegalFooterLinks className="mb-4 flex flex-wrap justify-center gap-x-4 gap-y-1" />
+        <LegalFooterLinks className="mb-4" />
         <p className="text-center text-xs text-muted-foreground">
           © {new Date().getFullYear()} Decida. Diagnóstico de viabilidad de negocios.
         </p>

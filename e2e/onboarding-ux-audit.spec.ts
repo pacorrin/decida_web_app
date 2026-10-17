@@ -395,7 +395,7 @@ test.describe("Auditoría UX del onboarding", () => {
     await expect(page.getByText("Ingresa un teléfono válido")).toBeVisible();
 
     await expect(page.locator("#name")).toHaveValue("Test");
-    await expect(page.locator("#phone")).toHaveValue("12");
+    await expect(page.locator("#phone")).toHaveValue("+52 12");
   });
 
   test("confirmación y pago tienen botón Atrás", async ({ page }) => {

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -42,9 +43,13 @@ export function OnboardingShell({ currentSlug, children }: OnboardingShellProps)
         <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-4 sm:px-6">
           <Link
             href="/"
-            className="text-lg font-semibold text-primary transition-colors hover:text-primary/80"
+            className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label="Decida, inicio"
           >
-            Decida
+            <Image src="/logo.svg" alt="" width={44} height={27} aria-hidden />
+            <span className="text-lg font-semibold tracking-tight text-primary">
+              Decida
+            </span>
           </Link>
           <div
             className="flex items-center gap-2 text-xs text-muted-foreground"

@@ -35,6 +35,7 @@ describe("copy de la landing", () => {
   it("sin anglicismos en el FAQ y con etiquetas claras en el menú", () => {
     expect(JSON.stringify(FAQ_ITEMS)).not.toMatch(/side hustle/i);
     expect(NAV_LINKS.map((l) => l.label)).toContain("Cómo funciona");
-    expect(NAV_LINKS.map((l) => l.label)).toContain("Entrar");
+    expect(NAV_LINKS.map((l) => l.label)).not.toContain("Entrar");
+    expect(NAV_LINKS.every((l) => l.href.startsWith("/#"))).toBe(true);
   });
 });

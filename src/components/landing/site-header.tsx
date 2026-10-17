@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Menu } from "lucide-react";
-import { NAV_LINKS } from "@/components/landing/landing-content";
-import { PrimaryCtaButton } from "@/components/landing/cta-link";
+import { LOGIN_LINK, NAV_LINKS } from "@/components/landing/landing-content";
+import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -44,7 +44,10 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-3 md:flex">
+          <CtaLink href={LOGIN_LINK.href} variant="outline">
+            {LOGIN_LINK.label}
+          </CtaLink>
           <PrimaryCtaButton href="/analizar">
             Analizar mi idea gratis
           </PrimaryCtaButton>
@@ -80,7 +83,14 @@ export function SiteHeader() {
                   {link.label}
                 </Link>
               ))}
-              <div className="pt-4">
+              <div className="flex flex-col gap-3 pt-4">
+                <CtaLink
+                  href={LOGIN_LINK.href}
+                  variant="outline"
+                  className="w-full sm:w-full"
+                >
+                  {LOGIN_LINK.label}
+                </CtaLink>
                 <PrimaryCtaButton href="/analizar">
                   Analizar mi idea gratis
                 </PrimaryCtaButton>

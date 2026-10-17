@@ -1,10 +1,11 @@
 import { z } from "zod";
 import type { StructuredUnderstanding } from "@/lib/ai/schemas/structured-understanding";
+import { isCompleteMexicoPhone } from "@/lib/onboarding/phone";
 
 export const contactSchema = z.object({
   email: z.string().email("Ingresa un correo válido"),
   name: z.string().min(2, "Ingresa tu nombre"),
-  phone: z.string().min(8, "Ingresa un teléfono válido"),
+  phone: z.string().refine(isCompleteMexicoPhone, "Ingresa un teléfono válido"),
   country: z.string().min(1, "Selecciona tu país"),
   password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
   acceptedTerms: z.enum(["on"], {

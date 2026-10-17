@@ -48,7 +48,7 @@ function FeatureList({ items }: { items: readonly string[] }) {
   );
 }
 
-export function PaymentStep({ stripeEnabled = false }: { stripeEnabled?: boolean }) {
+export function PaymentStep() {
   const [state, action, pending] = useActionState(savePayment, initialState);
   const remaining = getRemainingMinutes("pago");
   useEffect(() => {
@@ -58,12 +58,6 @@ export function PaymentStep({ stripeEnabled = false }: { stripeEnabled?: boolean
   return (
     <div className="space-y-6">
       <BackButton currentSlug="pago" />
-      {!stripeEnabled && (
-        <div className="rounded-xl border border-[#6baed6]/30 bg-accent/50 px-4 py-3 text-sm text-muted-foreground">
-          <span className="font-medium text-primary">Modo beta</span> — pago
-          simulado. Tu progreso está guardado.
-        </div>
-      )}
 
       {/* El título «Elige tu plan» lo pone el encabezado del paso (OnboardingShell). */}
       <p className="text-sm text-muted-foreground">{PAYMENT_ANCHOR_COPY}</p>
@@ -121,7 +115,7 @@ export function PaymentStep({ stripeEnabled = false }: { stripeEnabled?: boolean
               </p>
               <p className="flex items-center gap-2 text-sm text-muted-foreground">
                 <CreditCard className="size-4 text-[#6baed6]" aria-hidden />
-                {stripeEnabled ? "Pago seguro con Stripe" : "Pago simulado (beta)"}
+                Pago seguro con Stripe
               </p>
             </CardContent>
             <CardFooter className="flex-col items-stretch gap-2">

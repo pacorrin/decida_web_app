@@ -7,7 +7,6 @@ import { getStepBySlug } from "@/lib/onboarding/steps";
 import { getResumeStep } from "@/lib/onboarding/navigation";
 import { hasFullAccess } from "@/lib/subscription/access";
 import { getCurrentUser } from "@/lib/auth/session-server";
-import { isStripeEnabled } from "@/lib/stripe/config";
 import { resolveCheckoutReturn } from "@/lib/subscription/checkout-return";
 
 export default async function PagoPage({
@@ -36,7 +35,7 @@ export default async function PagoPage({
   return (
     <OnboardingShell currentSlug="pago">
       <CheckoutNotice state={checkoutState} />
-      <PaymentStep stripeEnabled={isStripeEnabled()} />
+      <PaymentStep />
     </OnboardingShell>
   );
 }

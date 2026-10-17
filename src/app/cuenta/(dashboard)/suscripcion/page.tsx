@@ -17,7 +17,6 @@ import { PortalButton } from "@/components/account/portal-button";
 import { SubscribeButton } from "@/components/account/subscribe-button";
 import { CheckoutNotice } from "@/components/account/checkout-notice";
 import { resolveCheckoutReturn } from "@/lib/subscription/checkout-return";
-import { isStripeEnabled } from "@/lib/stripe/config";
 import { describeSubscription } from "@/lib/subscription/cancel";
 import {
   PAYMENT_CANCEL_COPY,
@@ -63,7 +62,6 @@ export default async function SuscripcionPage({
   if (!initialUser) redirect("/cuenta/iniciar-sesion");
 
   const { limite, checkout, session_id } = await searchParams;
-  const stripeEnabled = isStripeEnabled();
   const resolvedCheckout = await resolveCheckoutReturn(
     initialUser.user_id,
     { checkout, session_id },
@@ -93,13 +91,6 @@ export default async function SuscripcionPage({
           Tu plan actual y lo que desbloquea la suscripción.
         </p>
       </div>
-
-      {!stripeEnabled && (
-        <div className="rounded-xl border border-[#6baed6]/30 bg-accent/50 px-4 py-3 text-sm text-muted-foreground">
-          <span className="font-medium text-primary">Modo beta</span> — pago
-          simulado, no se hace ningún cargo.
-        </div>
-      )}
 
       <CheckoutNotice state={checkoutState} />
 
@@ -186,9 +177,7 @@ export default async function SuscripcionPage({
             </p>
             <p className="flex items-center gap-2 text-sm text-muted-foreground">
               <CreditCard className="size-4 text-[#6baed6]" aria-hidden />
-              {stripeEnabled
-                ? "Pago seguro con Stripe"
-                : "Pago simulado (beta)"}
+              Pago seguro con Stripe
             </p>
           </CardContent>
           <CardFooter className="flex-col items-stretch gap-2">
