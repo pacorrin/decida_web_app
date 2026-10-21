@@ -1,0 +1,197 @@
+{
+  "case": {
+    "id": "02-plantillas-notion",
+    "kind": "producto-digital",
+    "expectedMarket": "Hispanohablantes (México y Latinoamérica), venta en línea",
+    "description": "Quiero vender plantillas de Notion para diseñadores freelance (cotizaciones, seguimiento de proyectos y facturación) en Gumroad. Las haría yo en mis ratos libres y las promovería en Instagram y LinkedIn.",
+    "profile": {
+      "situation": "empleado",
+      "goal": "ingreso_extra",
+      "experience": "ninguna",
+      "capital": "menos_10k",
+      "acceptableLoss": "menos_5k",
+      "hoursPerWeek": "5_10",
+      "schedule": "noches",
+      "timeframe": "3_6_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "crear",
+        "analizar"
+      ],
+      "workPreference": "digital",
+      "sales": 2,
+      "uncertainty": 3,
+      "process": 5,
+      "hiring": "solo"
+    },
+    "financial": {
+      "initialInvestment": 2500,
+      "fixedCostsRange": "menos_5k",
+      "products": [
+        {
+          "name": "Paquete de plantillas de Notion para freelancers",
+          "kind": "producto",
+          "price": 350,
+          "variableCost": 35,
+          "monthlyUnits": 30
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "ninguno",
+      "competition": "alta",
+      "channel": "redes_sociales",
+      "dependencies": [
+        "plataforma"
+      ],
+      "mainConcern": "Que haya demasiadas plantillas gratis y nadie pague por las mías.",
+      "successCondition": "Vender 30 paquetes al mes de forma constante durante seis meses."
+    }
+  },
+  "promptVersion": "v1.3.0",
+  "generatedAt": "2026-10-21T05:10:20.022Z",
+  "latencySeconds": 14.7,
+  "ideaSummary": "Quieres iniciar un negocio vendiendo plantillas de Notion diseñadas específicamente para diseñadores freelance, que incluirán herramientas para cotizaciones, seguimiento de proyectos y facturación. Tu idea consiste en crear estas plantillas en tu tiempo libre y promocionarlas a través de Instagram y LinkedIn.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 65,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 95,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 35,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 100,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 315,
+    "grossMarginPercentage": 90,
+    "estimatedMonthlyGrossProfit": 9450,
+    "estimatedMonthlyNetProfit": 6450,
+    "breakEvenSales": 10,
+    "paybackMonths": 0.3875968992248062
+  },
+  "interpretation": {
+    "personal_fit_signal": "yellow",
+    "financial_viability_signal": "green",
+    "commercial_viability_signal": "red",
+    "risk_level_signal": "red",
+    "time_fit_signal": "yellow",
+    "scalability_signal": "yellow",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "Tu negocio depende de una plataforma externa. Si esa plataforma cambia sus reglas o te suspende, pierdes el canal de un día para otro — ten un plan alterno antes de invertir fuerte.",
+      "Sin validación con clientes potenciales",
+      "Alta dependencia de plataforma externa",
+      "Mercado saturado de plantillas gratuitas"
+    ],
+    "reasoning_summary": "Aunque la inversión es baja y la viabilidad financiera es alta, el riesgo es muy alto por la falta de validación, dependencia de terceros y fuerte competencia. Se recomienda hablar con diseñadores freelance antes de comprometer tiempo y recursos."
+  },
+  "report": {
+    "arep_executive_summary": "La idea consiste en vender plantillas de Notion dirigidas a diseñadores freelance, enfocándose en herramientas como cotizaciones, seguimiento de proyectos y facturación, utilizando Gumroad como plataforma de venta y promoviendo en redes sociales como Instagram y LinkedIn. Aunque la viabilidad financiera es alta, con un puntaje de 95, el diagnóstico revela un alto nivel de riesgo, con un puntaje de 100, debido a la falta de validación con clientes potenciales y la alta competencia en el mercado, que incluye muchas plantillas gratuitas. Dado que tu negocio depende de una plataforma externa, es crucial tener un plan alternativo antes de realizar inversiones significativas. Se recomienda validar la idea hablando con diseñadores freelance para entender mejor sus necesidades y disposición a pagar por tus plantillas.",
+    "arep_business_understanding": "Ofreces un **paquete de plantillas de Notion** específicamente diseñadas para **freelancers** en áreas como cotizaciones, seguimiento de proyectos y facturación. Tu propuesta de valor radica en facilitar la organización y gestión del trabajo a diseñadores freelance, quienes buscan herramientas que les ahorren tiempo y mejoren su eficiencia. Al ofrecer estas plantillas a un precio de 350 pesos, estás brindando una solución accesible que puede ayudarles a optimizar sus procesos administrativos.\n\nEl cliente que buscas son **diseñadores freelance**, aunque no proporcionaste detalles específicos sobre su edad, ingresos o hábitos. Esto es algo que deberías validar. Sin embargo, se puede suponer que son personas que trabajan de manera independiente, probablemente con un enfoque en la creatividad y que valoran herramientas que les ayuden a gestionar su tiempo y proyectos de manera más efectiva. También es probable que usen plataformas como Instagram y LinkedIn para conectarse y promocionar su trabajo, lo que puede ser un buen canal para ti al momento de promocionar tus plantillas.",
+    "arep_strengths": [
+      {
+        "title": "Margen bruto alto por venta",
+        "whyItMatters": "Con un margen bruto del 90%, cada venta te deja $315 antes de gastos fijos, lo que te da flexibilidad para cubrir costos y absorber errores."
+      },
+      {
+        "title": "Recuperación rápida de inversión",
+        "whyItMatters": "Tu inversión de $2,500 se recupera en aproximadamente 0.4 meses, lo que significa que no estarás amarrado a esta idea por mucho tiempo si no funciona."
+      },
+      {
+        "title": "Punto de equilibrio accesible",
+        "whyItMatters": "Con un punto de equilibrio de solo 10 ventas al mes, tienes un colchón que te permite experimentar sin perder dinero inmediatamente."
+      },
+      {
+        "title": "Utilidad neta estimada positiva",
+        "whyItMatters": "La utilidad neta estimada de $6,450 al mes, si logras las ventas proyectadas, podría ser un ingreso extra significativo."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Alta competencia en el mercado",
+        "whyItMatters": "Declaraste que la competencia es alta y que hay muchas plantillas gratis, lo que puede dificultar la venta de tus productos.",
+        "howToReduce": "Habla con diseñadores freelance para entender sus necesidades y ajustar tus plantillas para que sean más atractivas que las gratuitas."
+      },
+      {
+        "title": "Falta de validación con clientes potenciales",
+        "whyItMatters": "No has hablado con nadie sobre tus plantillas, lo que significa que no tienes evidencia de interés real en el mercado.",
+        "howToReduce": "Realiza encuestas o entrevistas con diseñadores freelance para obtener retroalimentación sobre tus ideas y ajustar tu oferta."
+      },
+      {
+        "title": "Dependencia de plataformas externas",
+        "whyItMatters": "Tu negocio depende de plataformas como Instagram y Gumroad, lo que puede ser riesgoso si cambian sus políticas o si pierdes acceso.",
+        "howToReduce": "Desarrolla un plan alternativo para promocionar y vender tus plantillas, como crear una página web propia o utilizar múltiples canales de venta."
+      }
+    ],
+    "arep_personal_fit_analysis": "Tú encajas bien en esta idea de vender plantillas de Notion para diseñadores freelance en dos aspectos clave. Primero, disfrutas crear productos o servicios, lo cual es fundamental para desarrollar las plantillas que planeas vender. Además, tienes una alta comodidad siguiendo procesos, lo que te ayudará a estructurar tu trabajo y a crear un método eficiente para diseñar y promocionar tus plantillas.\n\nSin embargo, hay algunas brechas personales que debes considerar. La primera es tu comodidad vendiendo, que es de solo 2 de 5. Esto puede ser un obstáculo al momento de promover tus productos en Instagram y LinkedIn. Una acción concreta sería invertir tiempo en aprender sobre marketing digital y ventas, tal vez a través de cursos en línea, para aumentar tu confianza en esta área.\n\nLa segunda brecha es tu disponibilidad de tiempo, ya que solo puedes dedicar de 5 a 10 horas a la semana. Esto puede limitar tu capacidad para desarrollar y promocionar las plantillas de manera efectiva. Te recomendaría establecer un horario específico y realista para trabajar en tu negocio, asegurándote de que esas horas sean productivas y enfocadas en tareas clave.",
+    "arep_financial_analysis": "El **margen por producto** de tu paquete de plantillas de Notion para freelancers es bastante favorable. Estás vendiendo cada paquete a 350 MXN y tu costo variable es de 35 MXN. Esto te deja un margen bruto por venta de 315 MXN, lo que representa un 90% de margen bruto. Esto indica que cada venta contribuye significativamente a tus ganancias.\n\nNo hay riesgo de que alguno de tus productos se venda con pérdida, ya que el margen es positivo. Con un **punto de equilibrio** de 10 unidades al mes, estás en una buena posición, ya que con la venta de 30 unidades mensuales, generas un **beneficio bruto estimado de 9,450 MXN**. Esto es suficiente para cubrir tus costos fijos mensuales, que son menos de 5,000 MXN, y aún te deja un **beneficio neto estimado de 6,450 MXN**.\n\nEn cuanto a la **recuperación de la inversión**, con una inversión inicial de 2,500 MXN y un **tiempo de recuperación de aproximadamente 0.39 meses**, estás en una situación muy favorable. Esto significa que recuperarás tu inversión en menos de un mes, lo que es un indicativo positivo para la viabilidad financiera de tu negocio. Sin embargo, es importante que sigas evaluando otros aspectos del mercado y la competencia, ya que tu puntaje en viabilidad comercial es bajo.",
+    "arep_time_operation_analysis": "Para tu negocio de vender plantillas de Notion, el trabajo que implica se puede dividir en dos categorías: tareas únicas y tareas recurrentes. \n\n### Tareas únicas\n- **Creación de plantillas**: Esto incluye diseñar y desarrollar las plantillas que vas a vender. Dado que planeas hacerlas en tus ratos libres, es importante que definas un tiempo específico para esta actividad. Podrías estimar que te tomará unas 10 horas en total para crear un paquete inicial de plantillas.\n\n### Tareas recurrentes\n- **Promoción en redes sociales**: La promoción en Instagram y LinkedIn será clave para atraer clientes. Podrías dedicar unas 2 horas a la semana para crear contenido y publicar.\n- **Atención al cliente**: Responder preguntas y gestionar ventas puede llevarte aproximadamente 1 a 2 horas semanales, dependiendo de la cantidad de consultas que recibas.\n- **Gestión de ventas**: Cada vez que vendas un paquete, tendrás que asegurarte de que la entrega se realice correctamente, lo que podría llevarte 1 hora semanal.\n\n### Comparación con tu disponibilidad\nCon una disponibilidad de 5 a 10 horas por semana, el tiempo que dediques a la creación de plantillas se consume en la fase inicial. Las tareas recurrentes, sumando aproximadamente 3 a 4 horas, se ajustan a tu disponibilidad. Sin embargo, la promoción y atención al cliente podrían saturarte si no gestionas bien tu tiempo. Te recomendaría establecer un calendario semanal donde reserves días específicos para cada actividad, así como definir metas diarias para mantener un flujo de trabajo manejable.",
+    "arep_scalability_analysis": "Para que tu negocio de plantillas de Notion crezca sin que tu carga de trabajo aumente proporcionalmente, considera crear un sistema de automatización para la promoción y venta de tus productos. Utiliza herramientas de programación de publicaciones en Instagram y LinkedIn para mantener una presencia constante sin necesidad de dedicar más tiempo. También podrías explorar la posibilidad de crear un sitio web sencillo que dirija tráfico a tu tienda en Gumroad, lo que podría facilitar la captación de clientes. Además, podrías considerar la creación de contenido en video o tutoriales que muestren cómo usar tus plantillas, lo que podría atraer más clientes y aumentar tus ventas.\n\nSin embargo, hay factores que podrían frenar tu crecimiento. La alta competencia que mencionas puede hacer que sea difícil destacar tus plantillas, especialmente si hay muchas opciones gratuitas disponibles. Esto podría desincentivar a los clientes a pagar por tus productos. Además, depender de plataformas externas como Instagram para la promoción puede ser un riesgo, ya que cualquier cambio en el algoritmo o en las políticas de la plataforma podría afectar tu visibilidad y ventas. También, si decides escalar, podrías enfrentar limitaciones en tu tiempo disponible, ya que actualmente solo puedes dedicar entre 5 y 10 horas a la semana.\n\nTu puntaje de viabilidad comercial es bajo (35), lo que indica que el mercado puede no estar preparado para tus productos o que no has validado suficientemente tu propuesta con potenciales clientes. Además, el nivel de riesgo es alto (100), lo que significa que hay muchas incertidumbres en este camino. Te recomendaría que antes de lanzar, hables con diseñadores freelance para entender mejor sus necesidades y validar si estarían dispuestos a pagar por tus plantillas. Esto te ayudará a ajustar tu oferta y mejorar tus posibilidades de éxito.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda",
+        "tasks": [
+          "Hablar con 10 diseñadores freelance sobre sus necesidades en gestión de proyectos y cotizaciones.",
+          "Crear una encuesta en Google Forms y compartirla en tus redes sociales para obtener más opiniones.",
+          "Investigar 5 plantillas de Notion gratuitas y analizar qué ofrecen y qué les falta."
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números",
+        "tasks": [
+          "Calcular el costo de producción de tus plantillas y definir un precio competitivo.",
+          "Realizar un análisis de precios de al menos 5 competidores en el mercado de plantillas de Notion.",
+          "Crear un prototipo de una plantilla y calcular cuántas horas te tomaría producirla."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición",
+        "tasks": [
+          "Publicar una muestra gratuita de tu plantilla en Instagram y LinkedIn para medir el interés.",
+          "Crear un anuncio en Instagram con un presupuesto bajo y dirigirlo a diseñadores freelance.",
+          "Ofrecer un descuento a los primeros 5 compradores que se registren para recibir tus plantillas."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar los resultados de tus publicaciones y anuncios para determinar el interés real.",
+          "Hablar con al menos 5 personas que descargaron la muestra gratuita para obtener retroalimentación.",
+          "Definir si procederás a crear más plantillas o ajustarás tu enfoque basado en la retroalimentación recibida."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Es crucial que valides tu idea antes de hacer una inversión significativa. Aunque la viabilidad financiera es alta, el riesgo es extremadamente alto debido a la dependencia de una plataforma externa y la saturación del mercado con plantillas gratuitas. Te recomiendo que hables con diseñadores freelance para entender mejor sus necesidades y si estarían dispuestos a pagar por tus plantillas. Esto te dará una visión más clara sobre la demanda real de tu producto.\n\nLos siguientes pasos que debes seguir son: primero, contacta a diseñadores freelance y realiza entrevistas o encuestas para obtener retroalimentación sobre tus plantillas y su disposición a pagar por ellas. Segundo, desarrolla un plan alternativo en caso de que la plataforma donde planeas vender cambie sus políticas o te suspenda. Por último, considera crear una estrategia de marketing que te ayude a destacar en un mercado saturado, tal vez enfocándote en características únicas que ofrezcan un valor añadido a tus clientes.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.3.0"
+  }
+}

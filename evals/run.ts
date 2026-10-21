@@ -1,7 +1,8 @@
 /**
  * Corre el pipeline del reporte sobre un conjunto de casos, SIN base de datos.
  *
- *   pnpm evals:baseline        → evals/baseline/<caso>.json y .md
+ *   pnpm evals:baseline        → evals/baseline/<caso>.json y .md (referencia congelada)
+ *   pnpm evals:run <nombre>    → evals/<nombre>/… (corrida nueva, para comparar con baseline)
  *
  * Requiere OPENAI_API_KEY en .env. PostHog y Stripe se apagan a propósito para
  * que los evals no ensucien las métricas reales.
@@ -29,7 +30,8 @@ async function main() {
   const { buildReportData, REPORT_PROMPT_VERSION } = await import("@/lib/ai/generate-report");
   const { buildScoresForAi } = await import("@/lib/ai/report-context");
 
-  const cases = setName === "baseline" ? BASELINE_CASES : [];
+  // Mientras no existan los 20 casos del Paso 4, todos los conjuntos usan los 5 de referencia.
+  const cases = BASELINE_CASES;
   const selected = only ? cases.filter((c) => c.id === only) : cases;
   if (selected.length === 0) throw new Error(`Sin casos para «${setName}»${only ? ` / ${only}` : ""}`);
 

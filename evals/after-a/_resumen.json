@@ -1,0 +1,27 @@
+[
+  {
+    "id": "01-cafeteria-roma-norte",
+    "ok": true,
+    "seconds": 17.6
+  },
+  {
+    "id": "02-plantillas-notion",
+    "ok": true,
+    "seconds": 14.7
+  },
+  {
+    "id": "03-curso-ingles-ingenieros",
+    "ok": true,
+    "seconds": 18
+  },
+  {
+    "id": "04-comida-para-llevar-vaga",
+    "ok": true,
+    "seconds": 14.8
+  },
+  {
+    "id": "05-tienda-de-cassettes",
+    "ok": true,
+    "seconds": 15.5
+  }
+]
