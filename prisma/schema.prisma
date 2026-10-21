@@ -241,6 +241,8 @@ model assessment_reports {
   arep_pdf_url                 String?
   arep_ai_model_used           String?
   arep_prompt_version          String?
+  arep_review                  Json?
+  arep_needs_human_review      Boolean  @default(false)
   arep_created_at              DateTime @default(now())
 
   assessment assessments @relation(fields: [arep_asmt_id], references: [asmt_id], onDelete: Cascade)

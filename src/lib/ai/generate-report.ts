@@ -1,9 +1,21 @@
 import {
   generateJson,
+  generateReasoningJson,
   generateText,
   getNarrativeModel,
   type AiObservabilityContext,
 } from "@/lib/ai/openai";
+import {
+  REVIEW_SYSTEM_PROMPT,
+  buildReviewPrompt,
+  correctionsFor,
+  countIssues,
+  decideReviewAction,
+  reviewConfig,
+  reviewSchema,
+  type ReportReview,
+  type ReportSectionKey,
+} from "@/lib/ai/review-report";
 import { prisma } from "@/lib/prisma";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import { parseStoredProducts } from "@/lib/onboarding/products";
@@ -51,7 +63,7 @@ import { logReportGenerationError } from "@/lib/logging/report-logger";
  * Rows written before that carry v1.0.0 and are read through the legacy branch
  * of `parseStored*` in `src/lib/report/sections.ts`.
  */
-export const REPORT_PROMPT_VERSION = "v1.3.0";
+export const REPORT_PROMPT_VERSION = "v1.4.0";
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
 
@@ -234,10 +246,15 @@ async function generateSection(
  * BASE_SYSTEM — that prompt instructs Markdown, which made the model fence its
  * JSON and broke `JSON.parse` on every single report.
  */
+/** Bloque que se añade al prompt cuando una sección se reescribe tras la revisión. */
+const correctionBlock = (current: string, instructions: string[]) =>
+  `\n\nTEXTO ACTUAL DE LA SECCIÓN (resultado a corregir):\n${current}\n\nPROBLEMAS DETECTADOS POR LA REVISIÓN (corrígelos y conserva lo que está bien; si un hecho verificado contradice una alerta, omite ese punto):\n${instructions.map((i) => `- ${i}`).join("\n")}`;
+
 async function generateStrengthsRisks(
   ctx: ReportContext,
   verifiedFacts: string[],
-  observability?: AiObservabilityContext
+  observability?: AiObservabilityContext,
+  correction?: { current: string; instructions: string[] }
 ) {
   const raw = await generateJson<unknown>(
     STRENGTHS_RISKS_SYSTEM_PROMPT,
@@ -253,7 +270,7 @@ async function generateStrengthsRisks(
       clarity: ctx.clarity,
       ideaOriginal: ctx.ideaOriginal,
       verifiedFacts,
-    }),
+    }) + (correction ? correctionBlock(correction.current, correction.instructions) : ""),
     getNarrativeModel(),
     observability
   );
@@ -262,7 +279,8 @@ async function generateStrengthsRisks(
 
 async function generateValidationPlan(
   ctx: ReportContext,
-  observability?: AiObservabilityContext
+  observability?: AiObservabilityContext,
+  correction?: { current: string; instructions: string[] }
 ) {
   const raw = await generateJson<unknown>(
     VALIDATION_PLAN_SYSTEM_PROMPT,
@@ -274,7 +292,7 @@ async function generateValidationPlan(
       market: ctx.market,
       clarity: ctx.clarity,
       ideaOriginal: ctx.ideaOriginal,
-    }),
+    }) + (correction ? correctionBlock(correction.current, correction.instructions) : ""),
     getNarrativeModel(),
     observability
   );
@@ -305,6 +323,24 @@ function mergeStrengths(
   }
   return merged;
 }
+
+const renderStrengthsRisks = (strengths: ReportStrength[], risks: ReportRisk[]) =>
+  [
+    "Fortalezas:",
+    ...strengths.map((s) => `- ${s.title}: ${s.whyItMatters}`),
+    "Riesgos:",
+    ...risks.map((r) => `- ${r.title}: ${r.whyItMatters} (Cómo reducirlo: ${r.howToReduce})`),
+  ].join("\n");
+
+const renderPlan = (weeks: ValidationWeek[]) =>
+  weeks.map((w) => `Semana ${w.week} — ${w.title}: ${w.tasks.join("; ")}`).join("\n");
+
+type ReviewOutcome = {
+  review: ReportReview | null;
+  action: "none" | "rewrite" | "human_review" | "skipped" | "failed";
+  rewritten: ReportSectionKey[];
+  issues: number;
+};
 
 /**
  * Genera las 9 secciones y devuelve los datos del reporte, sin tocar la base
@@ -379,19 +415,138 @@ export async function buildReportData(
 
   const validationPlan: ValidationWeek[] = validationWeeks?.weeks ?? [];
 
+  // ---- Pasada de revisión (una sola iteración) -------------------------------
+  const sections = {
+    executive_summary: executiveSummary,
+    business_understanding: businessUnderstanding,
+    financial_analysis: financialAnalysis,
+    personal_fit_analysis: personalFitAnalysis,
+    time_operation_analysis: timeOperationAnalysis,
+    scalability_analysis: scalabilityAnalysis,
+    final_recommendation: finalRecommendation,
+    strengths_risks: renderStrengthsRisks(strengths, risks),
+    validation_plan: renderPlan(validationPlan),
+  };
+  const current = { ...sections } as Record<ReportSectionKey, string>;
+  let finalStrengths = strengths;
+  let finalRisks = risks;
+  let finalPlan = validationPlan;
+  const outcome: ReviewOutcome = { review: null, action: "skipped", rewritten: [], issues: 0 };
+  const cfg = reviewConfig();
+
+  if (cfg.enabled) {
+    try {
+      const raw = await generateReasoningJson<unknown>(
+        REVIEW_SYSTEM_PROMPT,
+        buildReviewPrompt({
+          sections: current,
+          scores: ctx.scores,
+          metrics: ctx.metrics,
+          interpretation: ctx.interpretation,
+          market: ctx.market,
+          clarity: ctx.clarity,
+          ideaOriginal: ctx.ideaOriginal || ctx.idea,
+          products: ctx.products,
+          financialInputs: ctx.financialInputs,
+          profile: ctx.profile,
+        }),
+        observability
+      );
+      const review = reviewSchema.parse(raw);
+      const decision = decideReviewAction(review, cfg);
+      outcome.review = review;
+      outcome.action = decision.action;
+      outcome.issues = countIssues(review);
+
+      if (decision.action === "human_review") {
+        logReportGenerationError("report_review: requiere revisión humana", {
+          assessmentId: assessment.asmt_id,
+          metadata: { issues: outcome.issues, maxIssues: cfg.maxIssues },
+        });
+      } else if (decision.action === "rewrite") {
+        const results = await Promise.all(
+          decision.sections.map(async (key) => {
+            const instructions = correctionsFor(review, key);
+            try {
+              if (key === "strengths_risks") {
+                const r = await generateStrengthsRisks(ctx, verifiedFacts, observability, {
+                  current: current[key],
+                  instructions,
+                });
+                // Sin completar con las deterministas: podrían reintroducir lo corregido.
+                return { kind: "sr" as const, key, strengths: r.strengths, risks: r.risks };
+              }
+              if (key === "validation_plan") {
+                const r = await generateValidationPlan(ctx, observability, {
+                  current: current[key],
+                  instructions,
+                });
+                return { kind: "plan" as const, key, plan: r.weeks };
+              }
+              const text = sanitizeSectionMarkdown(
+                await generateText(
+                  BASE_SYSTEM,
+                  SECTION_PROMPTS[key](ctx) + correctionBlock(current[key], instructions),
+                  getNarrativeModel(),
+                  observability
+                )
+              );
+              return { kind: "text" as const, key, text };
+            } catch (error) {
+              // Si una reescritura falla, esa sección conserva su versión original.
+              logReportGenerationError(`report_review: no se pudo reescribir ${key}`, {
+                assessmentId: assessment.asmt_id,
+                error,
+              });
+              return null;
+            }
+          })
+        );
+        for (const r of results) {
+          if (!r) continue;
+          outcome.rewritten.push(r.key);
+          if (r.kind === "text") {
+            if (r.text) (sections as Record<string, string>)[r.key] = r.text;
+          } else if (r.kind === "sr") {
+            if (r.strengths.length > 0 || r.risks.length > 0) {
+              finalStrengths = r.strengths;
+              finalRisks = r.risks.length > 0 ? r.risks : risks;
+            }
+          } else if (r.plan.length > 0) {
+            finalPlan = r.plan;
+          }
+        }
+      }
+    } catch (error) {
+      // La revisión nunca tumba el reporte: se entrega sin ella.
+      outcome.action = "failed";
+      logReportGenerationError("report_review: la revisión falló, se entrega sin revisar", {
+        assessmentId: assessment.asmt_id,
+        error,
+      });
+    }
+  }
+
   const reportData = {
-    arep_executive_summary: executiveSummary,
-    arep_business_understanding: businessUnderstanding,
-    arep_strengths: strengths,
-    arep_risks: risks,
-    arep_personal_fit_analysis: personalFitAnalysis,
-    arep_financial_analysis: financialAnalysis,
-    arep_time_operation_analysis: timeOperationAnalysis,
-    arep_scalability_analysis: scalabilityAnalysis,
-    arep_validation_plan: validationPlan,
-    arep_final_recommendation_text: finalRecommendation,
+    arep_executive_summary: sections.executive_summary,
+    arep_business_understanding: sections.business_understanding,
+    arep_strengths: finalStrengths,
+    arep_risks: finalRisks,
+    arep_personal_fit_analysis: sections.personal_fit_analysis,
+    arep_financial_analysis: sections.financial_analysis,
+    arep_time_operation_analysis: sections.time_operation_analysis,
+    arep_scalability_analysis: sections.scalability_analysis,
+    arep_validation_plan: finalPlan,
+    arep_final_recommendation_text: sections.final_recommendation,
     arep_ai_model_used: model,
     arep_prompt_version: REPORT_PROMPT_VERSION,
+    arep_review: {
+      action: outcome.action,
+      issues: outcome.issues,
+      rewritten: outcome.rewritten,
+      review: outcome.review,
+    },
+    arep_needs_human_review: outcome.action === "human_review",
   };
 
   return reportData;
