@@ -1,7 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReportSection } from "@/components/report/report-section";
 import { SignalBadge, formatCurrency } from "@/components/report/signal-badge";
-import { ReportToc, type ReportTocSectionId } from "@/components/report/report-toc";
+import {
+  ReportToc,
+  REPORT_TOC_SECTION_IDS,
+  type ReportTocSectionId,
+} from "@/components/report/report-toc";
 import { PrimaryCtaButton } from "@/components/landing/cta-link";
 import {
   RECOMMENDATION_LABELS,
@@ -17,6 +21,7 @@ import {
   parseStoredValidationPlan,
 } from "@/lib/report/sections";
 import { TrackedLink } from "@/components/analytics/tracked-link";
+import { ReportSources } from "@/components/report/report-sources";
 import { TrackEvent } from "@/components/analytics/track-event";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import {
@@ -125,9 +130,13 @@ export function ResultReport({
           : []),
         ...(visibleValidationPlan.length > 0 ? (["validacion"] as const) : []),
         ...(report ? (["recomendacion"] as const) : []),
+        ...(report?.arep_research ? (["fuentes"] as const) : []),
         ...(report && showFeedback ? (["feedback"] as const) : []),
       ]
-    : undefined;
+    : // Con acceso completo se listan todas las secciones, salvo «Fuentes» si no hubo investigación.
+      report?.arep_research
+      ? undefined
+      : REPORT_TOC_SECTION_IDS.filter((id) => id !== "fuentes");
 
   if (assessment.asmt_status === "failed") {
     return <ReportErrorState assessmentId={assessment.asmt_id} />;
@@ -708,6 +717,8 @@ export function ResultReport({
             <FullReportCta />
           </>
         )}
+
+        {report && <ReportSources research={report.arep_research} />}
 
         {!report && (
           <Card className="border-amber-200 bg-amber-50">

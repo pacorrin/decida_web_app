@@ -1,0 +1,601 @@
+{
+  "case": {
+    "id": "05-tienda-de-cassettes",
+    "kind": "idea-mala",
+    "expectedMarket": "México · Querétaro (centro comercial)",
+    "description": "Quiero abrir una tienda física en un centro comercial de Querétaro que venda únicamente cassettes de audio nuevos de música pop de los noventa. Rentaría un local grande de 120 metros cuadrados y los compraría a un solo distribuidor que los importa.",
+    "profile": {
+      "situation": "empleado",
+      "goal": "reemplazar_empleo",
+      "experience": "ninguna",
+      "capital": "menos_10k",
+      "acceptableLoss": "menos_5k",
+      "hoursPerWeek": "10_20",
+      "schedule": "fines_semana",
+      "timeframe": "1_3_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "vender"
+      ],
+      "workPreference": "fisico",
+      "sales": 2,
+      "uncertainty": 1,
+      "process": 2,
+      "hiring": "algunos"
+    },
+    "financial": {
+      "initialInvestment": 400000,
+      "fixedCostsRange": "30k_50k",
+      "products": [
+        {
+          "name": "Cassette de audio nuevo",
+          "kind": "producto",
+          "price": 120,
+          "variableCost": 150,
+          "monthlyUnits": 15
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "ninguno",
+      "competition": "baja",
+      "channel": "presencial",
+      "dependencies": [
+        "proveedor",
+        "ubicacion",
+        "inventario"
+      ],
+      "mainConcern": "Que la gente no entre a la tienda.",
+      "successCondition": "Que se vuelva viral y vendamos miles de cassettes."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "México",
+    "ciudad": "Querétaro",
+    "criterio": "La idea menciona específicamente abrir una tienda en Querétaro.",
+    "es_supuesto": false,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:06:18.825Z",
+  "latencySeconds": 61.8,
+  "ideaSummary": "Quieres abrir una tienda física en un centro comercial de Querétaro que se especialice en la venta de cassettes de audio nuevos de música pop de los noventa. Tu idea consiste en rentar un local de 120 metros cuadrados y adquirir los productos a un único distribuidor que los importa.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 52,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 0,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 50,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 100,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 65,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 70,
+      "semaforo": "verde"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": -30,
+    "grossMarginPercentage": -25,
+    "estimatedMonthlyGrossProfit": -450,
+    "estimatedMonthlyNetProfit": -40450,
+    "breakEvenSales": null,
+    "paybackMonths": null
+  },
+  "interpretation": {
+    "personal_fit_signal": "yellow",
+    "financial_viability_signal": "red",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "yellow",
+    "scalability_signal": "green",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "Tu inversión inicial ($400,000) es mayor que lo que dijiste que podrías perder sin afectar tu estabilidad. Si el negocio no funciona, la pérdida real superaría tu límite declarado — considera arrancar con una versión de menor inversión.",
+      "Tu inversión inicial ($400,000) supera el capital máximo que declaraste tener disponible para esta idea. Aclara de dónde saldría la diferencia antes de comprometerte.",
+      "El producto \"Cassette de audio nuevo\" tiene un precio igual o menor a su costo variable — cada venta pierde dinero. Sube el precio o baja el costo antes de arrancar.",
+      "Inversión inicial estimada de $400,000 MXN supera el capital disponible declarado (< $10,000 MXN) y la pérdida tolerable (< $5,000 MXN)",
+      "Dependencia de un único proveedor para el suministro de cassettes",
+      "Falta de validación con clientes potenciales antes de abrir la tienda"
+    ],
+    "reasoning_summary": "La inversión requerida excede ampliamente el capital y la pérdida tolerable, y no hay validación de clientes. El proyecto presenta alto riesgo financiero y dependencia crítica de un solo proveedor. Se recomienda validar primero el interés del mercado antes de comprometer recursos mayores."
+  },
+  "report": {
+    "arep_executive_summary": "La idea de abrir una tienda física en un centro comercial de Querétaro que venda únicamente cassettes de audio nuevos de música pop de los noventa está poco definida. Aunque mencionas que competidores como Dynamo Store & Records y Emma Record Store operan en el área, no se ha validado el interés de los clientes potenciales ni se ha definido a quién le venderías. Dada la alta inversión inicial de 400,000 MXN, que supera tu capacidad financiera declarada y el riesgo elevado que implica, se recomienda que primero valides el interés del mercado antes de comprometer recursos significativos.",
+    "arep_business_understanding": "Ofreces una tienda física en un centro comercial de Querétaro que se especializa en la venta de cassettes de audio nuevos de música pop de los noventa. Tu propuesta de valor se basa en ofrecer un producto nostálgico y específico que puede atraer a coleccionistas y amantes de la música de esa época. Al tener un solo distribuidor, podrías garantizar una oferta única en el mercado local, lo que podría diferenciarte de otros competidores que ofrecen productos relacionados con la música, como Dynamo Store & Records y Emma Record Store [F4][F10].\n\nEl cliente ideal podría ser alguien que vivió su juventud en los años noventa y tiene un interés por la música pop de esa época. Esto podría incluir a personas de mediana edad que buscan revivir su nostalgia, así como a coleccionistas jóvenes que aprecian el formato físico de la música. Sin embargo, es importante aclarar que no has especificado detalles sobre la edad, ingreso o hábitos de compra de este cliente, lo que queda como un supuesto por validar.\n\nTu idea aún está poco definida en aspectos clave, como el perfil del cliente. Es crucial que trabajes en identificar mejor a tu cliente objetivo para poder desarrollar estrategias de marketing efectivas y ajustar tu oferta a sus necesidades y preferencias.",
+    "arep_strengths": [
+      {
+        "title": "Canal de venta presencial definido",
+        "whyItMatters": "Tener un canal en mente te permite validar rápidamente si es efectivo para atraer clientes."
+      },
+      {
+        "title": "Disponibilidad de tiempo para operar",
+        "whyItMatters": "Contar con 10 a 20 horas a la semana te permite gestionar la tienda y buscar clientes al mismo tiempo."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Inversión inicial alta comparada con capital disponible",
+        "whyItMatters": "Tu inversión estimada de $400,000 MXN excede tu capital disponible de menos de $10,000 MXN, lo que puede llevar a problemas financieros graves.",
+        "howToReduce": "Considera iniciar con una inversión menor o buscar financiamiento adicional antes de comprometerte."
+      },
+      {
+        "title": "Dependencia de un único proveedor",
+        "whyItMatters": "Depender de un solo proveedor puede poner en riesgo tu negocio si hay problemas de suministro o cambios en precios.",
+        "howToReduce": "Investiga y establece relaciones con múltiples proveedores para diversificar tus fuentes de suministro."
+      },
+      {
+        "title": "Falta de validación con clientes potenciales",
+        "whyItMatters": "No haber hablado con posibles clientes puede resultar en una oferta que no resuena con el mercado, afectando las ventas.",
+        "howToReduce": "Realiza encuestas o entrevistas con personas interesadas en música pop de los noventa para validar tu idea antes de abrir la tienda."
+      },
+      {
+        "title": "Idea poco definida",
+        "whyItMatters": "La claridad parcial de tu idea indica que no tienes claro a quién le venderías, lo que puede dificultar tu estrategia de marketing.",
+        "howToReduce": "Define tu público objetivo y realiza un análisis de mercado para entender mejor sus preferencias y comportamientos."
+      }
+    ],
+    "arep_personal_fit_analysis": "Para tu idea de abrir una tienda física que venda cassettes de audio nuevos de música pop de los noventa, hay aspectos en los que encajas y otros que podrían ser un reto personal. \n\n### Encajes\n- **Disfrute en ventas**: Te gusta vender, lo cual es fundamental en un negocio minorista. Aunque tu comodidad vendiendo es moderada (2 de 5), tener una inclinación hacia las ventas puede ayudarte a mejorar esa habilidad con el tiempo.\n- **Trabajo físico**: Prefieres un trabajo físico, lo que se alinea bien con la operación diaria de una tienda. Esto puede incluir desde la organización del inventario hasta la atención al cliente.\n\n### Brechas Personales\n- **Comodidad con la incertidumbre**: Tu puntuación de 1 de 5 indica que te sientes muy incómodo ante la incertidumbre. Esto puede ser un obstáculo, ya que emprender implica enfrentar situaciones imprevistas. **Acción concreta**: Considera asistir a talleres o cursos sobre gestión de riesgos y toma de decisiones en negocios para desarrollar esta habilidad.\n  \n- **Comodidad siguiendo procesos**: Con una puntuación de 2 de 5, puede que te cueste seguir procesos establecidos. Esto es importante en la gestión de inventarios y atención al cliente. **Acción concreta**: Implementa un sistema simple de gestión de tareas y procesos en tu día a día, como listas de verificación, para acostumbrarte a seguir pasos y mejorar tu organización.\n\nRecuerda que, aunque hay áreas donde encajas, también es esencial trabajar en las brechas para aumentar tus posibilidades de éxito en este negocio.",
+    "arep_financial_analysis": "Tu análisis financiero muestra que el margen bruto por venta es negativo, con un margen bruto por producto de -30 MXN y un porcentaje de -25%. Esto significa que cada cassette que vendes a 120 MXN te genera una pérdida de 30 MXN, ya que el costo variable es de 150 MXN. Esto es un problema serio, ya que ningún volumen de ventas va a volver rentable tu negocio si cada producto se vende con pérdida.\n\nAdemás, tu estimación de ganancias mensuales muestra un beneficio bruto de -450 MXN y una pérdida neta de -40,450 MXN. Sin un punto de equilibrio definido y sin datos sobre las ventas que necesitas alcanzar para cubrir tus costos fijos, que están entre 30,000 y 50,000 MXN, es evidente que tu modelo actual no es sostenible. La inversión inicial de 400,000 MXN también se ve en riesgo, dado que el puntaje de viabilidad financiera es 0, lo que indica una situación crítica.\n\nEn resumen, necesitas urgentemente revisar tu estrategia de precios y costos. Considera ajustar el precio de tus cassettes o buscar proveedores que te ofrezcan mejores costos. También es esencial que busques información sobre el mercado que te permita establecer un precio competitivo y viable. Sin estos cambios, el riesgo de perder tu inversión es muy alto.",
+    "arep_time_operation_analysis": "Para abrir tu tienda de cassettes de audio nuevos en Querétaro, tendrás que realizar varias actividades que se dividen en tareas únicas y tareas recurrentes. Entre las tareas únicas, está la creación del inventario inicial, lo que implica la compra de cassettes a tu distribuidor. Esto es una inversión inicial y no se repetirá mensualmente. Sin embargo, las tareas recurrentes incluirán la atención al cliente, el manejo de ventas, la reposición de inventario, el mantenimiento del local y la promoción de la tienda. \n\nCon tu disponibilidad de 10 a 20 horas por semana, es crucial que organices bien tu tiempo. Si planeas abrir la tienda los fines de semana, considera dedicar tiempo entre semana para las compras y la organización del local. La atención al cliente y las ventas serán tus actividades más frecuentes, y podrían saturarte si no gestionas bien el flujo de clientes. Podrías pensar en contratar a 1 o 2 personas para ayudarte, especialmente en horas pico, lo que te permitirá enfocarte en otras tareas como la promoción de la tienda y la gestión del inventario.\n\nRecuerda que tu comodidad vendiendo es de 2 de 5, lo que indica que podrías sentirte un poco incómodo en esta área. Es importante que te prepares para mejorar tus habilidades de venta, ya que esto será clave para atraer a los clientes y hacer que tu negocio sea exitoso. La parte de promoción y marketing también será esencial, especialmente si tu mayor preocupación es que la gente no entre a la tienda.",
+    "arep_scalability_analysis": "Para que tu tienda de cassettes de audio nuevos crezca sin que tu carga de trabajo aumente significativamente, podrías considerar varias estrategias. Primero, podrías aprovechar el canal de ventas presenciales en el centro comercial, creando un ambiente atractivo que invite a los clientes a entrar. Además, podrías ofrecer eventos temáticos o promociones que generen interés y atraigan a un público más amplio. La idea de que tu tienda se vuelva viral es clave; podrías utilizar redes sociales para crear expectativa y conectar con fanáticos de la música pop de los noventa. También, contratar a 1 o 2 personas podría ayudarte a manejar la tienda y permitirte enfocarte en la estrategia de marketing.\n\nSin embargo, hay factores que podrían frenar tu crecimiento. La dependencia de un solo proveedor para los cassettes es un riesgo significativo; si algo le sucede a ese proveedor, tu inventario se verá afectado. Además, la ubicación física es crítica; si el centro comercial no atrae el tráfico deseado, podrías tener dificultades para atraer clientes. La competencia en el área, aunque declaras que es baja, incluye varias tiendas que ofrecen productos relacionados con la música, lo que podría hacer que los clientes elijan otras opciones en lugar de tu tienda.\n\nFinalmente, la viabilidad financiera es un gran reto, ya que tu puntaje en esta dimensión es muy bajo. Con un costo variable de 150 MXN por cassette y un precio de venta de 120 MXN, estarías operando con pérdidas desde el inicio. Esto podría limitar tu capacidad para reinvertir en el negocio y escalarlo. Es crucial que revises tus costos y precios para asegurarte de que tu modelo de negocio sea sostenible a largo plazo.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda",
+        "tasks": [
+          "Hablar con 10 personas de tu círculo social sobre su interés en comprar cassettes de audio nuevos de música pop de los noventa.",
+          "Definir el perfil de tu cliente ideal: ¿quiénes son, qué edad tienen y dónde suelen comprar música?",
+          "Visitar 3 tiendas competidoras como Emma Record Store y Dynamo Store & Records para observar el tráfico de clientes y el interés en productos relacionados."
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números",
+        "tasks": [
+          "Calcular el costo total de abrir la tienda, incluyendo renta, productos y otros gastos fijos.",
+          "Investigar precios de cassettes en tiendas competidoras como Emma Record Store y Mixup Galerías Querétaro para ajustar tu estrategia de precios.",
+          "Hablar con al menos 5 potenciales proveedores para obtener precios y condiciones de compra de cassettes."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición",
+        "tasks": [
+          "Crear una pequeña campaña en redes sociales para promocionar una venta de cassettes y medir el interés.",
+          "Organizar un evento pequeño en un lugar local donde puedas mostrar algunos cassettes y recibir retroalimentación directa de los asistentes.",
+          "Recoger correos electrónicos de interesados en tu tienda para futuras promociones y encuestas."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar los resultados de la campaña en redes sociales y el evento para evaluar el interés real en los cassettes.",
+          "Crear un plan de negocio preliminar basado en la información recopilada y los costos estimados.",
+          "Decidir si seguir adelante con la apertura de la tienda, ajustar la idea o explorar otras alternativas de negocio."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Tu proyecto de abrir una tienda de cassettes de audio nuevos en Querétaro presenta varios riesgos significativos, especialmente en términos financieros y de mercado. La inversión inicial que mencionas de $400,000 MXN supera ampliamente tu capital disponible y la pérdida tolerable que has declarado. Además, no has validado el interés del mercado ni la viabilidad de tu producto, lo que aumenta el riesgo de que el negocio no funcione. Por estas razones, se recomienda que primero valides el interés de los clientes potenciales antes de comprometer recursos significativos.\n\nEl primer paso crucial es aclarar a quién le venderías, ya que esto te ayudará a enfocar tu estrategia de marketing y ventas. Una vez que tengas esta información, es fundamental realizar encuestas o entrevistas con clientes potenciales para entender su interés en los cassettes de audio nuevos y su disposición a pagar por ellos. También considera ajustar el precio de tu producto para asegurarte de que no pierdas dinero con cada venta. Por último, evalúa la posibilidad de diversificar tus proveedores para reducir la dependencia de un solo distribuidor.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 3,
+      "rewritten": [
+        "business_understanding",
+        "strengths_risks"
+      ],
+      "review": {
+        "contradicciones": [
+          {
+            "secciones": [
+              "executive_summary",
+              "business_understanding"
+            ],
+            "afirmacion_a": "La idea de abrir una tienda física en un centro comercial de Querétaro que venda únicamente cassettes de audio nuevos de música pop de los noventa está poco definida.",
+            "afirmacion_b": "Tu idea tiene un enfoque claro, pero es crucial que definas mejor a tu cliente objetivo..."
+          },
+          {
+            "secciones": [
+              "strengths_risks",
+              "scalability_analysis"
+            ],
+            "afirmacion_a": "Competencia baja en el mercado: Menos competidores te permiten probar precios sin entrar en guerras de descuentos, lo que puede facilitar la captación de clientes.",
+            "afirmacion_b": "La competencia en el área, aunque declaras que es baja, incluye varias tiendas que ofrecen productos relacionados con la música, lo que podría hacer que los clientes elijan otras opciones en lugar de tu tienda."
+          }
+        ],
+        "supuestos_sin_fuente": [],
+        "conclusiones_no_sustentadas": [
+          {
+            "seccion": "business_understanding",
+            "afirmacion": "Al ser el único distribuidor, podrías garantizar una oferta única en el mercado local.",
+            "motivo": "No hay evidencia de que exista exclusividad con ese proveedor ni datos externos que confirmen que nadie más importe esos cassettes."
+          }
+        ],
+        "correcciones": [
+          {
+            "seccion": "business_understanding",
+            "instruccion": "Revisa la sección para no afirmar que la idea tiene un 'enfoque claro' y refleja que aún está poco definida en aspectos clave."
+          },
+          {
+            "seccion": "strengths_risks",
+            "instruccion": "Elimina la afirmación de 'competencia baja' y ajusta este punto considerando los múltiples competidores identificados en la ficha de mercado ([F4]–[F10])."
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Tienda física en Querétaro que vende cassettes de audio nuevos de música pop de los noventa.",
+          "sector": "Comercio al por menor de música",
+          "modelo_de_negocio": "Venta de cassettes de audio nuevos"
+        },
+        "tamano_mercado": {
+          "cifra": "1380016",
+          "anio": 2003,
+          "fuente_id": "F2",
+          "motivo": "Ventas netas al por menor de discos y casetes en México"
+        },
+        "competidores": [
+          {
+            "nombre": "Dynamo Store & Records",
+            "propuesta": "Especializada en discos de vinilo, CDs, revistas, pósteres y otros artículos coleccionables.",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "Sonoritmo Querétaro",
+            "propuesta": "Ofrece instrumentos musicales, equipos de audio profesional, iluminación y accesorios.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          },
+          {
+            "nombre": "Audio Music",
+            "propuesta": "Proporciona una amplia gama de productos en audio, iluminación e instrumentos musicales.",
+            "precio_referencia": null,
+            "fuente_id": "F6"
+          },
+          {
+            "nombre": "El Ruido de Fondo",
+            "propuesta": "Se especializa en vinilos y otros artículos coleccionables relacionados con la música.",
+            "precio_referencia": null,
+            "fuente_id": "F7"
+          },
+          {
+            "nombre": "Top Music Querétaro",
+            "propuesta": "Cadena de tiendas de instrumentos musicales, audio e iluminación.",
+            "precio_referencia": null,
+            "fuente_id": "F8"
+          },
+          {
+            "nombre": "Orfeo - Tienda de Música",
+            "propuesta": "Ofrece instrumentos musicales y equipos de audio.",
+            "precio_referencia": null,
+            "fuente_id": "F9"
+          },
+          {
+            "nombre": "Emma Record Store",
+            "propuesta": "Especializada en música, ubicada en el centro de Querétaro.",
+            "precio_referencia": null,
+            "fuente_id": "F10"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Maxell UR-90 Cassettes de Audio (90 minutos, paquete de 5)",
+            "rango": "295.58",
+            "fuente_id": "F14"
+          },
+          {
+            "descripcion": "Sony Audio Cassette 90 minutos HF",
+            "rango": "41",
+            "fuente_id": "F15"
+          },
+          {
+            "descripcion": "Sony VHS-C 30 minutos T-60PR",
+            "rango": "55",
+            "fuente_id": "F16"
+          },
+          {
+            "descripcion": "Panasonic VHS-C 90 minutos TC-30",
+            "rango": "97",
+            "fuente_id": "F17"
+          },
+          {
+            "descripcion": "Cintas de Casete de Grabación de Audio de 45 minutos",
+            "rango": "233",
+            "fuente_id": "F18"
+          },
+          {
+            "descripcion": "TDK D-60 Audio Cassette (usado)",
+            "rango": "700",
+            "fuente_id": "F19"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Dynamo Store & Records",
+            "nota": "Especializada en discos de vinilo, CDs, revistas, pósteres y otros artículos coleccionables.",
+            "fuente_id": "F4"
+          },
+          {
+            "canal": "Vinil Azul",
+            "nota": "Ofrece ediciones mexicanas, centro y sudamericanas, incluyendo discos de vinilo y CDs.",
+            "fuente_id": "F21"
+          },
+          {
+            "canal": "Mixup Galerías Querétaro",
+            "nota": "Parte de la cadena Mixup, ofrece una variedad de productos musicales.",
+            "fuente_id": "F22"
+          },
+          {
+            "canal": "Rockland",
+            "nota": "Especializada en música rock, ofrece CDs, DVDs y LPs originales.",
+            "fuente_id": "F23"
+          },
+          {
+            "canal": "Emma Record Store",
+            "nota": "Tienda física en Querétaro que ofrece discos de vinil, CDs y cassettes.",
+            "fuente_id": "F24"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Porcentaje de hogares que destinan menos del 30% de sus ingresos al pago de la vivienda o renta",
+            "valor": "84",
+            "fuente_id": "F12",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Población Económicamente Activa en Querétaro (primer trimestre de 2024)",
+            "valor": "1180840",
+            "fuente_id": "F13",
+            "es_supuesto": false
+          }
+        ],
+        "huecos_de_informacion": [
+          "No se encontró cifra específica de ventas recientes de cassettes de audio en México.",
+          "No se encontró información específica sobre el número de tiendas dedicadas a cassettes en Querétaro.",
+          "No se encontraron precios específicos de cassettes de audio nuevos en las tiendas físicas mencionadas."
+        ],
+        "mercado_objetivo": {
+          "pais": "México",
+          "ciudad": "Querétaro",
+          "criterio": "La idea menciona específicamente abrir una tienda en Querétaro.",
+          "es_supuesto": false
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "Comercio \nal por Menor \nIN6GI \nINSTITUTO NACIONAL",
+            "url": "https://en.www.inegi.org.mx/contenidos/productos/prod_serv/contenidos/espanol/bvinegi/productos/historicos/2104/702825172930/702825172930_1.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F2",
+            "titulo": "Censo Económicos 2024. SCIAN. México. 2002",
+            "url": "https://www.inegi.org.mx/contenidos/productos/prod_serv/contenidos/espanol/bvinegi/productos/historicos/1329/702825000069/702825000069_1.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F3",
+            "titulo": "ACTIVIDADES INFORMATICAS",
+            "url": "https://en.www.inegi.org.mx/contenidos/productos/prod_serv/contenidos/espanol/bvinegi/productos/censos/economicos/1999/general/telecomuni.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F4",
+            "titulo": "Dynamo Store & Records | 55 4533 3900 | Santiago de Querétaro",
+            "url": "https://www.allbiz.mx/dynamo-store-records-55-4533-3900",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F5",
+            "titulo": "Sonoritmo Querétaro | 442 216 6908 | Santiago de Querétaro",
+            "url": "https://www.allbiz.mx/sonoritmo-quer%C3%A9taro-442-216-6908",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F6",
+            "titulo": "Audio Music | 442 212 5222 | Santiago de Querétaro",
+            "url": "https://www.allbiz.mx/audio-music_2s-442-212-5222",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "El Ruido de Fondo | 442 214 0682 | Santiago de Querétaro",
+            "url": "https://www.allbiz.mx/el-ruido-de-fondo-442-214-0682",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "Top Music Querétaro | 442 242 3626 | Santiago de Querétaro",
+            "url": "https://www.allbiz.mx/top-music-quer%C3%A9taro-442-242-3626",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "Nuestras Tiendas - Orfeo",
+            "url": "https://orfeo.com.mx/ubicacion",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "Emma Record Store - Music store at Hidalgo 25-Local 8, Centro, Santiago de Querétaro, MX | Vinyl World",
+            "url": "https://www.vinylworld.org/record-shop/emma-record-store/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "Mashin Venta De Telefonía Audio Y Video",
+            "url": "https://mexicoo.mx/mashin-venta-de-telefonia-audio-y-video-3547296",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "Sistema de Información de Derechos Sociales 2024. Presentación de resultados",
+            "url": "https://en.www.inegi.org.mx/contenidos/desarrollosocial/sids/doc/sids_presentacion_2024.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F13",
+            "titulo": "Encuesta Nacional de Ocupación y Empleo (ENOE), Querétaro",
+            "url": "https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2024/ENOE/ENOE2024_05_Qro.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F14",
+            "titulo": "Cassettes de Audio Maxell UR-90, Paquete de 5 – Manos Urbanas",
+            "url": "https://manosurbanas.com/products/maxell-ur-90-cassettes-audio-90min",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F15",
+            "titulo": "CASSETTE SONY AUDIO 90MIN HF",
+            "url": "https://www.claroshop.com/producto/16062589/cassette-sony-audio-90min-hf",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F16",
+            "titulo": "CASSETTE SONY VHS 60MIN T-60PR",
+            "url": "https://www.claroshop.com/producto/16062591/cassette-sony-vhs-60min-t-60pr",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F17",
+            "titulo": "CASSETTE PANASONIC VHS-C 90 MIN TC-30",
+            "url": "https://www.claroshop.com/producto/16062585/cassette-panasonic-vhs-c-90-min-tc-30",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F18",
+            "titulo": "Cintas De Casete De Grabación De Audio En De 45 Minutos, Cinta De Casete Vacía Con Estuche Transparente Para Grabación De Música Con Sonido, Sonido Premium, | Walmart en línea",
+            "url": "https://www.walmart.com.mx/ip/cintas-de-casete-de-grabacion-de-audio-en-de-45-minutos-cinta-de-casete-vacia-con-estuche-transparente-para-grabacion-de-musica-con-sonido-sonido-premium-/00617126929193",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F19",
+            "titulo": "Tdk D-60 Audio Cassette | MercadoLibre",
+            "url": "https://www.mercadolibre.com.mx/tdk-d60-audio-cassette/up/MLMU495125503",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F20",
+            "titulo": "Sony minicomponente hcd eh15 en Querétaro | Clasf imagen-y-sonido",
+            "url": "https://www.clasf.mx/sony-minicomponente-hcd-eh15-en-quer%C3%A9taro-10000203/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F21",
+            "titulo": "Vinil Azul | 55 1949 6323 | Santiago de Querétaro",
+            "url": "https://www.allbiz.mx/vinil-azul_2K-55-1949-6323",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F22",
+            "titulo": "Mixup Galerías Querétaro - Centro Comercial Galerías Querétaro Av. 5 De Febrero. 99 Planta Baja Local 167 Col. Los Virreyes Santiago, 76030 Santiago de - Cybo",
+            "url": "https://es.cybo.com/MX-biz/mixup-galer%C3%ADas-quer%C3%A9taro",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F23",
+            "titulo": "Rockland | 442 388 9058 | Santiago de Querétaro",
+            "url": "https://www.allbiz.mx/rockland_6Q-442-388-9058",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F24",
+            "titulo": "Opinamos | Emma Record Store: Comparte la primera Opinión",
+            "url": "https://www.opinamos.io/emma-record-store",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F25",
+            "titulo": "Central De Discos De Reynosa, SA De CV | Santiago de Querétaro",
+            "url": "https://www.bizarchivo.mx/central-de-discos-de-reynosa-sa-de-cv_4N",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "Tamaño mercado cassettes audio México 2024 cifras ventas tiendas",
+            "tiendas venta cassettes audio Querétaro México",
+            "precio cassette audio nuevo tienda física Querétaro 2024",
+            "costos típicos de rentas en Querétaro 2024 site:inegi.org.mx OR site:quertaro.gob.mx",
+            "lugares para comprar cassettes de audio en Querétaro"
+          ],
+          "estimatedCostUsd": 0.239,
+          "durationMs": 21181,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

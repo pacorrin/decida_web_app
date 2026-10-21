@@ -126,6 +126,8 @@ Busca solo estas tres cosas:
 
 Reglas:
 - Sé conservador. Reporta únicamente lo que puedas señalar con una cita concreta. Si el reporte está bien, devuelve listas vacías.
+- Si hay ficha de mercado, una cifra o dato externo que cite una fuente [F#] existente en la ficha tiene respaldo; es un problema una cifra externa que NO está en la ficha, o una que cite una fuente que no existe o que dice otra cosa.
+- Compara lo que la persona declaró del mercado (competencia, canal, evidencia) con la ficha de mercado: si se contradicen (por ejemplo, declaró «competencia baja» y la ficha lista varios competidores reales en su zona, o la ficha no encuentra demanda para su producto), señálalo como contradicción y pide que la sección (normalmente fortalezas) deje de presentarlo como una ventaja.
 - Lo que la persona declaró (competencia, canal, evidencia de clientes, preocupación, condición de éxito) cuenta como dato recibido: úsalo como respaldo, pero una afirmación basada solo en eso debe presentarse como lo que ella declaró, no como un hecho del mercado.
 - Los puntajes, semáforos, métricas y la recomendación son DETERMINÍSTICOS: no los discutas ni propongas cambiarlos.
 - No marques como problema que falten datos externos si el reporte lo reconoce como algo por validar.
@@ -152,6 +154,8 @@ export type ReviewInput = {
   products: string;
   financialInputs: string;
   profile: string;
+  /** Ficha de mercado en JSON (vacía si no hubo investigación). */
+  research?: string;
 };
 
 export function buildReviewPrompt(input: ReviewInput): string {
@@ -169,6 +173,7 @@ Productos/servicios: ${input.products}
 Interpretación del scoring: ${input.interpretation}
 Mercado declarado por la persona: ${input.market}
 Emprendedor: ${input.profile}
+${input.research ? `Ficha de mercado (datos externos con fuente; lo que cite una fuente [F#] de la ficha SÍ tiene respaldo):\n${input.research}` : "Ficha de mercado: no disponible (no hubo investigación externa)."}
 
 REPORTE A REVISAR
 ${report}`;

@@ -52,7 +52,7 @@ Tu tarea: extraer las fortalezas y los riesgos REALES de este diagnóstico.
 
 Reglas duras:
 - Cada fortaleza y cada riesgo debe apoyarse en un dato concreto que te dieron (un número, un rango, una respuesta del usuario). Cita el dato dentro del texto.
-- NO inventes datos de mercado, cifras ni benchmarks. Si algo no está en los datos, no existe.
+- NO inventes datos de mercado, cifras ni benchmarks. Si algo no está en los datos, no existe. Si recibes una ficha de mercado, los datos externos salen solo de ahí y se citan con su id de fuente, por ejemplo [F2].
 - NO uses elogio genérico ("tienes buena actitud", "tu idea tiene potencial"). Si una fortaleza no se sostiene con un dato, NO la incluyas: es válido devolver pocas o ninguna.
 - Cada riesgo DEBE traer una acción concreta para reducirlo o validarlo (howToReduce).
 - Si la persona declaró competencia alta, una mayor preocupación o poca evidencia de clientes, eso debe aparecer como riesgo (o responderse en uno), no ignorarse.
@@ -87,6 +87,7 @@ export function buildStrengthsRisksPrompt(input: {
   market?: string;
   clarity?: string;
   ideaOriginal?: string;
+  research?: string;
   verifiedFacts: string[];
 }): string {
   const facts =
@@ -103,7 +104,8 @@ export function buildStrengthsRisksPrompt(input: {
   const original = input.ideaOriginal
     ? `\nIdea en palabras de la persona: ${input.ideaOriginal}`
     : "";
-  return `Idea: ${input.idea}${original}${clarity}${market}
+  const research = input.research ? `\n${input.research}` : "";
+  return `Idea: ${input.idea}${original}${clarity}${market}${research}
 Scores por dimensión: ${input.scores}
 Métricas financieras calculadas: ${input.metrics}
 Emprendedor (la persona que emprende, NO el cliente): ${input.profile}
@@ -121,6 +123,7 @@ Reglas duras:
 - Cada tarea debe ser algo que la persona pueda ejecutar esa semana, con verbo de acción y una cantidad cuando aplique ("Hablar con 10 clientes de tu zona", no "investigar el mercado").
 - Ancla las tareas a los datos del diagnóstico: su canal, su precio, sus productos, sus riesgos.
 - NO inventes datos ni supongas recursos que no declaró.
+- Si recibes una ficha de mercado, ancla las tareas a los competidores, canales y precios de la ficha (con su id de fuente) en lugar de decir «investiga a la competencia».
 - Usa el canal que la persona declaró para conseguir clientes, y que las tareas de la semana 1 ayuden a responder su mayor preocupación y a acercarse a su condición de éxito.
 - Si la "claridad de la idea" no es "clara", la semana 1 debe empezar por aclarar lo que falta (a quién, dónde, cómo gana dinero).
 - "title" es el objetivo de la semana en 2-4 palabras.
@@ -144,7 +147,9 @@ export function buildValidationPlanPrompt(input: {
   market?: string;
   clarity?: string;
   ideaOriginal?: string;
+  research?: string;
 }): string {
+  const research = input.research ? `\n${input.research}` : "";
   const original = input.ideaOriginal
     ? `\nIdea en palabras de la persona: ${input.ideaOriginal}`
     : "";
@@ -152,7 +157,7 @@ export function buildValidationPlanPrompt(input: {
   const market = input.market
     ? `\nMercado declarado por la persona (canal, competencia, evidencia de clientes, mayor preocupación, condición de éxito): ${input.market}`
     : "";
-  return `Idea: ${input.idea}${original}${clarity}${market}
+  return `Idea: ${input.idea}${original}${clarity}${market}${research}
 Interpretación del scoring (recomendación y alertas): ${input.interpretation}
 Productos/servicios y precios: ${input.products}
 Emprendedor (tiempo, capital, objetivo): ${input.profile}`;
