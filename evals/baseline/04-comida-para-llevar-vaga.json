@@ -1,0 +1,182 @@
+{
+  "case": {
+    "id": "04-comida-para-llevar-vaga",
+    "kind": "poca-informacion",
+    "expectedMarket": "No especificado (la idea no indica ubicación ni cliente)",
+    "description": "Quiero hacer algo con comida para llevar.",
+    "profile": {
+      "situation": "desempleado",
+      "goal": "ingreso_extra",
+      "experience": "ninguna",
+      "capital": "menos_10k",
+      "acceptableLoss": "menos_5k",
+      "hoursPerWeek": "20_40",
+      "schedule": "flexible",
+      "timeframe": "1_3_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "operar"
+      ],
+      "workPreference": "fisico",
+      "sales": 3,
+      "uncertainty": 3,
+      "process": 3,
+      "hiring": "solo"
+    },
+    "financial": {
+      "initialInvestment": 5000,
+      "fixedCostsRange": "menos_5k",
+      "products": [
+        {
+          "name": "Comida para llevar",
+          "kind": "producto",
+          "price": 80,
+          "variableCost": 50,
+          "monthlyUnits": 100
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "ninguno",
+      "competition": "media",
+      "channel": "otro",
+      "dependencies": [],
+      "mainConcern": "No sé.",
+      "successCondition": "Ganar dinero."
+    }
+  },
+  "promptVersion": "v1.2.0",
+  "generatedAt": "2026-10-21T05:04:13.915Z",
+  "latencySeconds": 11,
+  "ideaSummary": "Quieres iniciar un negocio de comida para llevar, donde ofreces opciones prácticas y deliciosas para tus clientes. Tu idea consiste en proporcionar una alternativa conveniente para quienes buscan comer bien sin tener que cocinar.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 68,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 19,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 43,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 98,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 85,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 30,
+    "grossMarginPercentage": 37.5,
+    "estimatedMonthlyGrossProfit": 3000,
+    "estimatedMonthlyNetProfit": 0,
+    "breakEvenSales": 100,
+    "paybackMonths": null
+  },
+  "interpretation": {
+    "personal_fit_signal": "yellow",
+    "financial_viability_signal": "red",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "green",
+    "scalability_signal": "yellow",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "La inversión inicial de $5,000 MXN podría superar tu tolerancia máxima a pérdidas (< $5,000 MXN)."
+    ],
+    "reasoning_summary": "Tienes tiempo disponible pero la viabilidad financiera es muy baja y el riesgo es alto. Además no hay validación de clientes. Se recomienda validar la idea antes de comprometer fondos."
+  },
+  "report": {
+    "arep_executive_summary": "Tu idea de iniciar un negocio de comida para llevar se enfoca en ofrecer opciones prácticas y deliciosas para aquellos que desean comer bien sin cocinar. Aunque tienes tiempo disponible para dedicarle al proyecto, la viabilidad financiera es preocupante, con un puntaje de 19, y el nivel de riesgo es muy alto, alcanzando un puntaje de 98. Esto sugiere que podrías enfrentar dificultades significativas al intentar establecer tu negocio. Por lo tanto, te recomiendo validar primero tu idea y la aceptación del mercado antes de invertir fondos, ya que esto te permitirá tomar decisiones más informadas y minimizar riesgos.",
+    "arep_business_understanding": "Ofreces comida para llevar que es práctica y deliciosa, ideal para quienes buscan una alternativa conveniente para alimentarse sin tener que cocinar. Tu propuesta de valor se centra en brindar opciones sabrosas que ahorran tiempo y esfuerzo a tus clientes, lo que puede ser especialmente atractivo para aquellos con agendas ocupadas o que simplemente prefieren no cocinar. El precio de 80 pesos por cada unidad, con un costo variable de 50 pesos, te permite mantener un margen que puede ser atractivo para el negocio.\n\nEl cliente que buscas atraer podría ser alguien que trabaja largas horas, estudiantes, o personas que, por diversas razones, no tienen tiempo o ganas de cocinar. Este cliente probablemente valora la conveniencia y la calidad de la comida. Sin embargo, es importante validar supuestos sobre su perfil, como su edad, nivel de ingreso y hábitos de consumo, para ajustar mejor tu oferta a sus necesidades.",
+    "arep_strengths": [
+      {
+        "title": "Inversión inicial manejable",
+        "whyItMatters": "Tu inversión de $5,000 MXN está dentro de lo que puedes perder, lo que te permite probar la idea sin comprometer tu estabilidad."
+      },
+      {
+        "title": "Tiempo disponible para operar",
+        "whyItMatters": "Tienes entre 20 a 40 horas a la semana para dedicar al negocio, lo que es crucial para operar y conseguir clientes."
+      },
+      {
+        "title": "Tu inversión de $5,000 cabe en lo que puedes perder",
+        "whyItMatters": "Dijiste que podrías perder hasta menos de $5,000 sin afectar tu estabilidad. Si esto no funciona, el golpe es soportable — y eso es justamente lo que te permite probarlo en serio en lugar de a medias."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Viabilidad financiera baja",
+        "whyItMatters": "Tu puntaje de viabilidad financiera es 19, lo que indica que el modelo de negocio puede no ser sostenible a largo plazo.",
+        "howToReduce": "Considera validar la idea con un grupo pequeño de clientes antes de realizar la inversión completa."
+      },
+      {
+        "title": "Alto nivel de riesgo",
+        "whyItMatters": "Con un puntaje de 98 en el nivel de riesgo, hay una alta probabilidad de que enfrentes dificultades significativas.",
+        "howToReduce": "Realiza un análisis de mercado para entender mejor la demanda y ajustar tu oferta antes de lanzar."
+      }
+    ],
+    "arep_personal_fit_analysis": "Tienes un puntaje de 68 en \"Fit personal\", lo que indica que hay un buen encaje entre tus habilidades y la idea de negocio de comida para llevar. Disfrutas de operar y ejecutar, lo cual es fundamental para manejar la preparación y entrega de tus productos. Además, tu disponibilidad horaria flexible te permitirá adaptarte a las demandas de este giro, especialmente en horarios de mayor afluencia.\n\nSin embargo, hay brechas que debes considerar. Primero, tu puntaje en \"Viabilidad financiera\" es bajo (19), lo que sugiere que la inversión inicial y los costos operativos podrían ser un reto. Para abordar esto, considera iniciar con un menú limitado que requiera menos ingredientes y tiempo de preparación, así podrás reducir costos y evaluar la demanda antes de expandirte. \n\nOtra brecha es tu nivel de riesgo (98), que es alto. Esto puede ser preocupante, especialmente porque no tienes experiencia emprendiendo. Para mitigar este riesgo, busca capacitación en gestión de negocios o cocina, ya sea a través de cursos en línea o talleres locales. Esto te dará más confianza y habilidades para manejar tu negocio de manera efectiva.",
+    "arep_financial_analysis": "Tu margen bruto por cada venta de comida para llevar es de 30 pesos, lo que representa un 37.5% del precio de venta de 80 pesos. Esto es positivo, ya que estás generando un margen en cada unidad vendida. Sin embargo, es importante señalar que tu estimación de ganancias netas es de 0, lo que indica que tus costos fijos podrían estar absorbiendo tus ganancias.\n\nEl punto de equilibrio se sitúa en 100 ventas mensuales. Esto significa que necesitas vender al menos esa cantidad para cubrir tus costos fijos y no incurrir en pérdidas. Si no logras alcanzar ese volumen de ventas, estarías operando con pérdidas. Dado que actualmente estimas un margen de ganancia mensual de 3000 pesos, si no logras vender las 100 unidades, tu situación financiera se verá comprometida.\n\nLa recuperación de la inversión no está definida en tus datos, ya que no se proporciona un tiempo estimado para ello. Sin embargo, con un puntaje de viabilidad financiera de 19, es crucial que evalúes tus costos fijos y busques formas de aumentar tus ventas o reducir gastos. La situación actual presenta un alto nivel de riesgo, lo que significa que deberías considerar estrategias para mejorar tu viabilidad financiera antes de avanzar.",
+    "arep_time_operation_analysis": "Tu idea de negocio de comida para llevar implica varias actividades concretas que deberás gestionar. Considerando que planeas vender 100 unidades al mes a un precio de 80 pesos cada una, tendrás que enfocarte en:\n\n- **Producción**: Preparar las comidas, lo cual puede requerir tiempo significativo dependiendo de las recetas y la cantidad de ingredientes.\n- **Entregas**: Si decides ofrecer servicio a domicilio, necesitarás tiempo para llevar las comidas a tus clientes.\n- **Atención a clientes**: Manejar pedidos, resolver dudas y recibir retroalimentación.\n- **Compras**: Adquirir los ingredientes necesarios para la producción.\n\nCon tu disponibilidad de 20 a 40 horas por semana, parece que tienes un buen margen para gestionar estas actividades. Sin embargo, la producción y la atención a clientes podrían saturarte, especialmente si no tienes experiencia previa. Te recomendaría organizar tu tiempo de la siguiente manera:\n\n1. **Planifica la producción**: Dedica bloques de tiempo específicos para cocinar, tal vez un par de días a la semana, donde prepares las comidas en lotes.\n2. **Establece un horario para entregas y atención a clientes**: Podrías asignar ciertas horas del día para estas actividades, evitando que se crucen con tu tiempo de producción.\n3. **Automatiza lo que puedas**: Considera usar herramientas digitales para gestionar pedidos y comunicación con clientes, lo que te ahorrará tiempo.\n\nRecuerda que, aunque tienes un horario flexible, es crucial que establezcas rutinas para mantener el control y la calidad de tu negocio.",
+    "arep_scalability_analysis": "Para que tu negocio de comida para llevar crezca sin que tu carga de trabajo aumente proporcionalmente, puedes considerar implementar un sistema de pedidos en línea. Esto te permitirá atender a más clientes sin necesidad de aumentar el tiempo que dedicas a la atención directa. Además, podrías optimizar tu menú, enfocándote en platillos que tengan un costo variable bajo y que sean fáciles de preparar, lo que te permitirá aumentar el margen de ganancia. También podrías explorar la posibilidad de alianzas con empresas de entrega, lo que te ayudaría a llegar a más clientes sin incrementar tu carga de trabajo.\n\nSin embargo, hay factores que podrían frenar tu crecimiento. Tu puntaje de viabilidad financiera es bajo (19), lo que indica que podrías enfrentar dificultades para cubrir costos y generar ganancias. Además, tu nivel de riesgo es muy alto (98), lo que sugiere que podrías tener problemas si no logras atraer suficientes clientes desde el inicio. Al no tener dependencias críticas, esto puede ser positivo, pero también significa que no cuentas con apoyo externo que te ayude a mitigar riesgos.\n\nDado que prefieres trabajar solo, es importante que consideres cómo manejarás el aumento en la demanda. Si decides expandir tu negocio, podrías necesitar contratar personal, lo que podría ser un reto si no tienes experiencia en gestión de equipos. La escalabilidad de tu negocio (puntaje 40) sugiere que hay oportunidades, pero también riesgos asociados con la capacidad de producción y la gestión del tiempo. En resumen, enfócate en optimizar tus procesos y busca formas de atraer clientes de manera efectiva para minimizar riesgos.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda",
+        "tasks": [
+          "Hablar con 10 personas en tu comunidad sobre su interés en comida para llevar",
+          "Crear una encuesta sencilla y compartirla en redes sociales para obtener al menos 30 respuestas",
+          "Investigar 3 competidores locales y analizar sus menús y precios"
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números",
+        "tasks": [
+          "Calcular el margen de ganancia basado en el costo variable y el precio de venta",
+          "Hacer un presupuesto simple para los primeros 3 meses de operación",
+          "Hablar con 5 posibles clientes sobre su disposición a pagar $80 por tus productos"
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición",
+        "tasks": [
+          "Crear una página en redes sociales para tu negocio y publicar al menos 3 fotos de platillos que planeas ofrecer",
+          "Ofrecer una promoción de lanzamiento a 10 personas a cambio de su opinión sobre la comida",
+          "Recoger feedback de al menos 5 personas que prueben tus platillos"
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar la información recopilada de las encuestas y entrevistas",
+          "Evaluar si el margen de ganancia es suficiente para cubrir tus costos y pérdidas tolerables",
+          "Definir si seguirás adelante con el negocio, ajustarás tu propuesta o desistirás"
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Tu idea de iniciar un negocio de comida para llevar presenta un alto riesgo y una viabilidad financiera muy baja. La inversión inicial de $5,000 MXN podría superar tu tolerancia máxima a pérdidas, lo que es una alerta importante. Antes de comprometer fondos, es fundamental que valides tu idea y compruebes si realmente hay interés por parte de tus potenciales clientes.\n\nPara avanzar, te recomiendo seguir estos pasos: primero, realiza encuestas o entrevistas con posibles clientes para entender sus necesidades y preferencias en comida para llevar. Segundo, considera hacer una prueba piloto con un menú limitado para evaluar la aceptación del producto. Finalmente, analiza los costos y márgenes de ganancia para asegurarte de que tu propuesta sea financieramente viable antes de realizar una inversión mayor.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.2.0"
+  }
+}
