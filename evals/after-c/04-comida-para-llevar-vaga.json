@@ -1,0 +1,507 @@
+{
+  "case": {
+    "id": "04-comida-para-llevar-vaga",
+    "kind": "poca-informacion",
+    "expectedMarket": "No especificado (la idea no indica ubicación ni cliente)",
+    "description": "Quiero hacer algo con comida para llevar.",
+    "profile": {
+      "situation": "desempleado",
+      "goal": "ingreso_extra",
+      "experience": "ninguna",
+      "capital": "menos_10k",
+      "acceptableLoss": "menos_5k",
+      "hoursPerWeek": "20_40",
+      "schedule": "flexible",
+      "timeframe": "1_3_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "operar"
+      ],
+      "workPreference": "fisico",
+      "sales": 3,
+      "uncertainty": 3,
+      "process": 3,
+      "hiring": "solo"
+    },
+    "financial": {
+      "initialInvestment": 5000,
+      "fixedCostsRange": "menos_5k",
+      "products": [
+        {
+          "name": "Comida para llevar",
+          "kind": "producto",
+          "price": 80,
+          "variableCost": 50,
+          "monthlyUnits": 100
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "ninguno",
+      "competition": "media",
+      "channel": "otro",
+      "dependencies": [],
+      "mainConcern": "No sé.",
+      "successCondition": "Ganar dinero."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "México",
+    "ciudad": null,
+    "criterio": "El texto no especifica un mercado más concreto, por lo que se utiliza el mercado por defecto.",
+    "es_supuesto": true,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:04:05.023Z",
+  "latencySeconds": 62.8,
+  "ideaSummary": "Entendemos que quiero hacer algo con comida para llevar.",
+  "summarySource": "fallback",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 68,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 19,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 43,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 98,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 85,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 30,
+    "grossMarginPercentage": 37.5,
+    "estimatedMonthlyGrossProfit": 3000,
+    "estimatedMonthlyNetProfit": 0,
+    "breakEvenSales": 100,
+    "paybackMonths": null
+  },
+  "interpretation": {
+    "personal_fit_signal": "yellow",
+    "financial_viability_signal": "red",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "green",
+    "scalability_signal": "yellow",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "La inversión inicial estimada de 5,000 MXN excede la pérdida máxima tolerable (<5,000 MXN)."
+    ],
+    "reasoning_summary": "Aunque el encaje personal y de tiempo son adecuados, la viabilidad financiera es muy baja y el riesgo es elevado. No hay evidencia de clientes potenciales. Se recomienda validar primero con entrevistas y pruebas de mercado antes de invertir."
+  },
+  "report": {
+    "arep_executive_summary": "La idea de establecer un negocio de comida para llevar está poco definida, ya que no se especifica dónde operarías ni cómo planeas generar ingresos. Aunque el encaje personal y la compatibilidad de tiempo son favorables, la viabilidad financiera es muy baja y el nivel de riesgo es alto, lo que sugiere que la competencia en el mercado es considerable, con plataformas como Uber Eats, Didi Food y Rappi, así como cadenas de restaurantes como La Casa de Toño y Sushi Roll [F2][F4][F5]. Mi recomendación es que valides primero tu concepto a través de entrevistas y pruebas de mercado antes de realizar cualquier inversión, para asegurarte de que la idea tenga un camino claro hacia la rentabilidad.",
+    "arep_business_understanding": "Ofreces comida para llevar, un servicio que ha ganado popularidad en México, ya que el 63% de los mexicanos compra este tipo de alimentos [F17]. Tu propuesta de valor podría centrarse en la conveniencia y la variedad de platillos que planeas ofrecer, aunque esto aún no está definido claramente. Los clientes potenciales te comprarían por la facilidad de obtener alimentos listos para consumir, especialmente si logras ofrecer opciones a precios competitivos, que en el mercado de comida para llevar oscilan entre 50 y 150 MXN por porción [F9]. Es fundamental que definas cómo ganarás dinero y qué te diferenciará de la competencia.\n\nTu cliente es un supuesto por validar, ya que no has especificado detalles sobre su perfil. Podría ser alguien que busca opciones rápidas y accesibles para alimentarse, posiblemente trabajadores, estudiantes o familias. Sin embargo, es crucial que definas mejor a quién te dirigirás y dónde planeas operar, ya que esto te ayudará a enfocar tus esfuerzos de marketing y a entender mejor las necesidades de tu cliente.\n\nRecuerda que la competencia es fuerte en este sector. Tienes competidores como Uber Eats, Didi Food y Rappi, que dominan las plataformas de entrega, así como cadenas de restaurantes como La Casa de Toño y Sushi Roll [F2][F4][F5]. Para tener éxito, necesitarás identificar qué te hará destacar frente a ellos y cómo planeas captar la atención de tus clientes potenciales.",
+    "arep_strengths": [
+      {
+        "title": "Inversión manejable",
+        "whyItMatters": "Tu inversión inicial de $5,000 excede la pérdida máxima tolerable de menos de $5,000, lo que implica un riesgo financiero alto."
+      },
+      {
+        "title": "Disponibilidad de tiempo",
+        "whyItMatters": "Tienes entre 20 a 40 horas disponibles a la semana, lo que te permite operar y buscar clientes simultáneamente."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Idea poco definida",
+        "whyItMatters": "La claridad de tu idea es vaga y falta información clave como dónde operarías y cómo ganarías dinero.",
+        "howToReduce": "Define claramente tu propuesta de valor y realiza un plan de negocio que incluya ubicación y modelo de ingresos."
+      },
+      {
+        "title": "Alta competencia en el mercado",
+        "whyItMatters": "Has declarado que hay competencia media, pero no has hablado con clientes potenciales, lo que puede dificultar tu entrada al mercado.",
+        "howToReduce": "Realiza entrevistas con posibles clientes y analiza a tus competidores para identificar oportunidades y diferenciarte."
+      },
+      {
+        "title": "Falta de evidencia de clientes",
+        "whyItMatters": "No has hablado con nadie sobre tu idea, lo que significa que no tienes validación del interés del mercado.",
+        "howToReduce": "Haz encuestas o entrevistas para validar tu idea y entender mejor las necesidades de tus potenciales clientes."
+      }
+    ],
+    "arep_personal_fit_analysis": "1. **Actividades que disfrutas**: Te gusta operar y ejecutar, lo cual es esencial en un negocio de comida para llevar. Este giro requiere que estés involucrado en la preparación y entrega de los platillos, lo que se alinea con tus preferencias por el trabajo físico.\n\n2. **Disponibilidad horaria**: Tienes un horario flexible y puedes dedicar entre 20 a 40 horas a la semana. Esto es positivo, ya que el negocio de comida para llevar puede requerir un compromiso de tiempo variable, especialmente durante las horas pico.\n\n### Brechas Personales\n\n1. **Comodidad vendiendo**: Tu comodidad al vender es de 3 de 5, lo que indica que no te sientes completamente a gusto. Para mejorar en este aspecto, considera practicar tus habilidades de venta con amigos o familiares, o incluso tomar un curso corto sobre ventas. Esto te ayudará a sentirte más seguro al ofrecer tus productos.\n\n2. **Experiencia emprendedora**: No tienes experiencia previa en emprendimiento, lo que puede ser una brecha significativa. Para abordar esto, busca un mentor o únete a un grupo de emprendedores donde puedas aprender de otros y obtener consejos sobre cómo gestionar un negocio. Esto te dará una mejor base para enfrentar los desafíos que se presenten.",
+    "arep_financial_analysis": "Tu negocio de comida para llevar tiene un margen bruto por venta de 30 MXN, lo que representa un 37.5% del precio de venta de 80 MXN. Esto es positivo, ya que el margen es superior al costo de alimentos típico en el mercado, que se encuentra entre el 25% y el 30% [F14]. Sin embargo, tus costos fijos mensuales son menos de 5,000 MXN, y con un beneficio bruto estimado de 3,000 MXN al mes, no estás generando ganancias netas, ya que tu utilidad neta es de 0 MXN. Esto indica que no estás cubriendo tus costos fijos, lo que es un riesgo significativo.\n\nEl punto de equilibrio se establece en 100 ventas mensuales, lo que significa que necesitas vender al menos 100 unidades para cubrir tus costos fijos y variables. Si no alcanzas este volumen de ventas, estarás operando con pérdidas. Dado que tu estimación de ventas es de 100 unidades al mes, parece que estás justo en el límite, lo que puede ser riesgoso, especialmente considerando que el puntaje de viabilidad financiera es bajo (19) y el nivel de riesgo es alto (98).\n\nEn cuanto a la recuperación de la inversión inicial de 5,000 MXN, no podrás recuperarla en menos de un mes, ya que no estás generando utilidades. Esto es un factor crítico que debes considerar. Si no logras aumentar tus ventas o reducir costos, la viabilidad financiera de tu negocio se verá comprometida. Te sugiero evaluar estrategias para aumentar tus ventas o reducir tus costos operativos para mejorar tu situación financiera.",
+    "arep_time_operation_analysis": "Para tu negocio de comida para llevar, es importante desglosar las tareas que implicará. Primero, tendrás que **crear el producto**, lo que incluye la preparación de los platillos. Esto puede ser una tarea inicial que requiera tiempo, pero una vez que tengas tus recetas y procesos establecidos, será más fácil replicar. Luego, tendrás actividades **repetitivas** como la atención a clientes, la gestión de pedidos y la entrega de la comida. Si decides utilizar aplicaciones de entrega como Uber Eats o Rappi, esto podría simplificar la logística, pero también implicaría comisiones que debes considerar en tus costos.\n\nCon tu disponibilidad de 20 a 40 horas por semana y un horario flexible, parece que tienes un buen margen para manejar las operaciones. Sin embargo, el trabajo físico en la cocina y la atención a clientes podrían ser agotadores si no los organizas bien. Te sugiero que establezcas un horario semanal donde dividas tus actividades en bloques de tiempo. Por ejemplo, puedes dedicar ciertos días a la preparación de platillos y otros a la atención de pedidos y entregas. \n\nEs crucial que definas cómo ganarás dinero y el lugar donde operarás, ya que esto impactará tus costos y la forma en que gestionas el tiempo. La falta de claridad en estos aspectos puede saturarte rápidamente. Considera hacer un análisis de tus costos fijos y variables para asegurarte de que tu modelo sea viable y sostenible. Además, asegúrate de que el precio que piensas cobrar (80 MXN por platillo) sea competitivo en comparación con el mercado, donde los precios de comida para llevar oscilan entre 50 y 150 MXN [F9].",
+    "arep_scalability_analysis": "El potencial de crecimiento de tu negocio de comida para llevar dependerá de varios factores. Primero, si decides operar a través de aplicaciones de entrega, como Uber Eats o Rappi, podrías alcanzar un público más amplio, ya que el 65% de los consumidores en México utiliza estas plataformas para hacer pedidos [F18]. Esto te permitiría generar ingresos sin incrementar significativamente tu carga de trabajo, ya que las aplicaciones se encargan de la logística de entrega. Además, si ofreces un menú atractivo y competitivo, podrías captar a clientes que buscan opciones de calidad a precios accesibles, considerando que los precios de comida para llevar rondan entre 50 y 150 MXN [F9].\n\nSin embargo, hay riesgos que podrían frenar tu crecimiento. La competencia es fuerte, con jugadores establecidos como La Casa de Toño y Sushi Roll, que ya tienen una base de clientes leales [F4][F5]. Además, tu falta de experiencia en el emprendimiento y la dependencia de plataformas externas para la entrega pueden limitar tu capacidad para escalar. Si decides trabajar solo, también deberás considerar cómo manejarás el aumento de demanda, ya que esto podría llevarte a un punto crítico donde no podrás atender a todos los clientes sin sacrificar calidad.\n\nPara un crecimiento coherente, te sugiero que inicies con un menú limitado y atractivo, utilizando plataformas de entrega para maximizar tu alcance. A medida que ganes experiencia y conozcas mejor a tus clientes, podrías considerar ampliar tu oferta. Sin embargo, es crucial que estés preparado para enfrentar la competencia y que busques maneras de diferenciarte, ya sea a través de la calidad de los ingredientes, precios competitivos o un enfoque en la atención al cliente.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Aclarar la idea",
+        "tasks": [
+          "Definir dónde operarás y cómo ganarás dinero con tu comida para llevar.",
+          "Hablar con 5 amigos o familiares sobre tu idea y obtener su opinión.",
+          "Investigar qué tipos de comida para llevar son populares en tu área."
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Validar demanda",
+        "tasks": [
+          "Hablar con 10 personas en tu comunidad sobre sus hábitos de compra de comida para llevar.",
+          "Realizar una encuesta en redes sociales para conocer preferencias de platillos.",
+          "Identificar 3 competidores locales y analizar sus menús y precios."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Confirmar números",
+        "tasks": [
+          "Calcular el costo de tus platillos considerando un precio de venta de 80 MXN y un costo variable de 50 MXN.",
+          "Establecer un precio competitivo basándote en el rango de 50-150 MXN de restaurantes de comida para llevar [F9].",
+          "Hacer un análisis de costos para determinar si puedes cubrir gastos como renta y nómina."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Probar adquisición",
+        "tasks": [
+          "Crear una página en redes sociales para promocionar tu comida para llevar.",
+          "Ofrecer una prueba gratuita de tus platillos a 5 personas a cambio de su opinión.",
+          "Investigar cómo funcionan las aplicaciones de entrega como Uber Eats y Didi Food para considerar su uso."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "La recomendación es que primero valides tu idea antes de realizar cualquier inversión. Actualmente, la viabilidad financiera es muy baja y el riesgo es elevado, lo que significa que podrías enfrentar pérdidas significativas. Es crucial que aclares aspectos fundamentales de tu propuesta, como dónde planeas operar y cómo generarás ingresos. Sin esta información, es difícil avanzar con confianza.\n\nPara empezar, realiza entrevistas con potenciales clientes para entender sus necesidades y preferencias en comida para llevar. Esto te ayudará a definir mejor tu oferta y a identificar oportunidades en el mercado. Además, investiga a tus competidores, como Uber Eats y La Casa de Toño, para conocer qué están haciendo bien y cómo puedes diferenciarte. Por último, asegúrate de establecer un plan claro que te permita medir el éxito y la rentabilidad de tu negocio antes de invertir más recursos.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 3,
+      "rewritten": [
+        "executive_summary",
+        "business_understanding",
+        "strengths_risks"
+      ],
+      "review": {
+        "contradicciones": [],
+        "supuestos_sin_fuente": [
+          {
+            "seccion": "executive_summary",
+            "afirmacion": "la competencia en el mercado es considerable"
+          },
+          {
+            "seccion": "business_understanding",
+            "afirmacion": "Ofreces comida para llevar, un servicio que se ha vuelto popular en México."
+          }
+        ],
+        "conclusiones_no_sustentadas": [
+          {
+            "seccion": "strengths_risks",
+            "afirmacion": "Inversión manejable: Tu inversión inicial de $5,000 cabe en lo que puedes perder, ya que toleras una pérdida máxima de menos de $5,000.",
+            "motivo": "Los datos indican que tu pérdida tolerable es menor de $5,000, por lo que una inversión de $5,000 la supera y no cabe en lo que puedes perder."
+          }
+        ],
+        "correcciones": [
+          {
+            "seccion": "executive_summary",
+            "instruccion": "Matizar o citar el nivel de competencia en el mercado, indicando si se basa en datos declarados o fuentes externas."
+          },
+          {
+            "seccion": "business_understanding",
+            "instruccion": "Agregar la fuente al afirmar que el servicio es popular (por ejemplo, [F17]) o marcarlo como supuesto a validar."
+          },
+          {
+            "seccion": "strengths_risks",
+            "instruccion": "Eliminar o corregir la afirmación sobre la inversión tolerable para reflejar que $5,000 excede la pérdida máxima indicada."
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Negocio de comida para llevar en México, que ofrece una variedad de platillos a través de restaurantes y aplicaciones de entrega.",
+          "sector": "Alimentación",
+          "modelo_de_negocio": "Comida para llevar y entrega a domicilio"
+        },
+        "tamano_mercado": {
+          "cifra": "58041",
+          "anio": 1999,
+          "fuente_id": "F1",
+          "motivo": "Número de unidades económicas de restaurantes de comida para llevar a nivel nacional."
+        },
+        "competidores": [
+          {
+            "nombre": "Uber Eats",
+            "propuesta": "Plataforma de entrega de alimentos con 35,000 restaurantes afiliados.",
+            "precio_referencia": null,
+            "fuente_id": "F2"
+          },
+          {
+            "nombre": "Didi Food",
+            "propuesta": "Servicio de entrega de alimentos con presencia en 34 ciudades.",
+            "precio_referencia": null,
+            "fuente_id": "F2"
+          },
+          {
+            "nombre": "Rappi",
+            "propuesta": "Aplicación de entrega de alimentos y otros productos.",
+            "precio_referencia": null,
+            "fuente_id": "F3"
+          },
+          {
+            "nombre": "La Casa de Toño",
+            "propuesta": "Cadena de restaurantes de comida tradicional mexicana.",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "Sushi Roll",
+            "propuesta": "Cadena de comida japonesa con opciones para llevar.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Comida callejera (tacos, tortas, etc.)",
+            "rango": "30–70 MXN",
+            "fuente_id": "F8"
+          },
+          {
+            "descripcion": "Restaurantes de comida para llevar (porción individual)",
+            "rango": "50–150 MXN",
+            "fuente_id": "F9"
+          },
+          {
+            "descripcion": "Menú de Carl's Jr.",
+            "rango": "22.00 – 299.00 MXN",
+            "fuente_id": "F12"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Restaurantes y puestos de comida",
+            "nota": "El 63% de los mexicanos compra comida para llevar.",
+            "fuente_id": "F17"
+          },
+          {
+            "canal": "Aplicaciones de entrega a domicilio",
+            "nota": "El 65% de los consumidores realiza pedidos a través de plataformas de delivery.",
+            "fuente_id": "F18"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Food Cost (Costo de Alimentos)",
+            "valor": "25-30%",
+            "fuente_id": "F14",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Nómina y Prestaciones",
+            "valor": "26%",
+            "fuente_id": "F15",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Renta del Local",
+            "valor": "150-450 MXN/m²",
+            "fuente_id": "F16",
+            "es_supuesto": false
+          }
+        ],
+        "huecos_de_informacion": [
+          "No se encontró valor monetario del mercado de comida para llevar en años recientes.",
+          "No se encontró volumen del mercado de comida para llevar en México.",
+          "Faltan competidores adicionales para completar un análisis más amplio.",
+          "No hay datos específicos sobre la compra de comida para llevar en supermercados."
+        ],
+        "mercado_objetivo": {
+          "pais": "México",
+          "ciudad": null,
+          "criterio": "El texto no especifica un mercado más concreto, por lo que se utiliza el mercado por defecto.",
+          "es_supuesto": true
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "LOS CONJUNTOS COMERCIALES",
+            "url": "https://www.inegi.org.mx/contenidos/productos/prod_serv/contenidos/espanol/bvinegi/productos/censos/economicos/1999/comercial/conjuntos.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F2",
+            "titulo": "Uber Eats, Didi Foods y Rappi lideran en México - Opportimes",
+            "url": "https://www.opportimes.com/logistica/uber-eats-didi-foods-y-rappi-lideran-en-mexico/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F3",
+            "titulo": "Top 10 Best Food Delivery Apps in Mexico",
+            "url": "https://enests.co/blog/top-10-best-food-delivery-apps-in-mexico",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F4",
+            "titulo": "La Casa de Toño: cómo un mexicano convirtió su puesto de comida en un negocio millonario",
+            "url": "https://elpais.com/mexico/2026-07-23/la-casa-de-tono-como-un-mexicano-convirtio-su-puesto-de-comida-en-un-negocio-millonario.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F5",
+            "titulo": "Sushi Roll",
+            "url": "https://es.wikipedia.org/wiki/Sushi_Roll",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F6",
+            "titulo": "Alsea también considera como competencia indirecta a algunos de establecimientos de comida/cafeterías operados por cadenas de supermercados y retail, tales como Vips, Sanborn’s, California, Toks y Wings, sin embargo estos podrían considerarse competidores dentro del segmento de establecimientos de comida de servicio completo dado el formato de operación de los mismos, otro competidor importante son las tiendas de conveniencia los cuales tienen a la venta buen café a precios competitivos.",
+            "url": "https://www.alsea.com.mx/uploads/es/documents/alsea_reporte_anual_bmv_anexo_n/alsea_reporte_anual_bmv_anexo_n_201215dd.pdf?v=2017-10-30-12-10-00",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "25 aps preparan su ‘debut’ para competir con Didi Food y Uber Eats",
+            "url": "https://forbes.com.mx/negocios-25-apps-mexicanas-preparan-su-debut-para-competir-con-didi-food-uber-eats-y-rappi/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "Mundial en México con Poco Presupuesto: La Guía Completa | mexi.co",
+            "url": "https://mexi.co/es/articles/mundial-mexico-guia-economica/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "▷ RESTAURANTES DE COMIDA PARA LLEVAR en ZIRáNDARO",
+            "url": "https://pymes.org.mx/pyme/restaurantes-de-comida-para-llevar-e24842c0.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "La Esquina Comida para Llevar - Gómez Palacio Centro Precios y Menú a Domicilio - Rappi",
+            "url": "https://www.rappi.com.mx/restaurantes/1930011969-la-esquina-comida-para-llevar",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F11",
+            "titulo": "\"La Terraza\" sazón casero, Restaurante para llevar. • Menú, Precios y Dirección",
+            "url": "https://queresto.com/Restlaterraza",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "Precios de menús en México — Exynia",
+            "url": "https://exynia.com/menus/mexico/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F13",
+            "titulo": "Precios Sushi 1 One | Charolas, Combos y Sushi Packs",
+            "url": "https://www.sushi1one.com/precios/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F14",
+            "titulo": "Calculadora Costo de Restaurante — Food Cost y Precio de Menú | México 2026",
+            "url": "https://calculoseguro.mx/calculadora-costo-restaurante/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F15",
+            "titulo": "¿Cómo saber si un restaurante es rentable? | RSB Systems",
+            "url": "https://www.rsb.mx/como-saber-si-un-restaurante-es-rentable",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F16",
+            "titulo": "Cómo Abrir un Negocio en México | Paso a Paso",
+            "url": "https://sitios.colmich.edu.mx/wp-style/how-to-open-business-in-mexico.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F17",
+            "titulo": "¿Comida para llevar? Cerca de 63% de los mexicanos lo prefiere • Fortuna y Poder",
+            "url": "https://fortunaypoder.com/primero-dinero/comida-llevar-63-los-mexicanos-lo-prefiere",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F18",
+            "titulo": "65% de los consumidores ordena de manera activa a través de plataformas de delivery en México - Marketing4eCommerce México",
+            "url": "https://marketing4ecommerce.mx/65-de-los-consumidores-ordena-de-manera-activa-a-traves-de-plataformas-de-delivery-en-mexico/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F19",
+            "titulo": "¿Por qué cada vez hay más gente que come en los supermercados?",
+            "url": "https://www.huffingtonpost.es/life/por-que-vez-hay-mas-gente-come-supermercados.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "tamaño mercado comida para llevar México site:gov.mx OR site:inegi.org.mx OR site:economista.com.mx OR site:statista.com OR site:euromonitor.com OR site:canirac.org.mx",
+            "competidores comida para llevar México mercado 2023 site:.gob.mx OR site:.mx OR site:.com OR site:.edu.mx",
+            "precios comida para llevar México 2023 site:inegi.org.mx",
+            "costos típicos operación negocio comida para llevar México 2023 site:.gob.mx OR site:.org OR site:.mx",
+            "clientes comida para llevar México dónde compran"
+          ],
+          "estimatedCostUsd": 0.205,
+          "durationMs": 20276,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

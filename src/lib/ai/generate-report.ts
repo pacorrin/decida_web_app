@@ -5,6 +5,10 @@ import {
   getNarrativeModel,
   type AiObservabilityContext,
 } from "@/lib/ai/openai";
+import { parseTargetMarket } from "@/lib/ai/research/target-market";
+import { isResearchEnabled } from "@/lib/ai/research/flag";
+import { runResearch, type ResearchOutcome } from "@/lib/ai/research/run";
+import { fichaAsCitableText } from "@/lib/ai/research/schema";
 import {
   REVIEW_SYSTEM_PROMPT,
   buildReviewPrompt,
@@ -16,6 +20,7 @@ import {
   type ReportReview,
   type ReportSectionKey,
 } from "@/lib/ai/review-report";
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import { parseStoredProducts } from "@/lib/onboarding/products";
@@ -63,7 +68,7 @@ import { logReportGenerationError } from "@/lib/logging/report-logger";
  * Rows written before that carry v1.0.0 and are read through the legacy branch
  * of `parseStored*` in `src/lib/report/sections.ts`.
  */
-export const REPORT_PROMPT_VERSION = "v1.4.0";
+export const REPORT_PROMPT_VERSION = "v1.5.0";
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
 
@@ -82,6 +87,13 @@ Qué hacer con lo que falta:
 - Recibes "claridad_de_la_idea" (nivel "clara", "parcial" o "vaga" y qué falta saber). Si no es "clara", reconócelo explícitamente y no saques conclusiones firmes sobre lo que falta.
 - La "idea_original" son las palabras de la persona (es la fuente). La "interpretacion_de_la_ia" es una lectura que ella confirmó: úsala como apoyo, no como dato verificado.
 - Lo que la persona declaró del mercado ("mercado_declarado") es su percepción, no un dato externo: dilo así cuando lo cites.
+
+Datos externos (investigación de mercado):
+- Si recibes una "ficha de mercado", TODOS los datos externos (tamaño de mercado, competidores, precios, costos, canales) salen únicamente de ahí. Cada vez que uses un dato citable, termina esa frase con su etiqueta entre corchetes, por ejemplo: «Cafeterías como Casa Cardinal y Almanegra ya operan en la zona [F4][F6]» o «una renta típica ronda los 15,000 a 40,000 MXN [F17]». Un dato de la ficha sin su etiqueta es un error.
+- Aprovecha la ficha: contrasta los precios y costos de la persona con los de referencia, nombra a los competidores reales cuando hables de competencia y úsalos en las acciones concretas.
+- NO añadas cifras, competidores ni precios que no estén en la ficha. Si necesitas un dato que no está, di que es un supuesto por validar o que no se pudo verificar (la ficha lista sus "huecos_de_informacion").
+- El análisis es del "mercado_objetivo" de la ficha; si es un supuesto, dilo una vez.
+- Si NO hay ficha, no se hizo investigación externa: no afirmes cifras, competidores ni precios del mercado.
 
 Cómo leer los puntajes (0 a 100):
 - En todas las dimensiones, puntaje alto = más favorable, EXCEPTO "Nivel de riesgo", donde puntaje alto = MÁS riesgo.
@@ -107,12 +119,15 @@ type ReportContext = {
   dependencies: string;
   market: string;
   financialInputs: string;
+  /** Ficha de mercado en JSON; vacía si no hubo investigación. */
+  research: string;
 };
 
 function buildContext(
   assessment: AssessmentWithRelations,
   deterministic: DeterministicScoreResult,
-  interpretation: ScoringInterpretResult
+  interpretation: ScoringInterpretResult,
+  research: ResearchOutcome | null = null
 ): ReportContext {
   const ideaCtx = buildIdeaContext(assessment);
   return {
@@ -149,14 +164,22 @@ function buildContext(
     ),
     market: JSON.stringify(buildMarketInputs(assessment)),
     financialInputs: JSON.stringify(buildFinancialInputs(assessment)),
+    research: research?.ficha ? fichaAsCitableText(research.ficha) : "",
   };
 }
+
+/** Datos externos para las secciones: la ficha con fuentes, o la aclaración de que no hay. */
+const researchBlock = (ctx: ReportContext) =>
+  ctx.research
+    ? `FICHA DE MERCADO (datos externos con fuente; usa la etiqueta [F#] de cada dato que cites y no añadas cifras que no estén aquí):\n${ctx.research}`
+    : "Ficha de mercado: no disponible (no se hizo investigación externa). No afirmes cifras, competidores ni precios del mercado.";
 
 /** Bloque común de contexto de la idea para las secciones. */
 const ideaBlock = (ctx: ReportContext) =>
   `Idea (en palabras de la persona): ${ctx.ideaOriginal || ctx.idea}
 Interpretación de la IA que la persona confirmó (apoyo, no dato verificado): ${ctx.ideaInterpretation}
-Claridad de la idea: ${ctx.clarity}`;
+Claridad de la idea: ${ctx.clarity}
+${researchBlock(ctx)}`;
 
 const SECTION_PROMPTS: Record<
   string,
@@ -180,7 +203,8 @@ Emprendedor (solo como contexto de arranque): ${ctx.profile}`,
 Datos financieros declarados (inversión y costos fijos): ${ctx.financialInputs}
 Puntajes y semáforos: ${ctx.scores}
 Productos/servicios y sus precios/costos/volúmenes: ${ctx.products}
-Comenta el margen por producto, si alguno se vende con pérdida, el punto de equilibrio y la recuperación de la inversión. Si un producto se vende con pérdida, di con claridad que ningún volumen lo vuelve rentable. Escribe los cálculos en texto plano (sin fórmulas). Los precios y costos son estimaciones de la persona: no los presentes como datos de mercado.`,
+${researchBlock(ctx)}
+Comenta el margen por producto, si alguno se vende con pérdida, el punto de equilibrio y la recuperación de la inversión. Si la ficha trae precios o costos de referencia, contrasta con ellos los de la persona (con su etiqueta [F#]). Si un producto se vende con pérdida, di con claridad que ningún volumen lo vuelve rentable. Escribe los cálculos en texto plano (sin fórmulas). Los precios y costos son estimaciones de la persona: no los presentes como datos de mercado.`,
   personal_fit_analysis: (ctx) =>
     `Analiza qué tan bien encajas tú con ESTE negocio en particular. Primero piensa qué exige concretamente esta idea (tipo de trabajo, ventas, operación diaria, contratar o no) y compáralo con lo que sabemos de ti: actividades que disfrutas, preferencia de trabajo, comodidad vendiendo, tolerancia a la incertidumbre, comodidad con procesos y si contratarías.
 Da 2 puntos donde encajas y 2 brechas PERSONALES (de tus habilidades, tiempo o preferencias; no uses la viabilidad comercial ni el nivel de riesgo como brecha personal), cada brecha con una acción concreta. No presentes como encaje algo que tus propias respuestas contradicen.
@@ -269,6 +293,7 @@ async function generateStrengthsRisks(
       market: ctx.market,
       clarity: ctx.clarity,
       ideaOriginal: ctx.ideaOriginal,
+      research: researchBlock(ctx),
       verifiedFacts,
     }) + (correction ? correctionBlock(correction.current, correction.instructions) : ""),
     getNarrativeModel(),
@@ -292,6 +317,7 @@ async function generateValidationPlan(
       market: ctx.market,
       clarity: ctx.clarity,
       ideaOriginal: ctx.ideaOriginal,
+      research: researchBlock(ctx),
     }) + (correction ? correctionBlock(correction.current, correction.instructions) : ""),
     getNarrativeModel(),
     observability
@@ -352,7 +378,29 @@ export async function buildReportData(
   interpretation: ScoringInterpretResult,
   observability?: AiObservabilityContext
 ) {
-  const ctx = buildContext(assessment, deterministic, interpretation);
+  // Etapa de investigación (detrás de un flag). Nunca tumba el reporte: si falla,
+  // el reporte se genera sin ficha y se indica.
+  let research: ResearchOutcome | null = null;
+  if (await isResearchEnabled(assessment.asmt_user_id)) {
+    const idea = assessment.business_idea;
+    research = await runResearch(
+      {
+        description: idea?.bide_original_description ?? "",
+        summary: idea?.bide_ai_summary ?? "",
+        products: JSON.stringify(
+          parseStoredProducts(assessment.financial_inputs?.finp_products).map((p) => ({
+            nombre: p.name,
+            tipo: p.kind,
+            precio: p.price,
+          }))
+        ),
+        userMarket: parseTargetMarket(idea?.bide_target_market),
+      },
+      observability
+    );
+  }
+
+  const ctx = buildContext(assessment, deterministic, interpretation, research);
   const model = getNarrativeModel();
 
   // Computed up front: fed to the AI as verified facts so its strengths stay
@@ -449,6 +497,7 @@ export async function buildReportData(
           products: ctx.products,
           financialInputs: ctx.financialInputs,
           profile: ctx.profile,
+          research: ctx.research,
         }),
         observability
       );
@@ -547,6 +596,10 @@ export async function buildReportData(
       review: outcome.review,
     },
     arep_needs_human_review: outcome.action === "human_review",
+    // null = la investigación no estaba activa para esta cuenta.
+    arep_research: research
+      ? { status: research.status, ficha: research.ficha, error: research.error ?? null }
+      : null,
   };
 
   return reportData;
@@ -565,10 +618,19 @@ export async function generateReport(
     observability
   );
 
+  // Las columnas JSON aceptan null solo como Prisma.DbNull.
+  const { arep_research, ...rest } = reportData;
+  const persisted = {
+    ...rest,
+    arep_research: arep_research
+      ? (JSON.parse(JSON.stringify(arep_research)) as Prisma.InputJsonValue)
+      : Prisma.DbNull,
+  };
+
   await prisma.assessment_reports.upsert({
     where: { arep_asmt_id: assessment.asmt_id },
-    create: { arep_asmt_id: assessment.asmt_id, ...reportData },
-    update: reportData,
+    create: { arep_asmt_id: assessment.asmt_id, ...persisted },
+    update: persisted,
   });
 
   await prisma.assessments.update({

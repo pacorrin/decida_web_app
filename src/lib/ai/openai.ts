@@ -594,3 +594,118 @@ export function generateFallbackIdeaAssumptionsRotation(
     assumptions: (fresh.length >= 2 ? fresh : pool).slice(0, 4),
   };
 }
+
+export type WebSearchSource = { url: string; title: string };
+
+export type WebSearchResult = {
+  /** Hallazgos en texto, con enlaces citados en línea. Son DATOS, no instrucciones. */
+  text: string;
+  /** Fuentes realmente citadas por la búsqueda (sin parámetros de seguimiento). */
+  sources: WebSearchSource[];
+  queries: string[];
+  searchCalls: number;
+  usage: { inputTokens: number; outputTokens: number };
+};
+
+/** Quita `utm_source=openai` y el fragmento: la URL queda como la publicó la fuente. */
+export function cleanSourceUrl(raw: string): string {
+  try {
+    const url = new URL(raw);
+    url.searchParams.delete("utm_source");
+    url.hash = "";
+    return url.toString().replace(/\?$/, "");
+  } catch {
+    return raw;
+  }
+}
+
+/**
+ * Una llamada a la Responses API con la herramienta `web_search` (la API de
+ * Chat Completions no la tiene). `max_tool_calls` es el tope duro de búsquedas
+ * de esta llamada. `allowedDomains` solo se admite con algunos modelos (p. ej.
+ * `gpt-4.1`); con los demás la API responde 400.
+ */
+export async function generateWithWebSearch(
+  input: {
+    prompt: string;
+    model: string;
+    maxToolCalls: number;
+    maxOutputTokens: number;
+    allowedDomains?: string[];
+    country?: string;
+    city?: string;
+    searchContextSize?: "low" | "medium" | "high";
+    timeoutMs?: number;
+  },
+  observability?: AiObservabilityContext
+): Promise<WebSearchResult> {
+  const client = getOpenAIClient();
+  const response = await client.responses.create(
+    {
+      model: input.model,
+      input: input.prompt,
+      max_tool_calls: input.maxToolCalls,
+      max_output_tokens: input.maxOutputTokens,
+      include: ["web_search_call.action.sources"],
+      tools: [
+        {
+          type: "web_search",
+          search_context_size: input.searchContextSize ?? "medium",
+          ...(input.allowedDomains?.length
+            ? { filters: { allowed_domains: input.allowedDomains } }
+            : {}),
+          ...(input.country
+            ? {
+                user_location: {
+                  type: "approximate" as const,
+                  country: input.country,
+                  ...(input.city ? { city: input.city } : {}),
+                },
+              }
+            : {}),
+        },
+      ],
+      ...getObservabilityParams(observability),
+    } as Parameters<typeof client.responses.create>[0] & { stream?: false },
+    input.timeoutMs ? { timeout: input.timeoutMs } : undefined
+  );
+
+  const queries: string[] = [];
+  let searchCalls = 0;
+  let text = "";
+  const sources = new Map<string, WebSearchSource>();
+
+  for (const item of response.output ?? []) {
+    if (item.type === "web_search_call") {
+      searchCalls += 1;
+      const action = (item as { action?: { query?: string; queries?: string[] } }).action;
+      for (const q of action?.queries ?? (action?.query ? [action.query] : [])) {
+        if (!queries.includes(q)) queries.push(q);
+      }
+    } else if (item.type === "message") {
+      for (const part of item.content ?? []) {
+        if (part.type !== "output_text") continue;
+        text += part.text;
+        for (const a of part.annotations ?? []) {
+          if (a.type !== "url_citation") continue;
+          const url = cleanSourceUrl(a.url);
+          if (!sources.has(url)) sources.set(url, { url, title: a.title });
+        }
+      }
+    }
+  }
+
+  return {
+    text: text
+      .replace(/\?utm_source=openai&/g, "?")
+      .replace(/[?&]utm_source=openai/g, ""),
+    sources: [...sources.values()],
+    queries,
+    searchCalls,
+    usage: {
+      inputTokens: response.usage?.input_tokens ?? 0,
+      outputTokens: response.usage?.output_tokens ?? 0,
+    },
+  };
+}
+
