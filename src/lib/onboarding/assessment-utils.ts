@@ -24,6 +24,7 @@ export type AssessmentBase = assessments & {
     bide_ai_summary: string | null;
     bide_ai_detected_assumptions: unknown;
     bide_user_confirmed_summary: boolean;
+    bide_target_market?: unknown;
   } | null;
   financial_inputs?: {
     finp_id: string;
@@ -79,6 +80,7 @@ export type AssessmentBase = assessments & {
     arep_strengths?: unknown;
     arep_risks?: unknown;
     arep_validation_plan?: unknown;
+    arep_research?: unknown;
   } | null;
   feedback?: {
     fdbk_rating: number | null;

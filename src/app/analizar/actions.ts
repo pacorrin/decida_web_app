@@ -46,6 +46,13 @@ import { PLANS_PATH } from "@/lib/subscription/limits";
 import { hasFullAccess } from "@/lib/subscription/access";
 import { blendProducts } from "@/lib/onboarding/products";
 import { prisma } from "@/lib/prisma";
+import {
+  formatTargetMarket,
+  inferTargetMarket,
+  parseTargetMarket,
+  parseTargetMarketText,
+  type StoredTargetMarket,
+} from "@/lib/ai/research/target-market";
 import { trackServer } from "@/lib/analytics/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { createUser, findUserByEmail, updateUserPassword, markEmailVerified } from "@/lib/auth/users";
@@ -198,12 +205,14 @@ export async function saveIdea(
     assessment.asmt_user_id
   );
 
-  let summaryResult;
-  try {
-    summaryResult = await generateIdeaSummary(description, observability);
-  } catch {
-    summaryResult = generateFallbackIdeaSummary(description);
-  }
+  // El mercado objetivo se infiere de la idea (no del país del visitante) y se
+  // muestra como supuesto editable en el paso de confirmación.
+  const [summaryResult, targetMarket] = await Promise.all([
+    generateIdeaSummary(description, observability).catch(() =>
+      generateFallbackIdeaSummary(description)
+    ),
+    inferTargetMarket(description, observability),
+  ]);
 
   await prisma.business_ideas.upsert({
     where: { bide_asmt_id: assessment.asmt_id },
@@ -220,6 +229,7 @@ export async function saveIdea(
       bide_why_would_pay:
         summaryResult.structuredUnderstanding.propuesta_valor ?? null,
       bide_user_confirmed_summary: false,
+      bide_target_market: targetMarket,
     },
     update: {
       bide_original_description: description,
@@ -233,6 +243,7 @@ export async function saveIdea(
       bide_why_would_pay:
         summaryResult.structuredUnderstanding.propuesta_valor ?? null,
       bide_user_confirmed_summary: false,
+      bide_target_market: targetMarket,
     },
   });
 
@@ -382,13 +393,40 @@ export async function rotateIdeaAssumptions(
   };
 }
 
-export async function confirmIdea(): Promise<void> {
+export async function confirmIdea(formData?: FormData): Promise<void> {
   const assessment = await requireAssessment();
   if (!assessment.business_idea) redirectToStep("idea");
 
+  // Mercado objetivo: si la persona lo cambió se guarda como suyo; si lo dejó
+  // igual, sigue siendo el supuesto que inferimos.
+  const stored = parseTargetMarket(assessment.business_idea.bide_target_market);
+  const typed = parseTargetMarketText(
+    typeof formData?.get("targetMarket") === "string"
+      ? (formData?.get("targetMarket") as string)
+      : null
+  );
+  let targetMarket: StoredTargetMarket | undefined;
+  if (typed) {
+    const unchanged =
+      !!stored &&
+      formatTargetMarket(typed).toLowerCase() === formatTargetMarket(stored).toLowerCase();
+    targetMarket = unchanged
+      ? { ...stored, editado: false }
+      : {
+          pais: typed.pais,
+          ciudad: typed.ciudad,
+          criterio: "Indicado por la persona.",
+          es_supuesto: false,
+          editado: true,
+        };
+  }
+
   await prisma.business_ideas.update({
     where: { bide_asmt_id: assessment.asmt_id },
-    data: { bide_user_confirmed_summary: true },
+    data: {
+      bide_user_confirmed_summary: true,
+      ...(targetMarket ? { bide_target_market: targetMarket } : {}),
+    },
   });
 
   // Quien ya tiene suscripción no necesita elegir plan.

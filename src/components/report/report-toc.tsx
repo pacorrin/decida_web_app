@@ -13,10 +13,13 @@ const SECTIONS = [
   { id: "escalabilidad", label: "Escalabilidad" },
   { id: "validacion", label: "Plan de validación" },
   { id: "recomendacion", label: "Recomendación final" },
+  { id: "fuentes", label: "Fuentes y límites" },
   { id: "feedback", label: "Tu opinión" },
 ] as const;
 
 export type ReportTocSectionId = (typeof SECTIONS)[number]["id"];
+
+export const REPORT_TOC_SECTION_IDS: ReportTocSectionId[] = SECTIONS.map((s) => s.id);
 
 export function ReportToc({
   className,

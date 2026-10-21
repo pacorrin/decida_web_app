@@ -23,6 +23,8 @@ import {
 import type { RefineIdeaState } from "@/lib/onboarding/schemas";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import { Markdown } from "@/components/ui/markdown";
+import { assessIdeaClarity } from "@/lib/ai/idea-clarity";
+import { formatTargetMarket, parseTargetMarket } from "@/lib/ai/research/target-market";
 
 const CATEGORY_LABELS: Record<string, string> = {
   cliente: "Cliente",
@@ -208,8 +210,34 @@ export function IdeaConfirmation({ assessment }: IdeaConfirmationProps) {
     (!refineState.success && refineState.message) ||
     (!rotateState.success && rotateState.message);
 
+  // Se mide sobre las palabras de la persona (no sobre el resumen de la IA, que
+  // siempre sale completo): una idea vaga da un reporte genérico.
+  const clarity = assessIdeaClarity(idea?.bide_original_description);
+  const targetMarket = parseTargetMarket(idea?.bide_target_market);
+
   return (
     <div className="space-y-6">
+      {clarity.level !== "clara" && (
+        <div
+          role="status"
+          data-testid="idea-clarity-notice"
+          className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+        >
+          <p className="font-medium">
+            {clarity.level === "vaga"
+              ? "Tu idea está muy poco definida"
+              : "Tu idea puede quedar más clara"}
+          </p>
+          <p className="mt-1 text-amber-900/90">
+            {clarity.level === "vaga"
+              ? "Con tan pocos datos el diagnóstico saldrá muy general. "
+              : "Cuanto más precisa sea, más útil será tu diagnóstico. "}
+            {clarity.missing.length > 0 &&
+              `Cuéntanos ${clarity.missing.join(", ")}. `}
+            Puedes hacerlo con «Pulir mi idea con IA» o editando tu idea.
+          </p>
+        </div>
+      )}
       <Card
         className={`border-primary/20 shadow-md transition-all duration-500 ${
           wasRefined ? "ring-2 ring-[#6baed6]/40" : ""
@@ -411,10 +439,34 @@ export function IdeaConfirmation({ assessment }: IdeaConfirmationProps) {
         </div>
       )}
 
+      <div className="space-y-2 rounded-xl border border-border/60 bg-muted/20 p-4">
+        <label htmlFor="targetMarket" className="text-sm font-medium text-primary">
+          Mercado que vamos a analizar
+        </label>
+        <Input
+          id="targetMarket"
+          name="targetMarket"
+          form="confirm-idea-form"
+          defaultValue={targetMarket ? formatTargetMarket(targetMarket) : ""}
+          placeholder="País · ciudad (opcional)"
+          maxLength={120}
+          data-testid="target-market-input"
+        />
+        <p className="text-xs text-muted-foreground">
+          {targetMarket?.es_supuesto
+            ? "Lo supusimos a partir de tu idea (no dijiste dónde operarías). "
+            : targetMarket
+              ? "Lo tomamos de tu idea. "
+              : ""}
+          Si tu negocio operará en otro país o ciudad, cámbialo: el análisis de
+          competencia, precios y costos usará este mercado.
+        </p>
+      </div>
+
       <div className="space-y-3 border-t border-border/60 pt-4">
         <BackButton currentSlug="confirmacion" />
         <div className="flex flex-col gap-3 sm:flex-row">
-          <form action={confirmIdea} className="flex-1">
+          <form id="confirm-idea-form" action={confirmIdea} className="flex-1">
             <Button
               type="submit"
               className="w-full"

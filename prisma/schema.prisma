@@ -155,6 +155,7 @@ model business_ideas {
   bide_ai_summary              String?
   bide_ai_detected_assumptions Json?
   bide_user_confirmed_summary  Boolean @default(false)
+  bide_target_market           Json?
 
   assessment assessments @relation(fields: [bide_asmt_id], references: [asmt_id], onDelete: Cascade)
 
@@ -241,6 +242,9 @@ model assessment_reports {
   arep_pdf_url                 String?
   arep_ai_model_used           String?
   arep_prompt_version          String?
+  arep_review                  Json?
+  arep_needs_human_review      Boolean  @default(false)
+  arep_research                Json?
   arep_created_at              DateTime @default(now())
 
   assessment assessments @relation(fields: [arep_asmt_id], references: [asmt_id], onDelete: Cascade)

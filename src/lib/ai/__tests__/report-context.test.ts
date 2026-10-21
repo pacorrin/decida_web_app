@@ -92,3 +92,70 @@ describe("sanitizeSectionMarkdown", () => {
     expect(sanitizeSectionMarkdown(clean)).toBe(clean);
   });
 });
+
+import {
+  buildFinancialInputs,
+  buildIdeaContext,
+  buildMarketInputs,
+} from "../report-context";
+
+describe("datos que antes no llegaban al reporte", () => {
+  const assessment = {
+    market_risk_inputs: {
+      mrsk_competition_level: "alta",
+      mrsk_acquisition_channel: "redes_sociales",
+      mrsk_customer_evidence_level: "1_3",
+      mrsk_main_concern: "  Que la renta se coma el margen  ",
+      mrsk_success_condition: "Cubrir costos en seis meses",
+    },
+    financial_inputs: {
+      finp_currency: "MXN",
+      finp_initial_investment: 380000,
+      finp_fixed_monthly_costs_range: "30k_50k",
+    },
+    business_idea: {
+      bide_original_description: "Quiero hacer algo con comida para llevar.",
+      bide_ai_detected_assumptions: {
+        assumptions: [],
+        structured: {
+          que_ofreces: "Comida para llevar",
+          cliente_objetivo: "Personas con poco tiempo",
+          como_operas: "Cocina en casa",
+        },
+      },
+    },
+  } as never;
+
+  it("buildMarketInputs entrega competencia, canal, evidencia, preocupación y éxito con etiquetas", () => {
+    const m = buildMarketInputs(assessment);
+    expect(m.nivel_de_competencia_declarado).toBe("Alta — mucha competencia");
+    expect(m.canal_para_conseguir_clientes).toBe("Redes sociales");
+    expect(m.evidencia_de_clientes).toBe("Sí, con 1 a 3 personas");
+    expect(m.mayor_preocupacion).toBe("Que la renta se coma el margen");
+    expect(m.condicion_de_exito).toBe("Cubrir costos en seis meses");
+  });
+
+  it("buildFinancialInputs incluye inversión, costos fijos y moneda", () => {
+    const f = buildFinancialInputs(assessment);
+    expect(f.moneda).toBe("MXN");
+    expect(f.inversion_inicial).toBe(380000);
+    expect(f.costos_fijos_mensuales_rango).toBe("$30,000 – $50,000 MXN");
+  });
+
+  it("buildIdeaContext separa las palabras de la persona de la lectura de la IA y mide la claridad", () => {
+    const ctx = buildIdeaContext(assessment);
+    expect(ctx.original).toBe("Quiero hacer algo con comida para llevar.");
+    expect(ctx.interpretation).toEqual([
+      { campo: "Qué ofreces", valor: "Comida para llevar" },
+      { campo: "A quién va dirigido", valor: "Personas con poco tiempo" },
+      { campo: "Cómo operaría", valor: "Cocina en casa" },
+    ]);
+    expect(ctx.clarity.level).toBe("vaga");
+  });
+
+  it("sin datos de mercado no inventa nada", () => {
+    const m = buildMarketInputs({ market_risk_inputs: null } as never);
+    expect(m.mayor_preocupacion).toBeNull();
+    expect(m.nivel_de_competencia_declarado).toBeNull();
+  });
+});

@@ -13,7 +13,7 @@ const FIXED_COST_MIDPOINT: Record<string, number> = {
  * Convierte un caso en un `AssessmentWithRelations` mínimo (sin base de datos).
  * `summary` es el resumen de la IA que en producción confirma la persona.
  */
-export function buildAssessment(c: EvalCase, summary: string) {
+export function buildAssessment(c: EvalCase, summary: string, targetMarket?: unknown) {
   const products = c.financial.products;
   const units = products.reduce((s, p) => s + p.monthlyUnits, 0);
   const price = units
@@ -51,6 +51,7 @@ export function buildAssessment(c: EvalCase, summary: string) {
       bide_ai_summary: summary,
       bide_ai_detected_assumptions: null,
       bide_user_confirmed_summary: true,
+      bide_target_market: targetMarket ?? null,
     },
     financial_inputs: {
       finp_id: `eval_fin_${c.id}`,

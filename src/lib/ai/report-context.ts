@@ -1,5 +1,9 @@
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import {
+  CHANNEL_OPTIONS,
+  COMPETITION_OPTIONS,
+  CUSTOMER_EVIDENCE_LEVEL_OPTIONS,
+  FIXED_COST_OPTIONS,
   CURRENT_SITUATION_OPTIONS,
   ENJOYED_ACTIVITIES_OPTIONS,
   EXPERIENCE_OPTIONS,
@@ -16,6 +20,9 @@ import {
 } from "@/lib/scoring/ranges";
 import type { DeterministicScoreResult } from "@/lib/scoring/types";
 import type { ScoringInterpretResult } from "@/lib/ai/schemas/scoring-interpret";
+import { unpackIdeaAiPayload } from "@/lib/ai/schemas/idea-assumptions";
+import { getStructuredEntries } from "@/lib/ai/schemas/structured-understanding";
+import { assessIdeaClarity } from "@/lib/ai/idea-clarity";
 
 const labelMap = (options: { value: string; label: string }[]) =>
   new Map(options.map((o) => [o.value, o.label]));
@@ -28,6 +35,10 @@ const TIMEFRAME = labelMap(INCOME_TIMEFRAME_OPTIONS);
 const ACTIVITY = labelMap(ENJOYED_ACTIVITIES_OPTIONS);
 const WORK_PREF = labelMap(WORK_PREFERENCE_OPTIONS);
 const HIRING = labelMap(HIRING_PREFERENCE_OPTIONS);
+const COMPETITION = labelMap(COMPETITION_OPTIONS);
+const CHANNEL = labelMap(CHANNEL_OPTIONS);
+const EVIDENCE = labelMap(CUSTOMER_EVIDENCE_LEVEL_OPTIONS);
+const FIXED_COSTS = labelMap(FIXED_COST_OPTIONS);
 
 const label = (map: Map<string, string>, value: string | null | undefined) =>
   value ? (map.get(value) ?? value) : null;
@@ -77,6 +88,53 @@ export function buildFounderProfile(
     comodidad_con_incertidumbre: scale(fit?.pfit_uncertainty_comfort_score),
     comodidad_siguiendo_procesos: scale(fit?.pfit_process_comfort_score),
     contratacion: label(HIRING, fit?.pfit_hiring_preference),
+  };
+}
+
+/**
+ * Lo que la persona declaró del mercado y del riesgo. Antes se capturaba en el
+ * onboarding y no llegaba a las secciones: la competencia alta, el canal, la
+ * evidencia de clientes, su mayor preocupación y su condición de éxito.
+ */
+export function buildMarketInputs(
+  assessment: AssessmentWithRelations,
+): Record<string, unknown> {
+  const m = assessment.market_risk_inputs;
+  return {
+    _nota: "Lo que la persona declaró; no son datos verificados del mercado.",
+    nivel_de_competencia_declarado: label(COMPETITION, m?.mrsk_competition_level),
+    canal_para_conseguir_clientes: label(CHANNEL, m?.mrsk_acquisition_channel),
+    evidencia_de_clientes: label(EVIDENCE, m?.mrsk_customer_evidence_level),
+    mayor_preocupacion: m?.mrsk_main_concern?.trim() || null,
+    condicion_de_exito: m?.mrsk_success_condition?.trim() || null,
+  };
+}
+
+export function buildFinancialInputs(
+  assessment: AssessmentWithRelations,
+): Record<string, unknown> {
+  const f = assessment.financial_inputs;
+  return {
+    moneda: f?.finp_currency ?? "MXN",
+    inversion_inicial: Number(f?.finp_initial_investment ?? 0) || null,
+    costos_fijos_mensuales_rango: label(FIXED_COSTS, f?.finp_fixed_monthly_costs_range),
+  };
+}
+
+/**
+ * La idea en las palabras de la persona (fuente), la interpretación de la IA
+ * que ella confirmó (útil pero no es un dato) y qué tan evaluable es.
+ */
+export function buildIdeaContext(assessment: AssessmentWithRelations) {
+  const idea = assessment.business_idea;
+  const original = idea?.bide_original_description?.trim() ?? "";
+  const structured = getStructuredEntries(
+    unpackIdeaAiPayload(idea?.bide_ai_detected_assumptions).structured,
+  );
+  return {
+    original,
+    interpretation: structured.map((e) => ({ campo: e.label, valor: e.value })),
+    clarity: assessIdeaClarity(original),
   };
 }
 

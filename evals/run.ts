@@ -1,7 +1,9 @@
 /**
  * Corre el pipeline del reporte sobre un conjunto de casos, SIN base de datos.
  *
- *   pnpm evals:baseline        → evals/baseline/<caso>.json y .md
+ *   pnpm evals:baseline        → evals/baseline/<caso>.json y .md (referencia congelada)
+ *   pnpm evals:run <nombre>    → evals/<nombre>/… (corrida nueva, para comparar con baseline)
+ *   pnpm evals:run <nombre> --research   → con la etapa de investigación (búsqueda web)
  *
  * Requiere OPENAI_API_KEY en .env. PostHog y Stripe se apagan a propósito para
  * que los evals no ensucien las métricas reales.
@@ -14,6 +16,10 @@ config({ path: join(process.cwd(), ".env") });
 process.env.NEXT_PUBLIC_POSTHOG_KEY = "";
 process.env.NEXT_PUBLIC_POSTHOG_HOST = "";
 process.env.STRIPE_SECRET_KEY = "";
+// La investigación con búsqueda web solo corre si se pide (`--research`): cuesta dinero y tiempo.
+const research = process.argv.includes("--research");
+process.env.REPORT_RESEARCH_ENABLED = research ? "true" : "false";
+process.argv = process.argv.filter((a) => a !== "--research");
 
 async function main() {
   const setName = process.argv[2] ?? "baseline";
@@ -28,8 +34,10 @@ async function main() {
   const { computeScoring } = await import("@/lib/scoring");
   const { buildReportData, REPORT_PROMPT_VERSION } = await import("@/lib/ai/generate-report");
   const { buildScoresForAi } = await import("@/lib/ai/report-context");
+  const { inferTargetMarket } = await import("@/lib/ai/research/target-market");
 
-  const cases = setName === "baseline" ? BASELINE_CASES : [];
+  // Mientras no existan los 20 casos del Paso 4, todos los conjuntos usan los 5 de referencia.
+  const cases = BASELINE_CASES;
   const selected = only ? cases.filter((c) => c.id === only) : cases;
   if (selected.length === 0) throw new Error(`Sin casos para «${setName}»${only ? ` / ${only}` : ""}`);
 
@@ -47,7 +55,9 @@ async function main() {
         summarySource = "fallback";
         idea = generateFallbackIdeaSummary(c.description);
       }
-      const assessment = buildAssessment(c, idea.summary);
+      // Igual que `saveIdea`: el mercado objetivo se infiere de la idea.
+      const targetMarket = await inferTargetMarket(c.description);
+      const assessment = buildAssessment(c, idea.summary, targetMarket);
       const { deterministic, interpretation } = await computeScoring(assessment);
       const report = await buildReportData(assessment, deterministic, interpretation);
       const seconds = Math.round((Date.now() - started) / 100) / 10;
@@ -60,6 +70,8 @@ async function main() {
       const result = {
         case: c,
         promptVersion: REPORT_PROMPT_VERSION,
+        researchEnabled: research,
+        targetMarket,
         generatedAt: new Date().toISOString(),
         latencySeconds: seconds,
         ideaSummary: idea.summary,
