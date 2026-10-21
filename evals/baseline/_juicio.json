@@ -1,0 +1,142 @@
+{
+  "01-cafeteria-roma-norte": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 1,
+      "evidence": "No hay ninguna cita [F#] ni mención de fuente o año para cifras externas como precios, inversión, punto de equilibrio, ni se declaran como supuestos.",
+      "reason": "El reporte presenta cifras externas específicas (precios, inversión, punto de equilibrio) como hechos, sin fuente ni aclarar que son supuestos. No hay ficha ni fuentes. Regla: máximo 2 si hay cifras inventadas, aquí corresponde 1."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se detectan contradicciones entre secciones, puntajes, semáforos o datos de la persona.",
+      "reason": "Todas las conclusiones y análisis se alinean con los puntajes y alertas calculadas; no hay contradicciones internas."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "Las recomendaciones y conclusiones derivan de los puntajes, márgenes y alertas calculadas ('tu inversión inicial de $380,000 excede lo que estás dispuesto a perder...').",
+      "reason": "Las conclusiones se siguen de los datos presentados y los puntajes; no hay saltos de lógica ni cálculos incorrectos."
+    },
+    "huecos_declarados": {
+      "score": 3,
+      "evidence": "\"es importante validar supuestos sobre su edad, ingresos y hábitos de consumo, ya que estos detalles no están claramente definidos en tu idea\"; pero no declara la falta de datos de mercado o competencia.",
+      "reason": "Se mencionan algunos huecos (perfil de cliente), pero no se declara la ausencia total de datos de mercado, competencia o precios externos; se asume información no respaldada."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "\"colonia Roma Norte de la Ciudad de México\" y \"clientes potenciales... en la zona\"; análisis y plan de validación enfocados en el mercado correcto.",
+      "reason": "El análisis corresponde explícitamente al mercado donde la persona venderá (Roma Norte, CDMX), sin desviarse a otros mercados."
+    }
+  },
+  "02-plantillas-notion": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 1,
+      "evidence": "Tu margen por cada paquete de plantillas de Notion para freelancers es de 315 pesos... el precio de venta es mucho mayor que el costo.",
+      "reason": "Se presentan cifras externas (precios de mercado, competencia, ventas estimadas) como hechos, pero no hay ninguna fuente ni se declaran como supuestos. Citas [F#] válidas: 0, fuentes: 0."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se detectan contradicciones entre secciones ni con los puntajes y semáforos.",
+      "reason": "El análisis financiero, riesgos, y recomendaciones son coherentes con los puntajes y alertas calculadas."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "\"la viabilidad financiera es excelente, con un puntaje de 95, la viabilidad comercial es preocupante, con un puntaje de 35...\"",
+      "reason": "Las conclusiones y recomendaciones se derivan de los puntajes, márgenes y alertas; no hay saltos de lógica ni cálculos incorrectos."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "\"No hay validación con clientes potenciales\"; \"Falta de validación con clientes potenciales — No has validado tu idea con clientes...\"",
+      "reason": "El reporte declara explícitamente la falta de validación y la ausencia de datos de mercado, y sugiere cómo cubrir esos huecos."
+    },
+    "mercado_objetivo": {
+      "score": 3,
+      "evidence": "\"Tu cliente son diseñadores freelance... podrían ser de diversas edades y niveles de ingreso...\"",
+      "reason": "El análisis corresponde al mercado objetivo real (diseñadores freelance hispanohablantes), pero no lo hace explícito respecto a país/región."
+    }
+  },
+  "03-curso-ingles-ingenieros": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 1,
+      "evidence": "No se cita ninguna fuente ni año para cifras externas como precios, tamaño de mercado o número de competidores.",
+      "reason": "Sin evidencia. El reporte menciona cifras externas (precio del curso, inversión inicial, utilidad, ventas estimadas) presentadas como hecho, pero no hay fuentes ni se declaran como supuestos."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se detectan contradicciones entre secciones ni con los puntajes, semáforos o datos de la persona.",
+      "reason": "Toda la información y recomendaciones son coherentes con los datos y alertas calculadas."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "\"La inversión inicial estimada ($45,000 MXN) excede la pérdida tolerable máxima declarada ($20,000 MXN)\" y \"valida primero\" se derivan de los datos y puntajes.",
+      "reason": "Las conclusiones y recomendaciones siguen lógicamente de los números y alertas presentados."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "\"Demanda comercial no validada completamente\" y \"no se especifican detalles como edad, ingresos o hábitos\".",
+      "reason": "El reporte declara explícitamente los huecos de información y sugiere cómo cubrirlos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "\"ingenieros de software de Latinoamérica que buscan trabajo remoto con empresas de Estados Unidos\".",
+      "reason": "El análisis corresponde al mercado donde la persona venderá y lo hace explícito."
+    }
+  },
+  "04-comida-para-llevar-vaga": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 1,
+      "evidence": "El precio de 80 pesos por cada unidad, con un costo variable de 50 pesos... punto de equilibrio se sitúa en 100 ventas mensuales... inversión de $5,000 MXN...",
+      "reason": "No hay ninguna fuente ni año para las cifras externas (precios, costos, punto de equilibrio, inversión), ni se presentan como supuestos. No hay ficha ni fuentes disponibles, y el reporte afirma cifras específicas como hechos."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "La inversión inicial de $5,000 MXN podría superar tu tolerancia máxima a pérdidas (< $5,000 MXN)...",
+      "reason": "No se detectan contradicciones entre secciones, puntajes, semáforos ni datos de la persona. Todo es coherente."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "Viabilidad financiera es preocupante, con un puntaje de 19, y el nivel de riesgo es muy alto, alcanzando un puntaje de 98. Por lo tanto, te recomiendo validar primero tu idea...",
+      "reason": "Las conclusiones y recomendaciones se derivan correctamente de los puntajes y datos presentados, sin saltos de lógica ni cálculos erróneos."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "La recuperación de la inversión no está definida en tus datos, ya que no se proporciona un tiempo estimado para ello.",
+      "reason": "El reporte declara explícitamente la ausencia de ciertos datos (ej. tiempo de recuperación de inversión) y sugiere cómo cubrirlos (validar, investigar mercado)."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "El cliente que buscas atraer podría ser alguien que trabaja largas horas, estudiantes, o personas que... no tienen tiempo o ganas de cocinar.",
+      "reason": "El análisis de mercado corresponde al público potencial de la idea y no asume un mercado distinto; esto se hace explícito en el texto."
+    }
+  },
+  "05-tienda-de-cassettes": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 1,
+      "evidence": "No hay ninguna cita de fuente ni año para cifras externas como inversión inicial, precios, costos o tamaño de mercado.",
+      "reason": "El reporte afirma cifras externas específicas (inversión, precios, costos, competencia) sin fuente y sin ficha; el conteo de citas válidas es 0."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se detectan contradicciones entre secciones, puntajes ni alertas.",
+      "reason": "El análisis financiero, los riesgos y las recomendaciones coinciden con los puntajes y alertas calculadas."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "\"El margen bruto por venta de tu cassette de audio nuevo es negativo, ya que vendes cada unidad a 120 y te cuesta 150...\"",
+      "reason": "Las conclusiones sobre inviabilidad y riesgo alto se derivan correctamente de los números y alertas presentados."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "\"No hay evidencia de clientes ni validación de demanda...\" y \"Falta de validación de mercado...\"",
+      "reason": "El reporte declara explícitamente la falta de validación de demanda y de datos de clientes."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "\"abrir una tienda física en un centro comercial de Querétaro\" y \"Visitar 3 tiendas de música en Querétaro...\"",
+      "reason": "El análisis y las acciones propuestas corresponden al mercado objetivo real (Querétaro, México) y lo hacen explícito."
+    }
+  }
+}

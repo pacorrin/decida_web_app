@@ -1,0 +1,613 @@
+{
+  "case": {
+    "id": "10-consultoria-pymes-chile",
+    "kind": "servicio-profesional",
+    "expectedMarket": "Chile · pequeñas y medianas empresas",
+    "description": "Quiero ofrecer consultoría de finanzas y flujo de caja a pymes en Santiago de Chile. Soy contador con diez años de experiencia en empresas medianas y buscaría clientes con recomendaciones y LinkedIn.",
+    "profile": {
+      "situation": "empleado",
+      "goal": "reemplazar_empleo",
+      "experience": "algo",
+      "capital": "10k_50k",
+      "acceptableLoss": "5k_20k",
+      "hoursPerWeek": "5_10",
+      "schedule": "noches",
+      "timeframe": "6_12_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "analizar",
+        "ensenar"
+      ],
+      "workPreference": "digital",
+      "sales": 3,
+      "uncertainty": 3,
+      "process": 4,
+      "hiring": "solo"
+    },
+    "financial": {
+      "initialInvestment": 15000,
+      "fixedCostsRange": "menos_5k",
+      "products": [
+        {
+          "name": "Paquete mensual de consultoría financiera",
+          "kind": "servicio",
+          "price": 9000,
+          "variableCost": 500,
+          "monthlyUnits": 5
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "4_10",
+      "competition": "media",
+      "channel": "referidos",
+      "dependencies": [
+        "cliente_unico"
+      ],
+      "mainConcern": "Cobrar lo que valgo sin una marca propia.",
+      "successCondition": "Tener cinco clientes mensuales en un año."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "Chile",
+    "ciudad": "Santiago",
+    "criterio": "La idea menciona específicamente Santiago de Chile como el mercado objetivo.",
+    "es_supuesto": false,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:44:10.580Z",
+  "latencySeconds": 80.8,
+  "cost": {
+    "tokensUsd": 0.099,
+    "searchUsd": 0.15,
+    "totalUsd": 0.249,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 15,
+        "inputTokens": 38751,
+        "outputTokens": 5431
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 6471,
+        "outputTokens": 6924
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 17351,
+        "outputTokens": 174
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 2258
+      }
+    }
+  },
+  "ideaSummary": "Quieres iniciar un servicio de consultoría en finanzas y flujo de caja dirigido a pymes en Santiago de Chile. Tu experiencia como contador de diez años te permitirá ofrecer un enfoque profesional y personalizado, utilizando recomendaciones y LinkedIn para captar clientes.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 75,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 97,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 59,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 86,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 45,
+      "semaforo": "amarillo"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 8500,
+    "grossMarginPercentage": 94.44444444444444,
+    "estimatedMonthlyGrossProfit": 42500,
+    "estimatedMonthlyNetProfit": 39500,
+    "breakEvenSales": 1,
+    "paybackMonths": 0.379746835443038
+  },
+  "interpretation": {
+    "personal_fit_signal": "green",
+    "financial_viability_signal": "green",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "yellow",
+    "scalability_signal": "yellow",
+    "final_recommendation": "proceed_small_test",
+    "red_flags": [
+      "Dependerías de 1 o 2 clientes para la mayoría de tus ingresos. Si uno se va, el negocio tambalea — diversifica la cartera pronto.",
+      "Dependencia de pocos clientes para la mayoría de los ingresos"
+    ],
+    "reasoning_summary": "Aunque cuentas con experiencia y buena viabilidad financiera, la comercialización y escalabilidad son limitadas y el riesgo es alto por la concentración de clientes. Se sugiere una prueba pequeña para validar precios y captar clientes sin comprometer más recursos."
+  },
+  "report": {
+    "arep_executive_summary": "Tu idea de ofrecer consultoría de finanzas y flujo de caja a pymes en Santiago de Chile es clara y se apoya en tu experiencia de diez años en el sector. Aunque la viabilidad financiera es alta, con un puntaje de 97, la viabilidad comercial presenta un semáforo amarillo, lo que indica que hay oportunidades, pero también desafíos en la captación de clientes. Además, el riesgo es alto debido a la posible dependencia de uno o dos clientes para la mayoría de tus ingresos, lo que podría afectar la estabilidad de tu negocio. Te recomiendo realizar una prueba pequeña para validar tus precios y captar clientes, sin comprometer más recursos, lo que te permitirá ajustar tu enfoque antes de escalar.",
+    "arep_business_understanding": "Ofreces consultoría de finanzas y flujo de caja a pymes en Santiago de Chile. Tu propuesta de valor se basa en tu experiencia como contador con diez años en empresas medianas, lo que te permite brindar un enfoque especializado y personalizado a las necesidades financieras de tus clientes. Los pymes podrían comprarte porque buscan optimizar su gestión financiera y mejorar su flujo de caja, y tú puedes ofrecerles soluciones prácticas y efectivas para alcanzar esos objetivos.\n\nEl cliente al que te diriges son pequeñas y medianas empresas en Santiago de Chile. No se especifican detalles como la edad, ingresos o hábitos de estos clientes, por lo que sería útil validar estos supuestos. Sin embargo, es razonable pensar que son empresarios que buscan mejorar su situación financiera y que valoran la asesoría profesional, especialmente si proviene de recomendaciones y plataformas como LinkedIn, donde planeas establecer tu red de contactos.",
+    "arep_strengths": [
+      {
+        "title": "Experiencia sólida en contabilidad",
+        "whyItMatters": "Tienes diez años de experiencia en empresas medianas, lo que te da un enfoque profesional y personalizado en tu consultoría."
+      },
+      {
+        "title": "Margen bruto alto",
+        "whyItMatters": "Tu margen bruto es del 94%, lo que significa que de cada venta te quedan $8,500 antes de gastos fijos, lo que te permite financiar tu operación y absorber errores iniciales."
+      },
+      {
+        "title": "Recuperación rápida de inversión",
+        "whyItMatters": "Tu inversión de $15,000 se recupera en aproximadamente 0.4 meses, lo que te permite probar la idea sin un compromiso a largo plazo."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Alta dependencia de pocos clientes",
+        "whyItMatters": "Dependes de 1 o 2 clientes para la mayoría de tus ingresos, lo que puede poner en riesgo la estabilidad de tu negocio si alguno se va.",
+        "howToReduce": "Diversifica tu cartera de clientes rápidamente para reducir esta dependencia."
+      },
+      {
+        "title": "Competencia media en el mercado",
+        "whyItMatters": "Has declarado que hay competencia media, lo que significa que tendrás que diferenciarte para captar clientes en un mercado con varios competidores como VSCA y Drakar Consulting [F1][F2].",
+        "howToReduce": "Desarrolla una propuesta de valor clara y utiliza tus redes de contacto para generar recomendaciones."
+      },
+      {
+        "title": "Claridad de la idea sobre la marca",
+        "whyItMatters": "Tu mayor preocupación es cobrar lo que vales sin una marca propia, lo que puede dificultar la captación de clientes.",
+        "howToReduce": "Considera invertir en branding y marketing para establecer tu presencia en el mercado."
+      }
+    ],
+    "arep_personal_fit_analysis": "En tu idea de ofrecer consultoría de finanzas y flujo de caja a pymes en Santiago de Chile, hay dos puntos donde encajas bien. Primero, tu experiencia como contador con diez años en empresas medianas te proporciona un sólido conocimiento que puedes aplicar directamente en tu consultoría. Segundo, disfrutas analizar datos, lo cual es esencial en la consultoría financiera, ya que necesitarás interpretar información financiera para ayudar a tus clientes.\n\nSin embargo, hay dos brechas personales que debes considerar. La primera es tu disponibilidad de tiempo. Solo puedes dedicar de 5 a 10 horas a la semana, lo que podría limitar tu capacidad para atender a varios clientes y cumplir con sus necesidades. Una acción concreta sería establecer un horario fijo para tus sesiones de consultoría, asegurando que puedas maximizar el tiempo que ofreces a tus clientes.\n\nLa segunda brecha es tu comodidad con la incertidumbre, que es de 3 de 5. Esto puede ser un desafío en un entorno de consultoría donde los resultados no siempre son predecibles. Para abordar esto, podrías trabajar en desarrollar un plan de contingencia que te ayude a manejar mejor las situaciones inciertas y a mantener la confianza en tus servicios.",
+    "arep_financial_analysis": "Tu idea de ofrecer consultoría financiera a pymes en Santiago de Chile muestra un panorama financiero muy favorable. El margen bruto por cada paquete mensual de consultoría es de 8,500 MXN, lo que representa un impresionante 94.44% de margen. Esto significa que, por cada venta, generas una ganancia significativa, lo cual es un buen indicador de viabilidad financiera.\n\nEl punto de equilibrio es de solo 1 venta, lo que implica que, con la venta de un solo paquete mensual, cubres todos tus costos fijos. Además, con una inversión inicial de 15,000 MXN y costos fijos mensuales menores a 5,000 MXN, tu payback es de aproximadamente 0.38 meses, lo que significa que recuperarás tu inversión en menos de un mes, lo cual es excepcional.\n\nSin embargo, es importante considerar que, aunque los números son positivos, el puntaje de viabilidad comercial es amarillo (59), lo que indica que hay áreas que podrían mejorarse. Además, el nivel de riesgo es alto (86), lo que sugiere que debes tener cuidado con factores externos que podrían afectar tu negocio, como la competencia de consultorías establecidas en el mercado, como VSCA y Drakar Consulting [F1][F2]. Asegúrate de tener un plan claro para diferenciarte y atraer a tus clientes potenciales.",
+    "arep_time_operation_analysis": "Tu idea de ofrecer consultoría de finanzas y flujo de caja a pymes en Santiago de Chile es clara y tiene un enfoque específico. Para llevar a cabo este negocio, hay varias actividades que deberás realizar. Primero, tendrás que crear el contenido y las herramientas que utilizarás en tus consultorías, lo que puede incluir la elaboración de informes financieros y análisis de flujo de caja. Este es un trabajo que se hace una vez, aunque puede requerir actualizaciones periódicas.\n\nEn cuanto a las actividades que se repiten con cada venta, deberás dedicar tiempo a la atención al cliente, que incluye reuniones, seguimiento y ajustes en las recomendaciones según las necesidades de cada pyme. También tendrás que gestionar la promoción de tus servicios a través de redes sociales como LinkedIn y el boca a boca. Dado que has mencionado que puedes dedicar de 5 a 10 horas a la semana, es crucial que organices tu tiempo para equilibrar estas tareas. Podrías considerar dedicar ciertas noches a la atención al cliente y a la promoción, mientras que los fines de semana podrías enfocarte en la creación de contenido y análisis.\n\nSin embargo, el puntaje de compatibilidad de tiempo es 40, lo que indica que puede haber un riesgo de saturación. Para evitarlo, establece un horario fijo para cada actividad y considera limitar el número de clientes iniciales a cinco, como mencionaste en tu condición de éxito. Esto te permitirá gestionar mejor tu carga de trabajo y mantener la calidad de tu servicio, evitando el agotamiento.",
+    "arep_scalability_analysis": "Para que tu negocio de consultoría financiera crezca sin aumentar significativamente tu carga de trabajo, puedes considerar las siguientes estrategias:\n\n1. **Automatización y digitalización**: Utiliza herramientas digitales para optimizar tus procesos. Esto puede incluir software de gestión financiera que te permita manejar más clientes sin necesidad de dedicar más horas. Además, ofrecer servicios en línea puede facilitar la captación de clientes a través de plataformas como LinkedIn y PymeupHUB, donde ya planeas hacer marketing [F20].\n\n2. **Creación de paquetes de servicios**: Ofrecer paquetes de consultoría que incluyan diferentes niveles de servicio puede atraer a una mayor variedad de clientes. Por ejemplo, podrías tener un paquete básico a un precio accesible que permita a las pymes probar tus servicios antes de comprometerse a un contrato más amplio.\n\n3. **Referencias y alianzas estratégicas**: Fomentar el boca a boca y las recomendaciones puede ser clave. Considera establecer alianzas con otros profesionales que trabajen con pymes, como contadores o asesores legales, para que te refieran clientes. Esto puede ayudarte a aumentar tu base de clientes sin un esfuerzo de marketing intensivo.\n\nSin embargo, hay varios factores que podrían frenar tu crecimiento:\n\n1. **Dependencia de pocos clientes**: Tu modelo actual depende de 1 o 2 clientes para la mayoría de tus ingresos. Esto es un riesgo alto, ya que perder uno de ellos podría afectar drásticamente tus finanzas. Diversificar tu base de clientes es crucial para mitigar este riesgo.\n\n2. **Competencia en el mercado**: Hay varios competidores en Santiago, como VSCA, Drakar Consulting y Finanzas360, que ofrecen servicios similares. Deberás diferenciarte de ellos, ya sea a través de precios competitivos o un enfoque único en tu consultoría [F1][F2][F4].\n\n3. **Capacidad de atención**: Con solo 5 a 10 horas disponibles a la semana, tu capacidad para atender a múltiples clientes es limitada. Si logras captar más clientes, podrías verte abrumado. Considera cómo podrías escalar tus servicios, ya sea mediante la contratación de colaboradores en el futuro o ajustando tus precios y paquetes de servicios.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda",
+        "tasks": [
+          "Hablar con 10 pymes en Santiago sobre sus necesidades financieras y flujo de caja.",
+          "Solicitar recomendaciones a 5 contactos en LinkedIn sobre tu servicio de consultoría.",
+          "Definir claramente tu propuesta de valor: ¿qué ofreces que te diferencia de competidores como Drakar Consulting y Finanzas360?"
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números",
+        "tasks": [
+          "Investigar precios de servicios similares en Santiago, como el Plan Básico de Contabilidad Mensual desde $11.000 CLP y otros precios de referencia como el Plan PyME AnBetter desde 1 UF + IVA al mes.",
+          "Calcular tus costos operativos estimados y definir un precio competitivo para tu paquete mensual de consultoría financiera.",
+          "Hablar con 3 pymes que podrían ser tus clientes para validar tu precio propuesto."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición",
+        "tasks": [
+          "Crear un perfil profesional en LinkedIn y publicar sobre tu experiencia en consultoría financiera.",
+          "Contactar a 5 pymes a través de LinkedIn y ofrecer una consulta gratuita para captar su interés.",
+          "Recoger feedback de al menos 3 pymes sobre tu propuesta y ajustar tu enfoque según sus comentarios."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar los resultados de tus interacciones con pymes y determinar si hay interés en tus servicios.",
+          "Definir un plan de acción para captar al menos 5 clientes mensuales en el próximo año.",
+          "Evaluar si necesitas ajustar tu propuesta de valor o tus precios basándote en la retroalimentación recibida."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Es recomendable que procedas con una prueba pequeña para validar tu oferta de consultoría financiera y flujo de caja. Aunque cuentas con una sólida experiencia y viabilidad financiera, el riesgo es alto debido a la dependencia de uno o dos clientes para la mayoría de tus ingresos. Diversificar tu cartera será crucial para asegurar la estabilidad de tu negocio y evitar que un cambio en la relación con un cliente afecte tus finanzas.\n\nPara avanzar, primero establece un plan claro para captar tus primeros clientes, utilizando tus contactos y plataformas como LinkedIn. En segundo lugar, define tus precios en relación con los competidores, como Finanzas360 y JLH Consultores, para asegurarte de que reflejan tu valor y experiencia. Por último, considera crear una estrategia de marketing que te ayude a construir tu marca personal y atraer más clientes, lo que será clave para alcanzar tu meta de tener cinco clientes mensuales en un año.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 3,
+      "rewritten": [
+        "scalability_analysis",
+        "validation_plan"
+      ],
+      "review": {
+        "contradicciones": [],
+        "supuestos_sin_fuente": [
+          {
+            "seccion": "scalability_analysis",
+            "afirmacion": "Ofrecer servicios en línea puede facilitar la captación de clientes a través de plataformas como LinkedIn y PymeupHUB"
+          }
+        ],
+        "conclusiones_no_sustentadas": [
+          {
+            "seccion": "validation_plan",
+            "afirmacion": "Investigar precios de servicios similares en Santiago, como el Plan Básico de Contabilidad Mensual desde $11.000 CLP",
+            "motivo": "Compara precios en CLP con tu oferta en MXN sin considerar la conversión de moneda"
+          },
+          {
+            "seccion": "time_operation_analysis",
+            "afirmacion": "Considera limitar el número de clientes iniciales a cinco",
+            "motivo": "La condición de éxito declarada era alcanzar cinco clientes en un año, no poner un tope máximo inicial"
+          }
+        ],
+        "correcciones": [
+          {
+            "seccion": "scalability_analysis",
+            "instruccion": "Cita la fuente para la mención de PymeupHUB o señala que es un supuesto por validar"
+          },
+          {
+            "seccion": "validation_plan",
+            "instruccion": "Revisa la comparabilidad de precios entre MXN y CLP, incluyendo la conversión de moneda al investigar referencias de mercado"
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Ofrecer consultoría de finanzas y flujo de caja a pymes en Santiago de Chile.",
+          "sector": "Consultoría Financiera",
+          "modelo_de_negocio": "Consultoría y asesoría financiera especializada para pequeñas y medianas empresas."
+        },
+        "tamano_mercado": {
+          "cifra": null,
+          "anio": null,
+          "fuente_id": null,
+          "motivo": "NO ENCONTRADO"
+        },
+        "competidores": [
+          {
+            "nombre": "VSCA",
+            "propuesta": "Asesoría Financiera Independiente con análisis macroeconómico y de mercados.",
+            "precio_referencia": null,
+            "fuente_id": "F1"
+          },
+          {
+            "nombre": "Drakar Consulting",
+            "propuesta": "Consultoría financiera para empresas medianas en etapa de crecimiento.",
+            "precio_referencia": null,
+            "fuente_id": "F2"
+          },
+          {
+            "nombre": "JLH Consultores",
+            "propuesta": "Asesoría integral en áreas tributaria, financiera, contable, laboral y legal.",
+            "precio_referencia": null,
+            "fuente_id": "F3"
+          },
+          {
+            "nombre": "Finanzas360",
+            "propuesta": "Externalización de la Gerencia de Finanzas y Administración como CFO externo.",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "Arce Consultores",
+            "propuesta": "Consultoría financiera, tributaria y contable con diagnósticos personalizados.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          },
+          {
+            "nombre": "FINTEC CONSULTORES SpA",
+            "propuesta": "Consultoría en administración, finanzas y control de gestión para pymes.",
+            "precio_referencia": null,
+            "fuente_id": "F6"
+          },
+          {
+            "nombre": "Guch Solutions",
+            "propuesta": "Consultoría especializada en contabilidad, tributación y finanzas para pymes.",
+            "precio_referencia": null,
+            "fuente_id": "F7"
+          },
+          {
+            "nombre": "Inductiva Consultores Ltda",
+            "propuesta": "Asesoría para mantener obligaciones tributarias y optimizar gestión financiera.",
+            "precio_referencia": null,
+            "fuente_id": "F8"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Plan Básico de Contabilidad Mensual.",
+            "rango": "Desde $11.000 CLP al mes.",
+            "fuente_id": "F13"
+          },
+          {
+            "descripcion": "Contabilidad mensual con representación ante el SII.",
+            "rango": "Desde $45.990 CLP al mes.",
+            "fuente_id": "F14"
+          },
+          {
+            "descripcion": "Planes corporativos de consultoría financiera.",
+            "rango": "UF 15 a UF 60 mensuales.",
+            "fuente_id": "F15"
+          },
+          {
+            "descripcion": "Plan GUCH Base para contabilidad mensual.",
+            "rango": "Desde $79.990 CLP al mes.",
+            "fuente_id": "F16"
+          },
+          {
+            "descripcion": "Plan PyME AnBetter con asesoría diaria.",
+            "rango": "1 UF + IVA al mes (~CLP 47.000).",
+            "fuente_id": "F17"
+          },
+          {
+            "descripcion": "Servicios contables para PYMEs.",
+            "rango": "Desde $59.990 CLP al mes.",
+            "fuente_id": "F18"
+          },
+          {
+            "descripcion": "Plan GUCH Start con asesoría y constitución de empresa.",
+            "rango": "Desde $49.990 CLP al mes.",
+            "fuente_id": "F19"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Plataformas digitales especializadas",
+            "nota": "Sitios como PymeupHUB conectan pymes con servicios profesionales.",
+            "fuente_id": "F20"
+          },
+          {
+            "canal": "Redes sociales profesionales",
+            "nota": "LinkedIn es utilizado por empresas para ofrecer servicios de consultoría.",
+            "fuente_id": "F21"
+          },
+          {
+            "canal": "Iniciativas gubernamentales y colaboraciones",
+            "nota": "Programas como el Hub Metropolitano fortalecen el encadenamiento productivo.",
+            "fuente_id": "F22"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Renta de oficina",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Salarios de Gerente General",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Salarios de Analista Financiero",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Salarios de Asistente Administrativo",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Comisiones",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          }
+        ],
+        "huecos_de_informacion": [
+          "No se encontró información sobre el tamaño del mercado de consultoría financiera en Chile o Santiago.",
+          "No se encontraron datos específicos sobre costos operativos de consultorías financieras en Santiago."
+        ],
+        "mercado_objetivo": {
+          "pais": "Chile",
+          "ciudad": "Santiago",
+          "criterio": "La idea menciona específicamente Santiago de Chile como el mercado objetivo.",
+          "es_supuesto": false
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "VSCA — Asesoría Financiera Independiente | Santiago, Chile",
+            "url": "https://www.vsca.cl/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F2",
+            "titulo": "Drakar Consulting | Consultoría Financiera FP&A para PyMEs en Chile",
+            "url": "https://drakarconsulting.cl/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F3",
+            "titulo": "JLH Consultores | Asesoría tributaria, financiera, contable, laboral y legal",
+            "url": "https://jlhconsulting.cl/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F4",
+            "titulo": "Finanzas360 – Consultoría Financiera y CFO Externo para Empresas | Chile",
+            "url": "https://chile.ahk.de/es/socios/directorio-de-socios/finanzas-360",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F5",
+            "titulo": "Consultoría Financiera | ARCE Consultores",
+            "url": "https://arceconsultores.cl/servicios/consultoria-financiera",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F6",
+            "titulo": "FINTEC CONSULTORES SpA | LinkedIn",
+            "url": "https://cl.linkedin.com/company/fintecconsultores",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "Guch Solutions - Consultorías Contables, Financieras y Tributarias para Pymes | LinkedIn",
+            "url": "https://cl.linkedin.com/in/guch-solutions",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "Inductiva Consultores Ltda | Santiago | 2x3",
+            "url": "https://www.2x3.cl/profesional/inductiva-consultores-ltda",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "Guillermo González Cueto | Consultoría Empresarial para PyMEs",
+            "url": "https://ggconsultores.cl/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "Green Consultores SpA — Consultoría Financiera y Farmacéutica",
+            "url": "https://www.greenspa.cl/index.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "M&G Asesorías Financieras — Soluciones claras para decisiones inteligentes",
+            "url": "https://mgasesoriasfinancieras.cl/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "VanguardIA — Consultoría IA para PYMEs | Santiago, Chile",
+            "url": "https://vanguardia.pro/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F13",
+            "titulo": "Contabilidad para Pymes",
+            "url": "https://www.galvarez.cl/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F14",
+            "titulo": "Contador para Pymes en Santiago | Planes desde $45.990 | Santiago Contadores",
+            "url": "https://www.santiagocontadores.cl/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F15",
+            "titulo": "Servicios — FINCONTA 360°",
+            "url": "https://finconta360.cl/servicios",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F16",
+            "titulo": "Contabilidad Mensual para Pymes en Santiago | Guch Solutions",
+            "url": "https://guchsolutions.cl/servicios/contabilidad-mensual/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F17",
+            "titulo": "Plan PyME AnBetter | Asesoría Integral por WhatsApp para PyMEs",
+            "url": "https://www.an-better.cl/planpymeanbetter",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F18",
+            "titulo": "Servicios Contables PyME desde $59.990/mes | SolutionTax",
+            "url": "https://solutiontax.cl/servicios-contables/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F19",
+            "titulo": "Contabilidad para Pymes en Santiago | GUCH Solutions",
+            "url": "https://guchsolutions.cl/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F20",
+            "titulo": "PymeupHUB | Expande y potencia tu PYME",
+            "url": "https://pymeup.cl/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F21",
+            "titulo": "Puente - Servicios Financieros | LinkedIn",
+            "url": "https://cl.linkedin.com/company/puente-liquidez-capitaldetrabajo",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F22",
+            "titulo": "Abastible se une a 'Hub Metropolitano' y 'Hub Huechuraba' para promover el emprendimiento en Santiago de Chile",
+            "url": "https://elpais.com/chile/2026-07-01/abastible-se-une-a-hub-metropolitano-y-hub-huechuraba-para-promover-el-emprendimiento-en-santiago-de-chile.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "tamaño del mercado de consultoría financiera Chile 2023 site:cl OR site:gov.cl OR site:superfinanciero.cl OR site:cnc.cl OR site:sbif.cl OR site:ine.cl",
+            "consultoría financiera para pymes en Santiago de Chile competidores Deloitte PwC independientes",
+            "precios servicios consultoría financiera pymes Santiago Chile 2023",
+            "costos de operar una consultoría financiera en Santiago de Chile 2023 site:.cl OR site:.gob.cl OR site:.org.cl",
+            "canales donde pymes en Santiago de Chile buscan servicios de consultoría financiera 2023"
+          ],
+          "estimatedCostUsd": 0.203,
+          "durationMs": 21484,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

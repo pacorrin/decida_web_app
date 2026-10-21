@@ -21,7 +21,12 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report",
     "evals:baseline": "tsx --tsconfig evals/tsconfig.json evals/run.ts baseline",
-    "evals:run": "tsx --tsconfig evals/tsconfig.json evals/run.ts"
+    "evals:run": "tsx --tsconfig evals/tsconfig.json evals/run.ts",
+    "evals": "tsx --tsconfig evals/tsconfig.json evals/index.ts",
+    "evals:judge": "tsx --tsconfig evals/tsconfig.json evals/judge.ts",
+    "evals:compare": "tsx --tsconfig evals/tsconfig.json evals/compare.ts",
+    "evals:calibrate-sheet": "tsx --tsconfig evals/tsconfig.json evals/calibrate.ts sheet",
+    "evals:calibrate": "tsx --tsconfig evals/tsconfig.json evals/calibrate.ts report"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
