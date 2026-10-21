@@ -1,0 +1,571 @@
+{
+  "case": {
+    "id": "12-panaderia-existente-segunda-sucursal",
+    "kind": "negocio-existente",
+    "expectedMarket": "México · Puebla (segunda sucursal)",
+    "description": "Tengo una panadería en Puebla que ya vende bien y quiero abrir una segunda sucursal en otra colonia de la ciudad. Mi hermano se encargaría de la nueva y yo seguiría en la primera.",
+    "profile": {
+      "situation": "negocio_actual",
+      "goal": "escalar_negocio",
+      "experience": "negocio_activo",
+      "capital": "150k_500k",
+      "acceptableLoss": "50k_100k",
+      "hoursPerWeek": "mas_40",
+      "schedule": "tiempo_completo",
+      "timeframe": "3_6_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "operar",
+        "liderar"
+      ],
+      "workPreference": "fisico",
+      "sales": 4,
+      "uncertainty": 3,
+      "process": 4,
+      "hiring": "equipo"
+    },
+    "financial": {
+      "initialInvestment": 320000,
+      "fixedCostsRange": "15k_30k",
+      "products": [
+        {
+          "name": "Pan dulce y de sal",
+          "kind": "producto",
+          "price": 18,
+          "variableCost": 7,
+          "monthlyUnits": 6000
+        },
+        {
+          "name": "Pasteles por encargo",
+          "kind": "producto",
+          "price": 450,
+          "variableCost": 200,
+          "monthlyUnits": 60
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "ya_clientes",
+      "competition": "alta",
+      "channel": "presencial",
+      "dependencies": [
+        "ubicacion",
+        "inventario",
+        "permiso"
+      ],
+      "mainConcern": "Que la calidad baje cuando yo no esté en el local.",
+      "successCondition": "Que la segunda sucursal iguale el 70% de las ventas de la primera en un año."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "México",
+    "ciudad": "Puebla",
+    "criterio": "La idea menciona específicamente la ciudad de Puebla para la nueva sucursal.",
+    "es_supuesto": false,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:46:10.165Z",
+  "latencySeconds": 62.8,
+  "cost": {
+    "tokensUsd": 0.094,
+    "searchUsd": 0.15,
+    "totalUsd": 0.244,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 16,
+        "inputTokens": 42307,
+        "outputTokens": 4653
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 6282,
+        "outputTokens": 4360
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 3908
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 17331,
+        "outputTokens": 605
+      }
+    }
+  },
+  "ideaSummary": "Quieres abrir una segunda sucursal de tu panadería en otra colonia de Puebla, donde tu hermano se encargará de la nueva ubicación mientras tú continúas gestionando la primera. Tu objetivo es expandir tu negocio, aprovechando el éxito que ya has tenido en la primera sucursal.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 87,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 80,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 63,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 66,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 95,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 100,
+      "semaforo": "verde"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 13.366336633663366,
+    "grossMarginPercentage": 60,
+    "estimatedMonthlyGrossProfit": 81000,
+    "estimatedMonthlyNetProfit": 59000,
+    "breakEvenSales": 1646,
+    "paybackMonths": 5.423728813559322
+  },
+  "interpretation": {
+    "personal_fit_signal": "green",
+    "financial_viability_signal": "green",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "green",
+    "scalability_signal": "green",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "Tu inversión inicial ($320,000) es mayor que lo que dijiste que podrías perder sin afectar tu estabilidad. Si el negocio no funciona, la pérdida real superaría tu límite declarado — considera arrancar con una versión de menor inversión.",
+      "Tu negocio requiere un permiso, licencia o regulación para operar. Investígalo a fondo antes de invertir: puede bloquear el arranque o encarecerlo.",
+      "La inversión inicial estimada ($320,000 MXN) supera la parte baja del capital disponible declarado ($150,000 MXN).",
+      "La inversión inicial excede la pérdida máxima tolerable declarada ($100,000 MXN)."
+    ],
+    "reasoning_summary": "Aunque el negocio actual es exitoso y altamente escalable con buena viabilidad financiera y encaje personal, la inversión requerida es alta frente al capital mínimo y la pérdida tolerada. Se recomienda validar con una prueba o piloto antes de comprometerse plenamente."
+  },
+  "report": {
+    "arep_executive_summary": "La idea de abrir una segunda sucursal de tu panadería en Puebla está poco definida, ya que falta aclarar a quién le venderías. Aunque tu negocio actual muestra un buen desempeño y tiene potencial de escalabilidad, la viabilidad comercial presenta un puntaje amarillo, lo que indica que hay áreas que requieren atención. Además, la inversión inicial de $320,000 MXN es considerablemente mayor que el capital mínimo que mencionaste y supera tu límite de pérdida tolerada, lo que representa un riesgo significativo. Te recomiendo validar la idea con una prueba o piloto antes de comprometerte plenamente, para asegurarte de que la nueva sucursal pueda replicar el éxito de la primera sin comprometer tu estabilidad financiera.",
+    "arep_business_understanding": "Ofreces una variedad de productos de panadería, incluyendo pan dulce y de sal, así como pasteles por encargo. Tu propuesta de valor se basa en la calidad de tus productos, que ya tienen una buena aceptación en tu primera sucursal. Los clientes te comprarían por la calidad de tus productos y la conveniencia de tener una segunda sucursal en una nueva colonia, lo que facilitaría su acceso.\n\nSin embargo, la descripción de tu cliente es parcial, ya que no has especificado a quién le venderías en esta nueva sucursal. Podría ser un supuesto que tus clientes sean personas que buscan productos de panadería de calidad en Puebla, pero es importante validar aspectos como su edad, ingresos y hábitos de compra para afinar tu estrategia.",
+    "arep_strengths": [
+      {
+        "title": "Éxito comprobado en la primera sucursal",
+        "whyItMatters": "Ya tienes una panadería que vende bien, lo que indica que hay demanda y aceptación en el mercado."
+      },
+      {
+        "title": "Margen bruto saludable",
+        "whyItMatters": "Con un margen bruto del 60%, tienes un buen colchón financiero para cubrir costos y absorber errores en el arranque."
+      },
+      {
+        "title": "Recuperación rápida de la inversión",
+        "whyItMatters": "La inversión de $320,000 se recupera en aproximadamente 5.4 meses, lo que te permite evaluar la viabilidad del negocio rápidamente."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Competencia alta en el mercado",
+        "whyItMatters": "Declaraste que hay mucha competencia, lo que puede dificultar la captación de clientes en la nueva sucursal.",
+        "howToReduce": "Investiga a fondo a tus competidores y define una propuesta de valor clara que te diferencie."
+      },
+      {
+        "title": "Calidad del producto bajo riesgo",
+        "whyItMatters": "Te preocupa que la calidad baje cuando no estés presente, lo que podría afectar la reputación de la marca.",
+        "howToReduce": "Establece estándares claros y un sistema de control de calidad que tu hermano pueda seguir en tu ausencia."
+      },
+      {
+        "title": "Idea poco definida",
+        "whyItMatters": "La claridad de la idea es parcial y falta saber a quién le venderías, lo que puede afectar la estrategia de marketing.",
+        "howToReduce": "Realiza un estudio de mercado para identificar el perfil de tus clientes potenciales en la nueva colonia."
+      }
+    ],
+    "arep_personal_fit_analysis": "Tú tienes un buen encaje con la idea de abrir una segunda sucursal de tu panadería en Puebla. Primero, disfrutas de operar y ejecutar, lo que es fundamental para manejar una nueva ubicación. Además, tu comodidad vendiendo es alta, lo que te ayudará a atraer y retener clientes en la nueva sucursal. También, tienes la intención de armar un equipo, lo que es clave para delegar responsabilidades y asegurar que ambas sucursales funcionen sin problemas.\n\nSin embargo, hay algunas brechas personales que deberías considerar. Primero, aunque tienes una tolerancia moderada a la incertidumbre (3 de 5), abrir una nueva sucursal puede implicar desafíos inesperados. Te recomiendo que te prepares mentalmente para estos retos, quizás estableciendo un plan de contingencia o buscando asesoría de otros dueños de negocios que hayan pasado por un proceso similar. \n\nOtra brecha es que la claridad de tu idea es parcial, ya que falta definir a quién le venderías en la nueva colonia. Esto es crucial para el éxito de la sucursal. Te sugiero que realices una investigación de mercado en la nueva área para identificar a tu cliente ideal y adaptar tu oferta a sus necesidades y preferencias. Esto te permitirá tener una estrategia más sólida al momento de abrir la nueva ubicación.",
+    "arep_financial_analysis": "Los márgenes de tus productos son un aspecto clave para la viabilidad financiera de tu panadería. Para el pan dulce y de sal, vendes a 18 MXN con un costo variable de 7 MXN, lo que te da un margen bruto de 11 MXN por unidad. Esto representa un margen bruto del 61.11%, lo cual es positivo. Por otro lado, los pasteles por encargo se venden a 450 MXN con un costo variable de 200 MXN, generando un margen bruto de 250 MXN por pastel, lo que equivale a un margen del 55.56%. Ambos productos son rentables, ya que ninguno se vende con pérdida.\n\nTu punto de equilibrio se sitúa en 1,646 ventas, lo que indica que necesitas vender al menos esa cantidad para cubrir tus costos fijos y variables. Con un estimado de 6,000 unidades de pan dulce y 60 pasteles por mes, estás muy por encima de este punto, lo que sugiere que tu negocio tiene un potencial de rentabilidad. Además, el tiempo estimado para recuperar tu inversión inicial de 320,000 MXN es de aproximadamente 5.4 meses, lo cual es bastante favorable.\n\nSin embargo, aunque tu viabilidad financiera tiene un puntaje alto de 80, el nivel de riesgo es rojo con un puntaje de 66. Esto implica que, aunque tus márgenes son buenos y el tiempo de recuperación es corto, hay factores de riesgo que debes considerar, como la competencia en el mercado, que incluye panaderías bien establecidas como La Princesa y La Flor de Puebla, ambas con calificaciones de 4.4 estrellas [F5]. Asegúrate de tener un plan sólido para diferenciarte y atraer a tus clientes.",
+    "arep_time_operation_analysis": "Con la apertura de tu segunda sucursal de panadería en Puebla, el trabajo que implica se puede dividir en tareas únicas y repetitivas. Las tareas únicas incluyen la creación de productos, como el pan dulce y los pasteles por encargo. Estas actividades requieren tiempo y esfuerzo inicial, pero no se realizarán con cada venta. Por otro lado, las tareas repetitivas incluyen la atención al cliente, la gestión de ventas, la supervisión de la producción, las compras de insumos y la entrega de productos. Estas actividades son las que consumirán más tiempo de manera continua.\n\nDado que mencionas que tienes más de 40 horas disponibles por semana, tu disponibilidad horaria es favorable para manejar estas operaciones. Sin embargo, es importante considerar que la atención a clientes y la supervisión de la nueva sucursal podrían saturarte, especialmente si no hay un buen equipo en su lugar. Para organizarte, podrías establecer un horario que asigne tiempos específicos para cada tarea, priorizando las actividades más críticas y delegando algunas responsabilidades a tu hermano o a otros miembros del equipo que contrates.\n\nAdemás, dado que la competencia en el área es alta, es esencial que mantengas un control de calidad riguroso para asegurar que la calidad de tus productos no baje. Esto podría requerir tu atención periódica en la nueva sucursal. Considera implementar procesos estandarizados que tu hermano pueda seguir para garantizar la consistencia en la calidad y el servicio. Con una buena organización y delegación, podrás manejar ambas sucursales de manera efectiva.",
+    "arep_scalability_analysis": "Para que tu panadería crezca con la apertura de una segunda sucursal sin aumentar significativamente tu carga de trabajo, es clave que tu hermano esté bien preparado para manejar la nueva ubicación. Asegúrate de que tenga la capacitación necesaria y que comprenda tus estándares de calidad, ya que mencionas que tu mayor preocupación es que la calidad baje cuando no estés presente. Además, considera establecer procesos claros y eficientes que le permitan operar de manera autónoma.\n\nEl crecimiento podría estar impulsado por la apertura de nuevas unidades económicas en el sector de panaderías en Puebla, aunque esta es una suposición que deberías validar. Sin embargo, el nivel de competencia es alto, con varias panaderías bien establecidas en el centro histórico, como Panadería La Princesa y Panificadora La Flor de Puebla, que tienen buenas calificaciones [F5]. Esto sugiere que necesitarás diferenciarte, ya sea a través de la calidad de tus productos, un servicio al cliente excepcional o una estrategia de marketing efectiva.\n\nPor otro lado, ten en cuenta las dependencias críticas que mencionaste, como la necesidad de un local adecuado y la gestión del inventario, que puede caducar rápidamente. Además, la contratación de personal adicional podría ser un reto si no cuentas con un plan claro para el reclutamiento y la capacitación. Si decides vender a través de canales como supermercados o tiendas de conveniencia, esto podría requerir una inversión adicional en logística y marketing, lo que podría afectar tu capacidad de crecimiento si no se maneja adecuadamente.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda local",
+        "tasks": [
+          "Hablar con 10 personas en la nueva colonia para conocer sus hábitos de compra de panadería.",
+          "Realizar una encuesta en redes sociales para identificar qué productos de panadería prefieren los residentes de la nueva colonia.",
+          "Visitar 3 panaderías competidoras en la nueva colonia y observar el flujo de clientes y productos que ofrecen."
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números",
+        "tasks": [
+          "Calcular el costo de operación mensual estimado para la nueva sucursal, incluyendo salarios y renta.",
+          "Analizar los precios de productos en 3 panaderías competidoras en la nueva colonia y establecer un rango de precios para tus productos.",
+          "Establecer un precio de venta para tus productos basado en el costo y el análisis de competencia."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición",
+        "tasks": [
+          "Crear una promoción especial para atraer clientes en la nueva colonia y compartirla en redes sociales.",
+          "Realizar una venta de prueba en un evento local o mercado en la nueva colonia para medir el interés.",
+          "Recoger feedback de al menos 20 clientes sobre tus productos durante la venta de prueba."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar los resultados de la venta de prueba y la retroalimentación de los clientes.",
+          "Revisar si el capital disponible es suficiente para cubrir los costos iniciales de la nueva sucursal.",
+          "Definir si abrirás la nueva sucursal, ajustarás tu estrategia o buscarás más validación."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "La recomendación es clara: debes validar tu idea antes de hacer una inversión tan alta. Aunque tu panadería actual es exitosa y tiene un buen encaje personal, el monto que planeas invertir ($320,000) es significativo en comparación con la pérdida máxima que estás dispuesto a tolerar. Además, es crucial que investigues los permisos y regulaciones necesarios para operar la nueva sucursal, ya que esto podría afectar el inicio de tu negocio.\n\nEl primer paso es aclarar a quién le venderías en la nueva sucursal, ya que esto te ayudará a definir mejor tu mercado objetivo y ajustar tu propuesta. Luego, considera realizar una prueba o piloto con una inversión menor para evaluar la respuesta del mercado y asegurarte de que la calidad se mantenga, lo cual es tu mayor preocupación. Finalmente, asegúrate de investigar a fondo los requisitos legales y permisos necesarios para evitar sorpresas que puedan encarecer el proceso.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 3,
+      "rewritten": [
+        "business_understanding",
+        "scalability_analysis",
+        "final_recommendation"
+      ],
+      "review": {
+        "contradicciones": [],
+        "supuestos_sin_fuente": [
+          {
+            "seccion": "business_understanding",
+            "afirmacion": "Los clientes te comprarían por la frescura y el sabor de tus productos."
+          },
+          {
+            "seccion": "scalability_analysis",
+            "afirmacion": "El crecimiento podría estar impulsado por la creciente demanda en el mercado de panaderías en Puebla, donde se espera un aumento en el número de unidades económicas en el sector."
+          }
+        ],
+        "conclusiones_no_sustentadas": [
+          {
+            "seccion": "final_recommendation",
+            "afirmacion": "El monto que planeas invertir ($320,000) supera tanto tu capital disponible como la pérdida máxima que estás dispuesto a tolerar.",
+            "motivo": "Tu capital disponible declarado es un rango de $150,000–$500,000, por lo que la inversión de $320,000 está dentro de dicho rango y no lo supera."
+          }
+        ],
+        "correcciones": [
+          {
+            "seccion": "business_understanding",
+            "instruccion": "Elimina o aclara la afirmación sobre ‘frescura y sabor’ y basa la propuesta de valor en lo que realmente declaraste ('calidad')."
+          },
+          {
+            "seccion": "scalability_analysis",
+            "instruccion": "Retira o reformula la idea de 'creciente demanda' en Puebla como suposición a validar, pues no hay datos de tendencia."
+          },
+          {
+            "seccion": "final_recommendation",
+            "instruccion": "Corrige la afirmación sobre el capital disponible para reflejar que 320,000 MXN está dentro del rango declarado de $150,000–$500,000."
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Abrir una segunda sucursal de una panadería en Puebla, México, en un mercado con un número creciente de unidades económicas en el sector.",
+          "sector": "Panadería",
+          "modelo_de_negocio": "Venta de productos de panadería y pastelería."
+        },
+        "tamano_mercado": {
+          "cifra": "18465",
+          "anio": 2026,
+          "fuente_id": "F1",
+          "motivo": "Número de unidades económicas en la rama de panadería y tortillas en Puebla."
+        },
+        "competidores": [
+          {
+            "nombre": "Panadería La Princesa",
+            "propuesta": "Ubicada en el Centro Histórico de Puebla, con una calificación de 4.4 estrellas.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          },
+          {
+            "nombre": "Panificadora La Flor de Puebla",
+            "propuesta": "También en el Centro Histórico, con una calificación de 4.4 estrellas.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          },
+          {
+            "nombre": "Panadería Dulce Delicia",
+            "propuesta": "Localizada en el Centro Histórico, con una calificación de 4.1 estrellas.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Pasteles en Panera Signature",
+            "rango": "$190 - $620",
+            "fuente_id": "F6"
+          },
+          {
+            "descripcion": "Pan de Dulce en Delipay Panadería",
+            "rango": "$8.00 - $15.50",
+            "fuente_id": "F7"
+          },
+          {
+            "descripcion": "Pan Dulce en Bistro 702",
+            "rango": "$49 - $94",
+            "fuente_id": "F8"
+          },
+          {
+            "descripcion": "Capuccino en Pastelería Bon Dessert",
+            "rango": "$103 - $625",
+            "fuente_id": "F9"
+          },
+          {
+            "descripcion": "Pastel de chocolate con mango en Valeria Herrera",
+            "rango": "Desde $480",
+            "fuente_id": "F10"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Panaderías locales",
+            "nota": "Los consumidores adquieren productos en panaderías como Panadería México y Dansk Pastelería.",
+            "fuente_id": "F16"
+          },
+          {
+            "canal": "Supermercados",
+            "nota": "Los supermercados también ofrecen productos de panadería.",
+            "fuente_id": null
+          },
+          {
+            "canal": "Tiendas de conveniencia",
+            "nota": "Se encuentran productos de panadería en tiendas de conveniencia.",
+            "fuente_id": null
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Salario promedio diario en Puebla (marzo 2023)",
+            "valor": "451.65",
+            "fuente_id": "F13",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Salario promedio diario en Puebla (septiembre 2023)",
+            "valor": "461.93",
+            "fuente_id": "F14",
+            "es_supuesto": false
+          }
+        ],
+        "huecos_de_informacion": [
+          "Valor de producción específico para Puebla en panaderías: NO ENCONTRADO.",
+          "Valor de producción nacional desglosado por productos disponible, pero no por entidad.",
+          "Competidores adicionales no verificados en términos de precios y propuestas."
+        ],
+        "mercado_objetivo": {
+          "pais": "México",
+          "ciudad": "Puebla",
+          "criterio": "La idea menciona específicamente la ciudad de Puebla para la nueva sucursal.",
+          "es_supuesto": false
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "Elaboración de Productos de Panadería y Tortillas: Salarios, producción, inversión, oportunidades y complejidad | Data México",
+            "url": "https://www.economia.gob.mx/datamexico/es/profile/industry/bakeries-and-tortilla-manufacturing?redirect=true",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F2",
+            "titulo": "Reporte de seguimiento de la industria agroalimentaria y fertilizantes | DGSIAP",
+            "url": "https://nube.agricultura.gob.mx/industriaAgroalimentaria/marzo2026.php",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F3",
+            "titulo": "IMAGENES ECONOMICAS",
+            "url": "https://www.inegi.org.mx/contenidos/productos/prod_serv/contenidos/espanol/bvinegi/productos/historicos/2104/702825163525/702825163525.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F4",
+            "titulo": "El sector alimentario en México",
+            "url": "https://internet.contenidos.inegi.org.mx/contenidos/productos/prod_serv/contenidos/espanol/bvinegi/productos/historicos/2104/702825180812/702825180812_8.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F5",
+            "titulo": "Pastelerías Esperanza en Google: análisis y reseñas | RAY",
+            "url": "https://grader.rayapp.ai/report/pastelerias-esperanza/ChIJD7lcisjBz4URmP1KNpGrG3A",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F6",
+            "titulo": "Menú Panera Signature | Pasteles y postres en Puebla",
+            "url": "https://postrespanera.com/menu/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "Delipay Panaderia - Fraccionamiento Hacienda El Palmar Precios y Menú a Domicilio - Rappi",
+            "url": "https://www.rappi.com.mx/restaurantes/1923789448-delipay-panaderia",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F8",
+            "titulo": "Pastelería y panadería en Puebla | Bistro 702",
+            "url": "https://bistro702.mx/pasteleria-y-panaderia",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "Capuccino - Pasteles Bon Dessert",
+            "url": "https://bondessert.com/catalogo_producto/capuccino/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "Valeria Herrera | Repostería artesanal en Puebla",
+            "url": "https://valeriaherrera.buxdev.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "¿Pan dulce y torta tendrán ajuste de precio en Puebla? Esto sabemos",
+            "url": "https://www.alcancediario.mx/puebla/pan-dulce-y-torta-tendran-ajuste-de-precio-en-puebla-esto-sabemos/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "Feria de la Hojaldra en Puebla, lugar y costos - Puebla Online",
+            "url": "https://www.pueblaonline.com.mx/2024/local/feria-de-la-hojaldra-en-puebla-lugar-y-costos/80573/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F13",
+            "titulo": "TRABAJO\n 1\n1 e r  T r i m e s t r e",
+            "url": "https://ceigep.puebla.gob.mx/docs/boletines/trabajo-2023-1.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F14",
+            "titulo": "TRABAJO\n 1\n3 e r  T r i m e s t r e",
+            "url": "https://ceigep.puebla.gob.mx/docs/boletines/trabajo-2023-3.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F15",
+            "titulo": "Remuneraciones",
+            "url": "https://www.inegi.org.mx/app/tabulados/default.html?nc=630&opc=t",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F16",
+            "titulo": "☎PANADERIA MEXICO - Las Empresas México",
+            "url": "https://lasempresas.com.mx/panaderia-mexico/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F17",
+            "titulo": "Dansk Pasteleria y Panaderia en la ciudad Puebla",
+            "url": "https://mx.worldorgs.com/catalogar/puebla/panader%C3%ADa/dansk-pasteleria-y-panaderia",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F18",
+            "titulo": "▷ PASTELERIA DE LA OMA en PUEBLA",
+            "url": "https://pymes.org.mx/pyme/pasteleria-de-la-oma-72808116.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F19",
+            "titulo": "LA FLOR DE PUEBLA | ⓔNegocios",
+            "url": "https://www.enlacenegocios.com/pyme/la-flor-de-puebla/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F20",
+            "titulo": "En Odette la temporada de pan de muerto se convierte en banquete de antojos dulces",
+            "url": "https://elpais.com/mexico/opinion/2024-10-19/en-odette-la-temporada-de-pan-de-muerto-se-convierte-en-banquete-de-antojos-dulces.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F21",
+            "titulo": "Día del pan: Industria panificadora emplea a más de 530 mil personas y sostiene 60 mil panaderías - Desde Puebla",
+            "url": "https://desdepuebla.com/2026/10/15/dia-del-pan-industria-panificadora-emplea-a-mas-de-530-mil-personas-y-sostiene-60-mil-panaderias/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F22",
+            "titulo": "MarketDataMéxico Panadería: Análisis del mercado y tendencias",
+            "url": "https://www.marketdatamexico.com/es/article/Pan_Analisis_mercado_tendencias",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "tamaño del mercado de panaderías en Puebla México datos INEGI 2023",
+            "competidores panaderías Puebla Panadería La Esperanza Panadería El Globo",
+            "precios pan dulce y pasteles por encargo en panaderías Puebla 2024",
+            "costos operación panaderías Puebla México rentas salarios 2023 site:.gob.mx OR site:.mx",
+            "lugares donde compran pan y pasteles los clientes en Puebla México"
+          ],
+          "estimatedCostUsd": 0.209,
+          "durationMs": 19563,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

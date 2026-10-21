@@ -1,0 +1,531 @@
+{
+  "case": {
+    "id": "02-plantillas-notion",
+    "kind": "producto-digital",
+    "expectedMarket": "Hispanohablantes (México y Latinoamérica), venta en línea",
+    "description": "Quiero vender plantillas de Notion para diseñadores freelance (cotizaciones, seguimiento de proyectos y facturación) en Gumroad. Las haría yo en mis ratos libres y las promovería en Instagram y LinkedIn.",
+    "profile": {
+      "situation": "empleado",
+      "goal": "ingreso_extra",
+      "experience": "ninguna",
+      "capital": "menos_10k",
+      "acceptableLoss": "menos_5k",
+      "hoursPerWeek": "5_10",
+      "schedule": "noches",
+      "timeframe": "3_6_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "crear",
+        "analizar"
+      ],
+      "workPreference": "digital",
+      "sales": 2,
+      "uncertainty": 3,
+      "process": 5,
+      "hiring": "solo"
+    },
+    "financial": {
+      "initialInvestment": 2500,
+      "fixedCostsRange": "menos_5k",
+      "products": [
+        {
+          "name": "Paquete de plantillas de Notion para freelancers",
+          "kind": "producto",
+          "price": 350,
+          "variableCost": 35,
+          "monthlyUnits": 30
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "ninguno",
+      "competition": "alta",
+      "channel": "redes_sociales",
+      "dependencies": [
+        "plataforma"
+      ],
+      "mainConcern": "Que haya demasiadas plantillas gratis y nadie pague por las mías.",
+      "successCondition": "Vender 30 paquetes al mes de forma constante durante seis meses."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "México",
+    "ciudad": null,
+    "criterio": "El texto no menciona un mercado específico, se utiliza el mercado por defecto.",
+    "es_supuesto": true,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:33:37.965Z",
+  "latencySeconds": 51.5,
+  "cost": {
+    "tokensUsd": 0.081,
+    "searchUsd": 0.15,
+    "totalUsd": 0.231,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 15,
+        "inputTokens": 34728,
+        "outputTokens": 4770
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 5976,
+        "outputTokens": 3030
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 17570,
+        "outputTokens": 175
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 2403
+      }
+    }
+  },
+  "ideaSummary": "Quieres iniciar un negocio vendiendo **plantillas de Notion** dirigidas a **diseñadores freelance**. Tu idea consiste en crear plantillas para **cotizaciones, seguimiento de proyectos y facturación**, las cuales venderás a través de **Gumroad** y promoverás en **Instagram** y **LinkedIn**.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 65,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 95,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 35,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 100,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 315,
+    "grossMarginPercentage": 90,
+    "estimatedMonthlyGrossProfit": 9450,
+    "estimatedMonthlyNetProfit": 6450,
+    "breakEvenSales": 10,
+    "paybackMonths": 0.3875968992248062
+  },
+  "interpretation": {
+    "personal_fit_signal": "yellow",
+    "financial_viability_signal": "green",
+    "commercial_viability_signal": "red",
+    "risk_level_signal": "red",
+    "time_fit_signal": "yellow",
+    "scalability_signal": "yellow",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "Tu negocio depende de una plataforma externa. Si esa plataforma cambia sus reglas o te suspende, pierdes el canal de un día para otro — ten un plan alterno antes de invertir fuerte.",
+      "No hay validación de clientes potenciales",
+      "Alto nivel de competencia con plantillas gratuitas"
+    ],
+    "reasoning_summary": "Aunque el proyecto encaja moderadamente con tus habilidades y financiamiento, la viabilidad comercial es baja y el riesgo es muy alto por falta de validación de demanda. Se recomienda hablar primero con potenciales clientes para ajustar la propuesta antes de invertir."
+  },
+  "report": {
+    "arep_executive_summary": "Tu idea de vender plantillas de Notion para diseñadores freelance en Gumroad tiene un enfoque claro y se alinea con tus habilidades, pero enfrenta desafíos significativos. La viabilidad comercial es baja debido a la alta competencia y la falta de validación de clientes, lo que genera un alto nivel de riesgo. Aunque el potencial financiero es favorable, es crucial que hables con posibles clientes para entender mejor sus necesidades y ajustar tu propuesta. Te recomiendo que realices esta validación antes de invertir recursos significativos en el desarrollo y promoción de tus plantillas.",
+    "arep_business_understanding": "Ofreces plantillas de Notion diseñadas específicamente para diseñadores freelance, que incluyen herramientas útiles como cotizaciones, seguimiento de proyectos y facturación. Tu propuesta de valor radica en facilitar la organización y gestión de proyectos para estos profesionales, permitiéndoles ahorrar tiempo y esfuerzo en tareas administrativas. Además, al venderlas en Gumroad, ofreces un acceso sencillo y directo a tus productos, lo que puede ser atractivo para tus clientes.\n\nEl cliente que buscas son diseñadores freelance que necesitan optimizar su flujo de trabajo. Aunque no has especificado detalles como edad, ingreso o hábitos, podemos suponer que son profesionales jóvenes o adultos que trabajan de manera independiente y buscan herramientas digitales que les ayuden a ser más eficientes. La promoción a través de Instagram y LinkedIn sugiere que tu cliente está familiarizado con estas plataformas y busca soluciones innovadoras en línea.",
+    "arep_strengths": [
+      {
+        "title": "Margen bruto alto",
+        "whyItMatters": "Tienes un margen bruto del 90% por cada venta, lo que te permite cubrir costos y absorber errores en el arranque."
+      },
+      {
+        "title": "Recuperación rápida de inversión",
+        "whyItMatters": "Tu inversión de $2,500 se recupera en aproximadamente 0.4 meses, lo que te da un margen de maniobra para ajustar la estrategia rápidamente."
+      },
+      {
+        "title": "Punto de equilibrio accesible",
+        "whyItMatters": "Con un punto de equilibrio de solo 10 ventas al mes, tienes un colchón que te permite operar incluso si no alcanzas tus proyecciones iniciales."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Alta competencia en el mercado",
+        "whyItMatters": "Declaraste que hay alta competencia, incluyendo más de 30,000 plantillas en Notion Marketplace [F1], lo que puede dificultar la captación de clientes.",
+        "howToReduce": "Investiga a fondo a tus competidores y busca un nicho específico o un valor agregado que ofrezcas en tus plantillas."
+      },
+      {
+        "title": "Falta de validación de clientes",
+        "whyItMatters": "No has hablado con potenciales clientes, lo que significa que no tienes evidencia de demanda para tus productos.",
+        "howToReduce": "Realiza encuestas o entrevistas con diseñadores freelance para entender sus necesidades y ajustar tus plantillas antes de lanzarlas."
+      },
+      {
+        "title": "Dependencia de plataformas externas",
+        "whyItMatters": "Tu negocio depende de plataformas como Gumroad e Instagram, lo que puede ser riesgoso si cambian sus políticas o si enfrentas problemas de visibilidad.",
+        "howToReduce": "Desarrolla un plan alternativo para diversificar tus canales de venta y promoción, como crear un sitio web propio o explorar otras plataformas."
+      },
+      {
+        "title": "Preocupación por plantillas gratuitas",
+        "whyItMatters": "Tienes la preocupación de que existan muchas plantillas gratuitas, lo que puede hacer que los clientes prefieran no pagar por las tuyas.",
+        "howToReduce": "Diferencia tus plantillas ofreciendo características únicas o un servicio adicional que justifique el costo."
+      }
+    ],
+    "arep_personal_fit_analysis": "En tu idea de vender plantillas de Notion para diseñadores freelance, hay dos puntos donde encajas bien. Primero, disfrutas crear productos o servicios, lo cual es clave para desarrollar plantillas atractivas y útiles. Segundo, tu comodidad siguiendo procesos es alta, lo que te permitirá establecer un flujo de trabajo eficiente para diseñar y promocionar tus plantillas.\n\nSin embargo, hay dos brechas personales que debes considerar. La primera es tu comodidad vendiendo, que es de 2 de 5. Esto puede dificultar la promoción efectiva de tus plantillas en Instagram y LinkedIn. Una acción concreta sería practicar tus habilidades de venta, quizás a través de cursos en línea o simulaciones con amigos, para aumentar tu confianza. La segunda brecha es el tiempo disponible, ya que solo puedes dedicar de 5 a 10 horas a la semana. Para maximizar este tiempo, te sugiero que establezcas un calendario semanal donde priorices tareas específicas, como diseño de plantillas y promoción, para asegurarte de que cada hora cuenta.",
+    "arep_financial_analysis": "Tu idea de vender plantillas de Notion para diseñadores freelance tiene un margen bruto por venta de 315 MXN, lo que representa un 90% de margen. Esto es excelente, ya que indica que por cada plantilla vendida, obtienes una buena ganancia. Con un precio de 350 MXN y un costo variable de 35 MXN, no hay riesgo de vender con pérdida, ya que cada venta te deja un margen positivo. \n\nEl punto de equilibrio se encuentra en 10 ventas mensuales, lo que significa que al alcanzar este número, cubrirás tus costos fijos y comenzarás a generar ganancias. Dado que tus costos fijos mensuales son menos de 5,000 MXN, y con una ganancia neta estimada de 6,450 MXN al mes, tu modelo es financieramente viable. Además, el tiempo de recuperación de la inversión es de aproximadamente 0.39 meses, lo que es muy favorable.\n\nSin embargo, hay un alto nivel de riesgo en tu negocio, con un puntaje de 100 en esta dimensión. Esto puede estar relacionado con la competencia en el mercado, ya que existen competidores establecidos como Notion Marketplace y Etsy México, donde hay una gran variedad de plantillas disponibles [F1][F3]. Aunque tu viabilidad financiera es alta, es crucial que consideres estrategias de diferenciación y promoción para destacarte en un mercado competitivo.",
+    "arep_time_operation_analysis": "Para vender plantillas de Notion para diseñadores freelance, tu trabajo se dividirá en tareas que se realizan una sola vez y tareas recurrentes. Las tareas iniciales incluyen la creación de las plantillas, lo cual puede requerir tiempo y creatividad, pero es un esfuerzo que se realiza una vez por cada nuevo producto. Después, cada venta implicará tareas repetitivas como la atención al cliente, la promoción en redes sociales y la gestión de la plataforma de venta (Gumroad).\n\nCon una disponibilidad de 5 a 10 horas por semana, tendrás que organizarte bien. Si asumes que crear una plantilla toma varias horas, y que la promoción y atención al cliente se deben hacer de forma continua, podrías saturarte en la parte de atención al cliente y promoción, especialmente si decides vender 30 paquetes al mes. Te sugiero que establezcas un horario fijo para la creación de productos y otro para la promoción y atención al cliente. Por ejemplo, podrías dedicar un par de noches a la creación y el resto a la promoción, asegurándote de no sobrecargarte.\n\nConsidera que la competencia es alta, y que hay muchas plantillas disponibles en el mercado, aunque no se ha verificado la cantidad de opciones gratuitas. Esto significa que tu estrategia de marketing en Instagram y LinkedIn será crucial para destacar. Organiza tus esfuerzos de promoción de manera que puedas mantener un flujo constante sin agotarte, y evalúa la posibilidad de automatizar algunas tareas, como la gestión de correos o publicaciones en redes sociales, para optimizar tu tiempo.",
+    "arep_scalability_analysis": "Para que tu negocio de plantillas de Notion crezca sin que aumente tu carga de trabajo, puedes considerar las siguientes estrategias:\n\n- **Automatización y escalabilidad**: Una vez que tengas tus plantillas listas, puedes crear un sistema automatizado para la venta y entrega a través de Gumroad. Esto te permitirá vender sin necesidad de intervención directa en cada transacción.\n- **Promoción efectiva en redes sociales**: Utiliza Instagram y LinkedIn para promocionar tus plantillas. Publica contenido que muestre cómo tus plantillas pueden resolver problemas específicos de diseñadores freelance, lo que podría atraer más clientes sin requerir más tiempo de tu parte.\n- **Colaboraciones y alianzas**: Busca colaborar con influencers o diseñadores que ya tengan una audiencia establecida. Esto puede aumentar tu visibilidad y ventas sin que tengas que invertir más tiempo en marketing.\n\nSin embargo, hay factores que podrían frenar tu crecimiento:\n\n- **Alta competencia**: El mercado de plantillas de Notion es competitivo, con jugadores como Notion Marketplace y Etsy México ofreciendo una amplia variedad de opciones [F1][F3]. Esto puede dificultar que tus plantillas se destaquen, especialmente si hay muchas alternativas gratuitas.\n- **Dependencia de plataformas externas**: Tu negocio depende de canales como Instagram y Gumroad, lo que significa que cualquier cambio en sus algoritmos o políticas podría afectar tu visibilidad y ventas.\n- **Limitaciones de tiempo**: Con solo 5 a 10 horas a la semana disponibles, puede ser un reto mantener un flujo constante de creación y promoción de nuevas plantillas, lo que podría limitar tu capacidad de escalar.\n\nConsidera estas estrategias y riesgos al planear tu crecimiento. Asegúrate de tener un enfoque claro en cómo diferenciarte en un mercado saturado y cómo gestionar tus recursos de manera efectiva.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda inicial",
+        "tasks": [
+          "Hablar con 10 diseñadores freelance sobre sus necesidades de plantillas de Notion.",
+          "Publicar una encuesta en Instagram y LinkedIn para conocer el interés en tus plantillas.",
+          "Revisar 5 plantillas gratuitas en Notion Marketplace y Notiontopia para identificar sus características y precios."
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números y precios",
+        "tasks": [
+          "Definir un precio para tus plantillas basado en el análisis de precios de Gumroad ($2.30 - $30.76 USD) [F8].",
+          "Calcular los costos de producción y comisiones de plataformas de venta para asegurar rentabilidad.",
+          "Hablar con 5 diseñadores freelance sobre su disposición a pagar por plantillas de Notion."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición de clientes",
+        "tasks": [
+          "Crear una cuenta en Gumroad y subir una plantilla de prueba gratuita para captar correos electrónicos.",
+          "Promover la plantilla gratuita en Instagram y LinkedIn, apuntando a diseñadores freelance.",
+          "Recoger feedback de al menos 10 usuarios sobre la plantilla gratuita y su interés en versiones pagadas."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar los resultados de la encuesta y feedback recibido para ajustar tu oferta.",
+          "Definir un plan de contenido para Instagram y LinkedIn que incluya testimonios de usuarios.",
+          "Tomar una decisión sobre lanzar las plantillas pagadas basándote en la validación de demanda y feedback."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "La viabilidad comercial de tu proyecto de vender plantillas de Notion es baja y el riesgo es muy alto debido a la falta de validación de demanda. Es fundamental que hables primero con potenciales clientes para ajustar tu propuesta antes de realizar una inversión significativa. Además, considera que tu negocio depende de una plataforma externa; si esta cambia sus reglas o te suspende, podrías perder tu canal de ventas de un día para otro.\n\nPara avanzar, te sugiero los siguientes pasos: primero, realiza entrevistas o encuestas a diseñadores freelance para entender sus necesidades y si estarían dispuestos a pagar por tus plantillas. Esto te ayudará a validar tu idea y ajustar tu oferta. Segundo, investiga más sobre la competencia, especialmente sobre las plantillas gratuitas, para identificar cómo puedes diferenciarte y ofrecer un valor único. Por último, desarrolla un plan alternativo que contemple otros canales de venta o plataformas en caso de que tu canal principal enfrente problemas.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 2,
+      "rewritten": [
+        "time_operation_analysis",
+        "strengths_risks"
+      ],
+      "review": {
+        "contradicciones": [],
+        "supuestos_sin_fuente": [
+          {
+            "seccion": "time_operation_analysis",
+            "afirmacion": "Considera también que la competencia es alta, y que hay muchas plantillas gratuitas disponibles."
+          },
+          {
+            "seccion": "strengths_risks",
+            "afirmacion": "Alta competencia en el mercado: incluyendo más de 70,000 plantillas en Notion Marketplace [F1]."
+          }
+        ],
+        "conclusiones_no_sustentadas": [],
+        "correcciones": [
+          {
+            "seccion": "time_operation_analysis",
+            "instruccion": "Eliminar o matizar la afirmación de que hay muchas plantillas gratuitas disponibles y presentarla como hipótesis a validar."
+          },
+          {
+            "seccion": "strengths_risks",
+            "instruccion": "Corregir el número de plantillas en Notion Marketplace para que coincida con la fuente F1 (más de 30,000) o eliminar la cifra si no está verificada."
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Venta de plantillas de Notion para diseñadores freelance que incluyen cotizaciones, seguimiento de proyectos y facturación.",
+          "sector": "Tecnología / Plantillas digitales",
+          "modelo_de_negocio": "E-commerce"
+        },
+        "tamano_mercado": {
+          "cifra": null,
+          "anio": null,
+          "fuente_id": null,
+          "motivo": "No se encontraron datos concretos y fiables sobre el tamaño del mercado de software y plantillas digitales en México."
+        },
+        "competidores": [
+          {
+            "nombre": "Notion Marketplace",
+            "propuesta": "Más de 70,000 plantillas creadas por la comunidad de Notion.",
+            "precio_referencia": null,
+            "fuente_id": "F1"
+          },
+          {
+            "nombre": "Notiontopia",
+            "propuesta": "Primer marketplace de plantillas para Notion 100% en español, que también brinda servicios de consultoría.",
+            "precio_referencia": null,
+            "fuente_id": "F2"
+          },
+          {
+            "nombre": "Etsy México",
+            "propuesta": "Variedad de plantillas de Notion, incluyendo opciones como 'Notion templates 2.0'.",
+            "precio_referencia": null,
+            "fuente_id": "F3"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Plantillas de Notion en Gumroad",
+            "rango": "$2.30 - $30.76 USD",
+            "fuente_id": "F8"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Sitios web especializados",
+            "nota": "Empresas como Azteknologies ofrecen plantillas digitales.",
+            "fuente_id": "F16"
+          },
+          {
+            "canal": "Plataformas de suscripción",
+            "nota": "Limited Library proporciona acceso a una variedad de diseños digitales.",
+            "fuente_id": "F17"
+          },
+          {
+            "canal": "Herramientas en línea",
+            "nota": "HazloSimple ofrece plantillas digitales y herramientas para negocios.",
+            "fuente_id": "F18"
+          },
+          {
+            "canal": "Plataformas de comercio electrónico",
+            "nota": "Etsy México alberga una variedad de plantillas digitales.",
+            "fuente_id": "F19"
+          },
+          {
+            "canal": "Redes sociales",
+            "nota": "Instagram y LinkedIn son claves para la promoción y venta de plantillas digitales.",
+            "fuente_id": "F20"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Costos de producción de plantillas digitales",
+            "valor": "$99 - $5,000 MXN",
+            "fuente_id": "F14",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Comisiones de plataformas de venta",
+            "valor": "3.99% - 14.9%",
+            "fuente_id": "F15",
+            "es_supuesto": false
+          }
+        ],
+        "huecos_de_informacion": [
+          "No se encontraron datos sobre el tamaño del mercado de software y plantillas digitales en México.",
+          "No se verificaron más de 3 competidores relevantes en el mercado.",
+          "No se obtuvieron cifras específicas sobre rentas o regulación del sector."
+        ],
+        "mercado_objetivo": {
+          "pais": "México",
+          "ciudad": null,
+          "criterio": "El texto no menciona un mercado específico, se utiliza el mercado por defecto.",
+          "es_supuesto": true
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "Elige entre más de 30 000 Notion plantillas | Notion Marketplace",
+            "url": "https://www.notion.com/es/templates",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F2",
+            "titulo": "Notiontopia ⚡️ Alta Productividad",
+            "url": "https://notiontopia.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F3",
+            "titulo": "Notion templates 2.0 - Etsy México",
+            "url": "https://www.etsy.com/market/notion_templates_2.0",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F4",
+            "titulo": "Principales Alternativas y Competidores de 10 Notion en 2026 | G2",
+            "url": "https://www.g2.com/es/products/notion/competitors/alternatives",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F5",
+            "titulo": "Las 15 mejores alternativas a Notion - Capterra México 2026",
+            "url": "https://www.capterra.mx/alternatives/186596/notion",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F6",
+            "titulo": "12 Best Notion alternatives in 2026 | ToolGuide",
+            "url": "https://toolguide.io/en/alternative/notion/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "Plantillas de Notion impulsadas por IA: Aumenta la Productividad y Eficiencia | Creati.ai",
+            "url": "https://creati.ai/es/ai-tools/notion-templates-for-ai/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "TuDailyNotion",
+            "url": "https://tudailynotion.gumroad.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "NotionSrta",
+            "url": "https://notionsrta.gumroad.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "Momomuse studio",
+            "url": "https://momomuse.gumroad.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "Land it",
+            "url": "https://landit.gumroad.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "Café Notion ☕️",
+            "url": "https://cafenotion.gumroad.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F13",
+            "titulo": "The Focus Lab | Agendas Digitales 2026 y Plantillas Notion",
+            "url": "https://thefocuslab.shop/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F14",
+            "titulo": "Crear y vender productos digitales desde México: guía",
+            "url": "https://vidaconcriterio.com/crear-vender-productos-digitales-mexico/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F15",
+            "titulo": "Cómo vender productos digitales en México: cobro, cuotas y precios",
+            "url": "https://estante.store/vender/mexico",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F16",
+            "titulo": "Azteknologies",
+            "url": "https://azteknologies.com.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F17",
+            "titulo": "Membresía de diseños DTF, PNG y megapacks | Limited Library",
+            "url": "https://limitedmx.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F18",
+            "titulo": "HazloSimple | Páginas web, plantillas y herramientas para tu negocio",
+            "url": "https://hazlosimple.netlify.app/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F19",
+            "titulo": "Digital templates best sellers - Etsy México",
+            "url": "https://www.etsy.com/ca/market/digital_templates_best_sellers",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F20",
+            "titulo": "Digital 2026: Mexico — DataReportal – Global Digital Insights",
+            "url": "https://datareportal.com/reports/digital-2026-mexico",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "tamaño del mercado de software en México 2023 sitio:gov.mx OR sitio:statista.com OR sitio:inegi.org.mx OR sitio:canieti.org",
+            "competidores de plantillas Notion en México",
+            "precios plantillas Notion Gumroad México 2024",
+            "costos de producción y venta de plantillas digitales en México 2023",
+            "canales de compra de plantillas digitales en México Instagram LinkedIn"
+          ],
+          "estimatedCostUsd": 0.203,
+          "durationMs": 16995,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

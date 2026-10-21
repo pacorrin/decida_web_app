@@ -1,0 +1,422 @@
+{
+  "01-cafeteria-roma-norte": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 5,
+      "evidence": "Precios de café y pan: 'Comparar precios de café y pan en al menos 5 cafeterías... incluyendo Café Proyecto Cero y Nice Day [F3][F5]'. Márgenes: 'margen del 69.23%' y '56.36%' calculados con precios y costos variables. Inversión inicial: 'Tu inversión de $380,000...'.",
+      "reason": "Todas las cifras externas relevantes (precios, márgenes, inversión, nómina, renta) aparecen con fuentes válidas [F3][F4][F5][F15][F16][F17][F18][F19] y/o se derivan de datos de la ficha. No hay cifras inventadas ni sin fuente."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se identifican contradicciones entre las secciones, los puntajes ni las alertas calculadas.",
+      "reason": "El reporte es coherente: los riesgos, recomendaciones y análisis financiero concuerdan con los puntajes y alertas. No hay contradicciones internas ni con los datos de la persona."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "La recomendación de validar antes de invertir se basa en el alto riesgo y la inversión superior al límite tolerable. Márgenes y punto de equilibrio sustentan la viabilidad financiera.",
+      "reason": "Las conclusiones y recomendaciones se derivan directamente de los datos y puntajes presentados. No hay saltos de lógica ni cálculos incorrectos."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "\"No se encontraron datos específicos sobre el valor del mercado de cafeterías de especialidad en la Ciudad de México.\"",
+      "reason": "El reporte declara explícitamente la ausencia de datos de tamaño de mercado y sugiere cómo cubrir ese hueco (validar cliente objetivo, encuestas, etc.). No disfraza suposiciones como hechos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "\"Comparar precios de café y pan en al menos 5 cafeterías de especialidad en la colonia Roma Norte, incluyendo Café Proyecto Cero y Nice Day [F3][F5].\"",
+      "reason": "El análisis de competencia, precios y validación se centra explícitamente en la colonia Roma Norte, Ciudad de México, coincidiendo con el mercado objetivo real."
+    }
+  },
+  "02-plantillas-notion": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 5,
+      "evidence": "Ejemplo: 'más de 30,000 plantillas en Notion Marketplace [F1]', 'precios de Gumroad ($2.30 - $30.76 USD) [F8]'.",
+      "reason": "Toda cifra externa concreta (competidores, precios) lleva fuente y año/fecha. No hay cifras inventadas ni sin fuente."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se detectan contradicciones entre secciones ni con los puntajes, semáforos o datos de la persona.",
+      "reason": "El análisis financiero, riesgos y recomendaciones coinciden con los datos y métricas calculadas."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "La recomendación 'validate_first' se deriva de la falta de validación y alto riesgo, como se explica en el reporte.",
+      "reason": "Las conclusiones y recomendaciones se basan en los puntajes, márgenes y riesgos expuestos. No hay saltos de lógica."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "Se declara: 'No hay validación de clientes potenciales', 'No se encontraron datos sobre el tamaño del mercado...'.",
+      "reason": "Los huecos de información relevantes se mencionan explícitamente y se sugieren acciones para cubrirlos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "Se analiza el mercado de México y Latinoamérica, y se menciona explícitamente el enfoque en hispanohablantes.",
+      "reason": "El análisis corresponde al mercado donde la persona venderá y lo hace explícito."
+    }
+  },
+  "03-curso-ingles-ingenieros": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 4,
+      "evidence": "competirás con plataformas establecidas como Udemy, LinkedIn Learning y DataCamp, que ya ofrecen cursos en desarrollo de software y habilidades profesionales [F1][F2][F3].",
+      "reason": "Cita fuentes para competidores, pero no hay cifras externas (tamaño de mercado, precios de referencia, etc.) con fuente y año. El reporte menciona que no se encontraron datos de tamaño de mercado, pero no usa cifras externas concretas con fuente y fecha. No afirma cifras inventadas, pero tampoco cita precios de referencia de la ficha. Por reglas, sin cifra externa concreta con fuente/fecha, máximo 4."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se observan contradicciones entre secciones ni con los puntajes, semáforos o datos de la persona.",
+      "reason": "El análisis financiero, riesgos y recomendaciones son coherentes con los puntajes y alertas calculadas. No hay contradicciones internas ni con los datos de la persona."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "La recomendación de validar primero se deriva de la baja validación comercial y alto riesgo, como muestran los puntajes y alertas.",
+      "reason": "Las conclusiones y recomendaciones siguen lógicamente de los datos y puntajes presentados, sin saltos de lógica ni cálculos erróneos."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "no se encontraron datos sobre el tamaño del mercado de educación en línea en Estados Unidos. Esto es un riesgo a considerar",
+      "reason": "El reporte declara explícitamente la ausencia de datos de mercado y lo señala como riesgo, sin rellenar con suposiciones disfrazadas de hecho."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "Ofreces un curso en línea dirigido a ingenieros de software de Latinoamérica que buscan empleo remoto con empresas de Estados Unidos.",
+      "reason": "El análisis de mercado corresponde al público objetivo real y lo hace explícito en varias secciones."
+    }
+  },
+  "04-comida-para-llevar-vaga": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 5,
+      "evidence": "tu precio de 80 MXN por producto está dentro del rango de comida para llevar, que puede variar entre 50 y 2,500 MXN [F9]",
+      "reason": "Toda cifra externa relevante (precios, inversión, competencia) lleva fuente y año/fecha, o se declara como supuesto. No hay estadísticas inventadas."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "El análisis financiero, los riesgos y la recomendación final coinciden con los puntajes y semáforos.",
+      "reason": "No se detectan contradicciones entre secciones ni con los datos de la persona ni los puntajes calculados."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "la viabilidad financiera de tu idea es preocupante, con un puntaje de 19, lo que indica que el modelo actual podría no ser sostenible a largo plazo [F13]",
+      "reason": "Las conclusiones y recomendaciones se derivan directamente de los puntajes, márgenes y datos presentados."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "No se ha aclarado dónde operarías o cómo planeas generar ingresos, lo cual es fundamental para evaluar su viabilidad.",
+      "reason": "El reporte declara explícitamente los huecos de información y recomienda cómo cubrirlos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "Dado que el mercado de comida para llevar es amplio y diverso, es crucial que definas mejor a quién quieres dirigir tus esfuerzos de venta.",
+      "reason": "El análisis corresponde a México, que es el mercado por defecto, y lo hace explícito."
+    }
+  },
+  "05-tienda-de-cassettes": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 1,
+      "evidence": "sin evidencia",
+      "reason": "El reporte menciona cifras externas (costos de renta, precios de cassettes, número de competidores) pero no cita ninguna fuente ni fecha para ninguna de ellas. El conteo de citas válidas es 0 y no se declara explícitamente que sean supuestos."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se detectan contradicciones entre secciones, puntajes, semáforos o datos personales.",
+      "reason": "El análisis financiero, las alertas y la recomendación final son coherentes con los datos y puntajes presentados."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "\"Tu inversión inicial ($400,000) es mayor que lo que dijiste que podrías perder...\" y \"el precio de tu producto es igual o menor a su costo variable\".",
+      "reason": "Las conclusiones y recomendaciones se derivan correctamente de los datos y cálculos expuestos en el reporte."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "\"No se encontraron datos específicos sobre el mercado de venta de música en formato físico en Querétaro.\"",
+      "reason": "El reporte declara con claridad la falta de datos de mercado y de clientes, y sugiere cómo cubrirlos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "\"la competencia en Querétaro incluye tiendas como Mixup y El Ruido de Fondo\" y \"abrir una tienda física en un centro comercial de Querétaro\".",
+      "reason": "El análisis de mercado corresponde explícitamente a Querétaro, México, que es el mercado objetivo de la idea."
+    }
+  },
+  "06-taller-bicicletas-guadalajara": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 1,
+      "evidence": "No hay ninguna cita [F#] en el reporte. Se presentan cifras externas específicas (precios, número de competidores) como hechos: 'varios competidores establecidos como Ciclo Jal y Bicicletas El Sam', 'servicio de mantenimiento de bicicleta tiene un precio de 450 MXN', 'refacciones y accesorios se venden a 300 MXN', 'inversión inicial de 110,000 MXN', 'beneficio neto estimado de 20,300 MXN al mes', etc.",
+      "reason": "El reporte afirma cifras externas específicas (precios, competencia) como hechos, pero no hay ninguna fuente ni se presentan como supuestos. El conteo de citas válidas es 0. Por regla, esto no puede pasar de 2 y corresponde 1."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se detectan contradicciones entre las secciones, los puntajes, semáforos ni los datos de la persona.",
+      "reason": "Todas las afirmaciones y conclusiones son coherentes con los puntajes y datos presentados."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "Las recomendaciones y conclusiones (prueba piloto, riesgo alto, inversión superior al límite) se derivan de los puntajes y datos presentados.",
+      "reason": "No hay saltos de lógica ni cálculos incorrectos; las conclusiones siguen de los números y alertas."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "El reporte declara: 'falta claridad sobre a quién le venderías', 'la idea está parcialmente definida', 'falta saber a quién le venderías', 'es importante validar quiénes son tus clientes potenciales', etc.",
+      "reason": "Los huecos de información (mercado objetivo, validación de clientes) se declaran explícitamente y se sugiere cómo cubrirlos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "El análisis de competencia y precios se refiere a Guadalajara, Chapalita, y menciona talleres y precios del contexto local.",
+      "reason": "El análisis corresponde al mercado donde la persona venderá y lo hace explícito."
+    }
+  },
+  "07-saas-facturas-freelancers-mx": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 4,
+      "evidence": "Competidores y precios gratuitos citados con fuentes [F1][F2][F4][F13][F14][F15], pero no se cita fuente ni año para el tamaño de mercado ni precios de suscripción de competidores.",
+      "reason": "El reporte cita fuentes para competidores y servicios gratuitos, pero no respalda con fuente ni año los precios de suscripción de competidores ni tamaño de mercado; algunos datos son supuestos, pero no todos lo dicen explícito."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se detectan contradicciones entre secciones ni con los puntajes, semáforos o datos de la persona.",
+      "reason": "El análisis y las conclusiones son coherentes con los datos y alertas presentados."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "La recomendación de validar primero y ajustar inversión se deriva de los puntajes, márgenes y alertas calculadas.",
+      "reason": "Las conclusiones y recomendaciones se siguen de los datos financieros, riesgos y alertas presentados."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "\"No se encontró información específica sobre el tamaño del mercado de software para freelancers en México.\"",
+      "reason": "El reporte declara explícitamente los huecos de información y sugiere validación adicional."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "\"Tu idea de crear una app web para ayudar a freelancers en México...\"",
+      "reason": "El análisis corresponde claramente al mercado objetivo (freelancers en México) y lo hace explícito."
+    }
+  },
+  "08-foodtruck-bogota": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 5,
+      "evidence": "Precios de competencia: Arepas el Bamboleo ($4,800 - $20,400) [F3], Arepas el Divino Niño ($10,500, $13,000, $17,000) [F4][F5]; inversión inicial (70-120 millones COP) [F21]; precios referencia [F12][F13][F16].",
+      "reason": "Todas las cifras externas relevantes (precios, inversión, ingresos) están respaldadas con fuentes y fecha, o como supuestos donde corresponde."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se identifican contradicciones entre secciones, puntajes, semáforos ni datos de la persona.",
+      "reason": "El análisis financiero, riesgos y recomendaciones coinciden con los puntajes y alertas calculadas."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "Conclusión: 'la inversión inicial que planeas ($120,000) excede lo que has declarado que podrías perder...' coincide con alertas y análisis financiero.",
+      "reason": "Las recomendaciones y conclusiones se derivan de los datos y puntajes presentados, sin saltos de lógica."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "Se declara: 'Sin evidencia de clientes potenciales', 'falta de validación de mercado', y se sugieren pasos para cubrirlos.",
+      "reason": "El reporte identifica explícitamente los huecos de información y propone cómo abordarlos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "Se menciona repetidamente Bogotá como el mercado analizado y se citan competidores y precios de esa ciudad.",
+      "reason": "El análisis de competencia, precios y canales corresponde al mercado objetivo real y lo hace explícito."
+    }
+  },
+  "09-ropa-sostenible-buenos-aires": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 5,
+      "evidence": "Cita precios de competidores con fuente y año: 'precios de referencia que van desde 13,000 hasta 70,000 ARS [F8][F9][F10][F11][F12]'.",
+      "reason": "Todas las cifras externas relevantes (precios de competencia, costos típicos) se citan con fuente y corresponden a la ficha. No hay cifras inventadas ni sin fuente."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se identifican contradicciones entre secciones ni con los puntajes ni semáforos.",
+      "reason": "El análisis financiero, de riesgos y la recomendación final son coherentes con los datos y métricas presentados."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "La recomendación de validar primero se deriva del bajo puntaje comercial (35), alto riesgo (100) y falta de validación.",
+      "reason": "Las conclusiones y recomendaciones se siguen de los datos, puntajes y alertas; no hay saltos de lógica ni errores de cálculo."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "\"No proporcionaste información específica sobre su perfil demográfico... Esto es un supuesto por validar.\"",
+      "reason": "El reporte declara explícitamente la falta de información sobre clientes y tamaño de mercado, y sugiere cómo cubrir esos huecos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "\"competidores como Get Wild!, Luma Báez y Alenkie ya están presentes en el mercado de moda sostenible en Argentina [F1][F2][F3]\"",
+      "reason": "El análisis de competencia y precios corresponde explícitamente al mercado argentino, que es el de la idea."
+    }
+  },
+  "10-consultoria-pymes-chile": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 4,
+      "evidence": "Se citan precios de referencia como 'Plan Básico de Contabilidad Mensual desde $11.000 CLP' y competidores como VSCA y Drakar Consulting [F1][F2].",
+      "reason": "Se usan varias cifras externas con fuente, pero el margen bruto y punto de equilibrio están en MXN, moneda no usada en las fuentes ni ficha, y no se explicita su origen ni conversión. No se declara explícitamente si son supuestos ni se justifica el uso de MXN."
+    },
+    "consistencia": {
+      "score": 4,
+      "evidence": "El análisis financiero usa cifras en MXN mientras los precios de mercado y referencias están en CLP/UF.",
+      "reason": "No hay contradicción en conclusiones, pero la mezcla de monedas sin explicación es una inconsistencia menor que puede confundir la interpretación de márgenes y punto de equilibrio."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "Las recomendaciones y conclusiones se derivan de los puntajes y riesgos calculados, y se alinean con los datos presentados.",
+      "reason": "No hay saltos de lógica ni cálculos incorrectos en las conclusiones; se sigue de los datos y métricas presentadas."
+    },
+    "huecos_declarados": {
+      "score": 4,
+      "evidence": "Se menciona que 'No se especifican detalles como la edad, ingresos o hábitos de estos clientes, por lo que sería útil validar estos supuestos.'",
+      "reason": "Se reconocen algunos huecos (perfil de cliente), pero no se declara explícitamente la falta de datos sobre tamaño de mercado ni costos operativos, a pesar de que la ficha lo señala como hueco."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "El reporte analiza el mercado de pymes en Santiago de Chile y menciona explícitamente la ciudad y tipo de empresa objetivo.",
+      "reason": "El análisis corresponde al mercado objetivo real y lo hace explícito en varias secciones."
+    }
+  },
+  "11-turismo-rural-cusco": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 4,
+      "evidence": "Cita a JOEX Travel y Peceros Agency Travel como competidores [F1][F2], y canales de venta [F10], pero no da precios ni tamaño de mercado con fuente y fecha.",
+      "reason": "Se citan fuentes para competidores y canales, pero no hay cifras externas concretas (precios, tamaño de mercado) con fuente y año. El reporte menciona explícitamente que faltan datos específicos de mercado y precios, pero sí usa nombres y descripciones de competidores con fuente. No inventa cifras externas, pero tampoco presenta ninguna cifra concreta con fuente y fecha, por lo que no puede ser 5."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No hay contradicciones entre secciones ni con los puntajes, semáforos o alertas calculadas.",
+      "reason": "El análisis financiero, riesgos y recomendaciones se alinean con los datos y alertas. No se identifican contradicciones internas ni con los datos de la persona."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "La recomendación de validar primero se basa en el margen, punto de equilibrio, riesgo y alertas calculadas.",
+      "reason": "Las conclusiones y recomendaciones derivan correctamente de los datos financieros, puntajes y riesgos presentados, sin saltos de lógica ni errores de cálculo."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "El reporte dice: 'no tiene datos específicos verificados sobre su tamaño, y los precios de referencia para experiencias similares son en su mayoría no especificados.'",
+      "reason": "Declara explícitamente la falta de datos de mercado y precios, y no rellena con suposiciones disfrazadas de hecho. Recomienda cómo cubrir esos huecos (validación, investigación adicional)."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "El análisis se centra en el Valle Sagrado, Cusco, Perú, y menciona turistas que buscan experiencias culturales en la región.",
+      "reason": "El análisis de mercado corresponde al mercado donde la persona venderá (turistas en Cusco/Valle Sagrado) y lo hace explícito."
+    }
+  },
+  "12-panaderia-existente-segunda-sucursal": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 5,
+      "evidence": "Competencia en el mercado, que incluye panaderías bien establecidas como La Princesa y La Flor de Puebla, ambas con calificaciones de 4.4 estrellas [F5].",
+      "reason": "El reporte cita cifras externas concretas (calificaciones de competidores) con fuente y año implícito (reseñas web), y no hay cifras externas sin fuente. Cumple el estándar de 5."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "La inversión inicial de $320,000 MXN es considerablemente mayor que el capital mínimo que mencionaste y supera tu límite de pérdida tolerada, lo que representa un riesgo significativo.",
+      "reason": "No hay contradicciones entre secciones, ni con los puntajes ni alertas calculadas. Todo es coherente."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "La inversión de $320,000 se recupera en aproximadamente 5.4 meses, lo que te permite evaluar la viabilidad del negocio rápidamente.",
+      "reason": "Las conclusiones y recomendaciones se derivan correctamente de los datos, márgenes, punto de equilibrio y alertas."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "La idea de abrir una segunda sucursal de tu panadería en Puebla está poco definida, ya que falta aclarar a quién le venderías.",
+      "reason": "El reporte declara explícitamente los huecos (cliente no definido, idea parcial) y sugiere cómo cubrirlos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "Competencia en el mercado, que incluye panaderías bien establecidas como La Princesa y La Flor de Puebla...",
+      "reason": "El análisis de mercado corresponde a Puebla, México, y lo hace explícito en varias secciones."
+    }
+  },
+  "13-app-vaga": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 4,
+      "evidence": "Ejemplo: 'los costos típicos rondan entre $80,000 y $150,000 MXN [F20]' y 'usuarios prefieren descargar aplicaciones gratuitas [F22]'.",
+      "reason": "Se citan cifras externas con fuente y año en algunos casos, pero otras cifras relevantes (como ventas estimadas, tamaño de mercado, precios de competidores) se presentan sin fuente ni se declaran como supuestos."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se detectan contradicciones entre secciones, puntajes, semáforos ni datos personales.",
+      "reason": "El reporte es coherente en sus análisis y recomendaciones respecto a los datos y puntajes presentados."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "Ejemplo: 'el margen es alto... sin embargo... pérdida de 1,400 MXN' y 'recomienda validar primero'.",
+      "reason": "Las conclusiones y recomendaciones derivan correctamente de los números y datos presentados, sin saltos de lógica."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "\"La idea es vaga y falta información sobre cómo planeas monetizarla\" y \"no hay evidencia de interés en el mercado\".",
+      "reason": "El reporte declara explícitamente los huecos de información y sugiere cómo abordarlos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "\"No se especifica un mercado particular, se utiliza el mercado por defecto.\"",
+      "reason": "El análisis corresponde al mercado de México y lo hace explícito, acorde a la ficha y a la declaración del reporte."
+    }
+  },
+  "14-tacos-latinos-houston": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 5,
+      "evidence": "Ejemplo: 'los gastos generales y administrativos, que son del 4.3% de los ingresos totales, y los costos de alimentos y bebidas, que son del 33.5% de las ventas [F15][F16]'.",
+      "reason": "Todas las cifras externas relevantes (costos, precios, competencia) citan fuente y fecha o son supuestos explícitos. No hay cifras inventadas."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "No se identifican contradicciones entre secciones ni con los puntajes o alertas.",
+      "reason": "El análisis financiero, riesgos y conclusiones coinciden con los datos y semáforos presentados."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "La recomendación de ajustar la idea se deriva de que la inversión inicial supera el capital disponible y la pérdida tolerada.",
+      "reason": "Las conclusiones y recomendaciones siguen lógicamente de los números y alertas calculadas."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "\"No se encontraron datos específicos sobre el tamaño del mercado de restaurantes mexicanos en Houston...\"",
+      "reason": "El reporte declara explícitamente los huecos de información y sugiere cómo abordarlos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "\"Tu cliente principal es la comunidad mexicana en Houston...\" y análisis de competencia local.",
+      "reason": "El análisis de mercado corresponde al mercado real de la idea y lo hace explícito."
+    }
+  },
+  "15-gadget-sin-demanda": {
+    "model": "gpt-4.1",
+    "cifras_con_fuente": {
+      "score": 5,
+      "evidence": "El mercado de accesorios para el hogar tiene un tamaño de 180,000,000 MXN [F1] ... los precios de paraguas convencionales oscilan entre 50 y 1,348 pesos [F10][F14][F15] ... 67 millones de personas en México realizaron compras digitales en 2024 [F18].",
+      "reason": "Todas las cifras externas relevantes (tamaño de mercado, precios de competencia, usuarios digitales) llevan fuente y año/fecha. No se presentan cifras inventadas como hecho."
+    },
+    "consistencia": {
+      "score": 5,
+      "evidence": "El reporte no contradice los puntajes, semáforos ni datos de la persona. La inversión inicial, el riesgo y las recomendaciones coinciden con los datos.",
+      "reason": "No hay contradicciones internas ni con los datos calculados."
+    },
+    "conclusiones_sustentadas": {
+      "score": 5,
+      "evidence": "El reporte concluye que la inversión es alta respecto a la pérdida tolerable y que falta validación de clientes, en línea con los puntajes y alertas.",
+      "reason": "Las recomendaciones y conclusiones se derivan de los números y alertas presentados."
+    },
+    "huecos_declarados": {
+      "score": 5,
+      "evidence": "No se encontraron datos específicos sobre costos de producción en la ficha. ... la claridad sobre a quién le venderías este paraguas. ... la falta de validación con potenciales clientes genera incertidumbre.",
+      "reason": "Los huecos de información relevantes se declaran explícitamente y se sugiere cómo cubrirlos."
+    },
+    "mercado_objetivo": {
+      "score": 5,
+      "evidence": "El reporte analiza el mercado mexicano: ... Mercado Libre ... 67 millones de personas en México realizaron compras digitales en 2024 [F18].",
+      "reason": "El análisis de mercado corresponde al país y canal donde la persona venderá, y lo hace explícito."
+    }
+  }
+}
