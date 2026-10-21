@@ -103,7 +103,29 @@ export async function startAssessmentForCurrentUser(): Promise<void> {
   if (result.status === "anonymous") {
     redirectToStep("contacto");
   }
-  redirect(getStepBySlug(getResumeStep(result.assessment)).path);
+  const path = getStepBySlug(getResumeStep(result.assessment)).path;
+  // Retoma un borrador con idea: la pantalla avisa y ofrece empezar con otra idea.
+  const resumed = !!result.assessment.business_idea?.bide_original_description;
+  redirect(resumed ? `${path}?retomado=1` : path);
+}
+
+/**
+ * «Empezar con otra idea»: descarta el borrador en curso de la persona (nunca un
+ * análisis completado ni uno ajeno) y arranca uno limpio con las mismas reglas
+ * de siempre (el límite gratuito sigue aplicando).
+ */
+export async function discardDraftAndRestart(): Promise<void> {
+  const user = await getCurrentUser();
+  const current = await getCurrentAssessment();
+  if (
+    user &&
+    current &&
+    current.asmt_user_id === user.user_id &&
+    !isAssessmentCompleted(current)
+  ) {
+    await prisma.assessments.delete({ where: { asmt_id: current.asmt_id } });
+  }
+  await startAssessmentForCurrentUser();
 }
 
 export async function saveContact(
