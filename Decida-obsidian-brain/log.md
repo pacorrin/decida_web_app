@@ -518,3 +518,11 @@ Se aplicaron los 5 bloqueos de la auditoría (aviso de pago según el modo de St
 ## [2026-10-16] query | Precios de la landing: sin aviso de pago y CTA de suscripción
 
 Se quitó por completo el aviso de pago bajo las tarjetas de precio (y `isStripeTestMode`), y el texto «Te suscribes desde tu cuenta…» se reemplazó por el botón «Desbloquear el reporte completo». Actualizado: `wiki/experiencia/auditoria-landing-2026-10-16.md`.
+
+## [2026-10-20] query | Etapa de investigación: Pasos 0 y 1 (en pausa)
+
+Paso 0: `docs/report-pipeline-current.md` (PR 8). Paso 1: arnés de evals sin base de datos y 5 reportes de referencia; `docs/diagnostico.md` clasifica 45 secciones: falta de datos externos 14, falta de conexión 9, conclusión que no sigue de los números 4, genérico 18 (PR 9). Por la regla de parada del encargo no se avanzó al Paso 2: la falta de datos externos no es la mayoría. Decisiones del usuario: ramas y PR en GitHub, flag de PostHog más variable de entorno, tope de ~$0.30 USD por reporte en investigación, calibración de jueces con revisión del usuario después del Paso 3.
+
+## [2026-10-21] decision | Modelo de créditos híbrido (en evaluación)
+
+A partir del costo de la investigación web (~$0.25–0.40 USD por análisis) se documentó la opción de pasar de la suscripción de 99 MXN a créditos con suscripción híbrida y un interruptor de «Investigación de mercado» (1 vs 2 créditos). Sin decisión tomada. Detalle en `wiki/decisiones/modelo-de-creditos-hibrido.md`.

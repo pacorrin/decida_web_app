@@ -58,3 +58,5 @@ pnpm-workspace.yaml
 # Sentry Config File
 .env.sentry-build-plugin
 .env
+
+video-decida
