@@ -1,0 +1,95 @@
+/**
+ * Corre el pipeline del reporte sobre un conjunto de casos, SIN base de datos.
+ *
+ *   pnpm evals:baseline        → evals/baseline/<caso>.json y .md
+ *
+ * Requiere OPENAI_API_KEY en .env. PostHog y Stripe se apagan a propósito para
+ * que los evals no ensucien las métricas reales.
+ */
+import { config } from "dotenv";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+config({ path: join(process.cwd(), ".env") });
+process.env.NEXT_PUBLIC_POSTHOG_KEY = "";
+process.env.NEXT_PUBLIC_POSTHOG_HOST = "";
+process.env.STRIPE_SECRET_KEY = "";
+
+async function main() {
+  const setName = process.argv[2] ?? "baseline";
+  const only = process.argv[3]; // id de un caso, opcional
+  const outDir = join(process.cwd(), "evals", setName);
+  mkdirSync(outDir, { recursive: true });
+
+  const { BASELINE_CASES } = await import("./cases/baseline");
+  const { buildAssessment } = await import("./lib/build-assessment");
+  const { renderReportMarkdown } = await import("./lib/render-markdown");
+  const { generateIdeaSummary, generateFallbackIdeaSummary } = await import("@/lib/ai/openai");
+  const { computeScoring } = await import("@/lib/scoring");
+  const { buildReportData, REPORT_PROMPT_VERSION } = await import("@/lib/ai/generate-report");
+  const { buildScoresForAi } = await import("@/lib/ai/report-context");
+
+  const cases = setName === "baseline" ? BASELINE_CASES : [];
+  const selected = only ? cases.filter((c) => c.id === only) : cases;
+  if (selected.length === 0) throw new Error(`Sin casos para «${setName}»${only ? ` / ${only}` : ""}`);
+
+  const summary: Record<string, unknown>[] = [];
+  for (const c of selected) {
+    const started = Date.now();
+    process.stdout.write(`▸ ${c.id} … `);
+    try {
+      // Igual que `saveIdea`: si la IA no devuelve un resumen válido, se usa el de respaldo.
+      let summarySource: "ai" | "fallback" = "ai";
+      let idea;
+      try {
+        idea = await generateIdeaSummary(c.description);
+      } catch {
+        summarySource = "fallback";
+        idea = generateFallbackIdeaSummary(c.description);
+      }
+      const assessment = buildAssessment(c, idea.summary);
+      const { deterministic, interpretation } = await computeScoring(assessment);
+      const report = await buildReportData(assessment, deterministic, interpretation);
+      const seconds = Math.round((Date.now() - started) / 100) / 10;
+
+      const scores = buildScoresForAi(deterministic, interpretation).map((s) => ({
+        dimension: s.dimension,
+        puntaje: s.puntaje,
+        semaforo: s.semaforo,
+      }));
+      const result = {
+        case: c,
+        promptVersion: REPORT_PROMPT_VERSION,
+        generatedAt: new Date().toISOString(),
+        latencySeconds: seconds,
+        ideaSummary: idea.summary,
+        summarySource,
+        scores,
+        metrics: deterministic.metrics,
+        interpretation,
+        report,
+      };
+      writeFileSync(join(outDir, `${c.id}.json`), JSON.stringify(result, null, 2));
+      writeFileSync(
+        join(outDir, `${c.id}.md`),
+        renderReportMarkdown({
+          caseId: c.id,
+          description: c.description,
+          summary: idea.summary,
+          scores,
+          recommendation: interpretation.final_recommendation,
+          redFlags: interpretation.red_flags,
+          report: report as unknown as Record<string, unknown>,
+        })
+      );
+      summary.push({ id: c.id, ok: true, seconds });
+      console.log(`ok (${seconds}s)`);
+    } catch (error) {
+      summary.push({ id: c.id, ok: false, error: String(error) });
+      console.log(`FALLÓ: ${String(error).slice(0, 160)}`);
+    }
+  }
+  writeFileSync(join(outDir, "_resumen.json"), JSON.stringify(summary, null, 2));
+}
+
+main().then(() => process.exit(0), (e) => { console.error(e); process.exit(1); });

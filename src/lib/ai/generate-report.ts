@@ -262,7 +262,11 @@ function mergeStrengths(
   return merged;
 }
 
-export async function generateReport(
+/**
+ * Genera las 9 secciones y devuelve los datos del reporte, sin tocar la base
+ * de datos. Lo usan `generateReport` (que además persiste) y los evals.
+ */
+export async function buildReportData(
   assessment: AssessmentWithRelations,
   deterministic: DeterministicScoreResult,
   interpretation: ScoringInterpretResult,
@@ -345,6 +349,22 @@ export async function generateReport(
     arep_ai_model_used: model,
     arep_prompt_version: REPORT_PROMPT_VERSION,
   };
+
+  return reportData;
+}
+
+export async function generateReport(
+  assessment: AssessmentWithRelations,
+  deterministic: DeterministicScoreResult,
+  interpretation: ScoringInterpretResult,
+  observability?: AiObservabilityContext
+) {
+  const reportData = await buildReportData(
+    assessment,
+    deterministic,
+    interpretation,
+    observability
+  );
 
   await prisma.assessment_reports.upsert({
     where: { arep_asmt_id: assessment.asmt_id },
