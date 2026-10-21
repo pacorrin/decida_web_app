@@ -24,7 +24,7 @@ import type { RefineIdeaState } from "@/lib/onboarding/schemas";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import { Markdown } from "@/components/ui/markdown";
 import { assessIdeaClarity } from "@/lib/ai/idea-clarity";
-import { formatTargetMarket, parseTargetMarket } from "@/lib/ai/research/target-market";
+import { formatTargetMarket, parseTargetMarket } from "@/lib/ai/research/market-format";
 
 const CATEGORY_LABELS: Record<string, string> = {
   cliente: "Cliente",
