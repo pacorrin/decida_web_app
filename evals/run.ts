@@ -27,6 +27,7 @@ async function main() {
   const outDir = join(process.cwd(), "evals", setName);
   mkdirSync(outDir, { recursive: true });
 
+  const { ALL_CASES } = await import("./cases/extended");
   const { BASELINE_CASES } = await import("./cases/baseline");
   const { buildAssessment } = await import("./lib/build-assessment");
   const { renderReportMarkdown } = await import("./lib/render-markdown");
@@ -35,15 +36,18 @@ async function main() {
   const { buildReportData, REPORT_PROMPT_VERSION } = await import("@/lib/ai/generate-report");
   const { buildScoresForAi } = await import("@/lib/ai/report-context");
   const { inferTargetMarket } = await import("@/lib/ai/research/target-market");
+  const { startUsageMeter, stopUsageMeter } = await import("@/lib/ai/usage-meter");
+  const { MODEL_PRICES_USD_PER_M, researchConfig } = await import("@/lib/ai/research/config");
 
-  // Mientras no existan los 20 casos del Paso 4, todos los conjuntos usan los 5 de referencia.
-  const cases = BASELINE_CASES;
+  // El baseline congelado usa solo los 5 casos de referencia; el resto de las corridas, los 15.
+  const cases = setName === "baseline" ? BASELINE_CASES : ALL_CASES;
   const selected = only ? cases.filter((c) => c.id === only) : cases;
   if (selected.length === 0) throw new Error(`Sin casos para «${setName}»${only ? ` / ${only}` : ""}`);
 
   const summary: Record<string, unknown>[] = [];
   for (const c of selected) {
     const started = Date.now();
+    startUsageMeter();
     process.stdout.write(`▸ ${c.id} … `);
     try {
       // Igual que `saveIdea`: si la IA no devuelve un resumen válido, se usa el de respaldo.
@@ -61,6 +65,21 @@ async function main() {
       const { deterministic, interpretation } = await computeScoring(assessment);
       const report = await buildReportData(assessment, deterministic, interpretation);
       const seconds = Math.round((Date.now() - started) / 100) / 10;
+      const usage = stopUsageMeter();
+      // Costo medido con tokens reales y tarifas de `MODEL_PRICES_USD_PER_M`; la búsqueda
+      // se cobra a la tarifa conservadora de `researchConfig().searchFeeUsd`.
+      const tokenCost = Object.entries(usage.byModel).reduce((sum, [model, u]) => {
+        const price = MODEL_PRICES_USD_PER_M[model] ?? { in: 2, out: 8 };
+        return sum + (u.inputTokens * price.in + u.outputTokens * price.out) / 1_000_000;
+      }, 0);
+      const searchCost = usage.searchCalls * researchConfig().searchFeeUsd;
+      const cost = {
+        tokensUsd: Math.round(tokenCost * 1000) / 1000,
+        searchUsd: Math.round(searchCost * 1000) / 1000,
+        totalUsd: Math.round((tokenCost + searchCost) * 1000) / 1000,
+        searchCalls: usage.searchCalls,
+        byModel: usage.byModel,
+      };
 
       const scores = buildScoresForAi(deterministic, interpretation).map((s) => ({
         dimension: s.dimension,
@@ -74,6 +93,7 @@ async function main() {
         targetMarket,
         generatedAt: new Date().toISOString(),
         latencySeconds: seconds,
+        cost,
         ideaSummary: idea.summary,
         summarySource,
         scores,
@@ -94,9 +114,10 @@ async function main() {
           report: report as unknown as Record<string, unknown>,
         })
       );
-      summary.push({ id: c.id, ok: true, seconds });
-      console.log(`ok (${seconds}s)`);
+      summary.push({ id: c.id, ok: true, seconds, costUsd: cost.totalUsd, searchCalls: cost.searchCalls });
+      console.log(`ok (${seconds}s, $${cost.totalUsd}, ${cost.searchCalls} búsquedas)`);
     } catch (error) {
+      stopUsageMeter();
       summary.push({ id: c.id, ok: false, error: String(error) });
       console.log(`FALLÓ: ${String(error).slice(0, 160)}`);
     }

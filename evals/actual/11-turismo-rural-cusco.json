@@ -1,0 +1,515 @@
+{
+  "case": {
+    "id": "11-turismo-rural-cusco",
+    "kind": "otro-pais",
+    "expectedMarket": "Perú · Cusco / Valle Sagrado (turistas)",
+    "description": "Quiero ofrecer experiencias de turismo rural de un día en comunidades del Valle Sagrado, en Cusco: talleres de tejido, cocina andina y caminata. Trabajaría con familias de la comunidad donde crecí y vendería a turistas por internet y agencias.",
+    "profile": {
+      "situation": "independiente",
+      "goal": "libertad_financiera",
+      "experience": "varios_intentos",
+      "capital": "10k_50k",
+      "acceptableLoss": "5k_20k",
+      "hoursPerWeek": "20_40",
+      "schedule": "flexible",
+      "timeframe": "6_12_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "liderar",
+        "ensenar",
+        "vender"
+      ],
+      "workPreference": "mixto",
+      "sales": 4,
+      "uncertainty": 4,
+      "process": 3,
+      "hiring": "equipo"
+    },
+    "financial": {
+      "initialInvestment": 35000,
+      "fixedCostsRange": "5k_15k",
+      "products": [
+        {
+          "name": "Experiencia rural de un día por persona",
+          "kind": "servicio",
+          "price": 1100,
+          "variableCost": 600,
+          "monthlyUnits": 60
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "1_3",
+      "competition": "media",
+      "channel": "publicidad",
+      "dependencies": [
+        "plataforma",
+        "permiso"
+      ],
+      "mainConcern": "Depender de que las agencias nos incluyan y de la temporada alta.",
+      "successCondition": "Recibir 60 turistas al mes todo el año."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "Perú",
+    "ciudad": null,
+    "criterio": "La idea menciona específicamente el Valle Sagrado en Cusco, Perú, como el lugar de operación.",
+    "es_supuesto": false,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:45:07.347Z",
+  "latencySeconds": 56.8,
+  "cost": {
+    "tokensUsd": 0.083,
+    "searchUsd": 0.15,
+    "totalUsd": 0.233,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 16,
+        "inputTokens": 36880,
+        "outputTokens": 5583
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 6245,
+        "outputTokens": 3414
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 17360,
+        "outputTokens": 208
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 1551
+      }
+    }
+  },
+  "ideaSummary": "Quieres ofrecer **experiencias de turismo rural** de un día en comunidades del Valle Sagrado, en Cusco. Tu idea consiste en organizar **talleres de tejido, cocina andina y caminatas** en colaboración con familias locales, y vender estas experiencias a turistas a través de internet y agencias de viajes.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 89,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 73,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 51,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 100,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 85,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 100,
+      "semaforo": "verde"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 500,
+    "grossMarginPercentage": 45.45454545454545,
+    "estimatedMonthlyGrossProfit": 30000,
+    "estimatedMonthlyNetProfit": 20000,
+    "breakEvenSales": 20,
+    "paybackMonths": 1.75
+  },
+  "interpretation": {
+    "personal_fit_signal": "green",
+    "financial_viability_signal": "green",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "green",
+    "scalability_signal": "green",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "Tu inversión inicial ($35,000) es mayor que lo que dijiste que podrías perder sin afectar tu estabilidad. Si el negocio no funciona, la pérdida real superaría tu límite declarado — considera arrancar con una versión de menor inversión.",
+      "Tu negocio depende de una plataforma externa. Si esa plataforma cambia sus reglas o te suspende, pierdes el canal de un día para otro — ten un plan alterno antes de invertir fuerte.",
+      "Tu negocio requiere un permiso, licencia o regulación para operar. Investígalo a fondo antes de invertir: puede bloquear el arranque o encarecerlo.",
+      "La inversión inicial de $35,000 MXN excede la pérdida tolerable máxima de $20,000 MXN",
+      "Alta dependencia de plataformas externas y de obtener permisos/licencias",
+      "Riesgo por estacionalidad y dependencia de que las agencias incluyan el producto"
+    ],
+    "reasoning_summary": "Aunque tienes un buen encaje personal y viabilidad financiera, el riesgo alto por inversión frente a tu pérdida tolerable y la baja validación comercial sugieren que primero debes validar más el interés del mercado y mitigar dependencias críticas."
+  },
+  "report": {
+    "arep_executive_summary": "Tu idea consiste en ofrecer experiencias de turismo rural de un día en comunidades del Valle Sagrado, en Cusco, a través de talleres de tejido, cocina andina y caminatas, trabajando con familias de tu comunidad. Aunque la claridad de la idea es alta y tienes un buen encaje personal y viabilidad financiera, el análisis revela un riesgo alto debido a la inversión inicial que supera tu capacidad de pérdida tolerable y la dependencia de plataformas externas y permisos para operar. Por lo tanto, te recomiendo que primero valides el interés del mercado y busques mitigar las dependencias críticas antes de realizar una inversión significativa.",
+    "arep_business_understanding": "Ofreces experiencias de turismo rural de un día en comunidades del Valle Sagrado, en Cusco, que incluyen talleres de tejido, cocina andina y caminatas. Tu propuesta de valor radica en la autenticidad de las experiencias, al trabajar directamente con familias de la comunidad donde creciste. Esto no solo brinda una conexión genuina con la cultura local, sino que también permite a los turistas vivir una experiencia única y enriquecedora. Sin embargo, el precio de 1,100 MXN por persona debe validarse con respecto a otras ofertas en el mercado para asegurarte de que sea competitivo.\n\nEn cuanto a tu cliente, parece que te enfocas en turistas que buscan experiencias auténticas y culturales en su viaje. No has especificado detalles sobre su perfil, como edad, ingresos o hábitos de consumo, lo cual es un supuesto por validar. Entender mejor a tu cliente ideal te ayudará a afinar tu propuesta y tus estrategias de marketing. Podrías explorar esto a través de encuestas o entrevistas con turistas que visitan la región.\n\nRecuerda que competidores como JOEX Travel y Peceros Agency Travel ofrecen paquetes similares, así que deberás diferenciarte con la calidad de tus experiencias y la conexión directa con la comunidad [F1][F2]. Además, considera los canales de venta como plataformas en línea y agencias de viajes locales para maximizar tu alcance [F10].",
+    "arep_strengths": [
+      {
+        "title": "Margen bruto atractivo",
+        "whyItMatters": "Con un margen bruto del 45%, cada venta te deja $500 antes de gastos fijos, lo que es crucial para financiar tu operación."
+      },
+      {
+        "title": "Recuperación rápida de inversión",
+        "whyItMatters": "Tu inversión de $35,000 se recupera en aproximadamente 1.8 meses al ritmo que estimaste, lo que reduce el riesgo financiero."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Alta dependencia de agencias y estacionalidad",
+        "whyItMatters": "Dependiendo de que las agencias incluyan tu producto y de la temporada alta, puedes enfrentar fluctuaciones en la demanda.",
+        "howToReduce": "Considera diversificar tus canales de venta, incluyendo la promoción directa a través de redes sociales y plataformas en línea."
+      },
+      {
+        "title": "Competencia media en el mercado",
+        "whyItMatters": "Existen competidores establecidos como JOEX Travel y Peceros Agency Travel, lo que puede dificultar la captación de clientes.",
+        "howToReduce": "Realiza un análisis más profundo de la competencia y busca diferenciar tus experiencias para atraer a un nicho específico."
+      },
+      {
+        "title": "Falta de validación de precios y demanda",
+        "whyItMatters": "No has validado completamente la disposición de los clientes a pagar el precio de $1,100 por experiencia, lo que puede afectar tus proyecciones de ventas.",
+        "howToReduce": "Realiza encuestas o pruebas de mercado para obtener retroalimentación directa sobre el precio y la demanda antes de lanzar."
+      },
+      {
+        "title": "Dependencia de plataformas externas",
+        "whyItMatters": "Tu negocio depende de plataformas externas para la venta, lo que puede ser riesgoso si cambian sus políticas o te suspenden.",
+        "howToReduce": "Desarrolla un plan alternativo que incluya canales de venta directos y estrategias de marketing independiente."
+      }
+    ],
+    "arep_personal_fit_analysis": "1. **Comodidad vendiendo**: Tienes una alta comodidad al vender (4 de 5), lo que es crucial para ofrecer experiencias de turismo rural. Tu habilidad para conectar con turistas y agencias será clave para atraer clientes y generar ventas.\n\n2. **Preferencia de trabajo mixto**: Tu preferencia por un trabajo mixto se alinea bien con la naturaleza de tu idea, que combina actividades al aire libre, interacción con comunidades y gestión de ventas. Esto te permitirá disfrutar de la diversidad de tareas que ofrece el turismo rural.\n\n### Brechas personales\n\n1. **Tolerancia a la incertidumbre**: Aunque tienes una buena tolerancia a la incertidumbre (4 de 5), el turismo puede ser un sector volátil, especialmente en momentos de cambios en la demanda. **Acción concreta**: Considera crear un plan de contingencia que contemple diferentes escenarios de ventas y cómo adaptarte a ellos.\n\n2. **Comodidad siguiendo procesos**: Tu comodidad con procesos es media (3 de 5). Esto podría ser un desafío al gestionar la logística de las experiencias y coordinar con las familias de la comunidad. **Acción concreta**: Dedica tiempo a desarrollar un sistema de operación claro para tus actividades, incluyendo protocolos para cada taller y experiencia, lo que te ayudará a estandarizar y facilitar la operación.",
+    "arep_financial_analysis": "Tu idea de ofrecer experiencias de turismo rural de un día en comunidades del Valle Sagrado tiene un margen bruto por venta de 500 MXN, lo que representa un 45.45% de margen bruto. Esto es positivo, ya que tus costos variables por persona son de 600 MXN y tu precio de venta es de 1,100 MXN. Sin embargo, es importante notar que si tus costos variables superaran el precio de venta, estarías vendiendo con pérdida, lo que no es el caso en este momento.\n\nTu punto de equilibrio es de 20 ventas al mes, lo que significa que necesitas vender al menos 20 experiencias para cubrir tus costos fijos y variables. Con un estimado de 60 unidades al mes, estás en una buena posición para cubrir tus costos. Además, con un estimado de utilidad neta de 20,000 MXN al mes, tu recuperación de la inversión inicial de 35,000 MXN se daría en aproximadamente 1.75 meses, lo cual es excelente.\n\nSin embargo, ten en cuenta que el mercado de turismo rural en Perú no tiene datos específicos verificados sobre su tamaño, y los precios de referencia para experiencias similares son en su mayoría no especificados. Esto puede representar un riesgo, ya que la falta de información clara sobre la competencia y el mercado podría afectar tus proyecciones. Además, el puntaje de 100 en nivel de riesgo indica que debes estar preparado para enfrentar desafíos en este aspecto.",
+    "arep_time_operation_analysis": "Para ofrecer experiencias de turismo rural en el Valle Sagrado, deberás considerar varias actividades que implican trabajo tanto una sola vez como de manera recurrente. Entre las tareas iniciales, necesitarás establecer relaciones con las familias de la comunidad, diseñar los talleres de tejido y cocina andina, y organizar las rutas para las caminatas. Este trabajo puede llevar varias semanas, dependiendo de la complejidad de cada experiencia y de la coordinación con los participantes.\n\nUna vez que las experiencias estén en marcha, las tareas recurrentes incluirán la atención a los turistas, la logística de las actividades (como transporte y materiales), y la promoción de tus servicios a través de agencias y plataformas en línea. Si planeas recibir 60 turistas al mes, esto implica un flujo constante de atención al cliente y gestión de reservas. Considera que, si trabajas de 20 a 40 horas a la semana, deberás organizar tu tiempo para equilibrar estas tareas, especialmente en temporadas altas donde la demanda puede aumentar.\n\nPara evitar saturarte, podrías delegar ciertas actividades, como la atención al cliente o la logística, a un equipo de apoyo. Esto te permitiría concentrarte en la creación de experiencias y en la promoción de tus servicios. También es recomendable establecer un calendario que contemple tanto las actividades iniciales como las recurrentes, asegurando que cada semana tengas tiempo asignado para cada tarea, evitando así el agotamiento.",
+    "arep_scalability_analysis": "Para que tu negocio de turismo rural crezca sin aumentar proporcionalmente tu carga de trabajo, puedes considerar varias estrategias. Al trabajar con familias de la comunidad, puedes delegar actividades como los talleres de tejido y cocina, lo que te permitirá escalar sin necesidad de incrementar tu tiempo de dedicación. Además, establecer alianzas con agencias de viajes locales y plataformas en línea te permitirá llegar a más turistas sin tener que gestionar cada reserva personalmente. Implementar un sistema de reservas automatizado también facilitaría la gestión de clientes y pagos.\n\nSin embargo, hay factores que podrían frenar tu crecimiento. La dependencia de agencias para la promoción y venta de tus experiencias puede ser un riesgo, especialmente si no logras que incluyan tus servicios en sus paquetes. La competencia en el sector es media, con competidores como JOEX Travel y Peceros Agency Travel, que ofrecen experiencias similares, lo que podría dificultar tu posicionamiento en el mercado. También es importante considerar la estacionalidad del turismo en Cusco, ya que depender de la temporada alta puede limitar tus ingresos durante el resto del año.\n\nTu estrategia de publicidad pagada es clave para atraer clientes, pero necesitarás un presupuesto que podría consumir parte de tu capital inicial. Dado que planeas formar un equipo, asegúrate de que la contratación de guías y personal de apoyo no exceda tus costos operativos. Los costos típicos para guías turísticos se estiman entre S/1,500 a S/3,000 mensuales (supuesto, no verificado), así que ten en cuenta esto al planear tu presupuesto. Mantener la calidad de las experiencias mientras escalas será esencial para tu éxito a largo plazo.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda inicial",
+        "tasks": [
+          "Hablar con 10 turistas que hayan visitado Cusco sobre su interés en experiencias de turismo rural.",
+          "Consultar con 5 agencias de viajes locales sobre su interés en incluir talleres de tejido y cocina andina en sus paquetes.",
+          "Publicar una encuesta en redes sociales para medir el interés en experiencias de turismo rural en el Valle Sagrado."
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números y precios",
+        "tasks": [
+          "Investigar precios de experiencias similares en JOEX Travel y Peceros Agency Travel para definir un rango de precios competitivo.",
+          "Calcular el costo total de ofrecer una experiencia de un día, incluyendo materiales y salarios, para asegurar rentabilidad.",
+          "Hablar con 5 familias locales sobre su disposición a colaborar y los costos que implicaría."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición de clientes",
+        "tasks": [
+          "Crear un anuncio en redes sociales para promocionar una experiencia de turismo rural y medir la respuesta.",
+          "Contactar a 3 agencias de viajes para presentarles la propuesta y obtener retroalimentación sobre su interés.",
+          "Realizar una publicación en un blog de viajeros sobre la experiencia de turismo rural que planeas ofrecer y medir el interés."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar los resultados de las encuestas y las conversaciones con turistas y agencias para definir si hay suficiente demanda.",
+          "Evaluar la viabilidad financiera con los costos y precios definidos, y decidir si avanzar con la inversión inicial.",
+          "Preparar un plan de acción para obtener los permisos necesarios y definir los pasos para lanzar el negocio."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Debes priorizar la validación de tu idea antes de realizar una inversión significativa. Aunque tienes un buen encaje personal y viabilidad financiera, el riesgo es alto debido a que tu inversión inicial de $35,000 excede tu límite de pérdida tolerable de $20,000. Además, tu negocio depende de plataformas externas y de permisos que podrían complicar el arranque. Por lo tanto, es crucial que primero valides el interés del mercado y mitigar las dependencias críticas antes de avanzar.\n\nPara empezar, te recomiendo que realices una investigación de mercado más profunda, enfocándote en la demanda de experiencias de turismo rural en el Valle Sagrado. Esto te ayudará a entender mejor cómo posicionarte frente a competidores como JOEX Travel y Peceros Agency Travel. Luego, considera iniciar con una versión de menor inversión de tu oferta, tal vez un taller o experiencia más sencilla, para evaluar la respuesta del público. Finalmente, asegúrate de investigar todos los permisos y regulaciones necesarios para operar en la zona, así podrás evitar bloqueos en el futuro.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 3,
+      "rewritten": [
+        "business_understanding",
+        "scalability_analysis",
+        "strengths_risks"
+      ],
+      "review": {
+        "contradicciones": [],
+        "supuestos_sin_fuente": [
+          {
+            "seccion": "business_understanding",
+            "afirmacion": "El precio de 1,100 MXN por persona parece competitivo en el contexto del turismo rural."
+          },
+          {
+            "seccion": "scalability_analysis",
+            "afirmacion": "El costo operativo estimado de S/1,000 a S/3,000 mensuales por cada guía."
+          }
+        ],
+        "conclusiones_no_sustentadas": [
+          {
+            "seccion": "strengths_risks",
+            "afirmacion": "Experiencia previa en el sector: Tienes experiencia previa en emprendimientos, lo que puede ayudarte a evitar errores comunes.",
+            "motivo": "La persona declaró 'varios intentos previos' de emprendimiento, pero no especificó experiencia en turismo rural ni en el sector."
+          }
+        ],
+        "correcciones": [
+          {
+            "seccion": "business_understanding",
+            "instruccion": "Elimina o etiqueta como hipótesis la afirmación de que el precio de 1,100 MXN es competitivo y plantea validarlo con datos de mercado."
+          },
+          {
+            "seccion": "scalability_analysis",
+            "instruccion": "Revisa el rango de costos de guías para que se base en datos verificados o márcalo claramente como supuesto a validar."
+          },
+          {
+            "seccion": "strengths_risks",
+            "instruccion": "Corrige la fortaleza sobre 'experiencia previa en el sector' para reflejar que la experiencia es en emprendimientos generales, no en turismo rural."
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Ofrecer experiencias de turismo rural de un día en comunidades del Valle Sagrado, en Cusco, a través de talleres de tejido, cocina andina y caminatas.",
+          "sector": "Turismo",
+          "modelo_de_negocio": "Experiencias de turismo rural"
+        },
+        "tamano_mercado": {
+          "cifra": null,
+          "anio": null,
+          "fuente_id": null,
+          "motivo": "NO ENCONTRADO"
+        },
+        "competidores": [
+          {
+            "nombre": "JOEX Travel",
+            "propuesta": "Paquetes turísticos de tipo clásico, turismo rural comunitario y de aventura.",
+            "precio_referencia": null,
+            "fuente_id": "F1"
+          },
+          {
+            "nombre": "Peceros Agency Travel",
+            "propuesta": "Experiencias personalizadas y únicas, enfocándose en el turismo responsable.",
+            "precio_referencia": null,
+            "fuente_id": "F2"
+          },
+          {
+            "nombre": "Peruvian Cooking Class",
+            "propuesta": "Clases de cocina en horarios por la mañana y por la tarde.",
+            "precio_referencia": null,
+            "fuente_id": "F3"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Entrada para extranjeros al Valle de Lares",
+            "rango": "S/10; niños extranjeros: S/5; locales: S/4; acampada: S/7",
+            "fuente_id": "F4"
+          },
+          {
+            "descripcion": "Experiencia de turismo comunitario en Raqchi",
+            "rango": "Precio no especificado",
+            "fuente_id": "F5"
+          },
+          {
+            "descripcion": "Experiencia de día completo en Mullak's Misminay",
+            "rango": "Precio no especificado",
+            "fuente_id": "F6"
+          },
+          {
+            "descripcion": "Experiencia en el Parque de la Papa",
+            "rango": "Precio no especificado",
+            "fuente_id": "F7"
+          },
+          {
+            "descripcion": "Ciclismo en el Colca",
+            "rango": "Precio no especificado",
+            "fuente_id": "F7"
+          },
+          {
+            "descripcion": "Astroturismo en Cusco",
+            "rango": "Precio no especificado",
+            "fuente_id": "F8"
+          },
+          {
+            "descripcion": "Catación y creación de café en Cusco y Quillabamba",
+            "rango": "Precio no especificado",
+            "fuente_id": "F9"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Agencias de viajes locales",
+            "nota": "Ofrecen paquetes que incluyen visitas a comunidades rurales y actividades tradicionales.",
+            "fuente_id": "F10"
+          },
+          {
+            "canal": "Plataformas en línea especializadas",
+            "nota": "Sitios web dedicados al turismo rural en Cusco proporcionan información y opciones para reservar experiencias.",
+            "fuente_id": "F10"
+          },
+          {
+            "canal": "Mercados locales",
+            "nota": "Algunos mercados ofrecen información sobre actividades turísticas en comunidades cercanas.",
+            "fuente_id": "F10"
+          },
+          {
+            "canal": "Centros de información turística",
+            "nota": "Brindan detalles sobre opciones de turismo rural y pueden facilitar reservas.",
+            "fuente_id": "F10"
+          },
+          {
+            "canal": "Redes sociales y blogs de viajeros",
+            "nota": "Permiten a los turistas descubrir y contactar directamente con comunidades que ofrecen experiencias rurales.",
+            "fuente_id": "F10"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Rentas de propiedades",
+            "valor": "S/ 1,000 a S/ 3,000 mensuales",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Salarios para guías turísticos",
+            "valor": "S/ 1,500 a S/ 3,000 mensuales",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Salarios para personal de apoyo",
+            "valor": "S/ 1,000 a S/ 2,000 mensuales",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Insumos y materiales",
+            "valor": "Varía ampliamente según la calidad y cantidad requerida",
+            "fuente_id": null,
+            "es_supuesto": true
+          }
+        ],
+        "huecos_de_informacion": [
+          "No se ha encontrado información específica sobre el valor del mercado de turismo rural en Perú ni en la región Cusco.",
+          "Los precios de referencia para experiencias de turismo rural son en su mayoría no especificados.",
+          "Los costos típicos son estimaciones generales y pueden haber cambiado desde 2024."
+        ],
+        "mercado_objetivo": {
+          "pais": "Perú",
+          "ciudad": null,
+          "criterio": "La idea menciona específicamente el Valle Sagrado en Cusco, Perú, como el lugar de operación.",
+          "es_supuesto": false
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "Nosotros - JOEX Travel",
+            "url": "https://joextravel.com/nosotros/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F2",
+            "titulo": "Top 5 mejores agencias de turismo en Cusco | Tiempo Real",
+            "url": "https://www.tiemporeal.com.pe/top-5-mejores-agencias-de-turismo-en-cusco/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F3",
+            "titulo": "ESCUELA DE POSTGRADO",
+            "url": "https://repositorio.usil.edu.pe/bitstreams/2728a58e-6f6e-4cc9-a6f8-ec17899f762a/download",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F4",
+            "titulo": "Lares Valley: Hiking Route in Cusco - Peru Travel",
+            "url": "https://www.peru.travel/attractions/lares",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F5",
+            "titulo": "Community Tourism in Raqchi, Cusco | Peru Travel",
+            "url": "https://www.peru.travel/experiences/community-tourism-in-raqchi",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F6",
+            "titulo": "Mullak's Misminay: Community Experience - Peru Travel",
+            "url": "https://www.peru.travel/experiences/mullaks-misminay",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "4 destinos peruanos para realizar turismo rural",
+            "url": "https://www.peru.travel/es/inspirate/4-destinos-peruanos-para-realizar-turismo-rural",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "Astroturismo en Cusco: La magia del cielo de los inkas",
+            "url": "https://www.peru.travel/es/inspirate/astroturismo-en-cusco-la-magia-del-cielo-de-los-inkas",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "Catación y creación de café en Cusco y Quillabamba: Conoce estas experiencias - Perú Travel",
+            "url": "https://www.peru.travel/es/experiencias/catacion-y-creacion-de-cafe-en-cusco",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "Guía Completa de los Mercados de Cusco: Una Experiencia Sensorial Única",
+            "url": "https://www.caminosalkantay.com/blog/guia-completa-de-los-mercados-de-cusco/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "valor mercado turismo rural Perú 2023 site:gob.pe OR site:mincetur.gob.pe OR site:inei.gob.pe OR site:promperu.gob.pe",
+            "competidores turismo rural Cusco experiencias similares",
+            "precios experiencias turismo rural Cusco 2023 fuente oficial",
+            "costos ofrecer experiencias turismo rural Cusco rentas salarios insumos 2023 site:.gob.pe OR site:.pe OR site:.org OR site:.edu.pe",
+            "experiencias de turismo rural Cusco dónde compran turistas"
+          ],
+          "estimatedCostUsd": 0.202,
+          "durationMs": 16573,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { OpenAI as PostHogOpenAI } from "@posthog/ai/openai";
 import NativeOpenAI from "openai";
 import { getPostHogClient } from "@/lib/analytics/server";
+import { recordUsage } from "./usage-meter";
 import {
   IDEA_SUMMARY_SYSTEM_PROMPT,
   buildIdeaSummaryUserPrompt,
@@ -109,6 +110,10 @@ export async function generateText(
     temperature: 0.4,
     ...getObservabilityParams(observability),
   } as NativeOpenAI.Chat.ChatCompletionCreateParamsNonStreaming);
+  recordUsage(model, {
+    inputTokens: response.usage?.prompt_tokens,
+    outputTokens: response.usage?.completion_tokens,
+  });
   const content = response.choices[0]?.message?.content;
   if (!content) throw new Error("Empty response from OpenAI");
   return content;
@@ -131,6 +136,10 @@ export async function generateJson<T>(
     temperature: 0.3,
     ...getObservabilityParams(observability),
   } as NativeOpenAI.Chat.ChatCompletionCreateParamsNonStreaming);
+  recordUsage(model, {
+    inputTokens: response.usage?.prompt_tokens,
+    outputTokens: response.usage?.completion_tokens,
+  });
   const content = response.choices[0]?.message?.content;
   if (!content) throw new Error("Empty response from OpenAI");
   return JSON.parse(content) as T;
@@ -155,6 +164,10 @@ export async function generateReasoningJson<T>(
     reasoning_effort: effort,
     ...getObservabilityParams(observability),
   } as NativeOpenAI.Chat.ChatCompletionCreateParamsNonStreaming);
+  recordUsage(model, {
+    inputTokens: response.usage?.prompt_tokens,
+    outputTokens: response.usage?.completion_tokens,
+  });
   const content = response.choices[0]?.message?.content;
   if (!content) throw new Error("Empty response from OpenAI reasoning");
   return JSON.parse(content) as T;
@@ -694,6 +707,12 @@ export async function generateWithWebSearch(
       }
     }
   }
+
+  recordUsage(
+    input.model,
+    { inputTokens: response.usage?.input_tokens, outputTokens: response.usage?.output_tokens },
+    searchCalls
+  );
 
   return {
     text: text

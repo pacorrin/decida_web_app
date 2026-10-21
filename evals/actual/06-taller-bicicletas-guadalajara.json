@@ -1,0 +1,606 @@
+{
+  "case": {
+    "id": "06-taller-bicicletas-guadalajara",
+    "kind": "negocio-local-mx",
+    "expectedMarket": "México · Guadalajara (zona Chapalita)",
+    "description": "Quiero abrir un taller de reparación y mantenimiento de bicicletas en Guadalajara, cerca de Chapalita, con venta de refacciones básicas. Yo soy mecánico de bicicletas desde hace años y hoy trabajo en una tienda ajena.",
+    "profile": {
+      "situation": "empleado",
+      "goal": "reemplazar_empleo",
+      "experience": "algo",
+      "capital": "50k_150k",
+      "acceptableLoss": "20k_50k",
+      "hoursPerWeek": "mas_40",
+      "schedule": "tiempo_completo",
+      "timeframe": "3_6_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "operar",
+        "crear"
+      ],
+      "workPreference": "fisico",
+      "sales": 3,
+      "uncertainty": 3,
+      "process": 4,
+      "hiring": "solo"
+    },
+    "financial": {
+      "initialInvestment": 110000,
+      "fixedCostsRange": "5k_15k",
+      "products": [
+        {
+          "name": "Servicio de mantenimiento de bicicleta",
+          "kind": "servicio",
+          "price": 450,
+          "variableCost": 120,
+          "monthlyUnits": 70
+        },
+        {
+          "name": "Refacciones y accesorios",
+          "kind": "producto",
+          "price": 300,
+          "variableCost": 180,
+          "monthlyUnits": 60
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "4_10",
+      "competition": "media",
+      "channel": "referidos",
+      "dependencies": [
+        "ubicacion",
+        "inventario"
+      ],
+      "mainConcern": "Que los clientes de mi tienda actual no me sigan.",
+      "successCondition": "Ganar lo mismo que en mi empleo actual en ocho meses."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "México",
+    "ciudad": "Guadalajara",
+    "criterio": "La idea menciona específicamente Guadalajara como ubicación del taller.",
+    "es_supuesto": false,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:39:49.762Z",
+  "latencySeconds": 177.1,
+  "cost": {
+    "tokensUsd": 0.097,
+    "searchUsd": 0.15,
+    "totalUsd": 0.247,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 13,
+        "inputTokens": 36679,
+        "outputTokens": 20948
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 6448,
+        "outputTokens": 3708
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 3326
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 17257,
+        "outputTokens": 356
+      }
+    }
+  },
+  "ideaSummary": "Entendemos que quiero abrir un taller de reparación y mantenimiento de bicicletas en Guadalajara, cerca de Chapalita, con venta de refacciones básicas.",
+  "summarySource": "fallback",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 70,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 81,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 59,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 86,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 95,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 45,
+      "semaforo": "amarillo"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 233.0769230769231,
+    "grossMarginPercentage": 61.21212121212122,
+    "estimatedMonthlyGrossProfit": 30300.000000000004,
+    "estimatedMonthlyNetProfit": 20300.000000000004,
+    "breakEvenSales": 43,
+    "paybackMonths": 5.418719211822659
+  },
+  "interpretation": {
+    "personal_fit_signal": "green",
+    "financial_viability_signal": "green",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "green",
+    "scalability_signal": "yellow",
+    "final_recommendation": "proceed_small_test",
+    "red_flags": [
+      "Tu inversión inicial ($110,000) es mayor que lo que dijiste que podrías perder sin afectar tu estabilidad. Si el negocio no funciona, la pérdida real superaría tu límite declarado — considera arrancar con una versión de menor inversión.",
+      "Inversión inicial de 110,000 MXN supera la pérdida máxima tolerable de 50,000 MXN."
+    ],
+    "reasoning_summary": "El proyecto muestra buen encaje personal y viabilidad financiera, pero la viabilidad comercial y la escalabilidad son moderadas y el riesgo es alto. La inversión inicial excede la pérdida tolerable, lo que eleva la exposición. Se recomienda iniciar con una prueba piloto de bajo costo antes de comprometer el capital completo."
+  },
+  "report": {
+    "arep_executive_summary": "Tu idea de abrir un taller de reparación y mantenimiento de bicicletas en Guadalajara, cerca de Chapalita, está poco definida. Aunque tienes experiencia como mecánico, falta claridad sobre a quién le venderías tus servicios y productos, lo que genera incertidumbre en la viabilidad comercial. A pesar de que el proyecto muestra un buen encaje personal y viabilidad financiera, el riesgo es alto y la inversión inicial de 110,000 MXN supera lo que has declarado que podrías perder sin afectar tu estabilidad.\n\nTe recomiendo que inicies con una prueba piloto de bajo costo para validar tu propuesta y captar clientes. Esto te permitirá ajustar tu oferta y entender mejor el mercado antes de comprometer todo tu capital. Al hacerlo, podrás minimizar riesgos y evaluar la respuesta de los clientes sin una inversión excesiva.",
+    "arep_business_understanding": "Ofreces un taller de reparación y mantenimiento de bicicletas, donde también venderás refacciones básicas. Tu experiencia como mecánico de bicicletas te da una ventaja competitiva, ya que puedes ofrecer un servicio especializado y de calidad. Los clientes te comprarían porque buscan un lugar confiable para mantener sus bicicletas en buen estado, además de contar con la opción de adquirir piezas necesarias para su funcionamiento.\n\nEl perfil de tu cliente aún no está del todo claro, ya que no has especificado a quién le venderías. Podría ser un supuesto que tu mercado objetivo incluya a ciclistas de diversas edades que necesiten mantenimiento regular o reparaciones ocasionales. También es posible que te enfoques en personas que utilizan la bicicleta como medio de transporte diario o para actividades recreativas. Es importante validar quiénes son tus clientes potenciales para ajustar tu oferta y estrategias de marketing.",
+    "arep_strengths": [
+      {
+        "title": "Experiencia en mecánica de bicicletas",
+        "whyItMatters": "Tienes años de experiencia como mecánico de bicicletas, lo que te da un conocimiento técnico valioso para ofrecer servicios de calidad."
+      },
+      {
+        "title": "Margen bruto atractivo",
+        "whyItMatters": "El margen bruto estimado es del 61%, lo que significa que de cada venta te quedan $233 antes de gastos fijos, lo que puede ayudar a cubrir costos operativos."
+      },
+      {
+        "title": "Recuperación de inversión rápida",
+        "whyItMatters": "Se estima que recuperarás tu inversión en aproximadamente 5.4 meses, lo que reduce el riesgo financiero a corto plazo."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Alta competencia en el mercado",
+        "whyItMatters": "Has declarado que hay competencia media en la zona, con varios competidores establecidos como Ciclo Jal y Bicicletas El Sam, lo que podría dificultar la captación de clientes.",
+        "howToReduce": "Realiza un análisis de la competencia para identificar qué servicios o precios puedes ofrecer que te diferencien y atraigan a los clientes."
+      },
+      {
+        "title": "Claridad de la idea insuficiente",
+        "whyItMatters": "La idea está parcialmente definida y falta saber a quién le venderías, lo que puede afectar tu estrategia de marketing y captación de clientes.",
+        "howToReduce": "Realiza encuestas o entrevistas con potenciales clientes para entender mejor sus necesidades y preferencias."
+      },
+      {
+        "title": "Dependencia de clientes actuales",
+        "whyItMatters": "Tienes preocupación de que los clientes de tu tienda actual no te sigan, lo que podría limitar tu base de clientes inicial.",
+        "howToReduce": "Desarrolla una estrategia de marketing que incluya promociones para atraer nuevos clientes y no depender únicamente de tus contactos actuales."
+      }
+    ],
+    "arep_personal_fit_analysis": "Tú tienes un buen encaje con la idea de abrir un taller de reparación y mantenimiento de bicicletas. Primero, tu experiencia como mecánico de bicicletas es un gran activo, ya que te permite ofrecer un servicio de calidad y entender las necesidades de tus clientes. Además, disfrutas de actividades físicas y operativas, lo cual es esencial en un taller donde el trabajo manual es constante.\n\nSin embargo, hay algunas brechas personales que deberías considerar. Una de ellas es tu comodidad con la venta. Aunque tienes una calificación de 3 de 5 en comodidad vendiendo, es importante que trabajes en mejorar esta habilidad, ya que vender refacciones y servicios será crucial para el éxito de tu taller. Una acción concreta podría ser practicar técnicas de venta con amigos o familiares para ganar confianza.\n\nOtra brecha es tu preferencia por trabajar solo. Aunque prefieres no contratar, considera que en un taller de este tipo, podría ser necesario contar con apoyo en momentos de alta demanda. Una acción que podrías tomar es evaluar si podrías trabajar con un aprendiz o asistente a tiempo parcial, lo que te permitiría enfocarte en las tareas más complejas mientras mantienes la operación fluida.",
+    "arep_financial_analysis": "Analizando los márgenes de tus productos, el **servicio de mantenimiento de bicicleta** tiene un precio de 450 MXN y un costo variable de 120 MXN, lo que te deja un margen bruto de 330 MXN por unidad, lo que representa un margen del 73.33%. Por otro lado, las **refacciones y accesorios** se venden a 300 MXN con un costo variable de 180 MXN, resultando en un margen bruto de 120 MXN y un margen del 40%. Ambos productos son rentables, ya que no se vende ninguno con pérdida. \n\nTu punto de equilibrio es de 43 ventas al mes, lo que significa que necesitas generar ingresos suficientes para cubrir tus costos fijos. Con un rango de costos fijos mensuales de 5,000 a 15,000 MXN, y considerando tu margen bruto, puedes cubrir tus costos fijos con aproximadamente 43 ventas. Esto es viable dado tu volumen estimado de ventas de 70 servicios de mantenimiento y 60 refacciones al mes. \n\nEn cuanto a la recuperación de la inversión, con una inversión inicial de 110,000 MXN y un beneficio neto estimado de 20,300 MXN al mes, tu payback es de aproximadamente 5.4 meses. Esto es favorable, ya que indica que recuperarás tu inversión en menos de seis meses si mantienes el rendimiento actual. Sin embargo, es importante monitorear tus costos y ventas para asegurar que no haya desviaciones significativas que afecten este cálculo.",
+    "arep_time_operation_analysis": "Para abrir tu taller de reparación y mantenimiento de bicicletas en Guadalajara, necesitarás realizar varias actividades tanto una vez como de forma repetitiva. \n\n### Actividades iniciales (una vez)\n- **Establecer el taller**: Esto incluye la búsqueda y renta del local, así como la compra de herramientas y equipos necesarios. \n- **Adquirir inventario**: Compra de refacciones básicas y accesorios que ofrecerás a tus clientes.\n- **Publicidad inicial**: Crear una estrategia de marketing para atraer a tus primeros clientes.\n\n### Actividades recurrentes (por cada venta)\n- **Reparación y mantenimiento**: Cada vez que un cliente traiga su bicicleta, deberás realizar el servicio correspondiente, que puede incluir desde reparaciones básicas hasta mantenimiento completo.\n- **Atención al cliente**: Recibir a los clientes, escuchar sus necesidades y ofrecerles un diagnóstico.\n- **Ventas de refacciones**: Cada vez que vendas un accesorio o repuesto, deberás gestionar el inventario y la entrega.\n\nCon más de 40 horas a la semana disponibles, parece que tienes el tiempo suficiente para manejar estas actividades. Sin embargo, la atención al cliente y las reparaciones podrían saturarte, especialmente en días con alta demanda. Para organizarte mejor, podrías establecer un horario fijo para las reparaciones y otro para la atención al cliente, así como considerar la posibilidad de ofrecer servicios por cita para optimizar el flujo de trabajo. Esto te ayudará a mantener un equilibrio y evitar el agotamiento.",
+    "arep_scalability_analysis": "Para que tu taller de reparación y mantenimiento de bicicletas crezca sin que aumente proporcionalmente tu carga de trabajo, podrías considerar implementar un sistema de citas en línea. Esto te permitiría gestionar el flujo de clientes de manera más eficiente y optimizar tu tiempo. Además, podrías explorar la posibilidad de ofrecer servicios de mantenimiento preventivo, donde los clientes traigan sus bicicletas en intervalos regulares, lo que te ayudaría a programar tu carga de trabajo. Otra opción sería capacitar a un asistente o aprendiz que te ayude con tareas más simples, permitiéndote enfocarte en trabajos más complejos.\n\nSin embargo, hay factores que podrían frenar tu crecimiento. La dependencia de una ubicación física puede limitar tu capacidad de atraer clientes si no estás en un lugar estratégico. Además, el mercado de reparación de bicicletas en Guadalajara parece tener una competencia media, con varios talleres establecidos como Ciclo Jal y Bicicletas El Sam, lo que podría dificultar la captación de clientes si no ofreces un valor diferenciador. También, si tus clientes actuales no te siguen de tu empleo anterior, esto podría impactar tus ingresos iniciales y tu estabilidad financiera.\n\nFinalmente, la falta de claridad sobre a quién le venderías es un riesgo que debes abordar. Definir tu mercado objetivo te permitirá crear estrategias de marketing más efectivas y aprovechar tu canal de referidos y boca a boca. Considera realizar encuestas o entrevistas con tus clientes potenciales para entender mejor sus necesidades y expectativas. Esto te ayudará a fortalecer tu propuesta de valor y a posicionarte mejor frente a la competencia.",
+    "arep_validation_plan": [],
+    "arep_final_recommendation_text": "Te recomiendo proceder con una prueba pequeña antes de hacer una inversión completa. Aunque tu proyecto de taller de reparación y mantenimiento de bicicletas tiene un buen encaje personal y viabilidad financiera, la viabilidad comercial y la escalabilidad son moderadas, y el riesgo es alto. Además, tu inversión inicial de 110,000 MXN supera tu límite de pérdida tolerable de 50,000 MXN, lo que incrementa tu exposición financiera.\n\nPara avanzar, primero aclara a quién le vas a vender tus servicios. Esto te ayudará a definir mejor tu mercado objetivo y estrategias de marketing. Luego, considera realizar un piloto de bajo costo, ofreciendo tus servicios a un grupo limitado de clientes para validar la demanda y ajustar tu propuesta. Por último, asegúrate de tener un plan para mantener la relación con tus clientes actuales y evitar que se vayan a la competencia.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "none",
+      "issues": 0,
+      "rewritten": [],
+      "review": {
+        "contradicciones": [],
+        "supuestos_sin_fuente": [],
+        "conclusiones_no_sustentadas": [],
+        "correcciones": []
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Taller de reparación y mantenimiento de bicicletas con venta de refacciones básicas.",
+          "sector": "Reparación de bicicletas",
+          "modelo_de_negocio": "Servicios de reparación y mantenimiento, venta de bicicletas y refacciones."
+        },
+        "tamano_mercado": {
+          "cifra": null,
+          "anio": null,
+          "fuente_id": null,
+          "motivo": "No se encontró información específica sobre el tamaño del mercado de reparación de bicicletas en Guadalajara ni en México."
+        },
+        "competidores": [
+          {
+            "nombre": "Ciclo Jal",
+            "propuesta": "Venta al por mayor y al por menor de bicicletas y repuestos, taller de reparación especializado en bicicletas.",
+            "precio_referencia": null,
+            "fuente_id": "F3"
+          },
+          {
+            "nombre": "Bicicletas El Sam",
+            "propuesta": "Taller y tienda de bicicletas que ofrece servicios de reparación y venta de repuestos.",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "Taller de Bicicletas Cebo",
+            "propuesta": "Reparación y mantenimiento de bicicletas.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          },
+          {
+            "nombre": "Joses Bike",
+            "propuesta": "Especializada en la reparación de bicicletas, ofreciendo desde reparaciones de pinchazos hasta revisiones completas.",
+            "precio_referencia": null,
+            "fuente_id": "F6"
+          },
+          {
+            "nombre": "Taller de Reparación de Bicicletas en Libertad",
+            "propuesta": "Reparación y mantenimiento de bicicletas.",
+            "precio_referencia": null,
+            "fuente_id": "F7"
+          },
+          {
+            "nombre": "Taller de Bicicletas",
+            "propuesta": "Reparación de bicicletas.",
+            "precio_referencia": null,
+            "fuente_id": "F8"
+          },
+          {
+            "nombre": "Cosmic Bike",
+            "propuesta": "Reparación y mantenimiento de bicicletas.",
+            "precio_referencia": null,
+            "fuente_id": "F10"
+          },
+          {
+            "nombre": "Venta y Reparación de Bicicletas y Refacciones",
+            "propuesta": "Venta y reparación de bicicletas y refacciones.",
+            "precio_referencia": null,
+            "fuente_id": "F11"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Reparaciones básicas incluyendo reparación de pinchazos, ajuste de frenos, lubricación de cadena y revisión general.",
+            "rango": "$25 MXN",
+            "fuente_id": "F14"
+          },
+          {
+            "descripcion": "Afinación básica que incluye ajuste de frenos y cambios, lubricación de cadena.",
+            "rango": "$250 MXN",
+            "fuente_id": "F15"
+          },
+          {
+            "descripcion": "Afinación completa que abarca revisión total de 21 puntos y limpieza profunda.",
+            "rango": "$550 MXN",
+            "fuente_id": "F15"
+          },
+          {
+            "descripcion": "Revisión general y diagnóstico de bicicleta.",
+            "rango": "$30 MXN",
+            "fuente_id": "F17"
+          },
+          {
+            "descripcion": "Mantenimiento medio de bicicleta que incluye lavado exterior y lubricación de la cadena.",
+            "rango": "$590 MXN",
+            "fuente_id": "F18"
+          },
+          {
+            "descripcion": "Precios para reparación de bicicletas que varían dependiendo de la complejidad del trabajo.",
+            "rango": "$15 a $50 MXN",
+            "fuente_id": "F19"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Venta y Reparación de Bicicletas y Refacciones",
+            "nota": "Ubicado en Calle Pedro García Conde 723, 5 de Mayo, 44970 Guadalajara.",
+            "fuente_id": "F11"
+          },
+          {
+            "canal": "Himabike",
+            "nota": "Situado en Calle Aquiles Serdán No. 768 B, Col. Belisario Dominguez, Guadalajara.",
+            "fuente_id": "F22"
+          },
+          {
+            "canal": "SUUT - Bicicletas en Guadalajara",
+            "nota": "Localizado en Calle Federación #563, Col. La Perla, Guadalajara.",
+            "fuente_id": "F21"
+          },
+          {
+            "canal": "Retro Bike",
+            "nota": "Se encontraba en Calzada del Federalismo Nte 519, Col. Jesús, Guadalajara.",
+            "fuente_id": "F23"
+          },
+          {
+            "canal": "Cosmic Bike",
+            "nota": "Ubicado en Calle Diagonal Manuel Cambre No. 1785, Col. Villaseñor, Guadalajara.",
+            "fuente_id": "F10"
+          },
+          {
+            "canal": "Reparación de Bicicletas Yépez",
+            "nota": "Situado en Av. Manuel Ávila Camacho 1175, Guadalajara.",
+            "fuente_id": "F24"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Renta del local",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Salarios del personal",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Herramientas y equipos",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Suministros y repuestos",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Servicios públicos (agua, electricidad, internet)",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Publicidad y marketing",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Seguros y licencias",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          }
+        ],
+        "huecos_de_informacion": [
+          "No se encontró información específica sobre el tamaño del mercado de reparación de bicicletas en Guadalajara ni en México.",
+          "No se encontraron datos específicos sobre los costos de operación de un taller de reparación de bicicletas en Guadalajara."
+        ],
+        "mercado_objetivo": {
+          "pais": "México",
+          "ciudad": "Guadalajara",
+          "criterio": "La idea menciona específicamente Guadalajara como ubicación del taller.",
+          "es_supuesto": false
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "Estudio sobre la",
+            "url": "https://www.inegi.org.mx/contenido/productos/prod_serv/contenidos/espanol/bvinegi/productos/nueva_estruc/702825197421.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F2",
+            "titulo": "Censos Económicos (CE) 2024",
+            "url": "https://www.inegi.org.mx/programas/ce/2024/default.html",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F3",
+            "titulo": "Ciclo Jal | 33 3618 6255 | Guadalajara (México)",
+            "url": "https://www.allbiz.mx/ciclo-jal-33-3618-6255",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F4",
+            "titulo": "Bicicletas El Sam | 33 1591 2471 | Guadalajara (México)",
+            "url": "https://www.allbiz.mx/bicicletas-el-sam-33-1591-2471",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F5",
+            "titulo": "Taller De Bicicletas Cebo | 33 3599 0552 | Guadalajara (México)",
+            "url": "https://www.allbiz.mx/taller-de-bicicletas-cebo-33-3599-0552",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F6",
+            "titulo": "Joses Bike - Reparación de bicicletas | Guadalajara",
+            "url": "https://joses-bike.ueniweb.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "Taller De Reparacion De Bicicletas en Libertad - Guadalajara, Jalisco",
+            "url": "https://mexicoo.mx/taller-de-reparacion-de-bicicletas-1936542",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "Taller de bicicletas | 33 3130 3436 | Guadalajara (México)",
+            "url": "https://www.bizarchivo.mx/taller-de-bicicletas_97t-33-3130-3436",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "Taller De Bicicletas en Artesanos (Sagrada Familia Y/O Jesus) - Guadalajara, Jalisco",
+            "url": "https://mexicoo.mx/taller-de-bicicletas-1960988",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "Cosmic Bike",
+            "url": "https://amp.mexicoo.mx/cosmic-ike-1962181",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "Venta y Reparación de Bicicletas y Refacciones | 33 1540 6054 | Guadalajara (México)",
+            "url": "https://www.allbiz.mx/venta-y-reparaci%C3%B3n-de-bicicletas-y-33-1540-6054",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "Taller De Reparacion De Bicicletas Don Vara",
+            "url": "https://mexicoo.mx/reparacion-de-bicicletas-1900841",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F13",
+            "titulo": "Taller de Bicicletas de Netos | 33 3665 4250 | Guadalajara (México)",
+            "url": "https://www.allbiz.mx/taller-de-bicicletas-de-netos-33-3665-4250",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F14",
+            "titulo": "BiciMóvil México - Servicio de Reparación Móvil de Bicicletas",
+            "url": "https://bicimovilpro.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F15",
+            "titulo": "Taller - CicloVida",
+            "url": "https://www.ciclovida.com.mx/taller.php",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F16",
+            "titulo": "SERVICIO - TORRE UNO MTB | TIENDA DE BICICLETAS DE MONTAÑA",
+            "url": "https://torreunomtb.com/servicio/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F17",
+            "titulo": "Taller Especializado en Bicicletas | Ciclometa",
+            "url": "https://ciclometa.com/products/workshop-ciclometa",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F18",
+            "titulo": "Mantenimiento Medio de Bicicleta - Zero Bike Store",
+            "url": "https://www.zerobike.com.mx/products/mantenimiento-medio-de-bicicleta",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F19",
+            "titulo": "Reparación de Bicicletas en Guadalajara, México - Actualizado 8 de septiembre de 2026",
+            "url": "https://manorapido.com/mx/guadalajara/reparacion-bicicletas",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F20",
+            "titulo": "Import Bike MX | 33 3641 6590 | Guadalajara (México)",
+            "url": "https://www.allbiz.mx/import-bike-mx-33-3641-6590",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F21",
+            "titulo": "SUUT - Bicicletas en Guadalajara | 33 3618 6446 | Guadalajara (México)",
+            "url": "https://www.allbiz.mx/suut-bicicletas-en-guadalajara-33-3618-6446",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F22",
+            "titulo": "Himabike",
+            "url": "https://mexicoo.mx/tienda-de-bicicletas-1682601",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F23",
+            "titulo": "Retro Bike | 33 1728 1663 | Guadalajara (México)",
+            "url": "https://www.allbiz.mx/retro-bike-33-1728-1663",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F24",
+            "titulo": "▷ Reparación de Bicicletas Yépez en Guadalajara",
+            "url": "https://tallerdebiciscercademi.com.mx/jalisco/guadalajara/reparacion-de-bicicletas-yepez-guadalajara/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F25",
+            "titulo": "▷ Reparación Bicicletas en Guadalajara",
+            "url": "https://tallerdebiciscercademi.com.mx/jalisco/guadalajara/reparacion-bicicletas-guadalajara/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F26",
+            "titulo": "Refaccionaria Y Reparación De Bicicletas - Guiamexico.mx",
+            "url": "https://guiamexico.mx/empresa/1950595/refaccionaria-y-reparacion-de-bicicletas",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "tamaño del mercado de reparación de bicicletas Guadalajara México 2023 site:.gob.mx OR site:inegi.org.mx OR site:statista.com OR site:amms.es",
+            "talleres de reparación de bicicletas Guadalajara competidores directos",
+            "precios servicios mantenimiento bicicletas Guadalajara México 2024",
+            "costos operación taller reparación bicicletas Guadalajara rentas salarios 2023 site:.gob.mx OR site:.mx",
+            "reparación de bicicletas clientes Guadalajara mercado objetivo México 2023"
+          ],
+          "estimatedCostUsd": 0.206,
+          "durationMs": 27766,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

@@ -1,0 +1,678 @@
+{
+  "case": {
+    "id": "14-tacos-latinos-houston",
+    "kind": "otro-pais",
+    "expectedMarket": "Estados Unidos · Houston (comunidad latina)",
+    "description": "Quiero abrir una taquería de barbacoa estilo Hidalgo en Houston, Texas, pensada para la comunidad mexicana que extraña el sabor de casa. Rentaría un local pequeño con cocina y mi familia me ayudaría con la operación.",
+    "profile": {
+      "situation": "independiente",
+      "goal": "reemplazar_empleo",
+      "experience": "algo",
+      "capital": "mas_500k",
+      "acceptableLoss": "mas_100k",
+      "hoursPerWeek": "mas_40",
+      "schedule": "tiempo_completo",
+      "timeframe": "6_12_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "operar",
+        "liderar"
+      ],
+      "workPreference": "fisico",
+      "sales": 4,
+      "uncertainty": 3,
+      "process": 4,
+      "hiring": "equipo"
+    },
+    "financial": {
+      "initialInvestment": 700000,
+      "fixedCostsRange": "mas_50k",
+      "products": [
+        {
+          "name": "Orden de tacos de barbacoa",
+          "kind": "producto",
+          "price": 180,
+          "variableCost": 70,
+          "monthlyUnits": 2500
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "mas_10",
+      "competition": "alta",
+      "channel": "referidos",
+      "dependencies": [
+        "ubicacion",
+        "permiso",
+        "inventario"
+      ],
+      "mainConcern": "Los costos de renta y los permisos sanitarios en Texas.",
+      "successCondition": "Operar sin pérdidas desde el mes ocho."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "Estados Unidos",
+    "ciudad": "Houston",
+    "criterio": "La idea se centra en abrir una taquería en Houston, Texas, para la comunidad mexicana.",
+    "es_supuesto": false,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:48:35.007Z",
+  "latencySeconds": 83.3,
+  "cost": {
+    "tokensUsd": 0.118,
+    "searchUsd": 0.15,
+    "totalUsd": 0.268,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 15,
+        "inputTokens": 43887,
+        "outputTokens": 5807
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 7003,
+        "outputTokens": 5241
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 2564
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 29151,
+        "outputTokens": 154
+      }
+    }
+  },
+  "ideaSummary": "Quieres abrir una taquería de barbacoa estilo Hidalgo en Houston, Texas, enfocada en la comunidad mexicana que anhela los sabores de su hogar. Tu idea consiste en rentar un local pequeño con cocina y contar con el apoyo de tu familia para la operación del negocio.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 87,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 81,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 57,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 49,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 95,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 95,
+      "semaforo": "verde"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 110,
+    "grossMarginPercentage": 61.111111111111114,
+    "estimatedMonthlyGrossProfit": 275000,
+    "estimatedMonthlyNetProfit": 215000,
+    "breakEvenSales": 546,
+    "paybackMonths": 3.255813953488372
+  },
+  "interpretation": {
+    "personal_fit_signal": "green",
+    "financial_viability_signal": "green",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "green",
+    "scalability_signal": "green",
+    "final_recommendation": "adjust_idea",
+    "red_flags": [
+      "Tu negocio requiere un permiso, licencia o regulación para operar. Investígalo a fondo antes de invertir: puede bloquear el arranque o encarecerlo.",
+      "Inversión inicial estimada de $700,000 MXN supera capital disponible declarado",
+      "Inversión inicial supera pérdida tolerada sin afectar estabilidad"
+    ],
+    "reasoning_summary": "Aunque el ajuste personal, la viabilidad financiera, el encaje de tiempo y la escalabilidad son sólidos, el monto de inversión inicial excede el capital disponible y la pérdida tolerable, elevando el riesgo. Se recomienda ajustar el modelo (por ejemplo, reducir costos de arrendamiento o buscar co-inversores) antes de avanzar."
+  },
+  "report": {
+    "arep_executive_summary": "Tu idea de abrir una taquería de barbacoa estilo Hidalgo en Houston está bien definida y tiene un enfoque claro en la comunidad mexicana que busca sabores auténticos. Sin embargo, aunque los puntajes de ajuste personal, viabilidad financiera, compatibilidad de tiempo y escalabilidad son favorables, el nivel de riesgo es alto debido a que la inversión inicial supera tu capital disponible y la pérdida tolerable. Por lo tanto, se recomienda ajustar tu modelo de negocio, como considerar reducir los costos de arrendamiento o buscar co-inversores, antes de avanzar con la apertura, para asegurar una base más sólida y minimizar riesgos.",
+    "arep_business_understanding": "Ofreces una taquería de barbacoa estilo Hidalgo en Houston, Texas, enfocada en brindar un sabor auténtico que recuerde a la comida casera de la comunidad mexicana. Tu propuesta de valor radica en la calidad de la barbacoa y la experiencia familiar que ofreces, lo que puede atraer a quienes extrañan esos sabores tradicionales. Además, el apoyo familiar en la operación puede generar un ambiente acogedor que invite a los clientes a regresar.\n\nTu cliente principal es la comunidad mexicana en Houston, que busca un lugar donde disfrutar de barbacoa auténtica. No se especifican detalles como edad, ingreso o hábitos de consumo, por lo que se puede suponer que son personas que valoran la comida tradicional y están dispuestas a pagar por una experiencia que les recuerde a su hogar. Este segmento podría incluir tanto a familias como a jóvenes adultos, pero esto es un supuesto que necesitarás validar.",
+    "arep_strengths": [
+      {
+        "title": "Margen bruto alto",
+        "whyItMatters": "Con un margen bruto del 61%, cada venta genera $110 antes de gastos fijos, lo que proporciona un colchón financiero para cubrir errores iniciales."
+      },
+      {
+        "title": "Recuperación rápida de inversión",
+        "whyItMatters": "La inversión de $700,000 se recupera en aproximadamente 3.3 meses, lo que permite un riesgo controlado en caso de errores."
+      },
+      {
+        "title": "Utilidad neta estimada positiva",
+        "whyItMatters": "Se estima una utilidad neta de $215,000 al mes, lo que indica que el negocio puede ser rentable si se cumplen las proyecciones de ventas."
+      },
+      {
+        "title": "Punto de equilibrio accesible",
+        "whyItMatters": "Con un punto de equilibrio de 546 ventas al mes, puedes quedarte 78% corto de tu pronóstico y aún así no perder dinero."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Alta competencia en el mercado",
+        "whyItMatters": "Declaraste que la competencia es alta, con varios competidores establecidos como Gerardo's y Taqueria La Borrega [F1][F2].",
+        "howToReduce": "Realiza un análisis más profundo de la competencia y busca un nicho específico que te diferencie, como un menú exclusivo o promociones especiales."
+      },
+      {
+        "title": "Costos de renta y permisos sanitarios",
+        "whyItMatters": "Tu mayor preocupación son los costos de renta y los permisos sanitarios en Texas, que pueden afectar la viabilidad financiera.",
+        "howToReduce": "Investiga y planifica los costos de renta y los requisitos de permisos en detalle para asegurar que tu presupuesto sea realista."
+      },
+      {
+        "title": "Evidencia de clientes limitada",
+        "whyItMatters": "Aunque mencionas tener más de 10 personas que podrían ser clientes, esto puede no ser suficiente para validar la demanda real.",
+        "howToReduce": "Realiza encuestas o pruebas de mercado para obtener más información sobre la demanda y ajustar tu oferta según las preferencias de la comunidad."
+      }
+    ],
+    "arep_personal_fit_analysis": "Tú encajas bien con la idea de abrir una taquería de barbacoa en Houston en varios aspectos. Primero, disfrutas de operar y ejecutar, lo que es fundamental en un negocio de alimentos donde la calidad y la atención al cliente son clave. Además, tu experiencia en liderar equipos será valiosa, especialmente si planeas involucrar a tu familia en la operación. También tienes una buena comodidad vendiendo, lo que te ayudará a atraer y retener clientes en un entorno competitivo.\n\nSin embargo, hay algunas brechas personales que debes considerar. Una de ellas es tu tolerancia a la incertidumbre, que es media (3 de 5). El sector de restaurantes puede ser volátil, especialmente al inicio. Una acción concreta sería informarte más sobre la industria de restaurantes en Houston, asistiendo a eventos de networking o talleres sobre emprendimiento en el sector. Esto te ayudará a sentirte más seguro ante situaciones imprevistas.\n\nOtra brecha es que, aunque te gustaría armar un equipo, deberás estar preparado para la gestión de personal, lo que puede ser un reto si no tienes experiencia previa en recursos humanos. Te sugiero que busques recursos o cursos sobre gestión de equipos y liderazgo en el contexto de restaurantes. Esto te permitirá desarrollar habilidades que te facilitarán la contratación y el manejo de tu equipo de trabajo.",
+    "arep_financial_analysis": "Tu idea de abrir una taquería de barbacoa en Houston tiene un margen de ganancia bruto por orden de 110 MXN, lo que representa un 61.11% de margen sobre el precio de venta de 180 MXN. Esto es positivo, ya que indica que cada venta contribuye significativamente a cubrir tus costos fijos y generar ganancias. Sin embargo, es crucial que verifiques si este margen se mantiene al considerar otros costos operativos, como los gastos generales y administrativos, que son del 4.3% de los ingresos totales, y los costos de alimentos y bebidas, que son del 33.5% de las ventas [F15][F16].\n\nTu punto de equilibrio se establece en 546 órdenes de tacos, lo que significa que necesitas vender al menos esa cantidad para cubrir tus costos fijos mensuales. Si tus costos fijos son más de 50,000 MXN, asegúrate de que tus proyecciones de ventas sean realistas. Con un estimado de 2,500 unidades al mes, estás en una buena posición para superar este punto de equilibrio y generar un beneficio neto mensual de 215,000 MXN, lo que indica que la recuperación de tu inversión inicial de 700,000 MXN podría lograrse en aproximadamente 3.26 meses.\n\nSin embargo, hay que tener en cuenta que el nivel de riesgo es alto, con un puntaje de 49 en esta dimensión. Esto significa que, aunque los números son prometedores, hay factores externos e internos que podrían afectar tus ventas y costos. Además, no se encontraron datos específicos sobre el tamaño del mercado de restaurantes mexicanos en Houston, lo que podría limitar tu capacidad para hacer proyecciones precisas. Asegúrate de realizar un análisis más profundo del mercado y de tus competidores, como Gerardo's y Taqueria La Borrega, para entender mejor tu posición y ajustar tus estrategias de precios y marketing [F1][F2].",
+    "arep_time_operation_analysis": "Abrir una taquería de barbacoa estilo Hidalgo en Houston implica varias tareas concretas que se dividen entre actividades únicas y repetitivas. Para la creación del producto, deberás establecer recetas, comprar ingredientes, y preparar el menú. Esto es un trabajo inicial que se hace una vez, aunque la preparación de la barbacoa y otros platillos se repetirá constantemente. En cuanto a las ventas, tendrás que atender a los clientes, gestionar pedidos, y coordinar entregas, lo cual se repetirá con cada venta.\n\nCon un volumen proyectado de 2,500 órdenes de tacos de barbacoa al mes, esto significa que deberás estar preparado para un flujo constante de trabajo. Si consideramos que cada orden requiere atención, puedes estimar que dedicarás varias horas diarias a la atención al cliente y la gestión de ventas. Si trabajas más de 40 horas a la semana, como mencionas, es crucial que organices tu tiempo eficientemente. Podrías dividir tus días en bloques: un tiempo para la preparación de la comida y otro para la atención al cliente y las entregas.\n\nLa parte que podría saturarte es la atención al cliente y la gestión de pedidos, especialmente si la demanda es alta. Para evitar el agotamiento, considera delegar algunas tareas a tu familia o al equipo que planeas formar. También es importante establecer procesos claros para la operación diaria, lo que te permitirá manejar mejor el flujo de trabajo y reducir el estrés.",
+    "arep_scalability_analysis": "Para que tu taquería de barbacoa estilo Hidalgo en Houston crezca sin incrementar significativamente tu carga de trabajo, puedes considerar varias estrategias. Primero, puedes optimizar tus operaciones mediante la implementación de procesos estandarizados en la cocina y el servicio. Esto facilitará la contratación y capacitación de personal adicional, lo que te permitirá delegar tareas y enfocarte en la gestión general. Además, el uso de plataformas digitales para pedidos y entregas puede ampliar tu alcance sin necesidad de que estés presente en el local en todo momento.\n\nSin embargo, hay factores que podrían frenar tu crecimiento. La alta competencia en el área, con taquerías como Gerardo's y Taquería La Borrega, significa que deberás diferenciarte claramente en calidad o precio para atraer a la comunidad mexicana que buscas. Además, depender de un local físico y de permisos sanitarios puede limitar tu capacidad de expansión. Si los costos de renta y los permisos se vuelven prohibitivos, esto podría afectar tu viabilidad a largo plazo.\n\nDado que planeas conseguir clientes a través de referencias y boca a boca, es crucial que ofrezcas una experiencia excepcional desde el inicio. Considera crear promociones o eventos especiales que incentiven a tus clientes a recomendarte. También, asegúrate de mantener una calidad constante en tus productos, ya que esto será clave para construir una reputación sólida en la comunidad.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda",
+        "tasks": [
+          "Hablar con 10 personas de la comunidad mexicana en Houston sobre su interés en una taquería de barbacoa estilo Hidalgo.",
+          "Visitar 5 taquerías competidoras como Gerardo's y Taqueria La Borrega para observar su menú y precios.",
+          "Crear una encuesta simple en redes sociales para conocer la preferencia de sabores y precios en tacos de barbacoa."
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números",
+        "tasks": [
+          "Calcular los costos de renta de locales pequeños en Houston y comparar con el precio de tacos en competidores como Taqueria Yolanda y Cantina Barba.",
+          "Investigar los requisitos de permisos sanitarios en Texas y estimar los costos asociados.",
+          "Hacer un análisis de costos para determinar el precio de venta de tus tacos de barbacoa, considerando un costo variable de $70 por orden."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición",
+        "tasks": [
+          "Crear un grupo en redes sociales para la comunidad mexicana y compartir contenido sobre tu idea de taquería.",
+          "Ofrecer una degustación gratuita de tacos de barbacoa a 20 personas en un evento local o reunión comunitaria.",
+          "Recoger feedback de al menos 15 personas sobre la degustación y su disposición a pagar por tus tacos."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar los resultados de la degustación y la encuesta para evaluar la viabilidad del negocio.",
+          "Revisar los costos estimados y los ingresos potenciales para decidir si seguir adelante con la inversión inicial.",
+          "Consultar con un experto en permisos y regulaciones para entender mejor los pasos a seguir para abrir la taquería."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Tu idea de abrir una taquería de barbacoa estilo Hidalgo en Houston tiene un buen encaje personal y una viabilidad financiera sólida, pero hay aspectos críticos que necesitas ajustar antes de avanzar. La inversión inicial estimada de $700,000 MXN supera el capital disponible que has declarado y la pérdida tolerable, lo que incrementa el riesgo de tu proyecto. Además, es fundamental que investigues a fondo los permisos y regulaciones necesarios para operar en Texas, ya que esto podría ser un obstáculo significativo para el arranque de tu negocio.\n\nPara avanzar, te recomiendo que sigas estos pasos: primero, realiza una investigación exhaustiva sobre los permisos y licencias requeridos para abrir tu taquería en Houston, así como los costos asociados. Segundo, revisa tu modelo de negocio y considera opciones para reducir costos, como negociar un mejor precio de renta o buscar co-inversores que te ayuden a cubrir la inversión inicial. Por último, asegúrate de tener un plan claro para atraer clientes, ya que mencionaste que tu canal principal sería el boca a boca; considera estrategias adicionales de marketing para aumentar tu visibilidad en la comunidad mexicana.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 3,
+      "rewritten": [
+        "business_understanding",
+        "strengths_risks"
+      ],
+      "review": {
+        "contradicciones": [
+          {
+            "secciones": [
+              "executive_summary",
+              "strengths_risks"
+            ],
+            "afirmacion_a": "Tu idea de abrir una taquería de barbacoa estilo Hidalgo en Houston está bien definida y tiene un enfoque claro en la comunidad mexicana que busca sabores auténticos.",
+            "afirmacion_b": "Idea poco definida: Aunque la idea es clara, no se han definido aspectos cruciales como el menú exacto y la estrategia de marketing."
+          }
+        ],
+        "supuestos_sin_fuente": [
+          {
+            "seccion": "business_understanding",
+            "afirmacion": "Este segmento puede incluir tanto a familias como a jóvenes adultos que buscan un sabor familiar en un ambiente cómodo."
+          },
+          {
+            "seccion": "business_understanding",
+            "afirmacion": "Se puede suponer que son personas que valoran la comida tradicional y están dispuestas a pagar por una experiencia que les recuerde a su hogar."
+          }
+        ],
+        "conclusiones_no_sustentadas": [],
+        "correcciones": [
+          {
+            "seccion": "business_understanding",
+            "instruccion": "Quita o marca como hipótesis la segmentación demográfica y la supuesta disposición a pagar; presenta estos puntos como supuestos a validar."
+          },
+          {
+            "seccion": "strengths_risks",
+            "instruccion": "Alinea la descripción de la claridad de la idea con el executive_summary evitando afirmar que la idea está poco definida tras describirla como bien definida."
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Abrir una taquería de barbacoa estilo Hidalgo en Houston, Texas, enfocada en la comunidad mexicana.",
+          "sector": "Restaurantes",
+          "modelo_de_negocio": "Taquería"
+        },
+        "tamano_mercado": {
+          "cifra": null,
+          "anio": null,
+          "fuente_id": null,
+          "motivo": "NO ENCONTRADO"
+        },
+        "competidores": [
+          {
+            "nombre": "Gerardo's",
+            "propuesta": "Barbacoa, carnitas y lengua.",
+            "precio_referencia": null,
+            "fuente_id": "F1"
+          },
+          {
+            "nombre": "Taqueria La Borrega",
+            "propuesta": "Tacos de barbacoa y servicio al cliente.",
+            "precio_referencia": null,
+            "fuente_id": "F2"
+          },
+          {
+            "nombre": "El De La Barbacoa",
+            "propuesta": "Tacos y tostigordos con carne ahumada y salsa verde.",
+            "precio_referencia": null,
+            "fuente_id": "F3"
+          },
+          {
+            "nombre": "Taquerias El Charro",
+            "propuesta": "Barbacoa y otros tacos tradicionales.",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "Huncho's Tacos",
+            "propuesta": "Tacos de barbacoa y platillos inspirados en Monterrey, Tijuana y Ciudad de México.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          },
+          {
+            "nombre": "Taqueria El Sol de Mexico",
+            "propuesta": "Tacos rancheros y tortillas caseras.",
+            "precio_referencia": null,
+            "fuente_id": "F6"
+          },
+          {
+            "nombre": "Tacos Javi's",
+            "propuesta": "Tacos de barbacoa de res en tortillas de maíz o harina.",
+            "precio_referencia": null,
+            "fuente_id": "F7"
+          },
+          {
+            "nombre": "Cantina Barba",
+            "propuesta": "Tacos de barbacoa y otros platillos mexicanos.",
+            "precio_referencia": null,
+            "fuente_id": "F8"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Taco de barbacoa en Taqueria Los Charros (Food Truck)",
+            "rango": "$2.75",
+            "fuente_id": "F9"
+          },
+          {
+            "descripcion": "Taco individual de barbacoa en Huncho's Tacos",
+            "rango": "$3.79",
+            "fuente_id": "F10"
+          },
+          {
+            "descripcion": "Taco de barbacoa en Taqueria Yolanda (Food Truck)",
+            "rango": "$2.75",
+            "fuente_id": "F11"
+          },
+          {
+            "descripcion": "Taco de barbacoa en Cantina Barba",
+            "rango": "$5.00",
+            "fuente_id": "F8"
+          },
+          {
+            "descripcion": "Taco de barbacoa en Itacate Taqueria",
+            "rango": "$3.69",
+            "fuente_id": "F12"
+          },
+          {
+            "descripcion": "Orden de 5 tacos de barbacoa en Tacos Javis #2 La Escondida",
+            "rango": "$15.60",
+            "fuente_id": "F13"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "El Pueblo Market & Taquería",
+            "nota": "Ofrece tacos, burritos, carnitas y abarrotes mexicanos.",
+            "fuente_id": "F18"
+          },
+          {
+            "canal": "El Parian Mercado",
+            "nota": "Carnicería y taquería que destaca por sus tacos al pastor.",
+            "fuente_id": "F19"
+          },
+          {
+            "canal": "Supermercados Teloloapan",
+            "nota": "Supermercado familiar con carnicería y comida preparada.",
+            "fuente_id": "F20"
+          },
+          {
+            "canal": "Mi Tienda by H-E-B",
+            "nota": "Supermercado mexicano con productos auténticos.",
+            "fuente_id": "F21"
+          },
+          {
+            "canal": "La Michoacana Meat Market",
+            "nota": "Carnicería y tienda mexicana con carne fresca.",
+            "fuente_id": "F22"
+          },
+          {
+            "canal": "La Palma Market",
+            "nota": "Supermercado latino con envíos a Cuba y México.",
+            "fuente_id": "F23"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Salario promedio de camareros",
+            "valor": "$12.37 por hora",
+            "fuente_id": "F14",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Salario promedio de trabajadores de comida rápida",
+            "valor": "$11.34 por hora",
+            "fuente_id": "F14",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Salario promedio de cocineros",
+            "valor": "$13.61 por hora",
+            "fuente_id": "F14",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Salario promedio de lavaplatos",
+            "valor": "$12.97 por hora",
+            "fuente_id": "F14",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Salario promedio de anfitriones",
+            "valor": "$13.37 por hora",
+            "fuente_id": "F14",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Gastos operativos generales y administrativos",
+            "valor": "4.3% de los ingresos totales",
+            "fuente_id": "F15",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Gastos de depreciación y amortización",
+            "valor": "3.2% de los ingresos totales",
+            "fuente_id": "F16",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Costos de alimentos y bebidas",
+            "valor": "33.5% de las ventas",
+            "fuente_id": "F16",
+            "es_supuesto": false
+          }
+        ],
+        "huecos_de_informacion": [
+          "No se encontraron datos específicos sobre el tamaño del mercado de restaurantes mexicanos en Houston, Texas.",
+          "No se encontraron datos sobre el mercado objetivo general de restaurantes mexicanos en Estados Unidos."
+        ],
+        "mercado_objetivo": {
+          "pais": "Estados Unidos",
+          "ciudad": "Houston",
+          "criterio": "La idea se centra en abrir una taquería en Houston, Texas, para la comunidad mexicana.",
+          "es_supuesto": false
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "Gerardos: Authentic Barbacoa and Tacos in Houston",
+            "url": "https://gerardos.res-menu.net/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F2",
+            "titulo": "Taqueria La Borrega Houston: Authentic Texas Mexican Food Truck Experience",
+            "url": "https://restauranteamexicana.com/mexican-restaurants-near-me/taqueria-la-borrega-food-truck",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F3",
+            "titulo": "El De La Barbacoa, Houston - Menu, Reviews (88), Photos (39) - Restaurantji",
+            "url": "https://www.restaurantji.com/tx/houston/el-de-la-barbacoa-/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F4",
+            "titulo": "Taquerias El Charro menu - Houston TX 77091 - (877) 585-1085",
+            "url": "https://www.allmenus.com/tx/houston/21692-taquerias-el-charro/menu/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F5",
+            "titulo": "hunchotacos.com",
+            "url": "https://hunchotacos.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F6",
+            "titulo": "Taqueria El Sol de Mexico, Houston - Menu, Reviews (154), Photos (29) - Restaurantji",
+            "url": "https://www.restaurantji.com/tx/houston/taqueria-el-sol-de-mexico-2-/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "Tacos Javi's Menu in Houston, TX | Order Delivery & Reviews",
+            "url": "https://www.menupix.com/houston/restaurants/28639829/Tacos-Javis-Menu-Houston-TX",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "Cantina Barba - Barbacoa",
+            "url": "https://www.toasttab.com/local/order/cantina-barba/item-barbacoa_142e0794-4246-4055-a417-dddcf7c899b9",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "Taqueria Los Charros (Food Truck) Menu - Houston, TX",
+            "url": "https://www.roostcafeandbistro.com/taqueria-los-charros-food-truck-77058/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "Huncho's Tacos 8559 Highway 6 S - Single Barbacoa",
+            "url": "https://www.toasttab.com/local/order/hunchos-tacos-8559-highway-6-s/item-single-barbacoa_b2d7a9b0-2ee3-43d5-84d3-7d6c47528577",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "Taqueria Yolanda (Food Truck) Menu - Houston, TX",
+            "url": "https://www.roostcafeandbistro.com/taqueria-yolanda-food-truck-77082/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "Itacate Taqueria - 9522 Huffmeister Road, Houston TX, USA - YourFoodOnline",
+            "url": "https://www.itacatecypress.com/products",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F13",
+            "titulo": "Order TACOS JAVIS #2 LA ESCONDIDA - Houston, TX Menu Delivery [Menu & Prices] | Houston - DoorDash",
+            "url": "https://www.doordash.com/store/tacos-javis--2-la-escondida-houston-26285989/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F14",
+            "titulo": "Houston-The Woodlands-Sugar Land, TX - May 2023 OEWS Metropolitan and Nonmetropolitan Area Occupational Employment and Wage Estimates",
+            "url": "https://www.bls.gov/oes/2023/May/oes_26420.htm",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F15",
+            "titulo": "https://www.sec.gov/Archives/edgar/data/1289460/000155837024010663/txrh-20240625x10q.htm",
+            "url": "https://www.sec.gov/Archives/edgar/data/1289460/000155837024010663/txrh-20240625x10q.htm",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F16",
+            "titulo": "https://www.sec.gov/Archives/edgar/data/1289460/000155837024014095/txrh-20240924x10q.htm",
+            "url": "https://www.sec.gov/Archives/edgar/data/1289460/000155837024014095/txrh-20240924x10q.htm",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F17",
+            "titulo": "Food Permits | Houston Health Department",
+            "url": "https://www.houstontx.gov/health//Food/",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F18",
+            "titulo": "El Pueblo Market & Taquería | Mexican Grocery Store Houston & Taqueria in Houston TX",
+            "url": "https://elpueblohouston.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F19",
+            "titulo": "El Parian Mercado | Carnicería y Taquería Mexicana",
+            "url": "https://elparianmercado.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F20",
+            "titulo": "Supermercados Teloloapan - Mexican Store in Houston | Recetas Mexas",
+            "url": "https://recetasmexas.com/en-us/store/supermercados-teloloapan-houston-uvalde",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F21",
+            "titulo": "Mi Tienda by H-E-B - Mexican Store in Houston | Recetas Mexas",
+            "url": "https://recetasmexas.com/en-us/store/mi-tienda-heb-houston-little-york",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F22",
+            "titulo": "La Michoacana Meat Market - Mexican Store in Houston | Recetas Mexas",
+            "url": "https://recetasmexas.com/en-us/store/la-michoacana-meat-market-houston-baybrook",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F23",
+            "titulo": "La Palma Market | Supermercado latino en Houston con envíos a Cuba, México, Centro y Sur América. Compra tus productos favoritos y envíalos fácil, rápido y seguro.",
+            "url": "https://lapalmamarket.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F24",
+            "titulo": "El Ahorro Supermarket en Houston: Auténtico Mercado Mexicano",
+            "url": "https://www.novacircle.com/es-ES/spots/north-america/united-states/texas/houston/houston-tx/el-ahorro-supermarket-2-34844b",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F25",
+            "titulo": "La Familia Meat Market - South Central Houston - Mi Tienda Mexicana",
+            "url": "https://mitiendamexicana.com/la-familia-meat-market-south-central-houston/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F26",
+            "titulo": "La Canasta Imports - Mexican Products - Northside - Mi Tienda Mexicana",
+            "url": "https://mitiendamexicana.com/la-canasta-imports-mexican-products-northside/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "Mexican restaurant market size Houston Texas 2023 site:.gov OR site:.edu OR site:.org OR site:.gov OR site:.us",
+            "competidores directos taquerías de barbacoa Houston Texas",
+            "precio tacos de barbacoa restaurante Houston Texas 2024",
+            "costos de operación taquería Houston Texas renta salarios 2023 site:.gov OR site:.edu",
+            "dónde compra la comunidad mexicana en Houston productos de comida mexicana 2023 site:.gov OR site:.edu OR site:.org OR site:.com"
+          ],
+          "estimatedCostUsd": 0.227,
+          "durationMs": 21686,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

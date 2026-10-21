@@ -1,0 +1,587 @@
+{
+  "case": {
+    "id": "07-saas-facturas-freelancers-mx",
+    "kind": "producto-digital",
+    "expectedMarket": "México (freelancers y pequeños negocios), venta en línea",
+    "description": "Quiero crear una app web que ayude a freelancers en México a emitir facturas CFDI y recordar cobros pendientes por WhatsApp. Cobraría una mensualidad. Soy desarrollador y la construiría yo.",
+    "profile": {
+      "situation": "empleado",
+      "goal": "reemplazar_empleo",
+      "experience": "algo",
+      "capital": "10k_50k",
+      "acceptableLoss": "5k_20k",
+      "hoursPerWeek": "10_20",
+      "schedule": "noches",
+      "timeframe": "mas_12_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "crear",
+        "analizar"
+      ],
+      "workPreference": "digital",
+      "sales": 2,
+      "uncertainty": 3,
+      "process": 4,
+      "hiring": "solo"
+    },
+    "financial": {
+      "initialInvestment": 30000,
+      "fixedCostsRange": "5k_15k",
+      "products": [
+        {
+          "name": "Suscripción mensual de la app",
+          "kind": "servicio",
+          "price": 199,
+          "variableCost": 25,
+          "monthlyUnits": 120
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "1_3",
+      "competition": "alta",
+      "channel": "redes_sociales",
+      "dependencies": [
+        "plataforma"
+      ],
+      "mainConcern": "Que ya existan apps de facturación gratuitas o más baratas.",
+      "successCondition": "Llegar a 300 suscriptores de pago en 18 meses."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "México",
+    "ciudad": null,
+    "criterio": "La idea se enfoca en ayudar a freelancers en México, lo que indica claramente el mercado objetivo.",
+    "es_supuesto": false,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:40:45.571Z",
+  "latencySeconds": 55.8,
+  "cost": {
+    "tokensUsd": 0.081,
+    "searchUsd": 0.15,
+    "totalUsd": 0.231,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 13,
+        "inputTokens": 33488,
+        "outputTokens": 4859
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 6655,
+        "outputTokens": 2985
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 2136
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 17381,
+        "outputTokens": 216
+      }
+    }
+  },
+  "ideaSummary": "Quieres crear una app web que facilite a los freelancers en México la emisión de facturas CFDI y el recordatorio de cobros pendientes a través de WhatsApp. Tu modelo de negocio se basará en una suscripción mensual, y tú mismo desarrollarás la aplicación.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 63,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 94,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 43,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 100,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 65,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 45,
+      "semaforo": "amarillo"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 174,
+    "grossMarginPercentage": 87.43718592964824,
+    "estimatedMonthlyGrossProfit": 20880,
+    "estimatedMonthlyNetProfit": 10880,
+    "breakEvenSales": 58,
+    "paybackMonths": 2.7573529411764706
+  },
+  "interpretation": {
+    "personal_fit_signal": "yellow",
+    "financial_viability_signal": "green",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "yellow",
+    "scalability_signal": "yellow",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "Tu inversión inicial ($30,000) es mayor que lo que dijiste que podrías perder sin afectar tu estabilidad. Si el negocio no funciona, la pérdida real superaría tu límite declarado — considera arrancar con una versión de menor inversión.",
+      "Tu negocio depende de una plataforma externa. Si esa plataforma cambia sus reglas o te suspende, pierdes el canal de un día para otro — ten un plan alterno antes de invertir fuerte.",
+      "La inversión inicial estimada ($30,000 MXN) supera la pérdida tolerable máxima ($20,000 MXN)"
+    ],
+    "reasoning_summary": "La idea muestra buena viabilidad financiera pero presenta riesgo muy alto y validación comercial limitada con solo 1-3 clientes. Además, la inversión requerida excede la pérdida que tolerarías. Se recomienda validar más el mercado y ajustar antes de invertir."
+  },
+  "report": {
+    "arep_executive_summary": "Tu idea de crear una app web para ayudar a freelancers en México a emitir facturas CFDI y recordar cobros pendientes por WhatsApp tiene un buen enfoque, especialmente en términos de viabilidad financiera, donde obtuviste un puntaje alto. Sin embargo, el análisis revela un riesgo muy alto y una competencia significativa, ya que ya existen aplicaciones de facturación gratuitas y más económicas en el mercado. Por lo tanto, te recomiendo que valides más tu propuesta y ajustes tu modelo de negocio antes de hacer una inversión considerable, considerando que tu inversión inicial supera lo que estás dispuesto a perder sin afectar tu estabilidad.",
+    "arep_business_understanding": "Ofreces una app web que facilita a los freelancers en México la emisión de facturas CFDI y el recordatorio de cobros pendientes a través de WhatsApp. Tu propuesta de valor radica en simplificar un proceso que puede ser complicado y tedioso para ellos, permitiéndoles enfocarse más en su trabajo y menos en la parte administrativa. Además, al ofrecer un modelo de suscripción mensual, les das acceso a una herramienta que puede mejorar su flujo de caja y organización.\n\nEl cliente al que te diriges son los freelancers en México, aunque no se especificaron características demográficas como edad o ingresos. Es un supuesto que podrías validar en el futuro, pero es probable que se trate de personas que buscan soluciones eficientes para gestionar sus facturas y cobros. Este grupo puede incluir desde diseñadores y programadores hasta consultores y otros profesionales independientes que necesitan cumplir con sus obligaciones fiscales de manera sencilla.",
+    "arep_strengths": [
+      {
+        "title": "Margen bruto alto",
+        "whyItMatters": "Tienes un margen bruto del 87%, lo que significa que de cada venta te quedan $174 antes de gastos fijos, lo que te da flexibilidad para cubrir costos operativos."
+      },
+      {
+        "title": "Recuperación rápida de inversión",
+        "whyItMatters": "Tu inversión de $30,000 se recupera en aproximadamente 2.8 meses, lo cual es un tiempo razonable para empezar a ver resultados."
+      },
+      {
+        "title": "Utilidad neta positiva",
+        "whyItMatters": "Con un estimado de $10,880 de utilidad neta al mes, el negocio puede cubrir sus costos fijos y generar ganancias desde el inicio."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Alta competencia en el mercado",
+        "whyItMatters": "Declaraste que hay alta competencia, lo que puede dificultar la captación de clientes, especialmente con opciones gratuitas o más baratas disponibles.",
+        "howToReduce": "Realiza un análisis de la competencia para identificar características únicas que puedas ofrecer y considera ajustar tu propuesta de valor."
+      },
+      {
+        "title": "Dependencia de plataformas externas",
+        "whyItMatters": "Tu negocio depende de plataformas externas como redes sociales para conseguir clientes, lo que puede ser riesgoso si cambian sus políticas.",
+        "howToReduce": "Desarrolla un plan alternativo para diversificar tus canales de adquisición de clientes y no depender únicamente de una plataforma."
+      },
+      {
+        "title": "Poca evidencia de clientes",
+        "whyItMatters": "Solo tienes 1 a 3 clientes potenciales, lo que indica que la validación comercial es limitada y puede afectar la viabilidad del negocio.",
+        "howToReduce": "Realiza encuestas o entrevistas con freelancers para entender mejor sus necesidades y validar tu idea antes de invertir más."
+      },
+      {
+        "title": "Inversión inicial superior a la pérdida tolerable",
+        "whyItMatters": "Tu inversión inicial de $30,000 excede la pérdida que estás dispuesto a tolerar ($20,000), lo que aumenta el riesgo financiero.",
+        "howToReduce": "Considera desarrollar una versión mínima viable (MVP) de tu app que requiera menos inversión para probar el mercado antes de comprometerte a una inversión mayor."
+      }
+    ],
+    "arep_personal_fit_analysis": "Tú tienes un buen encaje en dos aspectos clave para desarrollar tu app web de facturación para freelancers. Primero, disfrutas crear productos y servicios, lo cual es fundamental para el desarrollo de la aplicación. Además, tu alta comodidad siguiendo procesos (4 de 5) te permitirá establecer un flujo de trabajo eficiente y mantener la calidad en el desarrollo y en la atención al cliente. \n\nSin embargo, hay algunas brechas personales a considerar. La primera es tu comodidad vendiendo, que es de 2 de 5. Esto puede dificultar la adquisición de nuevos clientes para tu app. Una acción concreta sería invertir tiempo en aprender técnicas de ventas y marketing digital, o buscar un socio que se encargue de esta área. La segunda brecha es tu disponibilidad horaria, ya que solo puedes dedicar entre 10 y 20 horas a la semana. Para maximizar tu tiempo, establece un plan de trabajo claro y prioriza las tareas más críticas para el desarrollo de la app. \n\nConsidera estos puntos para ajustar tu enfoque y asegurar que tu proyecto tenga un desarrollo más fluido y exitoso.",
+    "arep_financial_analysis": "Tu idea de crear una app web para facilitar la emisión de facturas CFDI y recordatorios de cobros a freelancers en México muestra un buen potencial financiero. Tienes un margen de ganancia bruto por venta de 174 MXN, lo que representa un 87.44% de margen. Esto es favorable, ya que indica que por cada suscripción mensual de 199 MXN, obtienes una ganancia significativa después de cubrir el costo variable de 25 MXN. Por lo tanto, no hay productos que se vendan con pérdida en tu modelo actual.\n\nEl punto de equilibrio se sitúa en 58 suscripciones mensuales, lo que significa que necesitas alcanzar ese número para cubrir tus costos fijos. Con costos fijos mensuales que varían entre 5,000 y 15,000 MXN, es crucial que te enfoques en alcanzar al menos este volumen de ventas para empezar a generar ganancias. Además, la recuperación de tu inversión inicial de 30,000 MXN se estima en aproximadamente 2.76 meses, lo cual es un periodo bastante corto y atractivo.\n\nSin embargo, hay que tener en cuenta que el nivel de riesgo es alto, con un puntaje de 100. Esto puede deberse a la competencia en el mercado, donde existen varias plataformas establecidas como Billify, SenHub y Timbreo, que ya ofrecen servicios similares [F1][F2][F4]. Asegúrate de diferenciar tu oferta y considerar estrategias de marketing efectivas para captar y retener a tus clientes.",
+    "arep_time_operation_analysis": "Para tu negocio de crear una app web que ayude a freelancers en México a emitir facturas CFDI y recordar cobros pendientes, el trabajo se puede dividir en varias áreas clave. Primero, en la fase inicial, deberás enfocarte en **desarrollo de la app**, lo cual implicará programación, diseño de la interfaz y pruebas. Esto es un trabajo que se hace una vez, aunque podría requerir ajustes y mejoras continuas después del lanzamiento. \n\nUna vez que la app esté en funcionamiento, las tareas diarias incluirán **atención a clientes**, donde deberás responder preguntas y solucionar problemas que puedan surgir. También tendrás que gestionar **la facturación y los cobros**, asegurándote de que los usuarios estén satisfechos y que los pagos se procesen correctamente. Además, será necesario realizar **actualizaciones y mantenimiento** de la app, lo que puede ser recurrente dependiendo de la retroalimentación de los usuarios.\n\nCon una disponibilidad de 10 a 20 horas por semana, es crucial que organices tu tiempo. Podrías dedicar las primeras semanas a desarrollar la app, lo cual podría consumir la mayor parte de tu tiempo. Luego, una vez lanzada, podrías dividir tu tiempo entre atención a clientes y mantenimiento de la app. La parte que podría saturarte es la atención a clientes, especialmente si creces rápidamente. Considera establecer un sistema de preguntas frecuentes o tutoriales para reducir la carga de atención directa.",
+    "arep_scalability_analysis": "Para que tu app web crezca sin aumentar proporcionalmente tu carga de trabajo, es crucial que enfoques tus esfuerzos en la automatización y en la generación de contenido que atraiga a tus clientes potenciales. Considera crear tutoriales o guías sobre el uso de tu app y sobre la facturación para freelancers, que puedas compartir en redes sociales y comunidades en línea. Esto no solo te ayudará a captar usuarios, sino que también establecerá tu autoridad en el tema. Además, podrías implementar un sistema de referidos que incentive a tus usuarios actuales a recomendar tu servicio a otros freelancers.\n\nSin embargo, hay factores que podrían frenar tu crecimiento. La alta competencia en el mercado de aplicaciones de facturación, como Billify, SenHub y Timbreo, puede hacer que sea difícil destacar. Además, el hecho de que existan opciones gratuitas o más baratas puede limitar tu capacidad para atraer suscriptores, especialmente si no ofreces características que justifiquen el costo de tu suscripción mensual. También, la dependencia de plataformas externas para la promoción de tu app puede ser un riesgo si esas plataformas cambian sus políticas o si tu visibilidad disminuye.\n\nPor último, tu preferencia por trabajar solo puede ser un limitante en términos de expansión. Si en algún momento decides escalar tu negocio, necesitarás evaluar si estás dispuesto a colaborar con otros o a contratar personal que te ayude a gestionar el crecimiento. Considera establecer alianzas con proveedores de software de facturación o comunidades de freelancers, lo que podría facilitar la adquisición de usuarios y mejorar tu posicionamiento en el mercado.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda inicial",
+        "tasks": [
+          "Hablar con 10 freelancers en redes sociales sobre sus necesidades de facturación y cobros.",
+          "Crear una encuesta sencilla y compartirla en grupos de freelancers para obtener al menos 30 respuestas.",
+          "Investigar las características de 3 competidores como Billify [F1], SenHub [F2] y Timbreo [F4] y anotar qué les gusta y qué no a sus usuarios."
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números",
+        "tasks": [
+          "Calcular el costo de desarrollo de la app y estimar el precio de suscripción que cubriría tus costos.",
+          "Analizar el feedback de las encuestas y entrevistas para identificar al menos 3 características clave que los freelancers valoran en una app de facturación.",
+          "Investigar el precio de las suscripciones de al menos 3 competidores y definir un rango de precios para tu servicio."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición",
+        "tasks": [
+          "Crear una página de aterrizaje simple para tu app y compartirla en tus redes sociales.",
+          "Ofrecer acceso anticipado a la app a 10 freelancers a cambio de su feedback y testimonios.",
+          "Promocionar la página de aterrizaje en grupos de freelancers y medir el interés a través de la cantidad de registros."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar el número de registros y el feedback recibido de los 10 freelancers que probaron la app.",
+          "Revisar si el interés y las características solicitadas justifican continuar con el desarrollo de la app.",
+          "Definir un plan de acción basado en los resultados obtenidos, considerando si necesitas ajustar tu propuesta o si puedes avanzar al desarrollo completo."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Tu idea de crear una app web para ayudar a freelancers en México a emitir facturas CFDI y recordar cobros pendientes por WhatsApp tiene buena viabilidad financiera, pero presenta un riesgo muy alto. La inversión inicial de $30,000 excede la pérdida máxima que estás dispuesto a tolerar, lo que te pone en una situación vulnerable si el negocio no funciona. Además, depender de una plataforma externa puede poner en riesgo tu canal de ventas. Por lo tanto, se recomienda validar primero el mercado antes de realizar una inversión significativa.\n\nLos siguientes pasos importantes son: primero, realiza una validación más profunda de tu mercado objetivo. Esto puede incluir encuestas o entrevistas con freelancers para entender mejor sus necesidades y su disposición a pagar por tu servicio. Segundo, considera desarrollar una versión mínima viable (MVP) de tu app que requiera una inversión menor, lo que te permitirá probar la idea sin comprometer demasiado capital. Por último, establece un plan alterno para diversificar tus canales de venta, de modo que no dependas únicamente de una plataforma externa.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "none",
+      "issues": 0,
+      "rewritten": [],
+      "review": {
+        "contradicciones": [],
+        "supuestos_sin_fuente": [],
+        "conclusiones_no_sustentadas": [],
+        "correcciones": []
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Crear una app web que facilite a los freelancers en México la emisión de facturas CFDI y el recordatorio de cobros pendientes a través de WhatsApp, con un modelo de negocio basado en suscripción mensual.",
+          "sector": "Tecnología / Software",
+          "modelo_de_negocio": "Suscripción mensual"
+        },
+        "tamano_mercado": {
+          "cifra": null,
+          "anio": null,
+          "fuente_id": null,
+          "motivo": "No se encontró información específica acerca del tamaño del mercado de software para freelancers en México."
+        },
+        "competidores": [
+          {
+            "nombre": "Billify",
+            "propuesta": "Plataforma que permite crear facturas profesionales, timbrar CFDI ante el SAT y gestionar clientes desde un solo lugar.",
+            "precio_referencia": null,
+            "fuente_id": "F1"
+          },
+          {
+            "nombre": "SenHub",
+            "propuesta": "Ofrece facturación electrónica con cumplimiento del SAT, destacando por su velocidad y seguridad.",
+            "precio_referencia": null,
+            "fuente_id": "F2"
+          },
+          {
+            "nombre": "Soicont",
+            "propuesta": "Plataforma de facturación electrónica simplificada, diseñada para contadores y PyMEs en México.",
+            "precio_referencia": null,
+            "fuente_id": "F3"
+          },
+          {
+            "nombre": "Timbreo",
+            "propuesta": "Permite emitir, enviar y administrar facturas electrónicas de manera rápida y sencilla, especialmente para médicos, freelancers, emprendedores y PyMEs.",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "Folky",
+            "propuesta": "Plataforma web de facturación moderna que emite CFDI 4.0, registra pagos, gestiona cancelaciones y administra múltiples empresas desde un solo lugar.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          },
+          {
+            "nombre": "Contalo",
+            "propuesta": "Empresa mexicana que ofrece servicios de facturación electrónica, contabilidad electrónica y servicios digitales para hacer crecer tu empresa.",
+            "precio_referencia": null,
+            "fuente_id": "F6"
+          },
+          {
+            "nombre": "Teotech",
+            "propuesta": "Plataforma de facturación CFDI 4.0 con IA, diseñada para PyMEs, freelancers y despachos contables en México.",
+            "precio_referencia": null,
+            "fuente_id": "F7"
+          },
+          {
+            "nombre": "Heru",
+            "propuesta": "Ofrece servicios de declaración de impuestos al SAT de forma automática, incluyendo facturación y asesoría cuando es necesario.",
+            "precio_referencia": null,
+            "fuente_id": "F8"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Servicio de facturación CFDI versión 4.0 del SAT",
+            "rango": "Gratuito",
+            "fuente_id": "F13"
+          },
+          {
+            "descripcion": "Aplicación 'Mis Cuentas' del SAT",
+            "rango": "Gratuito",
+            "fuente_id": "F14"
+          },
+          {
+            "descripcion": "Aplicación 'Factura SAT Móvil'",
+            "rango": "Gratuito",
+            "fuente_id": "F15"
+          },
+          {
+            "descripcion": "Costo por CFDI timbrado por Proveedores Autorizados de Certificación (PAC)",
+            "rango": "Entre $1.50 MXN y $12 MXN por CFDI, dependiendo del volumen",
+            "fuente_id": "F16"
+          },
+          {
+            "descripcion": "Certificado de Sello Digital (CSD)",
+            "rango": "Aproximadamente $450 MXN",
+            "fuente_id": "F16"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Plataformas especializadas",
+            "nota": "Sitios como FreelanceLibre MX ofrecen recursos y herramientas para freelancers.",
+            "fuente_id": "F20"
+          },
+          {
+            "canal": "Comunidades en línea",
+            "nota": "Grupos y comunidades en redes sociales facilitan el intercambio de información sobre herramientas de facturación.",
+            "fuente_id": "F21"
+          },
+          {
+            "canal": "Proveedores de software de facturación",
+            "nota": "Empresas como Vanta Facturación ofrecen soluciones específicas para freelancers.",
+            "fuente_id": "F22"
+          },
+          {
+            "canal": "Plataformas de comparación de herramientas",
+            "nota": "Sitios como Resuelven.mx permiten comparar diferentes herramientas de facturación.",
+            "fuente_id": "F23"
+          },
+          {
+            "canal": "Asesorías y consultorías",
+            "nota": "Algunos freelancers buscan asesoramiento personalizado a través de consultorías especializadas.",
+            "fuente_id": null
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Gasto en Investigación y Desarrollo Tecnológico (IDT)",
+            "valor": "1,103,097 mil pesos en 2015",
+            "fuente_id": "F17",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Gasto en Adquisición y Desarrollo de Software",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Clasificación de Servicios de Software",
+            "valor": "",
+            "fuente_id": null,
+            "es_supuesto": true
+          }
+        ],
+        "huecos_de_informacion": [
+          "No se encontró información específica sobre el tamaño del mercado de software para freelancers en México.",
+          "No se hallaron datos sobre ingresos totales o estimaciones del mercado de software específicamente dirigido a freelancers en México.",
+          "La información específica sobre los costos de desarrollo y operación de software en México es limitada y puede variar ampliamente."
+        ],
+        "mercado_objetivo": {
+          "pais": "México",
+          "ciudad": null,
+          "criterio": "La idea se enfoca en ayudar a freelancers en México, lo que indica claramente el mercado objetivo.",
+          "es_supuesto": false
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "Billify — Facturación para México",
+            "url": "https://www.billify.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F2",
+            "titulo": "Sobre SenHub — Facturación Electrónica para México | SenHub",
+            "url": "https://senhub.mx/nosotros",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F3",
+            "titulo": "Soicont - Facturación Electrónica CFDI 4.0",
+            "url": "https://soicont.com.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F4",
+            "titulo": "Timbreo — Facturación electrónica CFDI 4.0 para tu negocio",
+            "url": "https://www.timbreo.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F5",
+            "titulo": "Folky | Facturación electrónica CFDI 4.0 para empresas en México",
+            "url": "https://folky.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F6",
+            "titulo": "Contalo | Facturación Electrónica CFDI, Contabilidad y Servicios Fiscales en México",
+            "url": "https://contalo.com.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "Facturación CFDI 4.0 con IA — Multi-empresa y RESICO | Teotech",
+            "url": "https://cfdi.teotech.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "heru: declara tus impuestos al SAT en automático",
+            "url": "https://www.heru.app/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "Billia.mx | La forma más chill de facturar en México",
+            "url": "https://billia.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "GreenFact – Facturación Electrónica CFDI 4.0 | Nómina y Contabilidad",
+            "url": "https://greenfact.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "Inicio | FactuMex Facturación Electrónica",
+            "url": "https://www.factu-mex.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "Fynthex — Contabilidad y facturación para emprendedores en México",
+            "url": "https://fynthex.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F13",
+            "titulo": "Servicio de facturación CFDI versión 4.0 - Factura electrónica - Portal de trámites y servicios - SAT",
+            "url": "https://wwwmat.sat.gob.mx/cs/Satellite?c=SATAplicacion&childpagename=SatTyR%2FSATAplicacion%2FSAT_LandingFichaAplicacionLayout&cid=1462242175169&packedargs=d%3DTouch&pagename=TySWrapper",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F14",
+            "titulo": "Aplicaciones para cumplir con tus obligaciones en el Régimen de Incorporación Fiscal - Consultas de orientación - Portal de trámites y servicios - SAT",
+            "url": "https://wwwmat.sat.gob.mx/consulta/26991/aplicaciones-para-cumplir-con-tus-obligaciones-en-el-regimen-de-incorporacion-fiscal",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F15",
+            "titulo": "Factura Electrónica SAT: Guía Completa 2024",
+            "url": "https://tramites.juarez.gob.mx/app/sat-electronic-invoicing-guide-mexico.html",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F16",
+            "titulo": "Factura Electrónica SAT: Cómo Emitir CFDI en México | Guía 2026",
+            "url": "https://sir.juarez.gob.mx/wp-style/sat-electronic-invoicing-guide.html",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F17",
+            "titulo": "Mexico - Encuesta Sobre Investigación y Desarrollo Tecnológico 2017",
+            "url": "https://www.inegi.org.mx/rnm/index.php/catalog/386/datafile/F2/V234",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F18",
+            "titulo": "Mexico - Encuesta Sobre Investigación y Desarrollo Tecnológico 2014",
+            "url": "https://www.inegi.org.mx/rnm/index.php/catalog/361/datafile/F4",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F19",
+            "titulo": "Estructura del Sistema de Clasificación de Productos de México 2023. SCPM",
+            "url": "https://www.inegi.org.mx/contenidos/app/scpm/scpm_completo.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F20",
+            "titulo": "FreelanceLibre MX | Plataforma Freelance México — Programación, Diseño y más",
+            "url": "https://freelancelibre.mx/para-freelancers",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F21",
+            "titulo": "TuKitWebConAlex | Comunidad Freelance & Partners | Meetup",
+            "url": "https://www.meetup.com/es-es/tukitwebconalex-comunidad-freelance-partners/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F22",
+            "titulo": "Vanta Facturación — Inteligencia que trabaja contigo",
+            "url": "https://www.vantafacturacion.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F23",
+            "titulo": "Resuelven | Software para negocios en México",
+            "url": "https://resuelven.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "tamaño del mercado de software para freelancers en México cifras 2023 2024 site:org mx",
+            "competidores servicios facturación freelancers México",
+            "precios aplicaciones facturación CFDI México 2024 sitio oficial",
+            "costos típicos de desarrollo y operación de software en México 2023 sitio oficial",
+            "canales donde freelancers México buscan soluciones de facturación"
+          ],
+          "estimatedCostUsd": 0.203,
+          "durationMs": 21783,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

@@ -1,0 +1,604 @@
+{
+  "case": {
+    "id": "01-cafeteria-roma-norte",
+    "kind": "negocio-local-mx",
+    "expectedMarket": "México · Ciudad de México (Roma Norte)",
+    "description": "Quiero abrir una cafetería de especialidad con pan artesanal en la colonia Roma Norte de la Ciudad de México. Tendría un local pequeño rentado, café de productores mexicanos y pan horneado en el mismo lugar. Atendería yo con dos baristas de medio tiempo.",
+    "profile": {
+      "situation": "empleado",
+      "goal": "reemplazar_empleo",
+      "experience": "algo",
+      "capital": "150k_500k",
+      "acceptableLoss": "50k_100k",
+      "hoursPerWeek": "mas_40",
+      "schedule": "tiempo_completo",
+      "timeframe": "6_12_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "operar",
+        "crear",
+        "vender"
+      ],
+      "workPreference": "fisico",
+      "sales": 4,
+      "uncertainty": 3,
+      "process": 4,
+      "hiring": "algunos"
+    },
+    "financial": {
+      "initialInvestment": 380000,
+      "fixedCostsRange": "30k_50k",
+      "products": [
+        {
+          "name": "Café de especialidad",
+          "kind": "producto",
+          "price": 65,
+          "variableCost": 20,
+          "monthlyUnits": 1500
+        },
+        {
+          "name": "Pan artesanal",
+          "kind": "producto",
+          "price": 55,
+          "variableCost": 24,
+          "monthlyUnits": 700
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "4_10",
+      "competition": "alta",
+      "channel": "presencial",
+      "dependencies": [
+        "ubicacion",
+        "permiso",
+        "inventario"
+      ],
+      "mainConcern": "Que la renta del local se coma el margen antes de tener clientes fijos.",
+      "successCondition": "Cubrir todos los costos fijos en el mes seis y poder dejar mi empleo en un año."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "México",
+    "ciudad": "Ciudad de México",
+    "criterio": "La idea menciona específicamente la colonia Roma Norte en la Ciudad de México.",
+    "es_supuesto": false,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:32:46.503Z",
+  "latencySeconds": 63.6,
+  "cost": {
+    "tokensUsd": 0.086,
+    "searchUsd": 0.15,
+    "totalUsd": 0.236,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 14,
+        "inputTokens": 38026,
+        "outputTokens": 5190
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 6777,
+        "outputTokens": 3265
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 2416
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 17571,
+        "outputTokens": 393
+      }
+    }
+  },
+  "ideaSummary": "Quieres abrir una **cafetería de especialidad** que ofrezca **café de productores mexicanos** y **pan artesanal** en la colonia Roma Norte de la Ciudad de México. Tu idea consiste en operar un local pequeño donde tú y dos baristas de medio tiempo atenderán a los clientes.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 84,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 83,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 51,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 77,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 95,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 70,
+      "semaforo": "verde"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 40.54545454545455,
+    "grossMarginPercentage": 65.58823529411765,
+    "estimatedMonthlyGrossProfit": 89200,
+    "estimatedMonthlyNetProfit": 49200,
+    "breakEvenSales": 987,
+    "paybackMonths": 7.723577235772358
+  },
+  "interpretation": {
+    "personal_fit_signal": "green",
+    "financial_viability_signal": "green",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "green",
+    "scalability_signal": "green",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "Tu inversión inicial ($380,000) es mayor que lo que dijiste que podrías perder sin afectar tu estabilidad. Si el negocio no funciona, la pérdida real superaría tu límite declarado — considera arrancar con una versión de menor inversión.",
+      "Tu negocio requiere un permiso, licencia o regulación para operar. Investígalo a fondo antes de invertir: puede bloquear el arranque o encarecerlo.",
+      "La inversión inicial (380,000 MXN) supera la pérdida tolerable declarada (50,000–100,000 MXN)"
+    ],
+    "reasoning_summary": "Tu perfil y viabilidad financiera son sólidos, pero la viabilidad comercial es moderada y el riesgo alto debido al monto de inversión frente a la pérdida tolerable. Se recomienda validar más el modelo (pop-ups, encuestas, pre-ventas) antes de comprometer capital significativo."
+  },
+  "report": {
+    "arep_executive_summary": "La idea de abrir una cafetería de especialidad con pan artesanal en la colonia Roma Norte está poco definida, ya que falta claridad sobre a quién le venderías. Aunque tu perfil y viabilidad financiera son sólidos, la viabilidad comercial presenta un puntaje moderado y el nivel de riesgo es alto, lo que indica que podrías enfrentar dificultades en el arranque. Es crucial que valides más tu modelo de negocio antes de realizar una inversión significativa; considera opciones como pop-ups, encuestas o pre-ventas para obtener información valiosa sobre tu mercado objetivo. Esto te ayudará a reducir riesgos y a definir mejor tu propuesta antes de comprometer capital.",
+    "arep_business_understanding": "Ofreces una experiencia única al abrir una cafetería de especialidad que combina café de productores mexicanos con pan artesanal horneado en el mismo lugar. Tu propuesta de valor radica en la calidad de los ingredientes y el enfoque en lo local, lo que puede atraer a clientes que buscan productos frescos y auténticos. Además, al atender personalmente con dos baristas, puedes ofrecer un servicio más personalizado, lo que podría diferenciarte de otras cafeterías.\n\nSin embargo, la descripción de tu cliente es un supuesto por validar. No has especificado a quién le venderías, lo que es crucial para definir tu estrategia de marketing y ventas. Podrías estar dirigiéndote a jóvenes profesionales, amantes del café, o incluso a familias que buscan un lugar acogedor para disfrutar de un buen desayuno. Es importante que aclares quién es tu cliente ideal para enfocar tus esfuerzos de manera efectiva.\n\nEn la colonia Roma Norte, ya existen competidores como Café Proyecto Cero, Almanegra Café y Nice Day, que ofrecen café de especialidad y pan artesanal [F3][F4][F5]. Esto indica que hay un mercado activo, pero también una competencia que tendrás que considerar al definir tu propuesta y precios. Asegúrate de investigar más sobre sus ofertas y cómo puedes diferenciarte para atraer a tus clientes potenciales.",
+    "arep_strengths": [
+      {
+        "title": "Margen bruto atractivo",
+        "whyItMatters": "Tienes un margen bruto del 66%, lo que te permite cubrir costos y absorber errores en el arranque."
+      },
+      {
+        "title": "Recuperación de inversión rápida",
+        "whyItMatters": "Tu inversión de $380,000 se recupera en aproximadamente 7.7 meses, lo que te da flexibilidad en caso de errores."
+      },
+      {
+        "title": "Interés preliminar de clientes",
+        "whyItMatters": "Ya hablaste con 4 a 10 personas interesadas, lo que indica un interés inicial en tu oferta."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Alta competencia en el mercado",
+        "whyItMatters": "Declaraste que la competencia es alta, lo que puede dificultar la captación de clientes en un mercado saturado.",
+        "howToReduce": "Realiza un análisis más profundo de tus competidores y define claramente tu propuesta de valor para diferenciarte."
+      },
+      {
+        "title": "Idea poco definida",
+        "whyItMatters": "La claridad de tu idea es parcial y falta saber a quién le venderías, lo que puede afectar tu estrategia de marketing.",
+        "howToReduce": "Investiga y define tu mercado objetivo, realizando encuestas o entrevistas para entender mejor a tus clientes potenciales."
+      },
+      {
+        "title": "Riesgo financiero elevado",
+        "whyItMatters": "Tu inversión inicial ($380,000) supera la pérdida tolerable declarada ($50,000–$100,000), lo que implica un riesgo financiero significativo.",
+        "howToReduce": "Considera iniciar con una inversión menor o un modelo de negocio que requiera menos capital inicial, como un pop-up o una venta en línea."
+      }
+    ],
+    "arep_personal_fit_analysis": "Tú encajas bien en la idea de abrir una cafetería de especialidad con pan artesanal en la colonia Roma Norte por varias razones. Primero, disfrutas de actividades como operar y vender, lo que es esencial para el día a día de una cafetería. Además, tu comodidad vendiendo es alta (4 de 5), lo que sugiere que puedes interactuar con los clientes y promover tus productos de manera efectiva. También tienes una preferencia por el trabajo físico, lo cual es adecuado para el ambiente activo de una cafetería.\n\nSin embargo, hay algunas brechas personales que deberías considerar. La primera es tu tolerancia a la incertidumbre, que es media (3 de 5). Esto puede ser un desafío en un negocio donde las ventas pueden fluctuar. Una acción concreta sería establecer un plan financiero sólido que contemple diferentes escenarios de ventas, para que puedas manejar mejor la incertidumbre. \n\nLa segunda brecha es la falta de claridad sobre a quién le venderías. Esto es crucial para definir tu estrategia de marketing y operaciones. Te sugiero que realices una investigación de mercado para identificar tu cliente ideal en la colonia Roma Norte, así podrás adaptar tu oferta y atraer a tus consumidores de manera efectiva.",
+    "arep_financial_analysis": "Analizando los márgenes de tus productos, el café de especialidad tiene un precio de 65 MXN y un costo variable de 20 MXN, lo que te deja un margen bruto de 45 MXN por unidad, lo que equivale a un margen del 69.23%. Por otro lado, el pan artesanal se vende a 55 MXN con un costo variable de 24 MXN, lo que te da un margen bruto de 31 MXN, equivalente a un margen del 56.36%. Ambos productos son rentables, ya que no hay pérdidas en su venta.\n\nEl punto de equilibrio se establece en 987 ventas, lo que significa que necesitas vender al menos esa cantidad para cubrir tus costos fijos mensuales. Dado que tus costos fijos están en un rango de 30,000 a 50,000 MXN, y considerando tu margen bruto promedio, alcanzar ese punto de equilibrio es factible, pero debes estar atento a las fluctuaciones en la demanda y los costos.\n\nLa recuperación de tu inversión inicial de 380,000 MXN se estima en aproximadamente 7.7 meses, lo cual es un tiempo razonable para un negocio en este sector. Sin embargo, es importante considerar que este cálculo depende de mantener un flujo constante de ventas y de no enfrentar imprevistos que puedan afectar tus costos o ingresos. Con un puntaje de 83 en viabilidad financiera, tu idea tiene buenas bases, pero el nivel de riesgo es alto, así que asegúrate de tener un plan sólido para mitigar cualquier eventualidad.",
+    "arep_time_operation_analysis": "Abrir una cafetería de especialidad con pan artesanal implica varias tareas concretas que deberás gestionar. Primero, la **producción** de café y pan, que incluye la compra de insumos, la preparación de las bebidas y el horneado del pan. Esto se repetirá con cada venta, por lo que tendrás que planificar bien tu tiempo. Además, deberás encargarte de la **atención a clientes**, lo que implica recibir y tomar pedidos, servir productos y manejar el cobro. La **gestión de inventarios** y la **compras** de insumos también son tareas clave que deberás realizar regularmente.\n\nCon más de 40 horas disponibles por semana, parece que tienes tiempo suficiente para manejar estas actividades. Sin embargo, es importante que consideres que la atención a clientes puede ser intensa, especialmente en horas pico. Podrías organizar tu tiempo de la siguiente manera: asigna bloques específicos para la producción de café y pan en las mañanas, y destina las horas de mayor afluencia para la atención a clientes. Además, con la ayuda de tus baristas, podrías dividir las tareas de atención al cliente y producción para evitar saturarte.\n\nRecuerda que algunas tareas son puntuales, como la creación de recetas y la organización inicial del local, mientras que otras son recurrentes. La producción de café y pan se repetirá con cada venta, así que asegúrate de tener un sistema eficiente para manejarlo. También considera que al principio, podrías necesitar más tiempo para establecer procesos y atraer clientes, así que ten paciencia y ajusta tu planificación según sea necesario.",
+    "arep_scalability_analysis": "Para que tu cafetería de especialidad crezca sin que aumente proporcionalmente tu carga de trabajo, puedes considerar varias estrategias. Primero, optimiza tus operaciones: al tener un local pequeño, asegúrate de que el diseño y la disposición del espacio sean eficientes. Esto incluye una buena organización en la cocina y la barra, así como el uso de tecnología para pedidos y pagos, lo que puede reducir el tiempo de atención. Además, puedes implementar un programa de lealtad que incentive a los clientes a regresar, lo que puede aumentar tus ventas con un esfuerzo adicional mínimo.\n\nSin embargo, hay factores que podrían frenar tu crecimiento. La alta competencia en la colonia Roma Norte, con cafés como Café Proyecto Cero y Almanegra, puede dificultar la captación de clientes. Además, tu dependencia de un local físico y de la regulación para operar puede limitar tu flexibilidad. Si la renta se convierte en un costo elevado, como mencionas, podría afectar tus márgenes y tu capacidad para reinvertir en el negocio. También, si decides contratar más personal, debes considerar que la nómina representa entre el 25% y el 30% de tus ventas mensuales, lo que puede impactar tus finanzas si no logras un flujo constante de clientes.\n\nFinalmente, dado que tu canal principal para conseguir clientes es la venta presencial, es crucial que trabajes en la experiencia del cliente en el local. Esto incluye no solo la calidad del café y el pan, sino también el ambiente y el servicio. Considera también la posibilidad de realizar colaboraciones con proveedores locales de café y pan, como TOLO y Panadería El Fénix, para fortalecer tu oferta y atraer a más clientes. Si logras establecer una buena reputación y una base de clientes leales, podrás escalar tu negocio de manera más efectiva.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Definir cliente objetivo",
+        "tasks": [
+          "Hablar con 10 personas en la colonia Roma Norte para identificar su interés en café de especialidad y pan artesanal.",
+          "Crear un perfil de cliente ideal que incluya edad, gustos y hábitos de consumo.",
+          "Investigar en redes sociales grupos o foros sobre café y pan en la colonia Roma Norte para entender mejor a tu audiencia."
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar precios y márgenes",
+        "tasks": [
+          "Comparar precios de café y pan en al menos 5 cafeterías de especialidad en la colonia Roma Norte, incluyendo Café Proyecto Cero y Nice Day [F3][F5].",
+          "Calcular márgenes brutos basados en precios de referencia y costos variables de tus productos.",
+          "Crear un esquema de precios para tus productos que asegure cubrir costos fijos y márgenes deseados."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición de clientes",
+        "tasks": [
+          "Organizar una degustación de café y pan en un espacio público de la colonia Roma Norte y captar al menos 30 correos electrónicos de interesados.",
+          "Crear una página en redes sociales para tu cafetería y publicar contenido relacionado con café de especialidad y pan artesanal.",
+          "Ofrecer un descuento o promoción a los primeros 10 clientes que se registren en tu lista de correos."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar la información recopilada sobre clientes, precios y márgenes para evaluar la viabilidad del negocio.",
+          "Realizar un pequeño análisis financiero proyectando ingresos y costos para los primeros 6 meses.",
+          "Definir si avanzarás con la apertura del local, ajustarás tu propuesta o considerarás un modelo alternativo como pop-ups o ventas en línea."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Tu idea de abrir una cafetería de especialidad en la colonia Roma Norte tiene potencial, pero es fundamental que aclares algunos aspectos antes de avanzar. La viabilidad comercial es moderada y el riesgo es alto, especialmente considerando que tu inversión inicial de 380,000 MXN supera tu límite de pérdida tolerable de 50,000 a 100,000 MXN. Por lo tanto, es recomendable que valides tu modelo de negocio y a quién le venderías, así como investigar a fondo los permisos y regulaciones necesarios para operar.\n\nLos siguientes pasos son cruciales: primero, aclara a quién le venderías, ya que esto te ayudará a definir mejor tu mercado objetivo y estrategias de marketing. Segundo, investiga y asegúrate de cumplir con todos los permisos y regulaciones necesarios para operar tu cafetería. Esto te evitará contratiempos y costos adicionales en el futuro. Por último, considera iniciar con una versión de menor inversión, como un pop-up o una pre-venta, para validar tu concepto y ajustar tu oferta antes de comprometer una inversión significativa.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 1,
+      "rewritten": [
+        "strengths_risks"
+      ],
+      "review": {
+        "contradicciones": [],
+        "supuestos_sin_fuente": [],
+        "conclusiones_no_sustentadas": [
+          {
+            "seccion": "strengths_risks",
+            "afirmacion": "Demanda potencial validada: Ya hablaste con clientes potenciales, lo que indica que hay interés real en tu oferta.",
+            "motivo": "Se basa en solo 4–10 conversaciones informales declaradas, lo cual no constituye una validación sólida de demanda."
+          }
+        ],
+        "correcciones": [
+          {
+            "seccion": "strengths_risks",
+            "instruccion": "Modifica la fortaleza 'Demanda potencial validada' para presentar la evidencia como un indicio preliminar y no como una validación definitiva de mercado."
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Abrir una cafetería de especialidad que ofrezca café de productores mexicanos y pan artesanal en la colonia Roma Norte de la Ciudad de México.",
+          "sector": "Cafeterías de especialidad",
+          "modelo_de_negocio": "Venta de café de especialidad y pan artesanal"
+        },
+        "tamano_mercado": {
+          "cifra": null,
+          "anio": null,
+          "fuente_id": null,
+          "motivo": "NO ENCONTRADO"
+        },
+        "competidores": [
+          {
+            "nombre": "Café Proyecto Cero",
+            "propuesta": "Espresso bar de especialidad con venta de café en grano por proceso y bebidas artesanales calibradas al momento.",
+            "precio_referencia": null,
+            "fuente_id": "F3"
+          },
+          {
+            "nombre": "Almanegra Café",
+            "propuesta": "Café mexicano de origen único, tostado en casa, con diversos métodos de preparación.",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "Nice Day",
+            "propuesta": "Café de especialidad y panadería artesanal, fusionando influencias asiáticas y mexicanas.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          },
+          {
+            "nombre": "Mal de Ojo Coffee",
+            "propuesta": "Microbarra de café de especialidad y espresso bar con opciones de café filtrado.",
+            "precio_referencia": null,
+            "fuente_id": "F6"
+          },
+          {
+            "nombre": "Buna",
+            "propuesta": "Tostadora de café mexicano que trabaja con productores de Chiapas, Veracruz y Oaxaca.",
+            "precio_referencia": null,
+            "fuente_id": "F7"
+          },
+          {
+            "nombre": "LeDuo",
+            "propuesta": "Café artesanal con un programa de lealtad y beneficios exclusivos.",
+            "precio_referencia": null,
+            "fuente_id": "F8"
+          },
+          {
+            "nombre": "Café Tilia",
+            "propuesta": "Refugio para amantes del café y buena comida, con un ambiente acogedor.",
+            "precio_referencia": null,
+            "fuente_id": "F9"
+          },
+          {
+            "nombre": "Forte",
+            "propuesta": "Café mexicano de especialidad en un local acogedor.",
+            "precio_referencia": null,
+            "fuente_id": "F10"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Café de especialidad",
+            "rango": "MX$45 - MX$90 (filtrado), MX$60 - MX$95 (espresso)",
+            "fuente_id": "F15"
+          },
+          {
+            "descripcion": "Pan artesanal",
+            "rango": "Desde MX$45",
+            "fuente_id": "F16"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Proveedores locales de café de especialidad",
+            "nota": "Establecimientos como TOLO ofrecen café de comercio directo.",
+            "fuente_id": "F20"
+          },
+          {
+            "canal": "Panaderías artesanales locales",
+            "nota": "Establecimientos como Panadería El Fénix ofrecen panes artesanales.",
+            "fuente_id": "F22"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Inversión inicial",
+            "valor": "$150,000 a $600,000 MXN",
+            "fuente_id": "F17",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Márgenes brutos (bebidas)",
+            "valor": "65-75%",
+            "fuente_id": "F18",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Márgenes brutos (alimentos)",
+            "valor": "55-65%",
+            "fuente_id": "F18",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Ticket promedio",
+            "valor": "$85 a $120 MXN",
+            "fuente_id": "F18",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Renta",
+            "valor": "8-12% de las ventas mensuales",
+            "fuente_id": "F17",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Nómina",
+            "valor": "25-30% de las ventas mensuales",
+            "fuente_id": "F17",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Servicios (agua, luz, gas, etc.)",
+            "valor": "5-8% de las ventas mensuales",
+            "fuente_id": "F17",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Salario mínimo (2024)",
+            "valor": "$249.00 MXN diarios",
+            "fuente_id": "F19",
+            "es_supuesto": false
+          }
+        ],
+        "huecos_de_informacion": [
+          "No se encontraron datos específicos sobre el valor del mercado de cafeterías de especialidad en la Ciudad de México.",
+          "No se encontraron cifras sobre el valor de mercado en unidades monetarias por año para cafeterías de especialidad en la Ciudad de México."
+        ],
+        "mercado_objetivo": {
+          "pais": "México",
+          "ciudad": "Ciudad de México",
+          "criterio": "La idea menciona específicamente la colonia Roma Norte en la Ciudad de México.",
+          "es_supuesto": false
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "<title>Establecimientos de preparación y servicio de alimentos y de bebidas con categoría turística por demarcación territorial según clase del establecimiento</title>",
+            "url": "https://www.inegi.org.mx/app/cuadroentidad/CDMX/2021/21/21_8",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F2",
+            "titulo": "Colección de estudios sectoriales y regionales. Conociendo la Industria Restaurantera. 2021.",
+            "url": "https://www.inegi.org.mx/contenido/productos/prod_serv/contenidos/espanol/bvinegi/productos/nueva_estruc/889463903369.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F3",
+            "titulo": "Café Proyecto Cero — Coffee shop de especialidad en Ciudad de México · drops.cafe",
+            "url": "https://drops.cafe/b/cafe-cafe-proyecto-cero-en-ciudad-de-mexico",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F4",
+            "titulo": "Almanegra Café - Roma Norte - CDMX365",
+            "url": "https://cdmx365.com/es/almanegra-cafe",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F5",
+            "titulo": "Nice Day · Café de especialidad y panadería | CDMX",
+            "url": "https://nicedaymx.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F6",
+            "titulo": "Mal de Ojo Coffee — Coffee shop de especialidad en Ciudad de México · drops.cafe",
+            "url": "https://drops.cafe/b/cafe-mal-de-ojo-coffee-en-cuauhtemoc-mexico-city",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "Buna — Roma Norte, CDMX | Planazo",
+            "url": "https://www.planazo.com.mx/lugares/buna",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "LeDuo — Roma CDMX",
+            "url": "https://www.leduo.mx/app/login",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "Café Tilia: Cafetería de Especialidad en Roma Nte., CDMX",
+            "url": "https://www.novacircle.com/es-PA/spots/north-america/mexico/cdmx/cuauhtemoc-municipality/cuauhtemoc/cafe-tilia-cafeteria-de-especialidad-bb43c2",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "Caféterías CDMX / Forte, café mexicano de especialidad – Food Police",
+            "url": "https://foodpolice.mx/blogs/contenido/cafeterias-cdmx-forte-cafe-mexicano-de-especialidad",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "Grieta — Coffee shop de especialidad en Ciudad de México · drops.cafe",
+            "url": "https://drops.cafe/b/cafe-grieta-en-cuauhtemoc-mexico-city",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "Café Tormenta, el puesto callejero para beber café al ritmo de buena música",
+            "url": "https://elpais.com/mexico/2024-09-28/cafe-tormenta-el-puesto-callejero-para-beber-cafe-al-ritmo-de-buena-musica.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F13",
+            "titulo": "Amanda Manda, los desayunos y las comidas más acogedoras de la Roma Norte",
+            "url": "https://elpais.com/mexico/opinion/2024-11-29/amanda-manda-los-desayunos-y-las-comidas-mas-acogedoras-de-la-roma-norte.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F14",
+            "titulo": "Richard Hart, el panadero socio de René Redzepi abre su primer local fuera de Europa y elige Ciudad de México",
+            "url": "https://elpais.com/gastronomia/2025-06-24/richard-hart-el-panadero-socio-de-rene-redzepi-abre-su-primer-local-fuera-de-europa-y-elige-ciudad-de-mexico.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F15",
+            "titulo": "¿Cuánto Cuesta un Café en México? Precios de OXXO a Especialidad | SaborCiudad",
+            "url": "https://saborciudad.com/guia/cuanto-cuesta-un-cafe",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F16",
+            "titulo": "La cafetería de CDMX con pan artesanal, paquetes de desayunos y bebidas desde 45 pesos",
+            "url": "https://www.radioformula.com.mx/estilodevida/La-cafeteria-de-CDMX-con-pan-artesanal-paquetes-de-desayunos-y-bebidas-desde-45-pesos-20250703-0100.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F17",
+            "titulo": "Negocios Rentables en México: Guía Completa 2024",
+            "url": "https://juarez.gob.mx/wp-style/profitable-businesses-mexico.html",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F18",
+            "titulo": "Negocios Rentables en México: Guía Completa para Emprender",
+            "url": "https://cms.juarez.gob.mx/app/profitable-businesses-mexico.html",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F19",
+            "titulo": "22 de enero de 2024 — GACETA OFICIAL DE LA CIUDAD DE MÉXICO — 95",
+            "url": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/4746caecba5a4c1d870207fae17ea916.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F20",
+            "titulo": "Café Mayoreo y Proveedor de Café | TOLO",
+            "url": "https://www.tolo.cafe/us-es/mayoreo",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F21",
+            "titulo": "Cómo abrir una cafetería de especialidad en CDMX: guía completa — PharosPOS",
+            "url": "https://pharospos.com/blog/como-abrir-cafeteria-especialidad-cdmx",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F22",
+            "titulo": "GRUPO BYRON S.A. DE C.V. MINISUPER PANADERÍA EL FÉNIX - Datos de ubicación y contacto | Cuauhtémoc, Ciudad de México",
+            "url": "https://panaderias.mx/grupo-byron-sa-de-cv-minisuper-panaderia-el-fenix-b50c2a3c",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F23",
+            "titulo": "Proveedores de Panaderías en Mexico, CDMX - Guiatel",
+            "url": "https://www.guiatel.com.mx/empresas/mexico-cdmx/proveedores-de-panaderias",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "valor mercado cafeterías de especialidad Ciudad de México 2023 site:.gov.mx OR site:.org.mx OR site:inegi.org.mx OR site:canacintacafecolonial.com OR site:cmcafe.org.mx",
+            "competidores directos cafeterías de especialidad colonia Roma Norte Ciudad de México 2024",
+            "precios referencia café especialidad pan artesanal cafeterías Ciudad de México 2024",
+            "costos operación cafetería especialidad Ciudad de México renta salarios 2023 sitio oficial",
+            "dónde compran café y pan clientes cafeterías especialidad Ciudad de México"
+          ],
+          "estimatedCostUsd": 0.205,
+          "durationMs": 22257,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

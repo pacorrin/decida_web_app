@@ -1,0 +1,574 @@
+{
+  "case": {
+    "id": "15-gadget-sin-demanda",
+    "kind": "idea-mala",
+    "expectedMarket": "México (producto físico vendido en línea)",
+    "description": "Quiero fabricar y vender un paraguas que se abre con un control remoto y trae un ventilador integrado, a 3,500 pesos. Lo mandaría a hacer a China y lo vendería en Mercado Libre. No he hablado con nadie, pero creo que a todos les va a encantar.",
+    "profile": {
+      "situation": "empleado",
+      "goal": "libertad_financiera",
+      "experience": "ninguna",
+      "capital": "50k_150k",
+      "acceptableLoss": "5k_20k",
+      "hoursPerWeek": "5_10",
+      "schedule": "noches",
+      "timeframe": "3_6_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "crear"
+      ],
+      "workPreference": "mixto",
+      "sales": 2,
+      "uncertainty": 2,
+      "process": 2,
+      "hiring": "solo"
+    },
+    "financial": {
+      "initialInvestment": 140000,
+      "fixedCostsRange": "5k_15k",
+      "products": [
+        {
+          "name": "Paraguas con control remoto y ventilador",
+          "kind": "producto",
+          "price": 3500,
+          "variableCost": 2800,
+          "monthlyUnits": 20
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "ninguno",
+      "competition": "baja",
+      "channel": "otro",
+      "dependencies": [
+        "proveedor",
+        "plataforma",
+        "inventario"
+      ],
+      "mainConcern": "Que el proveedor mande algo de baja calidad.",
+      "successCondition": "Hacerme rico."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "México",
+    "ciudad": null,
+    "criterio": "El texto menciona que se vendería en Mercado Libre, que opera en México.",
+    "es_supuesto": true,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:49:35.517Z",
+  "latencySeconds": 60.5,
+  "cost": {
+    "tokensUsd": 0.092,
+    "searchUsd": 0.15,
+    "totalUsd": 0.242,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 15,
+        "inputTokens": 37869,
+        "outputTokens": 4886
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 6474,
+        "outputTokens": 4127
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 1676
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 17214,
+        "outputTokens": 963
+      }
+    }
+  },
+  "ideaSummary": "Quieres fabricar y vender un paraguas innovador que se abre con control remoto y cuenta con un ventilador integrado, a un precio de 3,500 pesos. Planeas producirlo en China y comercializarlo a través de Mercado Libre, confiando en que será bien recibido por el público.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 54,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 50,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 100,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 50,
+      "semaforo": "amarillo"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 700,
+    "grossMarginPercentage": 20,
+    "estimatedMonthlyGrossProfit": 14000,
+    "estimatedMonthlyNetProfit": 4000,
+    "breakEvenSales": 15,
+    "paybackMonths": 35
+  },
+  "interpretation": {
+    "personal_fit_signal": "yellow",
+    "financial_viability_signal": "yellow",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "yellow",
+    "scalability_signal": "yellow",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "Tu inversión inicial ($140,000) es mayor que lo que dijiste que podrías perder sin afectar tu estabilidad. Si el negocio no funciona, la pérdida real superaría tu límite declarado — considera arrancar con una versión de menor inversión.",
+      "Tu negocio depende de una plataforma externa. Si esa plataforma cambia sus reglas o te suspende, pierdes el canal de un día para otro — ten un plan alterno antes de invertir fuerte.",
+      "La inversión inicial estimada de $140,000 MXN supera la pérdida tolerable de hasta $20,000 MXN",
+      "Sin evidencia de clientes potenciales ni validación de demanda",
+      "Dependencia crítica de un único proveedor sin garantías de calidad"
+    ],
+    "reasoning_summary": "La inversión es alta respecto a la pérdida soportable y no hay validación de mercado. El riesgo de calidad del proveedor y la falta de validación de clientes incrementan la incertidumbre, por lo que conviene validar la idea antes de invertir."
+  },
+  "report": {
+    "arep_executive_summary": "La idea de fabricar y vender un paraguas innovador que se abre con control remoto y cuenta con un ventilador integrado está poco definida. Aunque el mercado de accesorios para el hogar tiene un tamaño de 180,000,000 MXN [F1], la falta de claridad sobre a quién le venderías y la ausencia de validación con potenciales clientes generan incertidumbre. Además, el alto nivel de riesgo identificado sugiere que podrías enfrentar dificultades significativas, especialmente considerando que la inversión inicial de 140,000 pesos excede lo que has mencionado que podrías perder sin afectar tu estabilidad. Te recomiendo validar primero la idea y explorar la demanda antes de hacer una inversión significativa, para mitigar riesgos y asegurar que tu producto realmente resuene con el mercado.",
+    "arep_business_understanding": "Ofreces un paraguas innovador que se abre con un control remoto y tiene un ventilador integrado, lo que lo hace atractivo para quienes buscan comodidad y funcionalidad. Tu propuesta de valor se centra en la conveniencia de no tener que abrir el paraguas manualmente y en la posibilidad de mantenerse fresco en días calurosos. Esto podría resonar con clientes que valoran la tecnología y la practicidad en productos cotidianos, especialmente en climas cálidos.\n\nSin embargo, la claridad sobre quién es tu cliente ideal es parcial. No has definido a quién le venderías este paraguas. Podría ser un supuesto que tu cliente sea alguien que busca soluciones innovadoras para el clima, pero es importante validar esto. Considera investigar más sobre las características demográficas y de comportamiento de tu mercado objetivo, como su edad, ingresos y hábitos de compra.\n\nEs crucial que identifiques a tus competidores en el mercado de paraguas y sombrillas. Existen marcas como ShadeMaster y KYRA MX DOLPHIN que ofrecen productos innovadores, lo que indica que el mercado tiene opciones. Además, los precios de paraguas convencionales oscilan entre 50 y 1,348 pesos, lo que significa que tu precio de 3,500 pesos podría ser un reto a la hora de posicionar tu producto [F10][F14][F15].",
+    "arep_strengths": [
+      {
+        "title": "Utilidad neta estimada de $4,000 al mes",
+        "whyItMatters": "Con el precio, el costo y el volumen que declaraste, el negocio cubre sus costos fijos y deja $4,000 mensuales. Es un punto de partida en papel, no un resultado: depende de que ese volumen se cumpla."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Falta de validación de clientes",
+        "whyItMatters": "No has hablado con nadie sobre tu idea, lo que implica que no hay evidencia de demanda real.",
+        "howToReduce": "Realiza encuestas o entrevistas con potenciales clientes para validar el interés en tu producto."
+      },
+      {
+        "title": "Dependencia de un solo proveedor",
+        "whyItMatters": "Tu negocio depende de un único fabricante, lo que aumenta el riesgo de calidad y suministro.",
+        "howToReduce": "Busca múltiples proveedores para diversificar el riesgo y asegurar la calidad del producto."
+      },
+      {
+        "title": "Inversión alta respecto a la pérdida tolerable",
+        "whyItMatters": "Tu inversión inicial de $140,000 excede la pérdida que estás dispuesto a asumir de hasta $20,000, lo que puede afectar tu estabilidad financiera.",
+        "howToReduce": "Considera iniciar con una versión más económica del producto para validar la demanda antes de realizar una inversión mayor."
+      },
+      {
+        "title": "Idea poco definida",
+        "whyItMatters": "La claridad de tu idea es parcial y no sabes a quién le venderías, lo que dificulta el enfoque de tu estrategia de marketing.",
+        "howToReduce": "Define tu mercado objetivo y realiza un análisis de clientes potenciales para entender mejor sus necesidades."
+      }
+    ],
+    "arep_personal_fit_analysis": "Para tu idea de fabricar y vender un paraguas innovador, hay dos puntos donde encajas bien:\n\n- **Interés en crear productos**: Disfrutas de la creación de productos o servicios, lo cual es esencial para diseñar y desarrollar un paraguas con características únicas como el control remoto y el ventilador. Esto te permitirá estar motivado y comprometido durante el proceso de desarrollo.\n- **Modelo de trabajo mixto**: Tu preferencia por un trabajo mixto puede ser beneficiosa, ya que tendrás que combinar tareas de diseño, negociación con proveedores en China y ventas en línea, lo que te permitirá diversificar tus actividades y mantener el interés.\n\nSin embargo, hay dos brechas personales que debes considerar:\n\n- **Comodidad vendiendo**: Tu comodidad para vender es baja (2 de 5). Esto puede ser un obstáculo al momento de promocionar y vender el paraguas en plataformas como Mercado Libre. **Acción concreta**: Considera tomar un curso de ventas o marketing digital para mejorar tus habilidades y confianza en esta área.\n  \n- **Tolerancia a la incertidumbre**: También tienes una baja tolerancia a la incertidumbre (2 de 5), lo cual puede ser un reto en un negocio que implica riesgos como la fabricación y la venta de un producto nuevo. **Acción concreta**: Establece un plan de contingencia para posibles problemas en la producción o ventas, lo que te ayudará a sentirte más preparado y reducir la ansiedad ante lo desconocido.",
+    "arep_financial_analysis": "Tu idea de fabricar y vender paraguas innovadores tiene un margen de ganancia bruto de 700 MXN por cada venta, lo que representa un 20% de margen sobre el precio de 3,500 MXN. Sin embargo, el costo variable de 2,800 MXN por paraguas es significativo, y es importante que verifiques si este costo incluye todos los gastos de producción, ya que no se encontraron datos específicos sobre costos de producción en la ficha.\n\nTu estimación de ganancias mensuales es de 14,000 MXN, lo que se traduce en un beneficio neto de 4,000 MXN al mes. El punto de equilibrio está en 15 unidades vendidas al mes, lo que significa que necesitas vender al menos esa cantidad para cubrir tus costos. Con una inversión inicial de 140,000 MXN y un payback de 35 meses, la recuperación de tu inversión parece prolongada, lo que puede ser un riesgo a considerar.\n\nEl puntaje de viabilidad financiera es de 40, lo que indica que hay áreas de mejora. Además, el nivel de riesgo es muy alto con un puntaje de 100, lo que sugiere que debes tener un plan sólido para mitigar estos riesgos. Es crucial que analices tus costos fijos mensuales, que oscilan entre 5,000 y 15,000 MXN, y compares estos números con tus proyecciones de ventas para asegurar que tu modelo sea sostenible.",
+    "arep_time_operation_analysis": "Para tu negocio de paraguas con control remoto y ventilador, hay varias tareas concretas que debes considerar. Primero, la **producción** del paraguas, que implica coordinar con el proveedor en China para asegurarte de que el producto cumpla con tus estándares de calidad. Esto puede requerir tiempo inicial para establecer la relación y definir los detalles del producto. Luego, está la **venta**, que incluye crear listados en Mercado Libre, gestionar el inventario y realizar envíos. También necesitarás **atención al cliente**, que puede abarcar responder preguntas y resolver problemas post-venta.\n\nDado que mencionas que tienes entre 5 y 10 horas a la semana disponibles, es crucial que organices bien tu tiempo. La **producción** y el establecimiento de relaciones con proveedores son tareas que puedes realizar una vez, pero el manejo de ventas y atención al cliente serán actividades continuas. Podrías dedicar las primeras semanas a establecer la producción y luego, una vez que tengas el producto, concentrarte en la venta y atención al cliente. \n\nEs probable que la parte que más te sature sea la atención al cliente, especialmente si las ventas comienzan a crecer. Para organizarte, considera establecer horarios específicos para responder preguntas y gestionar pedidos, así como utilizar herramientas de automatización para facilitar la atención al cliente. Esto te ayudará a mantener un equilibrio entre tus actividades y tu disponibilidad horaria.",
+    "arep_scalability_analysis": "Para que tu negocio de paraguas con control remoto y ventilador crezca sin que aumente tu carga de trabajo, considera implementar estrategias de automatización y delegación. Por ejemplo, puedes establecer un sistema de gestión de pedidos en Mercado Libre que te permita manejar las ventas de manera más eficiente. Además, si decides trabajar con un proveedor confiable en China, podrías negociar un contrato que incluya la producción bajo demanda, lo que reduciría la necesidad de mantener un inventario grande. También podrías explorar la opción de contratar a un asistente virtual para manejar el servicio al cliente y la promoción en redes sociales.\n\nSin embargo, hay factores que podrían frenar tu crecimiento. La dependencia de un solo proveedor puede ser riesgosa; si este no cumple con los estándares de calidad o los tiempos de entrega, tu negocio podría verse afectado. También, la competencia en el mercado de paraguas y sombrillas es significativa, con competidores como ShadeMaster y KYRA MX DOLPHIN ofreciendo productos innovadores [F5][F6]. Además, tu falta de experiencia puede ser un obstáculo, ya que no has hablado con potenciales clientes ni validado tu idea en el mercado, lo que puede llevar a una baja aceptación del producto.\n\nPor último, el canal de ventas que elegiste, Mercado Libre, tiene un alto potencial, ya que 67 millones de personas en México realizan compras digitales [F18]. Sin embargo, es crucial que definas claramente a tu cliente objetivo para adaptar tu estrategia de marketing. Considera realizar encuestas o entrevistas para entender mejor las necesidades de tus futuros clientes y ajustar tu propuesta de valor. Esto te permitirá no solo atraer clientes, sino también construir una base sólida para el crecimiento a largo plazo.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda inicial",
+        "tasks": [
+          "Hablar con 10 personas de tu círculo sobre el paraguas y anotar sus opiniones",
+          "Definir el perfil de tu cliente ideal: ¿quiénes son y dónde los encuentras?",
+          "Investigar en redes sociales grupos o foros relacionados con paraguas o tecnología para compartir tu idea y recibir retroalimentación"
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números",
+        "tasks": [
+          "Calcular el costo de producción estimado y compararlo con el precio de venta de 3,500 pesos",
+          "Analizar precios de competidores como ShadeMaster y KYRA MX DOLPHIN para ajustar tu propuesta",
+          "Realizar una encuesta en línea a 30 personas para evaluar su disposición a pagar por el paraguas"
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición",
+        "tasks": [
+          "Crear una página de aterrizaje simple para el paraguas y medir el interés con una campaña de anuncios en redes sociales",
+          "Ofrecer un descuento por preorden a 20 personas interesadas y ver cuántas compran",
+          "Contactar a 5 proveedores en China para obtener cotizaciones y tiempos de entrega"
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar los resultados de la encuesta y las preordenes para evaluar la viabilidad del negocio",
+          "Revisar la retroalimentación de las personas que hablaron sobre el paraguas y ajustar la idea si es necesario",
+          "Definir si seguirás adelante con la producción o si necesitas ajustar tu propuesta"
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Tu idea de fabricar y vender un paraguas innovador tiene un alto nivel de riesgo, especialmente considerando que tu inversión inicial de $140,000 MXN supera considerablemente la pérdida tolerable de hasta $20,000 MXN. Además, la falta de validación de mercado y la dependencia de un único proveedor sin garantías de calidad aumentan la incertidumbre. Por lo tanto, es crucial que valides tu idea antes de hacer una inversión significativa.\n\nEl primer paso es aclarar a quién le venderías el paraguas, ya que esto te ayudará a definir mejor tu mercado objetivo y a validar la demanda. Luego, te recomiendo que busques alternativas de proveedores para mitigar el riesgo de calidad y tengas un plan alternativo en caso de que la plataforma que elijas para vender cambie sus políticas. Finalmente, considera iniciar con una versión de menor inversión del producto para probar el mercado sin comprometer tu estabilidad financiera.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 4,
+      "rewritten": [
+        "executive_summary",
+        "strengths_risks"
+      ],
+      "review": {
+        "contradicciones": [
+          {
+            "secciones": [
+              "strengths_risks",
+              "scalability_analysis"
+            ],
+            "afirmacion_a": "Competencia baja en el mercado: Tienes menos competidores, lo que te permite probar precios sin entrar en guerras de descuentos.",
+            "afirmacion_b": "Además, la competencia en el mercado de paraguas y sombrillas es significativa, con competidores como ShadeMaster y KYRA MX DOLPHIN ofreciendo productos innovadores [F5][F6]."
+          }
+        ],
+        "supuestos_sin_fuente": [
+          {
+            "seccion": "executive_summary",
+            "afirmacion": "Aunque el mercado de accesorios para el hogar tiene un tamaño considerable"
+          }
+        ],
+        "conclusiones_no_sustentadas": [
+          {
+            "seccion": "strengths_risks",
+            "afirmacion": "Competencia baja en el mercado: Tienes menos competidores, lo que te permite probar precios sin entrar en guerras de descuentos.",
+            "motivo": "La ficha de mercado lista varios competidores reales en el segmento de paraguas [F5–F12], por lo que no hay competencia baja."
+          },
+          {
+            "seccion": "strengths_risks",
+            "afirmacion": "Competencia baja en tu mercado: Menos competidores te dan margen para probar precio sin entrar a una guerra de descuentos.",
+            "motivo": "Es la misma fortaleza repetida en la lista, sin aportar información nueva."
+          }
+        ],
+        "correcciones": [
+          {
+            "seccion": "executive_summary",
+            "instruccion": "Cita la fuente [F1] al hablar del tamaño del mercado de accesorios para el hogar o elimina la afirmación de que es considerable."
+          },
+          {
+            "seccion": "strengths_risks",
+            "instruccion": "Reemplaza la fortaleza de \"competencia baja\" por un análisis realista de los competidores identificados y elimina el punto duplicado."
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Fabricación y venta de un paraguas innovador que se abre con control remoto y cuenta con un ventilador integrado.",
+          "sector": "Accesorios para el hogar",
+          "modelo_de_negocio": "Venta directa y en línea de paraguas innovadores."
+        },
+        "tamano_mercado": {
+          "cifra": "180000000",
+          "anio": 2019,
+          "fuente_id": "F1",
+          "motivo": "Ingresos totales del comercio minorista de muebles para el hogar y otros enseres domésticos."
+        },
+        "competidores": [
+          {
+            "nombre": "ShadeMaster",
+            "propuesta": "Sombrillas premium para espacios exteriores, combinando estética, resistencia y tecnología.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          },
+          {
+            "nombre": "KYRA MX DOLPHIN",
+            "propuesta": "Ofrece paraguas y sombrillas con diseños innovadores, incluyendo paraguas invertidos.",
+            "precio_referencia": null,
+            "fuente_id": "F6"
+          },
+          {
+            "nombre": "Paragüería Iberia S.A. de C.V.",
+            "propuesta": "Fabricación y venta de paraguas y sombrillas, utilizando técnicas como serigrafía y sublimación.",
+            "precio_referencia": null,
+            "fuente_id": "F7"
+          },
+          {
+            "nombre": "Paraguas Promocional",
+            "propuesta": "Fabricación y comercialización de paraguas promocionales y publicitarios.",
+            "precio_referencia": null,
+            "fuente_id": "F8"
+          },
+          {
+            "nombre": "Sombrilla.com.mx",
+            "propuesta": "Sombrillas personalizadas como obsequios promocionales.",
+            "precio_referencia": null,
+            "fuente_id": "F9"
+          },
+          {
+            "nombre": "Eco Promocionales",
+            "propuesta": "Proporciona paraguas promocionales de diferentes modelos y tamaños.",
+            "precio_referencia": null,
+            "fuente_id": "F10"
+          },
+          {
+            "nombre": "La Remolacha Cancún",
+            "propuesta": "Personaliza paraguas y sombrillas con logotipos para empresas.",
+            "precio_referencia": null,
+            "fuente_id": "F11"
+          },
+          {
+            "nombre": "DotFactory",
+            "propuesta": "Ofrece el Paraguas Ranzen, con características como cobertura amplia y mango ergonómico.",
+            "precio_referencia": null,
+            "fuente_id": "F12"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Paraguas de Eco Promocionales.",
+            "rango": "Desde $50.91 hasta $248.23 MXN.",
+            "fuente_id": "F10"
+          },
+          {
+            "descripcion": "Paraguas de Suburbia.",
+            "rango": "Entre $149.00 y $1,348.00 MXN.",
+            "fuente_id": "F14"
+          },
+          {
+            "descripcion": "Paraguas de Liverpool.",
+            "rango": "Desde $297.00 hasta $1,100.00 MXN.",
+            "fuente_id": "F15"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Compras en línea",
+            "nota": "67 millones de personas en México realizaron compras digitales en 2024.",
+            "fuente_id": "F18"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Salario promedio en la industria manufacturera",
+            "valor": "4.1",
+            "fuente_id": "F16",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Salarios y sueldos en establecimientos manufactureros",
+            "valor": "14543.9",
+            "fuente_id": "F17",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Contribuciones patronales a la seguridad social",
+            "valor": "2917.63",
+            "fuente_id": "F17",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Prestaciones sociales",
+            "valor": "2238.59",
+            "fuente_id": "F17",
+            "es_supuesto": false
+          }
+        ],
+        "huecos_de_informacion": [
+          "Datos específicos sobre el tamaño del mercado de accesorios para el hogar no fueron encontrados.",
+          "Costos de producción de paraguas no fueron encontrados.",
+          "Rentas comerciales no fueron encontrados."
+        ],
+        "mercado_objetivo": {
+          "pais": "México",
+          "ciudad": null,
+          "criterio": "El texto menciona que se vendería en Mercado Libre, que opera en México.",
+          "es_supuesto": true
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "Retail Trade of Furniture for Home and other Household Goods: Wages, production, investment, opportunities and complexity | Data México",
+            "url": "https://economia.gob.mx/datamexico/en/profile/industry/retail-trade-of-furniture-for-home-and-other-household-goods",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F2",
+            "titulo": "Accesorios y Artículos Similares de Metal Común, para Muebles, Puertas, Ventanas, Guarnicionería, Cofres y otros Artículos de esta Clase: Intercambio comercial, importaciones y exportaciones, mercado y especialización | Data México",
+            "url": "https://www.economia.gob.mx/datamexico/es/profile/product/fittings-and-similar-articles-of-base-metal-for-furniture-doors-windows-saddlery-chests-and-other-articles-of-this-class?redirect=true",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F3",
+            "titulo": "The other Furnishing Articles, other than those of Heading 94.04: Commercial exchange, international imports and exports, market and specialization | Data México",
+            "url": "https://economia.gob.mx/datamexico/en/profile/product/the-other-furnishing-articles-other-than-those-of-heading-9404?redirect=true",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F4",
+            "titulo": "Gasto corriente monetario promedio trimestral por entidad federativa según grandes rubros del gasto, 2024",
+            "url": "https://www.inegi.org.mx/app/tabulados/interactivos/?idrt=54&opc=t&pxq=Hogares_Hogares_12_60ab9bc6-fec2-4737-a8a5-3d3b435398b6",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F5",
+            "titulo": "ShadeMaster – Sombrillas premium",
+            "url": "https://shademaster.com.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F6",
+            "titulo": "KYRA MX DOLPHIN - Bolsos y Marroquinería | ComercioMexico.com",
+            "url": "https://comerciomexico.com/marcas/bolsos-marroquineria/kyra-mx-dolphin/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "About Us",
+            "url": "https://www.paragueriaiberia.com.mx/eng/quienes_somos.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "Fabricamos paraguas promocionales | México",
+            "url": "https://www.paraguaspromocional.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "Sombrilla - Sombrilla",
+            "url": "https://sombrilla.com.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "Eco Promocionales - Productos 100% Ecológicos 100% Innovadores",
+            "url": "https://www.ecopromocionales.com.mx/category/paraguas/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "Paraguas Promocionales Personalizados | La Remolacha Cancún",
+            "url": "https://laremolacha.com.mx/35-paraguas-personalizados-cancun",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "PARAGUAS RANZEN | Poliéster 8 Paneles, 92 cm",
+            "url": "https://dotfactory.mx/productos/paraguas-ranzen-8-paneles-empresas/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F13",
+            "titulo": "Paraguas goccia - México Gráfico - Promocionales en Querétaro",
+            "url": "https://mexicografico.mx/en/product/paraguas-goccia/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F14",
+            "titulo": "Paraguas | Suburbia",
+            "url": "https://www.suburbia.com.mx/tienda/paraguas/cat_sb_3294",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F15",
+            "titulo": "Paraguas y bastones con hasta 30% de descuento | Venta Especial",
+            "url": "https://www.liverpool.com.mx/tienda/paraguas-y-bastones/catst44697705",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F16",
+            "titulo": "Productividad",
+            "url": "https://www.inegi.org.mx/app/tabulados/default.html?nc=539",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F17",
+            "titulo": "Remuneraciones",
+            "url": "https://www.inegi.org.mx/app/tabulados/default.html?idrt=18&nc=824&opc=t",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F18",
+            "titulo": "Compras en línea",
+            "url": "https://revistadelconsumidor.profeco.gob.mx/media/revistas/sumario/sumario_brujula_de_compra_2026_1_a4nHpRXM.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F19",
+            "titulo": "Condusef contenido",
+            "url": "https://www.condusef.gob.mx/?idc=2113&idcat=1&p=contenido",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F20",
+            "titulo": "TENDENCIAS\n\nMERCADOS.\n\nABANICOS DE OLORES, COLORES",
+            "url": "https://bibliotecadelconsumidor.profeco.gob.mx/media/revistas/RC-497%20Julio%202018.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "tamaño mercado accesorios para el hogar México 2023 site:.gob.mx OR site:inegi.org.mx OR site:statista.com OR site:economista.com.mx OR site:expansion.mx OR site:euromonitor.com",
+            "competidores en México que venden paraguas innovadores tecnológicos",
+            "precios de paraguas características similares mercado mexicano 2024",
+            "costos producción paraguas México rentas salarios 2023 sitio:inegi.gob.mx",
+            "canales de compra preferidos por consumidores paraguas México sitio oficial"
+          ],
+          "estimatedCostUsd": 0.208,
+          "durationMs": 17569,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

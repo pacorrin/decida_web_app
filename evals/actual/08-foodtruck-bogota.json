@@ -1,0 +1,638 @@
+{
+  "case": {
+    "id": "08-foodtruck-bogota",
+    "kind": "otro-pais",
+    "expectedMarket": "Colombia · Bogotá",
+    "description": "Quiero montar un food truck de arepas rellenas en Bogotá, en zonas de oficinas y eventos de fin de semana. Ya tengo la receta y un cocinero de confianza; necesito comprar el camión y el equipo.",
+    "profile": {
+      "situation": "independiente",
+      "goal": "ingreso_extra",
+      "experience": "ninguna",
+      "capital": "50k_150k",
+      "acceptableLoss": "20k_50k",
+      "hoursPerWeek": "20_40",
+      "schedule": "flexible",
+      "timeframe": "3_6_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "operar",
+        "vender"
+      ],
+      "workPreference": "fisico",
+      "sales": 4,
+      "uncertainty": 3,
+      "process": 3,
+      "hiring": "algunos"
+    },
+    "financial": {
+      "initialInvestment": 120000,
+      "fixedCostsRange": "5k_15k",
+      "products": [
+        {
+          "name": "Arepa rellena con bebida",
+          "kind": "producto",
+          "price": 45,
+          "variableCost": 22,
+          "monthlyUnits": 900
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "ninguno",
+      "competition": "alta",
+      "channel": "presencial",
+      "dependencies": [
+        "permiso",
+        "ubicacion",
+        "inventario"
+      ],
+      "mainConcern": "Conseguir los permisos y buenos puntos de venta.",
+      "successCondition": "Recuperar la inversión en 12 meses."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "Colombia",
+    "ciudad": "Bogotá",
+    "criterio": "La idea menciona específicamente Bogotá como el lugar de operación.",
+    "es_supuesto": false,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:41:49.566Z",
+  "latencySeconds": 64,
+  "cost": {
+    "tokensUsd": 0.096,
+    "searchUsd": 0.15,
+    "totalUsd": 0.246,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 15,
+        "inputTokens": 44008,
+        "outputTokens": 5176
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 6913,
+        "outputTokens": 4517
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 3645
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 17405,
+        "outputTokens": 640
+      }
+    }
+  },
+  "ideaSummary": "Quieres iniciar un *food truck* de arepas rellenas en Bogotá, enfocándote en zonas de oficinas y eventos durante los fines de semana. Ya cuentas con la receta y un cocinero de confianza, pero necesitas adquirir el camión y el equipo necesario para operar.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 82,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 76,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 35,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 97,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 85,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 65,
+      "semaforo": "amarillo"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 23,
+    "grossMarginPercentage": 51.11111111111111,
+    "estimatedMonthlyGrossProfit": 20700,
+    "estimatedMonthlyNetProfit": 10700,
+    "breakEvenSales": 435,
+    "paybackMonths": 11.214953271028037
+  },
+  "interpretation": {
+    "personal_fit_signal": "green",
+    "financial_viability_signal": "green",
+    "commercial_viability_signal": "red",
+    "risk_level_signal": "red",
+    "time_fit_signal": "green",
+    "scalability_signal": "yellow",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "Tu inversión inicial ($120,000) es mayor que lo que dijiste que podrías perder sin afectar tu estabilidad. Si el negocio no funciona, la pérdida real superaría tu límite declarado — considera arrancar con una versión de menor inversión.",
+      "Tu negocio requiere un permiso, licencia o regulación para operar. Investígalo a fondo antes de invertir: puede bloquear el arranque o encarecerlo.",
+      "Inversión inicial excede la pérdida tolerable",
+      "Sin evidencia de clientes potenciales"
+    ],
+    "reasoning_summary": "Aunque hay buena afinidad y viabilidad financiera, la propuesta carece de validación comercial y el riesgo supera la tolerancia a pérdidas. Es clave confirmar demanda, asegurar permisos y puntos de venta antes de comprometer el capital."
+  },
+  "report": {
+    "arep_executive_summary": "Tu idea de montar un food truck de arepas rellenas en Bogotá tiene un buen potencial, especialmente en zonas de oficinas y eventos de fin de semana. Sin embargo, aunque los puntajes de fit personal y viabilidad financiera son altos, la viabilidad comercial es baja y el nivel de riesgo es muy alto. Esto sugiere que, a pesar de tu preparación, hay aspectos críticos que aún no se han validado, como la demanda real y la obtención de permisos necesarios para operar.\n\nTe recomiendo que primero valides la demanda de tus arepas y asegures los permisos y puntos de venta antes de realizar una inversión significativa. Esto te ayudará a reducir el riesgo y a evitar pérdidas que superen tu capacidad de absorción. Arrancar con una inversión menor podría ser una estrategia más segura para probar el mercado y ajustar tu oferta según la respuesta de los clientes.",
+    "arep_business_understanding": "Ofreces arepas rellenas en un food truck, lo que te permite llevar un producto típico y sabroso a las zonas de oficinas y eventos en Bogotá. La propuesta de valor radica en ofrecer una comida rápida y deliciosa, ideal para quienes buscan opciones prácticas durante su jornada laboral o en eventos sociales. Además, al tener un cocinero de confianza y una receta propia, puedes garantizar la calidad y el sabor de tus arepas, lo que puede atraer a clientes que valoran la autenticidad y el buen gusto.\n\nEl cliente al que te diriges parece ser principalmente trabajadores de oficinas y asistentes a eventos en Bogotá. Este perfil podría incluir a personas que buscan una opción de comida rápida y sabrosa durante su hora de comida o en eventos de fin de semana. Sin embargo, sería útil validar más detalles sobre su edad, ingresos y hábitos de consumo para definir mejor tu mercado objetivo.",
+    "arep_strengths": [
+      {
+        "title": "Tienes una receta y cocinero de confianza",
+        "whyItMatters": "Esto te permite iniciar con un producto de calidad y reduce el riesgo de errores en la preparación."
+      },
+      {
+        "title": "Margen bruto del 51% por venta",
+        "whyItMatters": "Este margen te da un colchón financiero para cubrir costos y absorber errores durante el arranque."
+      },
+      {
+        "title": "Recuperación de inversión en aproximadamente 11.2 meses",
+        "whyItMatters": "Esto indica que, si el negocio funciona como planeas, no estarás amarrado a la inversión por mucho tiempo."
+      },
+      {
+        "title": "Estimación de 900 ventas mensuales",
+        "whyItMatters": "Esto te da un objetivo claro para trabajar y medir el desempeño del negocio."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Alta competencia en el mercado",
+        "whyItMatters": "La competencia declarada como alta puede dificultar la captación de clientes y la diferenciación en el mercado.",
+        "howToReduce": "Investiga a fondo a tus competidores y define una propuesta de valor única que te distinga."
+      },
+      {
+        "title": "Sin evidencia de clientes potenciales",
+        "whyItMatters": "La falta de validación de mercado puede resultar en una baja demanda y, por ende, en pérdidas.",
+        "howToReduce": "Realiza encuestas o pruebas de producto en las zonas donde planeas vender para obtener retroalimentación directa."
+      },
+      {
+        "title": "Dependencia de permisos y regulaciones",
+        "whyItMatters": "Los permisos necesarios pueden retrasar el inicio de operaciones o incrementar los costos.",
+        "howToReduce": "Investiga y asegura todos los permisos requeridos antes de realizar la inversión."
+      },
+      {
+        "title": "Inversión inicial supera la pérdida tolerable",
+        "whyItMatters": "Si el negocio no funciona, la pérdida podría ser mayor a lo que estás dispuesto a asumir, afectando tu estabilidad financiera.",
+        "howToReduce": "Considera iniciar con una inversión menor o un modelo de negocio que requiera menos capital para validar la idea."
+      }
+    ],
+    "arep_personal_fit_analysis": "Tú encajas bien en esta idea de montar un food truck de arepas rellenas en Bogotá por varias razones. Primero, disfrutas de actividades que implican operar y vender, lo cual es fundamental en este tipo de negocio donde la interacción con los clientes y la ejecución diaria son clave. Además, tu comodidad vendiendo es alta (4 de 5), lo que sugiere que te sentirás a gusto en el ambiente de ventas, ya sea en zonas de oficinas o en eventos.\n\nSin embargo, hay algunas brechas personales que debes considerar. La primera es tu experiencia emprendedora, ya que mencionas que no tienes experiencia previa en este ámbito. Para abordar esto, sería útil buscar un mentor o tomar un curso sobre gestión de food trucks o emprendimiento en general, lo que te dará una base más sólida para operar tu negocio. \n\nLa segunda brecha es tu comodidad con la incertidumbre y los procesos, que es moderada (3 de 5). Esto puede ser un desafío en el entorno cambiante de un food truck. Para mejorar en este aspecto, podrías establecer un plan de contingencia que contemple diferentes escenarios, lo que te permitirá sentirte más preparado ante posibles imprevistos.",
+    "arep_financial_analysis": "Tu idea de iniciar un food truck de arepas rellenas en Bogotá tiene un margen bruto por venta de 23 MXN, lo que representa un 51.11% del precio de venta de 45 MXN. Esto es positivo, ya que te permite generar ganancias en cada venta. Sin embargo, es crucial que verifiques si el costo variable de 22 MXN por arepa es competitivo en comparación con los precios de referencia en el mercado, que varían entre 1,300 COP (aproximadamente 104 MXN) y 21,500 COP (aproximadamente 1,650 MXN) dependiendo del tipo de arepa [F12][F13][F16]. Si tus costos son más altos que estos, podrías estar vendiendo con pérdida, lo que afectaría tu viabilidad.\n\nTu punto de equilibrio es de 435 arepas al mes, lo que significa que necesitas vender al menos esta cantidad para cubrir tus costos fijos, que estimas entre 5,000 y 15,000 MXN. Si vendes 900 arepas al mes, como planeas, estarías generando un ingreso mensual de 40,500 MXN, lo que te deja con un beneficio neto estimado de 10,700 MXN después de cubrir tus costos fijos. Esto es favorable, pero recuerda que cualquier variación en las ventas o en los costos podría impactar tu rentabilidad.\n\nFinalmente, el tiempo de recuperación de tu inversión inicial de 120,000 MXN es de aproximadamente 11 meses, lo cual es razonable. Sin embargo, el alto puntaje de riesgo (97) indica que hay factores que podrían amenazar la estabilidad de tu negocio, como la competencia y la fluctuación en la demanda. Asegúrate de tener un plan sólido para enfrentar estos desafíos y considera diversificar tus canales de venta, como ferias y eventos gastronómicos, para maximizar tus oportunidades [F24][F26].",
+    "arep_time_operation_analysis": "Para tu food truck de arepas rellenas, el trabajo se puede dividir en tareas únicas y tareas recurrentes. Las tareas únicas incluyen la compra del camión y del equipo, así como la creación de las recetas y el menú. Las tareas recurrentes son la producción diaria de arepas, la atención al cliente, las entregas y la gestión de ventas. Con un volumen mensual de 900 unidades, deberás planificar la producción, que podría tomar varias horas al día, dependiendo de la cantidad de cocineros que tengas y de la eficiencia de tu proceso.\n\nTeniendo en cuenta que tienes entre 20 y 40 horas a la semana y un horario flexible, podrás organizarte para realizar las tareas más intensivas, como la producción, en días específicos. Por ejemplo, podrías dedicar un par de días a la semana a la producción masiva y otros días a la atención al cliente y ventas. La parte que podría saturarte es la producción y la atención al cliente, especialmente en eventos de alta demanda. Considera contratar a 1 o 2 personas para ayudarte en estas áreas, lo que te permitirá enfocarte en la gestión y expansión del negocio.\n\nRecuerda que el mercado es altamente competitivo, con competidores como Arepas el Bamboleo y Arepas el Divino Niño, que ofrecen precios variados [F3][F4][F5]. Por lo tanto, deberás estar preparado para ajustar tu estrategia de ventas y producción según la respuesta del mercado y la demanda en las zonas de oficinas y eventos. Asegúrate de tener un plan claro para la obtención de permisos y puntos de venta, ya que esto es crucial para el éxito de tu food truck.",
+    "arep_scalability_analysis": "El crecimiento de tu food truck de arepas rellenas en Bogotá puede ser impulsado por varios factores sin que tu carga de trabajo aumente de manera proporcional. Primero, al establecer un menú atractivo y diferenciado, puedes atraer a un mayor número de clientes, especialmente en zonas de oficinas y eventos de fin de semana. Además, al participar en ferias y eventos gastronómicos, como el Quesatón y el Festival de la Lechona, puedes aumentar tu visibilidad y ventas sin necesidad de incrementar significativamente tus horas de trabajo [F24][F25]. También, si decides contratar a 1 o 2 personas, podrías delegar tareas operativas, lo que te permitiría enfocarte en la estrategia y el crecimiento del negocio.\n\nSin embargo, hay factores que podrían frenar tu crecimiento. La alta competencia en el mercado de arepas en Bogotá, como Arepas el Bamboleo y Arepas el Divino Niño, puede dificultar la captación de clientes [F3][F4][F5]. Además, depender de permisos y licencias para operar puede ser un obstáculo, ya que cualquier retraso en la obtención de estos documentos podría afectar tu capacidad para iniciar el negocio. También es crucial que tengas en cuenta la necesidad de un inventario que se deprecia rápidamente, lo que podría impactar tus costos si no se gestiona adecuadamente.\n\nFinalmente, es importante que tengas claridad sobre tu canal de ventas. La venta presencial puede ser efectiva, pero también puede limitar tu alcance. Considera la posibilidad de expandirte a plataformas de entrega a domicilio o redes sociales para promocionar tu food truck. Esto podría ayudarte a diversificar tus ingresos y atraer a un público más amplio, siempre y cuando mantengas la calidad de tus productos y la atención al cliente.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda",
+        "tasks": [
+          "Hablar con 10 personas en zonas de oficinas sobre su interés en comprar arepas rellenas.",
+          "Visitar 3 food trucks en Bogotá y preguntar sobre su experiencia y ventas en zonas de oficinas y eventos.",
+          "Investigar los permisos necesarios para operar un food truck en Bogotá."
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números",
+        "tasks": [
+          "Calcular los costos de operación mensual incluyendo insumos, permisos y salarios.",
+          "Comparar precios de arepas de la competencia como Arepas el Bamboleo ($4,800 - $20,400) y Arepas el Divino Niño para definir tu rango de precios.",
+          "Establecer un plan de precios basado en el costo de producción y precios de referencia como la Arepa Mixta ($16,000) y la Arepa Criolla ($21,500) para validar con los clientes."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición",
+        "tasks": [
+          "Realizar una prueba de venta en un evento local o feria gastronómica con un menú limitado de arepas.",
+          "Crear una página en redes sociales para promocionar tu food truck y captar interés, buscando al menos 50 seguidores en la primera semana.",
+          "Ofrecer degustaciones gratuitas en zonas de oficinas para obtener retroalimentación sobre tus arepas."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar la retroalimentación recibida de las degustaciones y ventas en eventos para ajustar tu oferta.",
+          "Revisar los costos y beneficios de adquirir el camión y equipo necesario para operar.",
+          "Definir si continuar con la inversión en el food truck o ajustar el modelo de negocio basado en la validación realizada."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Tu idea de montar un food truck de arepas rellenas en Bogotá tiene un buen potencial, pero es crucial que realices una validación previa. La inversión inicial que planeas ($120,000) excede lo que has declarado que podrías perder sin afectar tu estabilidad. Además, necesitas investigar a fondo los permisos y regulaciones necesarios para operar, ya que esto podría bloquear tu arranque o encarecerlo. Sin evidencia de clientes potenciales, el riesgo de fracaso es alto.\n\nPara avanzar de manera segura, te recomiendo los siguientes pasos: primero, investiga y asegúrate de obtener todos los permisos y licencias necesarios para operar tu food truck en Bogotá. Esto te permitirá evitar sorpresas que puedan afectar tu inversión. Segundo, realiza un estudio de mercado para validar la demanda de tus arepas en las zonas de oficinas y eventos, asegurándote de hablar con posibles clientes para obtener retroalimentación. Por último, considera comenzar con una versión de menor inversión para probar el mercado antes de comprometerte completamente.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 2,
+      "rewritten": [
+        "financial_analysis",
+        "validation_plan"
+      ],
+      "review": {
+        "contradicciones": [],
+        "supuestos_sin_fuente": [
+          {
+            "seccion": "financial_analysis",
+            "afirmacion": "El costo variable de 22 MXN por arepa es competitivo en comparación con los precios de referencia en el mercado, que varían entre 1,300 COP (aproximadamente 104 MXN) y 21,500 COP (aproximadamente 1,650 MXN) dependiendo del tipo de arepa."
+          },
+          {
+            "seccion": "validation_plan",
+            "afirmacion": "Establecer un plan de precios basado en el costo de producción y precios de referencia como la Arepa Mixta ($16,000) y la Arepa Criolla ($21,500)."
+          }
+        ],
+        "conclusiones_no_sustentadas": [],
+        "correcciones": [
+          {
+            "seccion": "financial_analysis",
+            "instruccion": "Revisa o elimina las conversiones de precios de COP a MXN y cita la fuente del tipo de cambio o de los precios de referencia correctamente."
+          },
+          {
+            "seccion": "validation_plan",
+            "instruccion": "Agrega las citas de las fuentes para los precios de referencia de la Arepa Mixta y la Arepa Criolla o deja claro que son estimaciones a validar."
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Iniciar un food truck de arepas rellenas en Bogotá, enfocado en zonas de oficinas y eventos de fin de semana.",
+          "sector": "Alimentación",
+          "modelo_de_negocio": "Food truck"
+        },
+        "tamano_mercado": {
+          "cifra": "1200",
+          "anio": 2019,
+          "fuente_id": "F1",
+          "motivo": "Ventas mensuales estimadas para el mercado de food trucks en Colombia."
+        },
+        "competidores": [
+          {
+            "nombre": "Arepas el Bamboleo",
+            "propuesta": "Arepas con precios que varían entre $4,800 y $20,400.",
+            "precio_referencia": null,
+            "fuente_id": "F3"
+          },
+          {
+            "nombre": "Arepas el Divino Niño Castilla",
+            "propuesta": "Ofrece arepas como la 'Porky' ($10,500) y la 'Barbara' ($13,000).",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "Arepas el Divino Niño Madrigal",
+            "propuesta": "Destaca la 'Arepa Poderosa' ($17,000) y la 'Arepa Rechupete' ($13,000).",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Arepa Mixta (arepa de maíz, queso, carne y pollo)",
+            "rango": "16,000 COP",
+            "fuente_id": "F12"
+          },
+          {
+            "descripcion": "Arepa Criolla con Limonada Natural",
+            "rango": "21,500 COP",
+            "fuente_id": "F13"
+          },
+          {
+            "descripcion": "Arepa Jamón y Queso",
+            "rango": "2,500 COP",
+            "fuente_id": "F14"
+          },
+          {
+            "descripcion": "Arepa Rellena de Queso",
+            "rango": "1,300 COP",
+            "fuente_id": "F15"
+          },
+          {
+            "descripcion": "Arepa Desmechada",
+            "rango": "19,500 COP",
+            "fuente_id": "F16"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Ferias y Eventos Gastronómicos",
+            "nota": "Eventos como el Quesatón y el Festival de la Lechona ofrecen arepas.",
+            "fuente_id": "F24"
+          },
+          {
+            "canal": "Zonas de Oficinas y Áreas Comerciales",
+            "nota": "Establecimientos como El Carriel y Arepas D'Kasa están ubicados en zonas de alta afluencia.",
+            "fuente_id": "F26"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Inversión inicial",
+            "valor": "entre 70,000,000 y 120,000,000 COP",
+            "fuente_id": "F21",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Renta de espacio público",
+            "valor": "null",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Salarios y prestaciones sociales",
+            "valor": "null",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Costos de insumos",
+            "valor": "null",
+            "fuente_id": null,
+            "es_supuesto": true
+          },
+          {
+            "concepto": "Ingresos mensuales",
+            "valor": "superiores a 4,300,000 COP",
+            "fuente_id": "F21",
+            "es_supuesto": false
+          }
+        ],
+        "huecos_de_informacion": [
+          "NO ENCONTRADO información sobre el tamaño total anual del mercado de food trucks.",
+          "NO ENCONTRADO información sobre la participación en el sector de alimentos.",
+          "NO ENCONTRADO información sobre la evolución del mercado posterior a 2022."
+        ],
+        "mercado_objetivo": {
+          "pais": "Colombia",
+          "ciudad": "Bogotá",
+          "criterio": "La idea menciona específicamente Bogotá como el lugar de operación.",
+          "es_supuesto": false
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "PROYECTO DE ACUERDO 270-10",
+            "url": "https://concejodebogota.gov.co/cbogota/site/artic/20190306/asocfile/20190306122239/edicio__n_2866__pa_146_157_pd_de_2019.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F2",
+            "titulo": "EDICIÓN 3390 PA 320 - 324 PD DE 2022.docx",
+            "url": "https://concejodebogota.gov.co/cbogota/site/artic/20220103/asocfile/20220103094031/edici__n_3390_pa_320___324_pd_de_2022.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F3",
+            "titulo": "Arepas el Bamboleo - Fontibón Precios y Menú a Domicilio - Rappi",
+            "url": "https://www.rappi.com.co/restaurantes/900478106-arepas-el-bamboleo",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F4",
+            "titulo": "Arepas el Divino Niño Castilla | DiDi Food Colombia",
+            "url": "https://preweb.didiglobal.com/co/food/bogota/arepas-el-divino-nino-castilla/5764607749045094316/",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F5",
+            "titulo": "Arepas el Divino Niño - Madrigal | DiDi Food Colombia",
+            "url": "https://preweb.didiglobal.com/co/food/bogota/arepas-el-divino-nino-madrigal/5764615534201799785/",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F6",
+            "titulo": "Arepas Eliana | DiDi Food Colombia",
+            "url": "https://web.didiglobal.com/co/food/bogota/arepas-eliana/5764614956025383753/",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F7",
+            "titulo": "Arepaflow | DiDi Food Colombia",
+            "url": "https://preweb.didiglobal.com/co/food/bogota/arepaflow/5764615413871414624/",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F8",
+            "titulo": "D´PELAO Arepas & Chorizos | DiDi Food Colombia",
+            "url": "https://web.didiglobal.com/co/food/bogota/dpelao-arepas-chorizos/5764609082351421889/",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F9",
+            "titulo": "Deli Arepa | DiDi Food Colombia",
+            "url": "https://preweb.didiglobal.com/co/food/bogota/deli-arepa/5764610392215781876/",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F10",
+            "titulo": "Foggo Street Food at Teusaquillo - Bogota",
+            "url": "https://www.bogotatrip.com/shop/foggo-street-food",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "Rapi Arepas Bogota ★4.3 — Fast food | Reviews & Menu",
+            "url": "https://www.pos.do/en/bogota/restaurant/rapi-arepas",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "Arepas Rellenas y Chorizos Ar And Cho | DiDi Food Colombia",
+            "url": "https://web.didiglobal.com/co/food/bogota/arepas-rellenas-y-chorizos-ar-and-cho/5764607779613182907/",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F13",
+            "titulo": "Arepas Rellenas Anfer | DiDi Food Colombia",
+            "url": "https://web.didiglobal.com/co/food/bogota/arepas-rellenas-anfer/5764607659018553556/",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F14",
+            "titulo": "Cov A Eats | Restaurante familiar en Bogotá",
+            "url": "https://cov-a-eats.ueniweb.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F15",
+            "titulo": "Rellenitas y gorditas • Menú, Precios y Dirección",
+            "url": "https://queresto.com/rellenitasygorditas",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F16",
+            "titulo": "Estacion Arepa Rellena - Chapinero Precios y Menú a Domicilio - Rappi",
+            "url": "https://www.rappi.com.co/restaurantes/900085383-estacion-arepa-rellena",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F17",
+            "titulo": "Arepas rellenas - Menú - A Comer Arepa | Bogotá",
+            "url": "https://a-comer-arepa.ueniweb.com/products/menu/arepas-rellenas-26746317",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F18",
+            "titulo": "Las Arepas – Arepas Rellenas - Chapinero Precios y Menú a Domicilio - Rappi",
+            "url": "https://rappi-restaurant.rappi.com/restaurantes/900250746-las-arepas-arepas-rellenas",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F19",
+            "titulo": "Arepas Fredd | DiDi Food Colombia",
+            "url": "https://preweb.didiglobal.com/co/food/bogota/arepas-fredd/5764611012846947660/",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F20",
+            "titulo": "Las Arepas – Arepas Rellenas - Usaquén Precios y Menú a Domicilio - Rappi",
+            "url": "https://www.rappi.com.co/restaurantes/900250751-las-arepas-arepas-rellenas",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F21",
+            "titulo": "Se reglamentan los Food Trucks en Bogotá | Bogota.gov.co",
+            "url": "https://bogota.gov.co/mi-ciudad/desarrollo-economico/se-reglamentan-los-food-trucks-en-bogota",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F22",
+            "titulo": "https://revistas.unal.edu.co/index.php/dyna/article/download/9553/11477/22549?inline=1",
+            "url": "https://revistas.unal.edu.co/index.php/dyna/article/download/9553/11477/22549?inline=1",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F23",
+            "titulo": "EDICIÓN 2963 PA 021 AL 030 PD DE 2020.docx",
+            "url": "https://concejodebogota.gov.co/cbogota/site/artic/20200114/asocfile/20200114094326/edici__n_2963_pa_021_al_030_pd_de_2020.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F24",
+            "titulo": "¿Sin plan? Gran Quesatón campesina en Bogotá: horarios, puntos y donde comprar más barato",
+            "url": "https://www.tropicanafm.com/2025/sin-plan-gran-quesaton-campesina-en-bogota-horarios-puntos-y-donde-comprar-mas-barato-454045.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F25",
+            "titulo": "Alcaldía de Bogotá anunció el Festival de la Lechona 2026: Fechas y lugares; Platos desde $12.000",
+            "url": "https://www.tropicanafm.com/2026/alcaldia-de-bogota-anuncio-el-festival-de-la-lechona-2026-fechas-y-lugares-platos-desde-12-000-468017.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F26",
+            "titulo": "Puntos de venta - Arepas el Carriel",
+            "url": "https://elcarriel.com.co/puntos-de-venta/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F27",
+            "titulo": "AREPAS D'KASA • Menú, Precios y Dirección",
+            "url": "https://queresto.com/arepasdkasa",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F28",
+            "titulo": "Shop Arepas Expres | 316 5223529 | Bogotá",
+            "url": "https://co.todosnegocios.com/shop-arepas-expres-316-5223529",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F29",
+            "titulo": "Arepas de la Villa Ferias | DiDi Food Colombia",
+            "url": "https://web.didiglobal.com/co/food/bogota/arepas-de-la-villa-ferias/5764607541536100250/",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F30",
+            "titulo": "Arepitas Paisas Bog - Ciudad Bolívar Precios y Menú a Domicilio - Rappi",
+            "url": "https://www.rappi.com.co/restaurantes/900404423-arepitas-paisas-bog",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F31",
+            "titulo": "Arepa Gourmet, Bogotá, Colombia - Reseñas, Calificaciones, Consejos y Por Qué Deberías Ir – Wanderlog",
+            "url": "https://wanderlog.com/es/place/details/4547033/arepa-gourmet",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "tamaño del mercado food trucks Bogotá valor total sector alimentos Colombia 2023 site:.gov.co OR site:.gov OR site:.edu.co OR site:.edu",
+            "competidores directos food trucks arepas Bogotá Arepas en el Camino Arepas La 85",
+            "precios arepas rellenas food trucks Bogotá zonas de oficinas 2023",
+            "costos operación food truck Bogotá rentas salarios insumos 2023 site:.gov.co OR site:.edu.co",
+            "ferias y eventos donde se venden arepas en Bogotá 2024"
+          ],
+          "estimatedCostUsd": 0.209,
+          "durationMs": 18937,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

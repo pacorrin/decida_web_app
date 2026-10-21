@@ -1,0 +1,695 @@
+{
+  "case": {
+    "id": "03-curso-ingles-ingenieros",
+    "kind": "audiencia-internacional",
+    "expectedMarket": "Latinoamérica (ingenieros) orientada a empleadores de Estados Unidos; curso en español con contenido en inglés",
+    "description": "Quiero crear un curso en línea para ingenieros de software de Latinoamérica que quieren conseguir trabajo remoto con empresas de Estados Unidos: preparación de entrevistas en inglés, cómo armar el currículum y cómo negociar un salario en dólares. Lo vendería por internet con clases grabadas y una sesión en vivo al mes.",
+    "profile": {
+      "situation": "independiente",
+      "goal": "ingreso_extra",
+      "experience": "algo",
+      "capital": "10k_50k",
+      "acceptableLoss": "5k_20k",
+      "hoursPerWeek": "10_20",
+      "schedule": "flexible",
+      "timeframe": "6_12_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "ensenar",
+        "crear"
+      ],
+      "workPreference": "digital",
+      "sales": 3,
+      "uncertainty": 4,
+      "process": 3,
+      "hiring": "algunos"
+    },
+    "financial": {
+      "initialInvestment": 45000,
+      "fixedCostsRange": "5k_15k",
+      "products": [
+        {
+          "name": "Curso en línea con sesión mensual en vivo",
+          "kind": "servicio",
+          "price": 4500,
+          "variableCost": 450,
+          "monthlyUnits": 15
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "1_3",
+      "competition": "alta",
+      "channel": "redes_sociales",
+      "dependencies": [
+        "plataforma"
+      ],
+      "mainConcern": "No sé si ingenieros de otros países confiarán en un curso de alguien sin una marca conocida.",
+      "successCondition": "Llegar a 15 alumnos nuevos cada mes y que al menos tres consigan una oferta de trabajo."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "Estados Unidos",
+    "ciudad": null,
+    "criterio": "El curso está dirigido a ingenieros de software de Latinoamérica que buscan trabajo remoto con empresas de Estados Unidos.",
+    "es_supuesto": false,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:34:43.156Z",
+  "latencySeconds": 65.2,
+  "cost": {
+    "tokensUsd": 0.091,
+    "searchUsd": 0.15,
+    "totalUsd": 0.241,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 14,
+        "inputTokens": 40515,
+        "outputTokens": 5333
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 6885,
+        "outputTokens": 4282
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 17521,
+        "outputTokens": 280
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 3146
+      }
+    }
+  },
+  "ideaSummary": "Quieres crear un curso en línea dirigido a ingenieros de software de Latinoamérica que buscan trabajo remoto con empresas de Estados Unidos. Tu curso incluirá preparación para entrevistas en inglés, consejos para armar un currículum y estrategias para negociar salarios en dólares, y se ofrecerá a través de clases grabadas y una sesión en vivo mensual.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 77,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 95,
+      "semaforo": "verde"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 43,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 100,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 65,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 65,
+      "semaforo": "amarillo"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 4050,
+    "grossMarginPercentage": 90,
+    "estimatedMonthlyGrossProfit": 60750,
+    "estimatedMonthlyNetProfit": 50750,
+    "breakEvenSales": 3,
+    "paybackMonths": 0.8866995073891626
+  },
+  "interpretation": {
+    "personal_fit_signal": "green",
+    "financial_viability_signal": "green",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "yellow",
+    "scalability_signal": "yellow",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "Tu inversión inicial ($45,000) es mayor que lo que dijiste que podrías perder sin afectar tu estabilidad. Si el negocio no funciona, la pérdida real superaría tu límite declarado — considera arrancar con una versión de menor inversión.",
+      "Tu negocio depende de una plataforma externa. Si esa plataforma cambia sus reglas o te suspende, pierdes el canal de un día para otro — ten un plan alterno antes de invertir fuerte.",
+      "Inversión inicial de 45,000 MXN excede la pérdida tolerable máxima de 20,000 MXN",
+      "Validación de mercado insuficiente: solo ha hablado con 1–3 clientes potenciales"
+    ],
+    "reasoning_summary": "Aunque hay buen ajuste personal y financiera viable, el riesgo es muy alto y la validación comercial es baja; se recomienda validar más la demanda antes de invertir."
+  },
+  "report": {
+    "arep_executive_summary": "Tu idea de crear un curso en línea para ingenieros de software de Latinoamérica que buscan trabajo remoto con empresas de Estados Unidos está bien definida y tiene un enfoque claro en la preparación de entrevistas, currículum y negociación salarial. Sin embargo, aunque el ajuste personal y la viabilidad financiera son favorables, el nivel de riesgo es muy alto y la competencia es alta, lo que sugiere que la validación comercial es insuficiente. Por lo tanto, se recomienda que valides más la demanda y la confianza de tus potenciales clientes antes de realizar una inversión significativa en el desarrollo del curso. Esto te permitirá reducir riesgos y aumentar las posibilidades de éxito en el futuro.",
+    "arep_business_understanding": "Ofreces un curso en línea dirigido a ingenieros de software de Latinoamérica que buscan empleo remoto con empresas de Estados Unidos. Tu propuesta de valor radica en proporcionar preparación específica para entrevistas en inglés, asesoría sobre cómo elaborar un currículum atractivo y estrategias para negociar un salario en dólares. Esto es atractivo para tus clientes porque les ayudará a aumentar sus posibilidades de conseguir un empleo bien remunerado en el mercado estadounidense, lo que puede ser un cambio significativo en sus carreras.\n\nTu cliente ideal son ingenieros de software de Latinoamérica, aunque no se especifican detalles como edad, ingresos o hábitos. Esto es un supuesto por validar. Es probable que busquen mejorar sus habilidades y aumentar sus oportunidades laborales en un mercado competitivo, lo que hace que tu curso sea relevante para ellos. \n\nAdemás, es importante considerar que competirás con plataformas establecidas como Udemy, LinkedIn Learning y DataCamp, que ya ofrecen cursos en desarrollo de software y habilidades profesionales [F1][F2][F3]. Esto significa que deberás diferenciarte en tu enfoque y contenido para atraer a tus clientes potenciales.",
+    "arep_strengths": [
+      {
+        "title": "Alto margen bruto por venta",
+        "whyItMatters": "Con un margen bruto del 90%, cada venta genera $4,050 antes de gastos fijos, lo que permite financiar la operación y absorber errores iniciales."
+      },
+      {
+        "title": "Recuperación rápida de la inversión",
+        "whyItMatters": "La inversión de $45,000 se recupera en aproximadamente 0.9 meses, lo que reduce el riesgo financiero a corto plazo."
+      },
+      {
+        "title": "Punto de equilibrio bajo",
+        "whyItMatters": "Con solo 3 ventas al mes necesarias para cubrir costos, tienes un margen de error significativo en tus proyecciones de ventas."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Alta competencia en el mercado",
+        "whyItMatters": "La persona declaró que hay alta competencia, lo que puede dificultar la captación de clientes en un mercado saturado.",
+        "howToReduce": "Investiga a fondo a tus competidores y define un valor diferencial claro para tu curso."
+      },
+      {
+        "title": "Validación de mercado insuficiente",
+        "whyItMatters": "Solo has hablado con 1 a 3 clientes potenciales, lo que no es suficiente para validar la demanda de tu curso.",
+        "howToReduce": "Realiza encuestas o entrevistas más amplias para entender mejor las necesidades y disposición a pagar de tu público objetivo."
+      },
+      {
+        "title": "Dependencia de plataformas externas",
+        "whyItMatters": "Tu negocio depende de redes sociales para conseguir clientes, lo que puede ser riesgoso si cambian sus políticas o algoritmos.",
+        "howToReduce": "Desarrolla un plan alternativo que incluya otros canales de marketing y ventas para diversificar tus fuentes de clientes."
+      },
+      {
+        "title": "Confianza en la marca",
+        "whyItMatters": "La mayor preocupación es que ingenieros de otros países no confiarán en un curso de alguien sin una marca conocida, lo que puede limitar tu alcance.",
+        "howToReduce": "Considera colaborar con expertos o influencers en el área para aumentar la credibilidad de tu curso."
+      }
+    ],
+    "arep_personal_fit_analysis": "Tú encajas bien en esta idea de negocio en dos aspectos clave. Primero, disfrutas enseñar y crear productos, lo cual es fundamental para desarrollar un curso en línea. Esto te permitirá conectar con tus estudiantes y ofrecer un valor real en la preparación para entrevistas y negociación salarial. Segundo, tu comodidad con la incertidumbre (4 de 5) es un punto a favor, ya que el mercado de educación en línea puede ser volátil y requiere adaptabilidad ante cambios.\n\nSin embargo, hay dos brechas personales que debes considerar. La primera es tu comodidad siguiendo procesos (3 de 5). Para mejorar en este aspecto, podrías establecer un sistema claro para la creación y entrega de tus cursos, como un cronograma de producción y un checklist de contenido. Esto te ayudará a mantener la calidad y la organización. La segunda brecha es tu disponibilidad de tiempo, ya que planeas dedicar entre 10 y 20 horas a la semana. Para maximizar tu tiempo, considera priorizar tareas esenciales y delegar algunas actividades a las personas que planeas contratar, asegurando que el curso se desarrolle de manera eficiente.",
+    "arep_financial_analysis": "Tu idea de ofrecer un curso en línea para ingenieros de software de Latinoamérica es interesante y tiene un buen potencial financiero. Analizando los datos que proporcionaste, el margen bruto por venta es de 4,050 MXN, lo que representa un 90% de margen bruto. Esto es excelente, ya que significa que por cada curso vendido, obtienes una ganancia considerable. Además, con un estimado de 15 unidades vendidas al mes, tu ganancia bruta mensual es de 60,750 MXN y la ganancia neta es de 50,750 MXN. \n\nEl punto de equilibrio se alcanza con solo 3 ventas al mes, lo que indica que tu modelo es muy eficiente. La recuperación de la inversión inicial de 45,000 MXN se lograría en menos de un mes, específicamente en aproximadamente 0.89 meses, lo cual es bastante favorable. Sin embargo, es importante considerar que tus costos fijos mensuales pueden variar entre 5,000 y 15,000 MXN, lo que puede afectar tus márgenes dependiendo de la cifra que se aplique cada mes.\n\nEn cuanto a la competencia, existen plataformas como Udemy y LinkedIn Learning que ofrecen cursos similares, aunque tu enfoque en la preparación de entrevistas y negociación salarial puede diferenciarte. Sin embargo, es crucial que valides el tamaño del mercado y la demanda específica para tu nicho, ya que no se encontraron datos sobre el tamaño del mercado de educación en línea en Estados Unidos. Esto es un riesgo a considerar, ya que puede impactar tus proyecciones de ventas.",
+    "arep_time_operation_analysis": "Para tu negocio de curso en línea dirigido a ingenieros de software de Latinoamérica, el trabajo concreto que implica se puede dividir en varias tareas clave:\n\n1. **Creación del producto**: Esto incluye el desarrollo del contenido del curso, la grabación de las clases y la preparación de la sesión en vivo mensual. Este trabajo inicial puede requerir una inversión significativa de tiempo, ya que necesitas asegurarte de que el material sea atractivo y útil para tus alumnos.\n\n2. **Atención a clientes**: Tendrás que gestionar la comunicación con los estudiantes, responder preguntas y brindar soporte técnico. Esto puede ser recurrente y requerir tiempo cada semana.\n\n3. **Marketing y ventas**: Promocionar tu curso en redes sociales y otros canales es esencial para atraer nuevos alumnos. Esto puede incluir la creación de contenido promocional, gestión de anuncios y seguimiento de resultados, actividades que también consumirán tiempo de manera continua.\n\nCon una disponibilidad de 10 a 20 horas por semana, es importante que organices tu tiempo de manera efectiva. Podrías dedicar las primeras semanas a crear el contenido del curso, lo cual es una tarea única. Luego, asigna tiempo semanalmente para la atención al cliente y marketing. Para evitar saturarte, considera establecer bloques de tiempo específicos para cada actividad, así como la posibilidad de contratar a una o dos personas para ayudarte con la atención al cliente o marketing, lo que podría aliviar tu carga de trabajo y permitirte enfocarte en la creación de contenido y mejora del curso.",
+    "arep_scalability_analysis": "Para que tu curso en línea crezca sin que aumente proporcionalmente tu carga de trabajo, puedes considerar varias estrategias. Primero, puedes crear contenido adicional que complemente tus clases grabadas, como guías, plantillas de currículum o videos cortos que aborden preguntas frecuentes. Esto enriquecerá la experiencia del estudiante y permitirá que más personas se inscriban sin que tengas que dedicar más tiempo a la enseñanza directa. Además, podrías automatizar el proceso de marketing utilizando herramientas de marketing digital y publicidad en redes sociales, lo que te permitirá atraer más clientes sin incrementar tu carga horaria.\n\nSin embargo, hay factores que podrían frenar tu crecimiento. La alta competencia en el mercado de educación en línea, con jugadores como Udemy y LinkedIn Learning, puede dificultar que tu curso destaque. Además, depender de plataformas externas para la promoción y venta de tu curso puede ser riesgoso; si alguna de estas plataformas cambia sus políticas o algoritmos, tu visibilidad podría verse afectada. También es crucial que logres establecer confianza con tus potenciales alumnos, especialmente si no cuentas con una marca reconocida, ya que esto puede limitar tu capacidad para atraer estudiantes.\n\nTu canal de adquisición de clientes a través de redes sociales es un supuesto que necesitas validar. Considera realizar pruebas de adquisición para evaluar su eficacia y ajustar tus estrategias según los resultados. Utilizar testimonios de tus primeros alumnos puede ayudarte a construir credibilidad y atraer a más estudiantes. Con el objetivo de llegar a 15 nuevos alumnos cada mes, es fundamental que establezcas un plan de marketing claro y medible que te permita optimizar tus esfuerzos en función de lo que funcione mejor.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Validar demanda del curso",
+        "tasks": [
+          "Hablar con 10 ingenieros de software en redes sociales sobre su interés en un curso de preparación para trabajo remoto.",
+          "Crear una encuesta sencilla y compartirla con 20 ingenieros de software para conocer sus necesidades específicas.",
+          "Investigar en grupos de redes sociales sobre cursos similares y recopilar al menos 5 comentarios de usuarios sobre lo que valoran en un curso."
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Confirmar números del curso",
+        "tasks": [
+          "Analizar precios de cursos similares como los de Udemy y LinkedIn Learning para definir un rango de precios competitivo.",
+          "Calcular el costo de producción del curso, incluyendo grabación y edición de videos, y definir un precio de venta.",
+          "Hablar con 5 potenciales clientes sobre su disposición a pagar por el curso y ajustar el precio según sus comentarios."
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición de clientes",
+        "tasks": [
+          "Crear una página de aterrizaje simple para el curso y promocionarla en redes sociales.",
+          "Iniciar una campaña de publicidad en Meta (Facebook e Instagram) con un presupuesto de $500 para medir el interés.",
+          "Ofrecer una sesión gratuita de introducción al curso y captar correos electrónicos de interesados para futuras promociones."
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar los resultados de la campaña publicitaria y la sesión gratuita para evaluar el interés real en el curso.",
+          "Revisar la retroalimentación de los 10 ingenieros contactados en la semana 1 y ajustar el contenido del curso según sus necesidades.",
+          "Definir si proceder con la creación del curso completo o realizar ajustes en la propuesta basada en la validación obtenida."
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Te recomiendo que valides primero tu idea antes de hacer una inversión significativa. Aunque tienes un buen ajuste personal y una viabilidad financiera favorable, el riesgo es muy alto y la validación comercial es baja. Es crucial que hables con más potenciales clientes para asegurarte de que hay una demanda real para tu curso en línea, especialmente considerando que solo has hablado con 1 a 3 personas hasta ahora.\n\nLos siguientes pasos más importantes son: primero, realiza entrevistas o encuestas con más ingenieros de software en Latinoamérica para conocer sus necesidades y expectativas sobre un curso como el tuyo. Segundo, considera iniciar con una versión de menor inversión para probar el interés del mercado sin comprometer tu estabilidad financiera. Por último, desarrolla un plan alternativo para tu canal de ventas, ya que depender de una plataforma externa puede ser riesgoso si cambian sus políticas.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 1,
+      "rewritten": [
+        "scalability_analysis"
+      ],
+      "review": {
+        "contradicciones": [],
+        "supuestos_sin_fuente": [],
+        "conclusiones_no_sustentadas": [
+          {
+            "seccion": "scalability_analysis",
+            "afirmacion": "Tu canal de adquisición de clientes a través de redes sociales es una buena opción",
+            "motivo": "No hay datos ni respaldo en los insumos o ficha de mercado que permitan afirmar que redes sociales será un canal efectivo para captar ingenieros de software latinoamericanos."
+          }
+        ],
+        "correcciones": [
+          {
+            "seccion": "scalability_analysis",
+            "instruccion": "Elimina o refrasea la afirmación de que redes sociales es una buena opción y en su lugar indica la necesidad de validar la eficacia de ese canal mediante pruebas de adquisición."
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Curso en línea para ingenieros de software de Latinoamérica que buscan trabajo remoto con empresas de Estados Unidos, incluyendo preparación de entrevistas, currículum y negociación salarial.",
+          "sector": "Educación en línea",
+          "modelo_de_negocio": "Suscripción y pago por curso"
+        },
+        "tamano_mercado": {
+          "cifra": null,
+          "anio": null,
+          "fuente_id": null,
+          "motivo": "NO ENCONTRADO"
+        },
+        "competidores": [
+          {
+            "nombre": "Udemy",
+            "propuesta": "Amplia variedad de cursos en tecnología y desarrollo de software.",
+            "precio_referencia": null,
+            "fuente_id": "F1"
+          },
+          {
+            "nombre": "LinkedIn Learning",
+            "propuesta": "Cursos en desarrollo de software y habilidades profesionales.",
+            "precio_referencia": null,
+            "fuente_id": "F2"
+          },
+          {
+            "nombre": "DataCamp",
+            "propuesta": "Cursos de ciencia de datos y programación.",
+            "precio_referencia": null,
+            "fuente_id": "F3"
+          },
+          {
+            "nombre": "QA USA",
+            "propuesta": "Formación en habilidades técnicas.",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "CBT Nuggets",
+            "propuesta": "Cursos en tecnología y desarrollo de software.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          },
+          {
+            "nombre": "KodeKloud",
+            "propuesta": "Cursos prácticos de tecnología.",
+            "precio_referencia": null,
+            "fuente_id": "F6"
+          },
+          {
+            "nombre": "O'Reilly Learning",
+            "propuesta": "Acceso a libros, cursos en video y entrenamientos en vivo.",
+            "precio_referencia": "$499 al año",
+            "fuente_id": "F1"
+          },
+          {
+            "nombre": "edX",
+            "propuesta": "Cursos en colaboración con universidades y organizaciones.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Suscripción mensual para preparación de entrevistas.",
+            "rango": "$17",
+            "fuente_id": "F7"
+          },
+          {
+            "descripcion": "Servicio de preparación profesional para entrevistas.",
+            "rango": "$499",
+            "fuente_id": "F8"
+          },
+          {
+            "descripcion": "Sesiones de entrevista con retroalimentación de IA.",
+            "rango": "$99 - $349",
+            "fuente_id": "F9"
+          },
+          {
+            "descripcion": "Paquetes de coaching para entrevistas.",
+            "rango": "$87 - $480",
+            "fuente_id": "F10"
+          },
+          {
+            "descripcion": "Coaching de carrera con precios mensuales según nivel de compensación.",
+            "rango": "$297 - $697",
+            "fuente_id": "F12"
+          },
+          {
+            "descripcion": "Preparación para entrevistas de banca de inversión.",
+            "rango": "$40 - $100",
+            "fuente_id": "F13"
+          },
+          {
+            "descripcion": "Programa de preparación para consultoría.",
+            "rango": "€19 - €99",
+            "fuente_id": "F14"
+          },
+          {
+            "descripcion": "Curso en línea de técnicas de entrevista para supervisores.",
+            "rango": "$175",
+            "fuente_id": "F15"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "CodePath",
+            "nota": "Cursos técnicos sin costo.",
+            "fuente_id": "F21"
+          },
+          {
+            "canal": "SolelyBootcamp",
+            "nota": "Bootcamps de ingeniería de software en línea.",
+            "fuente_id": "F22"
+          },
+          {
+            "canal": "Springboard",
+            "nota": "Curso de preparación para la carrera de ingeniería de software.",
+            "fuente_id": "F23"
+          },
+          {
+            "canal": "4Geeks Academy",
+            "nota": "Programas de programación remotos con soporte ilimitado.",
+            "fuente_id": "F24"
+          },
+          {
+            "canal": "Vets Who Code",
+            "nota": "Acelerador de ingeniería de software gratuito para veteranos.",
+            "fuente_id": "F25"
+          },
+          {
+            "canal": "CareerFoundry",
+            "nota": "Programas de cambio de carrera con garantía de empleo.",
+            "fuente_id": "F26"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Desarrollo de Cursos en Línea",
+            "valor": "$38,980 - $325,330",
+            "fuente_id": "F16",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Ahorros en Formación Corporativa",
+            "valor": "$1,041",
+            "fuente_id": "F17",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Marketing Digital",
+            "valor": "$1,500 - $10,000 mensuales",
+            "fuente_id": "F18",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Publicidad en Google Ads",
+            "valor": "$4.81 por clic",
+            "fuente_id": "F19",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Publicidad en Meta (Facebook e Instagram)",
+            "valor": "$1.44 por clic",
+            "fuente_id": "F19",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Marketing por Correo Electrónico",
+            "valor": "$500 - $5,000 mensuales",
+            "fuente_id": "F20",
+            "es_supuesto": false
+          }
+        ],
+        "huecos_de_informacion": [
+          "No se encontraron datos sobre el tamaño del mercado de educación en línea en Estados Unidos.",
+          "No se hallaron cifras sobre el número de usuarios o enrollments en educación en línea.",
+          "No se encontraron estadísticas sobre el crecimiento anual o tasa de expansión del mercado de educación en línea."
+        ],
+        "mercado_objetivo": {
+          "pais": "Estados Unidos",
+          "ciudad": null,
+          "criterio": "El curso está dirigido a ingenieros de software de Latinoamérica que buscan trabajo remoto con empresas de Estados Unidos.",
+          "es_supuesto": false
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "Best Pluralsight Alternatives 2026 | CourseFacts Guides",
+            "url": "https://www.coursefacts.com/guides/pluralsight-alternatives-2026",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F2",
+            "titulo": "Top Udacity Alternatives & Competitors 2026 | Gartner Peer Insights",
+            "url": "https://www.gartner.com/reviews/market/digital-learning-content-providers/vendor/udacity/product/udacity/alternatives",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F3",
+            "titulo": "Top 10 Udacity Alternatives & Competitors in 2026 | G2",
+            "url": "https://www.g2.com/products/udacity/competitors/alternatives",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F4",
+            "titulo": "Principales Alternativas y Competidores de 10 Pluralsight en 2026 | G2",
+            "url": "https://www.g2.com/es/products/pluralsight/competitors/alternatives",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F5",
+            "titulo": "Top 10 Coursera Alternatives 2026 (Verified Pricing)",
+            "url": "https://freshlearn.com/blog/coursera-alternatives/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F6",
+            "titulo": "Top Pluralsight Competitors and Alternatives | Craft.co",
+            "url": "https://craft.co/pluralsight/competitors?competitors=pluralsight%2Cpodia%2Cteachable%2Csimplilearn%2Cudacity%2Ccoursera%2Cedx%2Clearning-tree-international%2Cskillsoft",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F7",
+            "titulo": "The Training Lab: Self-Paced Interview Prep — Collective Career Lab",
+            "url": "https://www.collective-career-lab.com/join-the-training-lab",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "Professional - Interview Preparation – Wonsulting Inc.",
+            "url": "https://checkout.wonsulting.com/products/professional-interview-preperation",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "https://www.mointerview.com/pricing",
+            "url": "https://www.mointerview.com/pricing",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "Interview Coaching - 3SEnglishPro",
+            "url": "https://3senglishpro.com/product/interview-coaching/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "Coaching Packages | OmniInterview",
+            "url": "https://www.omniinterview.com/coaching-packages",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "Career Coaching with Keepro",
+            "url": "https://www.keeproinc.com/careercoaching",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F13",
+            "titulo": "Deskcraft — Preparación de entrevistas de banca de inversión: preguntas, mocks y modelos · Deskcraft",
+            "url": "https://deskcraftprep.com/es",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F14",
+            "titulo": "Preparación para consultoría, lección a lección | NextEp MBB",
+            "url": "https://nextepmbb.com/programa-preparacion-consultoria/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F15",
+            "titulo": "División de Educación Continua y Estudios Profesionales UPR-RP  Año Académico 2024 - 2025",
+            "url": "https://decep.uprrp.edu/wp-content/uploads/2023/12/Ctalogo-DECEP-2024-2025.pdf",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F16",
+            "titulo": "Resource requirements and costs of developing and delivering MOOCs | The International Review of Research in Open and Distributed Learning",
+            "url": "https://www.irrodl.org/index.php/irrodl/article/view/1901",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F17",
+            "titulo": "e-Learning, en Universidad Galileo y el mundo - IVN",
+            "url": "https://www.galileo.edu/ivn/noticias/elearning-en-universidad-galileo-y-el-mundo/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F18",
+            "titulo": "How Much Does Digital Marketing Cost? Pricing by Channel - LegalClarity",
+            "url": "https://legalclarity.org/how-much-does-digital-marketing-cost-pricing-by-channel/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F19",
+            "titulo": "Online Courses Marketing Benchmarks 2026 | YouTube & Meta",
+            "url": "https://www.benchmarketing.org/benchmarks/industries/online-courses",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F20",
+            "titulo": "Marketing por correo electrónico que fomenta los clientes potenciales y genera ingresos constantes | Digital Marketing Co.",
+            "url": "https://digitalmarketingco.org/es/servicios/email-marketing",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F21",
+            "titulo": "CodePath | Career-Ready courses, developed by software engineers",
+            "url": "https://www.codepath.org/courses",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F22",
+            "titulo": "solelybootcamp: online part-time coding bootcamps | Software Engineering, FullStack Engineering, AI Engineering",
+            "url": "https://it.op-edu.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F23",
+            "titulo": "Software Engineering Career Track Prep by Springboard - Course + Reviews | Course Report",
+            "url": "https://www.coursereport.com/courses/software-engineering-career-track-prep-springboard",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F24",
+            "titulo": "4Geeks | Bootcamp de Programación Remoto",
+            "url": "https://4geeks.com/es/ubicacion/remoto",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F25",
+            "titulo": "Software Engineering Accelerator - Vets Who Code",
+            "url": "https://vetswhocode.io/programs/accelerator",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F26",
+            "titulo": "CareerFoundry | The Online Career Academy For Tech",
+            "url": "https://careerfoundry.com/en/?p=33206",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F27",
+            "titulo": "Springboard: Online Learning with Experts to Launch Your New Career",
+            "url": "https://www.springboard.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F28",
+            "titulo": "ProSuite - La Plataforma Todo-en-Uno Para Tu Carrera Tech",
+            "url": "https://learn.wandari.com/pro",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F29",
+            "titulo": "Software Development Engineer Interview Prep - Aced (formerly Exponent)",
+            "url": "https://www.tryexponent.com/sde",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F30",
+            "titulo": "U.S. Jobs, Career Paths & IT Training | ITLearn360",
+            "url": "https://www.itlearn360.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F31",
+            "titulo": "Software Engineering Recruiting Bootcamp",
+            "url": "https://go.joinleland.com/courses/software-engineering-recruiting-bootcamp",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "US online education market size 2023 site:.gov OR site:.edu OR site:.org OR site:.com",
+            "competitors of online courses for software engineers in the United States",
+            "precios cursos en línea preparación entrevistas desarrollo profesional Estados Unidos 2024",
+            "costos típicos de producción de cursos en línea en Estados Unidos 2023 site:.gov OR site:.edu OR site:.org OR site:linkedin.com OR site:teachable.com OR site:udemy.com OR site:coursera.org",
+            "software engineers in United States platforms for remote job preparation courses 2024"
+          ],
+          "estimatedCostUsd": 0.205,
+          "durationMs": 23517,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}

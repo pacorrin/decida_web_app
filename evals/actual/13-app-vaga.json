@@ -1,0 +1,645 @@
+{
+  "case": {
+    "id": "13-app-vaga",
+    "kind": "poca-informacion",
+    "expectedMarket": "No especificado (la idea no indica mercado ni cliente)",
+    "description": "Una app para ayudar a las personas.",
+    "profile": {
+      "situation": "estudiante",
+      "goal": "probar_idea",
+      "experience": "ninguna",
+      "capital": "menos_10k",
+      "acceptableLoss": "menos_5k",
+      "hoursPerWeek": "5_10",
+      "schedule": "noches",
+      "timeframe": "mas_12_meses"
+    },
+    "fit": {
+      "enjoyed": [
+        "crear"
+      ],
+      "workPreference": "digital",
+      "sales": 2,
+      "uncertainty": 3,
+      "process": 3,
+      "hiring": "solo"
+    },
+    "financial": {
+      "initialInvestment": 3000,
+      "fixedCostsRange": "menos_5k",
+      "products": [
+        {
+          "name": "App",
+          "kind": "servicio",
+          "price": 50,
+          "variableCost": 10,
+          "monthlyUnits": 40
+        }
+      ]
+    },
+    "market": {
+      "customerEvidence": "ninguno",
+      "competition": "media",
+      "channel": "otro",
+      "dependencies": [
+        "plataforma"
+      ],
+      "mainConcern": "No lo he pensado.",
+      "successCondition": "Que le sirva a la gente."
+    }
+  },
+  "promptVersion": "v1.5.0",
+  "researchEnabled": true,
+  "targetMarket": {
+    "pais": "México",
+    "ciudad": null,
+    "criterio": "No se especifica un mercado particular, se utiliza el mercado por defecto.",
+    "es_supuesto": true,
+    "editado": false
+  },
+  "generatedAt": "2026-10-21T06:47:11.721Z",
+  "latencySeconds": 61.6,
+  "cost": {
+    "tokensUsd": 0.087,
+    "searchUsd": 0.15,
+    "totalUsd": 0.237,
+    "searchCalls": 5,
+    "byModel": {
+      "gpt-4o-mini": {
+        "calls": 15,
+        "inputTokens": 41048,
+        "outputTokens": 5455
+      },
+      "o4-mini": {
+        "calls": 2,
+        "inputTokens": 6498,
+        "outputTokens": 3536
+      },
+      "gpt-4.1-mini": {
+        "calls": 4,
+        "inputTokens": 32696,
+        "outputTokens": 2594
+      },
+      "gpt-4.1": {
+        "calls": 1,
+        "inputTokens": 17541,
+        "outputTokens": 335
+      }
+    }
+  },
+  "ideaSummary": "Quieres iniciar una **app** destinada a ayudar a las personas en diversas áreas de su vida. Tu idea consiste en ofrecer herramientas y recursos que faciliten la resolución de problemas cotidianos, mejorando así la calidad de vida de tus usuarios.",
+  "summarySource": "ai",
+  "scores": [
+    {
+      "dimension": "Fit personal",
+      "puntaje": 61,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Viabilidad financiera",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Viabilidad comercial",
+      "puntaje": 43,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Nivel de riesgo",
+      "puntaje": 100,
+      "semaforo": "rojo"
+    },
+    {
+      "dimension": "Compatibilidad de tiempo",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    },
+    {
+      "dimension": "Escalabilidad",
+      "puntaje": 40,
+      "semaforo": "amarillo"
+    }
+  ],
+  "metrics": {
+    "grossMarginPerSale": 40,
+    "grossMarginPercentage": 80,
+    "estimatedMonthlyGrossProfit": 1600,
+    "estimatedMonthlyNetProfit": -1400,
+    "breakEvenSales": 75,
+    "paybackMonths": null
+  },
+  "interpretation": {
+    "personal_fit_signal": "yellow",
+    "financial_viability_signal": "yellow",
+    "commercial_viability_signal": "yellow",
+    "risk_level_signal": "red",
+    "time_fit_signal": "yellow",
+    "scalability_signal": "yellow",
+    "final_recommendation": "validate_first",
+    "red_flags": [
+      "Tu negocio depende de una plataforma externa. Si esa plataforma cambia sus reglas o te suspende, pierdes el canal de un día para otro — ten un plan alterno antes de invertir fuerte.",
+      "No hay validación de clientes potenciales",
+      "Dependencia crítica en plataforma externa"
+    ],
+    "reasoning_summary": "El proyecto muestra niveles moderados en ajuste personal, viabilidad financiera y comercial, pero un riesgo muy alto (100) por falta de pruebas y dependencia externa. No hay evidencia de clientes ni feedback, por lo que se recomienda validar primero la idea antes de invertir."
+  },
+  "report": {
+    "arep_executive_summary": "La idea de desarrollar una aplicación para ayudar a las personas está poco definida en este momento. Aunque hay niveles moderados en ajuste personal, viabilidad financiera y comercial, el riesgo es muy alto debido a la falta de pruebas y la dependencia de plataformas externas. Es crucial que antes de invertir, valides primero la idea y obtengas feedback de clientes potenciales, ya que actualmente no hay evidencia de interés en el mercado. Sin esta validación, es difícil asegurar el éxito de tu proyecto.",
+    "arep_business_understanding": "Ofreces una aplicación diseñada para ayudar a las personas en diversas áreas de su vida. La propuesta de valor se basa en brindar apoyo a los usuarios para mejorar su bienestar y calidad de vida. Sin embargo, es crucial que definas claramente cómo planeas monetizar esta app, ya que actualmente no está especificado en tu idea. Esto es fundamental para que los clientes vean el valor y estén dispuestos a pagar por el servicio.\n\nRespecto a quién es tu cliente, no has proporcionado detalles específicos sobre su perfil. Podría ser cualquier persona que busque mejorar algún aspecto de su vida, pero sería útil validar supuestos sobre su edad, ingresos y hábitos. Definir mejor a tu cliente te ayudará a enfocar tus esfuerzos de marketing y desarrollo de producto.",
+    "arep_strengths": [
+      {
+        "title": "Inversión inicial baja",
+        "whyItMatters": "Tu inversión de $3,000 cabe en lo que puedes perder, lo que te permite probar la idea sin comprometer tu estabilidad financiera."
+      },
+      {
+        "title": "Margen bruto alto",
+        "whyItMatters": "Tienes un margen bruto del 80% por venta, lo que significa que de cada venta te quedan $40 antes de gastos fijos, lo que puede ayudar a financiar tu operación."
+      }
+    ],
+    "arep_risks": [
+      {
+        "title": "Idea poco definida",
+        "whyItMatters": "La claridad de tu idea es vaga y no has definido cómo ganarías dinero, lo que dificulta el desarrollo de un modelo de negocio sólido.",
+        "howToReduce": "Dedica tiempo a investigar y definir claramente cómo monetizarás la app y qué valor ofrecerás a tus usuarios."
+      },
+      {
+        "title": "Falta de validación de clientes",
+        "whyItMatters": "No has hablado con nadie sobre tu idea, lo que significa que no tienes evidencia de interés o necesidad en el mercado.",
+        "howToReduce": "Realiza encuestas o entrevistas con potenciales usuarios para validar tu idea y entender sus necesidades."
+      },
+      {
+        "title": "Competencia media",
+        "whyItMatters": "Has declarado que hay competencia media, lo que indica que ya existen soluciones similares en el mercado que podrían dificultar tu entrada.",
+        "howToReduce": "Analiza a tus competidores y busca un nicho específico o una propuesta de valor diferenciada que te haga destacar."
+      },
+      {
+        "title": "Dependencia de plataformas externas",
+        "whyItMatters": "Tu negocio depende de una plataforma externa, lo que puede ser riesgoso si cambian sus reglas o te suspenden.",
+        "howToReduce": "Desarrolla un plan alternativo para diversificar tus canales de adquisición de usuarios y no depender únicamente de una plataforma."
+      }
+    ],
+    "arep_personal_fit_analysis": "Con la idea de desarrollar una app para ayudar a las personas, hay ciertos aspectos que se requieren y que pueden alinearse contigo. Primero, la creación de una aplicación implica un trabajo digital que disfrutas, lo que puede ser un buen punto de partida. Además, el modelo freemium y de suscripciones podría ofrecerte una oportunidad de generar ingresos a largo plazo, aunque esto depende de cómo planeas monetizar la app, algo que aún no se ha definido claramente.\n\nSin embargo, hay algunas brechas personales que debes considerar. Primero, tu nivel de comodidad al vender es bajo (2 de 5), lo que puede dificultar la promoción de tu app. Una acción concreta sería buscar cursos o recursos sobre marketing digital para mejorar tus habilidades en ventas. Segundo, tu disponibilidad de tiempo es limitada (5 a 10 horas a la semana), lo que podría no ser suficiente para el desarrollo y la operación de una app, especialmente en las primeras etapas. Podrías considerar establecer un plan de trabajo más estructurado que te permita maximizar esas horas, o bien, evaluar si puedes dedicar más tiempo en el futuro.\n\nPor último, es importante que definas cómo planeas ganar dinero con tu app. Esto es crucial para entender la viabilidad financiera y comercial de tu idea. Si no tienes claridad en este aspecto, sería recomendable investigar modelos de monetización que han funcionado en aplicaciones similares.",
+    "arep_financial_analysis": "Tu idea de una aplicación con un precio de 50 MXN y un costo variable de 10 MXN por unidad genera un margen bruto de 40 MXN por venta, lo que representa un margen del 80%. Esto es positivo, ya que el margen es alto y puede ser atractivo para los usuarios. Sin embargo, el problema radica en que, a pesar de este buen margen, tu utilidad neta mensual estimada es negativa, con una pérdida de 1,400 MXN. Esto indica que tus costos fijos superan tus ingresos, lo que es un riesgo significativo.\n\nEl punto de equilibrio se establece en 75 unidades vendidas al mes. Esto significa que necesitas vender al menos 75 aplicaciones para cubrir tus costos fijos. Si no alcanzas ese volumen, seguirás operando con pérdidas. Dado que estimas vender 40 unidades al mes, estás muy por debajo de este umbral, lo que sugiere que la viabilidad financiera es preocupante. Sin un aumento en las ventas o una reducción en los costos, es poco probable que logres rentabilidad.\n\nEn cuanto a la recuperación de la inversión, con una inversión inicial de 3,000 MXN y una pérdida mensual de 1,400 MXN, no hay un horizonte claro para recuperar tu inversión si las ventas no aumentan. La situación financiera actual sugiere que deberías considerar estrategias para incrementar las ventas o ajustar tus costos fijos para mejorar tu viabilidad financiera.",
+    "arep_time_operation_analysis": "La idea de crear una aplicación para ayudar a las personas es interesante, pero es importante aclarar algunos puntos antes de determinar si cabe en tu tiempo. Actualmente, la idea es vaga y falta información sobre cómo planeas monetizarla. Esto es crucial, ya que el modelo de negocio (freemium y suscripciones) implica tareas continuas de atención al cliente, marketing y actualizaciones de la app, además de la creación inicial del producto.\n\nEn términos de trabajo concreto, las actividades que deberías considerar incluyen:\n\n- **Desarrollo de la app**: Esto es una tarea inicial que puede requerir varias semanas o meses, dependiendo de la complejidad. Si optas por un desarrollo básico, los costos típicos rondan entre $80,000 y $150,000 MXN [F20], lo que puede ser un reto con tu capital disponible de menos de $10,000 MXN.\n- **Atención al cliente**: Una vez que la app esté en funcionamiento, necesitarás dedicar tiempo a responder preguntas y resolver problemas de los usuarios. Esto es recurrente y puede consumir varias horas a la semana.\n- **Marketing y promoción**: Necesitarás invertir tiempo en promocionar la app para atraer usuarios. Esto puede incluir redes sociales, publicidad y otros canales.\n\nCon una disponibilidad de 5 a 10 horas por semana, es probable que te sientas saturado con las tareas continuas de atención al cliente y marketing, especialmente si decides hacerlo solo. Podrías organizar tu tiempo estableciendo prioridades y dedicando bloques específicos para cada actividad, asegurándote de no descuidar el desarrollo inicial de la app. Considera también la posibilidad de buscar apoyo o herramientas que te ayuden a gestionar estas tareas de manera más eficiente.",
+    "arep_scalability_analysis": "Para que tu app crezca sin que aumente significativamente tu carga de trabajo, considera implementar un modelo freemium que ofrezca funciones básicas de forma gratuita y opciones premium de pago. Esto puede atraer a más usuarios inicialmente, y con el tiempo, puedes monetizar a través de suscripciones o contenido adicional. Además, si logras automatizar procesos, como la atención al cliente o la gestión de usuarios, podrás escalar sin necesidad de incrementar tus horas de trabajo. Utilizar canales como Google Play Store y Apple App Store, donde la mayoría de los usuarios prefieren descargar aplicaciones gratuitas [F22], puede facilitar tu crecimiento.\n\nSin embargo, hay varios riesgos que podrían frenar tu avance. La competencia en el mercado de aplicaciones es intensa, con jugadores establecidos como BBVA, Banorte y Mercado Libre [F4][F7]. Si no logras diferenciar tu aplicación o ofrecer un valor único, podrías tener dificultades para captar y retener usuarios. Además, la dependencia de plataformas externas para la distribución de tu app puede limitar tu control sobre el crecimiento y la visibilidad de tu producto.\n\nFinalmente, tu situación actual como estudiante y la falta de experiencia emprendedora son factores que pueden afectar tu capacidad para ejecutar la idea. La preferencia por trabajar solo puede limitar el acceso a colaboración y retroalimentación valiosa. Es crucial que definas cómo planeas ganar dinero con tu app y que consideres hablar con potenciales usuarios para entender mejor sus necesidades y expectativas. Esto te ayudará a ajustar tu propuesta de valor y a establecer una base sólida para el crecimiento.",
+    "arep_validation_plan": [
+      {
+        "week": 1,
+        "title": "Aclarar modelo de negocio",
+        "tasks": [
+          "Definir cómo ganarías dinero con la app",
+          "Investigar 5 aplicaciones similares y sus modelos de ingresos",
+          "Hablar con 5 personas sobre qué problemas les gustaría resolver con una app"
+        ]
+      },
+      {
+        "week": 2,
+        "title": "Validar demanda",
+        "tasks": [
+          "Crear una encuesta y compartirla con 20 personas sobre sus necesidades diarias",
+          "Recopilar feedback de al menos 10 personas sobre la idea de la app",
+          "Identificar 3 características que les gustaría ver en la app"
+        ]
+      },
+      {
+        "week": 3,
+        "title": "Probar adquisición",
+        "tasks": [
+          "Crear una página de aterrizaje para la app y medir el interés",
+          "Promocionar la página en redes sociales y obtener al menos 50 visitas",
+          "Recoger correos de al menos 10 personas interesadas en la app"
+        ]
+      },
+      {
+        "week": 4,
+        "title": "Decidir siguiente paso",
+        "tasks": [
+          "Analizar los datos recopilados y definir si continuar con el desarrollo",
+          "Investigar costos de desarrollo de apps básicas y definir un presupuesto",
+          "Preparar un plan de acción para el siguiente mes basado en los resultados obtenidos"
+        ]
+      }
+    ],
+    "arep_final_recommendation_text": "Tu proyecto muestra un alto nivel de riesgo debido a la falta de validación de clientes y la dependencia de una plataforma externa. Antes de invertir fuertemente, es crucial que aclares cómo planeas generar ingresos con tu aplicación. Sin una idea clara de tu modelo de negocio, será difícil atraer a tus clientes potenciales y asegurar la viabilidad financiera de tu proyecto.\n\nLos siguientes pasos que te recomiendo son: primero, realiza una investigación para definir claramente cómo ganarás dinero con tu aplicación. Esto puede incluir explorar modelos de suscripción o freemium. Segundo, busca feedback de potenciales usuarios para entender sus necesidades y validar tu idea. Esto te ayudará a ajustar tu propuesta y a reducir el riesgo asociado a la dependencia de plataformas externas. Por último, considera desarrollar un plan alternativo en caso de que la plataforma que utilices cambie sus reglas o te suspenda, para proteger tu inversión y asegurar la continuidad de tu negocio.",
+    "arep_ai_model_used": "gpt-4o-mini",
+    "arep_prompt_version": "v1.5.0",
+    "arep_review": {
+      "action": "rewrite",
+      "issues": 3,
+      "rewritten": [
+        "business_understanding",
+        "strengths_risks"
+      ],
+      "review": {
+        "contradicciones": [],
+        "supuestos_sin_fuente": [
+          {
+            "seccion": "business_understanding",
+            "afirmacion": "Considera que el mercado de aplicaciones en México es amplio y diverso, lo que implica que tu cliente potencial podría variar significativamente."
+          }
+        ],
+        "conclusiones_no_sustentadas": [
+          {
+            "seccion": "strengths_risks",
+            "afirmacion": "Margen bruto alto: Tienes un margen bruto del 80% por venta, lo que significa que de cada venta te quedan $40 antes de gastos fijos, lo que puede ayudar a financiar tu operación.",
+            "motivo": "Repite la misma fortaleza con otras palabras; es redundante con la otra mención del margen del 80%."
+          },
+          {
+            "seccion": "strengths_risks",
+            "afirmacion": "Ese margen es lo que financia tu operación y absorbe los errores del arranque; por debajo de 30% dependerías de vender mucho volumen desde el primer mes.",
+            "motivo": "Los datos financieros muestran una pérdida neta mensual de -1,400 MXN, por lo que el margen bruto no está financiando la operación ni cubriendo los costos fijos."
+          }
+        ],
+        "correcciones": [
+          {
+            "seccion": "business_understanding",
+            "instruccion": "Eliminar o presentar como supuesto por validar la afirmación sobre que el mercado de apps en México es amplio y diverso, ya que no hay dato externo que lo respalde."
+          },
+          {
+            "seccion": "strengths_risks",
+            "instruccion": "Unificar las menciones del margen bruto del 80%, eliminar la duplicación y ajustar la redacción para reflejar la pérdida neta mensual."
+          }
+        ]
+      }
+    },
+    "arep_needs_human_review": false,
+    "arep_research": {
+      "status": "ok",
+      "ficha": {
+        "idea_normalizada": {
+          "resumen": "Aplicación destinada a ayudar a las personas en diversas áreas de su vida.",
+          "sector": "Tecnología / Aplicaciones móviles",
+          "modelo_de_negocio": "Freemium y suscripciones"
+        },
+        "tamano_mercado": {
+          "cifra": null,
+          "anio": null,
+          "fuente_id": null,
+          "motivo": "No se encontró información específica y confiable sobre el valor del mercado de aplicaciones móviles en México."
+        },
+        "competidores": [
+          {
+            "nombre": "BBVA México",
+            "propuesta": "Aplicación con funciones como transferencias, pagos, consulta de productos, apertura de cuenta y acceso mediante biometría.",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "Banorte Móvil",
+            "propuesta": "Ofrece saldos, movimientos, transferencias, pagos, tarjeta digital, retiros sin tarjeta y localización de cajeros.",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "Santander México",
+            "propuesta": "Incluye transferencias, pagos, consulta de movimientos, recargas, administración de productos e inversiones.",
+            "precio_referencia": null,
+            "fuente_id": "F4"
+          },
+          {
+            "nombre": "Virgin Mobile México",
+            "propuesta": "Operador móvil virtual que ofrece servicios de telefonía móvil bajo la marca Virgin Mobile en México.",
+            "precio_referencia": null,
+            "fuente_id": "F5"
+          },
+          {
+            "nombre": "Weex Mobile",
+            "propuesta": "Startup mexicana que ofrece servicios de telefonía móvil permitiendo a los usuarios personalizar su servicio.",
+            "precio_referencia": null,
+            "fuente_id": "F6"
+          },
+          {
+            "nombre": "Mercado Libre",
+            "propuesta": "Aplicación de compras en línea con más de 100 millones de descargas.",
+            "precio_referencia": null,
+            "fuente_id": "F7"
+          },
+          {
+            "nombre": "Temu",
+            "propuesta": "Aplicación de compras en línea con más de 500 millones de descargas.",
+            "precio_referencia": null,
+            "fuente_id": "F7"
+          },
+          {
+            "nombre": "SHEIN",
+            "propuesta": "Aplicación de compras en línea con más de 500 millones de descargas.",
+            "precio_referencia": null,
+            "fuente_id": "F7"
+          }
+        ],
+        "precios_referencia": [
+          {
+            "descripcion": "Siente - Mindfulness y psicología",
+            "rango": "7 sesiones gratuitas",
+            "fuente_id": "F11"
+          },
+          {
+            "descripcion": "FitMe AI",
+            "rango": "$299 - $449 MXN mensuales",
+            "fuente_id": "F12"
+          },
+          {
+            "descripcion": "Ariun",
+            "rango": "$1,499 MXN anual",
+            "fuente_id": "F13"
+          },
+          {
+            "descripcion": "MyDiet",
+            "rango": "$149 MXN mensuales",
+            "fuente_id": "F14"
+          },
+          {
+            "descripcion": "Estoy Bien",
+            "rango": "$199 MXN mensual, $1,990 MXN anual",
+            "fuente_id": "F15"
+          },
+          {
+            "descripcion": "SELF BUILT® Fitness & Nutrition",
+            "rango": "$249 - $449 MXN",
+            "fuente_id": "F16"
+          },
+          {
+            "descripcion": "Sherpa: Salud Mental y Sueño",
+            "rango": "$160 - $200 MXN mensual, $1,200 - $1,980 MXN anual",
+            "fuente_id": "F17"
+          },
+          {
+            "descripcion": "Easeful: Bienestar con IA",
+            "rango": "Prueba gratuita de 7 días",
+            "fuente_id": "F18"
+          }
+        ],
+        "canales_adquisicion": [
+          {
+            "canal": "Google Play Store",
+            "nota": "54% de las descargas de aplicaciones en México en 2013.",
+            "fuente_id": "F22"
+          },
+          {
+            "canal": "Apple App Store",
+            "nota": "28% de las descargas de aplicaciones en México en 2013.",
+            "fuente_id": "F22"
+          },
+          {
+            "canal": "Dispositivos móviles",
+            "nota": "93.1% de los usuarios mexicanos accedían a aplicaciones mediante smartphones en 2019.",
+            "fuente_id": "F23"
+          },
+          {
+            "canal": "Aplicaciones gratuitas",
+            "nota": "84% de los mexicanos preferían descargar aplicaciones gratuitas en 2013.",
+            "fuente_id": "F22"
+          }
+        ],
+        "costes_tipicos": [
+          {
+            "concepto": "Desarrollo de aplicaciones básicas (MVP)",
+            "valor": "$80,000 - $150,000 MXN",
+            "fuente_id": "F20",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Desarrollo de aplicaciones intermedias",
+            "valor": "$150,000 - $350,000 MXN",
+            "fuente_id": "F20",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Desarrollo de aplicaciones complejas",
+            "valor": "$350,000 - $800,000+ MXN",
+            "fuente_id": "F20",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Operación de aplicaciones básicas (PWA)",
+            "valor": "$40,000 - $90,000 MXN",
+            "fuente_id": "F21",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Operación de aplicaciones híbridas",
+            "valor": "$90,000 - $180,000 MXN",
+            "fuente_id": "F21",
+            "es_supuesto": false
+          },
+          {
+            "concepto": "Operación de aplicaciones con funciones nativas",
+            "valor": "$180,000 - $400,000+ MXN",
+            "fuente_id": "F21",
+            "es_supuesto": false
+          }
+        ],
+        "huecos_de_informacion": [
+          "No se encontró información sobre el valor del mercado de aplicaciones móviles en México.",
+          "No se especificaron precios para varias aplicaciones de salud y bienestar.",
+          "No se encontraron cifras sobre rentas o regulación específica del mercado de aplicaciones móviles."
+        ],
+        "mercado_objetivo": {
+          "pais": "México",
+          "ciudad": null,
+          "criterio": "No se especifica un mercado particular, se utiliza el mercado por defecto.",
+          "es_supuesto": true
+        },
+        "fuentes": [
+          {
+            "id": "F1",
+            "titulo": "Resultados de la Encuesta Nacional sobre Disponibilidad y Uso de Tecnologías de la Información en los Hogares (ENDUTIH) 2025 – SNIEG",
+            "url": "https://sneig.gob.mx/2026/06/18/resultados-de-la-encuesta-nacional-sobre-disponibilidad-y-uso-de-tecnologias-de-la-informacion-en-los-hogares-endutih-2025/",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F2",
+            "titulo": "Estudios del sector | Organismo Promotor de Inversiones en Telecomunicaciones | Gobierno | gob.mx",
+            "url": "https://www.gob.mx/promtel/acciones-y-programas/estudios-del-sector-v2",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F3",
+            "titulo": "PROGRAMA Institucional de la Comisión Nacional Antimonopolio 2026-2030",
+            "url": "https://sidof.segob.gob.mx/notas/docFuente/5792300",
+            "consultada": "2026-10-21",
+            "tipo": "oficial"
+          },
+          {
+            "id": "F4",
+            "titulo": "Banca Digital México | Banca Móvil | Comparativas",
+            "url": "https://banca-digitalmx.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F5",
+            "titulo": "Virgin Mobile México",
+            "url": "https://es.wikipedia.org/wiki/Virgin_Mobile_M%C3%A9xico",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F6",
+            "titulo": "Weex Mobile",
+            "url": "https://es.wikipedia.org/wiki/Weex_Mobile",
+            "consultada": "2026-10-21",
+            "tipo": "agregador"
+          },
+          {
+            "id": "F7",
+            "titulo": "Most Popular Shopping Apps: Mexico",
+            "url": "https://42matters.com/most-popular-shopping-apps-mexico",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F8",
+            "titulo": "¿Qué son las 'superapps'? De esto va la revolución de servicios",
+            "url": "https://elceo.com/tecnologia/a-que-se-le-llama-las-superapps-de-esto-se-trata-la-revolucion-de-servicios/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F9",
+            "titulo": "Rappi vs. Uber Eats vs. Didi Food: ¿Quién es quién en las apps de entregas a domicilio? – El Financiero",
+            "url": "https://www.elfinanciero.com.mx/food-and-drink/2023/06/10/rappi-vs-uber-eats-vs-didi-food-quien-es-quien-en-las-apps-de-entrega-de-comida-a-domicilio/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F10",
+            "titulo": "Mejores Apps de Taxi en México 2025: Comparativa Completa | InfoRadioTaxi México",
+            "url": "https://inforadiotaximx.com.mx/blog/mejores-apps-taxi-mexico-2025",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F11",
+            "titulo": "Siente - Mindfulness y psicolo - Aplicaciones en Google Play",
+            "url": "https://play.google.com/store/apps/details?hl=es&id=com.facilisimo.dotmind",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F12",
+            "titulo": "Bienestar Inteligente | FitMe AI",
+            "url": "https://www.fitme-ai.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F13",
+            "titulo": "Ariun — Tu bienestar, inteligente",
+            "url": "https://www.ariun.fit/es/pricing",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F14",
+            "titulo": "Aplicación MyDiet | Nutrición Funcional y Salud Hormonal",
+            "url": "https://www.mydiet.mx/aplicacion/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F15",
+            "titulo": "Estoy Bien | Monitoreo y cuidado para adultos mayores",
+            "url": "https://www.estoybien.mx/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F16",
+            "titulo": "SELF BUILT® Fitness & Nutrition",
+            "url": "https://www.selfbuiltfitness.com/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F17",
+            "titulo": "Sherpa: Salud Mental y Sueño - Aplicaciones en Google Play",
+            "url": "https://play.google.com/store/apps/details?hl=es&id=la.sherpa.bienestar",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F18",
+            "titulo": "‎App Easeful: Bienestar con IA - App Store",
+            "url": "https://apps.apple.com/mx/app/easeful-bienestar-con-ia/id6762109793",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F19",
+            "titulo": "MIDO Mi Salud - Aplicaciones en Google Play",
+            "url": "https://play.google.com/store/apps/details?hl=es&id=com.midomisalud.mx",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F20",
+            "titulo": "¿Cuánto cuesta desarrollar una app móvil en México? | Bicéfalo",
+            "url": "https://bicefalo.com.mx/blog/cuanto-cuesta-desarrollar-una-app-movil-en-mexico.html",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F21",
+            "titulo": "Cuánto Cuesta una App Móvil en México 2026: de $40,000 a $400,000+ MXN",
+            "url": "https://fueradelacaja.com.mx/blog/cuanto-cuesta-app-movil-mexico",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F22",
+            "titulo": "84% de los mexicanos no paga por las apps que descarga",
+            "url": "https://www.informabtl.com/84-de-los-mexicanos-no-paga-por-las-apps-que-descarga/",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F23",
+            "titulo": "Apps Móviles: Acceso y Modalidad de Descarga — The CIU",
+            "url": "https://www.theciu.com/publicaciones-2/2019/11/4/apps-mviles-acceso-y-modalidad-de-descarga",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          },
+          {
+            "id": "F24",
+            "titulo": "How Did That Get In My Phone? Unwanted App Distribution on Android Devices",
+            "url": "https://arxiv.org/abs/2010.10088",
+            "consultada": "2026-10-21",
+            "tipo": "otro"
+          }
+        ],
+        "consultada": "2026-10-21",
+        "meta": {
+          "searches": 5,
+          "queries": [
+            "valor del mercado de aplicaciones móviles en México 2023 site:org OR site:gov OR site:statista.com OR site:ift.org.mx OR site:inegi.org.mx",
+            "aplicaciones móviles servicios similares México",
+            "precios de aplicaciones para mejorar la calidad de vida en México 2024",
+            "costos desarrollo app México 2023 site:.gob.mx OR site:.org OR site:.mx",
+            "dónde descargan aplicaciones usuarios en México 2023 site:.gob.mx OR site:.org OR site:.com"
+          ],
+          "estimatedCostUsd": 0.205,
+          "durationMs": 24013,
+          "topics": [
+            "tamano_mercado",
+            "competidores",
+            "precios",
+            "costes",
+            "canales"
+          ],
+          "skippedTopics": [],
+          "models": {
+            "official": "gpt-4.1",
+            "general": "gpt-4.1-mini",
+            "structure": "gpt-4o-mini"
+          },
+          "injectionAttempts": []
+        }
+      },
+      "error": null
+    }
+  }
+}
