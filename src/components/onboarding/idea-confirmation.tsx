@@ -23,6 +23,7 @@ import {
 import type { RefineIdeaState } from "@/lib/onboarding/schemas";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import { Markdown } from "@/components/ui/markdown";
+import { assessIdeaClarity } from "@/lib/ai/idea-clarity";
 
 const CATEGORY_LABELS: Record<string, string> = {
   cliente: "Cliente",
@@ -208,8 +209,33 @@ export function IdeaConfirmation({ assessment }: IdeaConfirmationProps) {
     (!refineState.success && refineState.message) ||
     (!rotateState.success && rotateState.message);
 
+  // Se mide sobre las palabras de la persona (no sobre el resumen de la IA, que
+  // siempre sale completo): una idea vaga da un reporte genérico.
+  const clarity = assessIdeaClarity(idea?.bide_original_description);
+
   return (
     <div className="space-y-6">
+      {clarity.level !== "clara" && (
+        <div
+          role="status"
+          data-testid="idea-clarity-notice"
+          className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+        >
+          <p className="font-medium">
+            {clarity.level === "vaga"
+              ? "Tu idea está muy poco definida"
+              : "Tu idea puede quedar más clara"}
+          </p>
+          <p className="mt-1 text-amber-900/90">
+            {clarity.level === "vaga"
+              ? "Con tan pocos datos el diagnóstico saldrá muy general. "
+              : "Cuanto más precisa sea, más útil será tu diagnóstico. "}
+            {clarity.missing.length > 0 &&
+              `Cuéntanos ${clarity.missing.join(", ")}. `}
+            Puedes hacerlo con «Pulir mi idea con IA» o editando tu idea.
+          </p>
+        </div>
+      )}
       <Card
         className={`border-primary/20 shadow-md transition-all duration-500 ${
           wasRefined ? "ring-2 ring-[#6baed6]/40" : ""

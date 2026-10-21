@@ -21,7 +21,10 @@ function dependencyLabels(raw: unknown): string[] {
 }
 import type { ScoringInterpretResult } from "@/lib/ai/schemas/scoring-interpret";
 import {
+  buildFinancialInputs,
   buildFounderProfile,
+  buildIdeaContext,
+  buildMarketInputs,
   buildScoresForAi,
   sanitizeSectionMarkdown,
 } from "@/lib/ai/report-context";
@@ -48,7 +51,7 @@ import { logReportGenerationError } from "@/lib/logging/report-logger";
  * Rows written before that carry v1.0.0 and are read through the legacy branch
  * of `parseStored*` in `src/lib/report/sections.ts`.
  */
-export const REPORT_PROMPT_VERSION = "v1.2.0";
+export const REPORT_PROMPT_VERSION = "v1.3.0";
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
 
@@ -62,6 +65,12 @@ Cómo hablar:
 - Habla de LA IDEA CONCRETA de la persona (su giro, su cliente, sus productos). Nunca des consejos genéricos de otros negocios (comercio electrónico, consultoría, freelancing) ni propongas cambiar de modelo.
 - Los datos de "emprendedor" describen a la persona que emprende; NO son el perfil de su cliente.
 
+Qué hacer con lo que falta:
+- NO inventes lo que la persona no dijo (a quién le vende, dónde, a qué precio, con qué competencia). Si falta, dilo como algo por aclarar o como supuesto.
+- Recibes "claridad_de_la_idea" (nivel "clara", "parcial" o "vaga" y qué falta saber). Si no es "clara", reconócelo explícitamente y no saques conclusiones firmes sobre lo que falta.
+- La "idea_original" son las palabras de la persona (es la fuente). La "interpretacion_de_la_ia" es una lectura que ella confirmó: úsala como apoyo, no como dato verificado.
+- Lo que la persona declaró del mercado ("mercado_declarado") es su percepción, no un dato externo: dilo así cuando lo cites.
+
 Cómo leer los puntajes (0 a 100):
 - En todas las dimensiones, puntaje alto = más favorable, EXCEPTO "Nivel de riesgo", donde puntaje alto = MÁS riesgo.
 - Cada dimensión trae su "semaforo" (verde, amarillo o rojo). No contradigas el semáforo ni la recomendación que se te da.
@@ -74,12 +83,18 @@ Formato (Markdown):
 
 type ReportContext = {
   idea: string;
+  ideaOriginal: string;
+  ideaInterpretation: string;
+  clarity: string;
+  clarityLevel: "clara" | "parcial" | "vaga";
   scores: string;
   metrics: string;
   interpretation: string;
   profile: string;
   products: string;
   dependencies: string;
+  market: string;
+  financialInputs: string;
 };
 
 function buildContext(
@@ -87,8 +102,17 @@ function buildContext(
   deterministic: DeterministicScoreResult,
   interpretation: ScoringInterpretResult
 ): ReportContext {
+  const ideaCtx = buildIdeaContext(assessment);
   return {
     idea: assessment.business_idea?.bide_ai_summary ?? "",
+    ideaOriginal: ideaCtx.original,
+    ideaInterpretation: JSON.stringify(ideaCtx.interpretation),
+    clarity: JSON.stringify({
+      nivel: ideaCtx.clarity.level,
+      palabras: ideaCtx.clarity.words,
+      falta_saber: ideaCtx.clarity.missing,
+    }),
+    clarityLevel: ideaCtx.clarity.level,
     products: JSON.stringify(
       parseStoredProducts(assessment.financial_inputs?.finp_products).map(
         (p) => ({
@@ -111,8 +135,16 @@ function buildContext(
     dependencies: JSON.stringify(
       dependencyLabels(assessment.market_risk_inputs?.mrsk_business_dependencies)
     ),
+    market: JSON.stringify(buildMarketInputs(assessment)),
+    financialInputs: JSON.stringify(buildFinancialInputs(assessment)),
   };
 }
+
+/** Bloque común de contexto de la idea para las secciones. */
+const ideaBlock = (ctx: ReportContext) =>
+  `Idea (en palabras de la persona): ${ctx.ideaOriginal || ctx.idea}
+Interpretación de la IA que la persona confirmó (apoyo, no dato verificado): ${ctx.ideaInterpretation}
+Claridad de la idea: ${ctx.clarity}`;
 
 const SECTION_PROMPTS: Record<
   string,
@@ -120,46 +152,52 @@ const SECTION_PROMPTS: Record<
 > = {
   executive_summary: (ctx) =>
     `Escribe el resumen ejecutivo del diagnóstico: un párrafo de 4 a 5 oraciones que diga qué es la idea, cómo salió (apóyate en los semáforos) y cuál es la recomendación y por qué.
-No enumeres las alertas ni los riesgos uno por uno (van en otras secciones): menciónalos en una sola frase si hace falta.
-Idea: ${ctx.idea}
+${ctx.clarityLevel === "clara" ? "" : "La idea NO está clara: empieza diciendo, sin dramatizar, que está poco definida para concluir con firmeza y qué falta saber.\n"}No enumeres las alertas ni los riesgos uno por uno (van en otras secciones): menciónalos en una sola frase si hace falta. Si la persona declaró competencia alta o poca evidencia de clientes, tenlo en cuenta en la lectura.
+${ideaBlock(ctx)}
 Puntajes y semáforos: ${ctx.scores}
+Mercado declarado por la persona: ${ctx.market}
 Interpretación: ${ctx.interpretation}`,
   business_understanding: (ctx) =>
     `Explica cómo entendemos el negocio y su propuesta de valor, en dos partes breves: (1) qué ofreces y por qué te compraría tu cliente; (2) quién es ese cliente.
 El cliente se describe SOLO con lo que dice la idea. Si la idea no precisa algo del cliente (edad, ingreso, hábitos), dilo como un supuesto por validar. Los datos del emprendedor NO son el perfil del cliente: no los uses para describirlo.
-Idea: ${ctx.idea}
+${ideaBlock(ctx)}
 Productos/servicios que planeas vender: ${ctx.products}
 Emprendedor (solo como contexto de arranque): ${ctx.profile}`,
   financial_analysis: (ctx) =>
     `Analiza la viabilidad financiera usando SOLO estas métricas: ${ctx.metrics}
+Datos financieros declarados (inversión y costos fijos): ${ctx.financialInputs}
 Puntajes y semáforos: ${ctx.scores}
 Productos/servicios y sus precios/costos/volúmenes: ${ctx.products}
-Comenta el margen por producto, si alguno se vende con pérdida, el punto de equilibrio y la recuperación de la inversión. Escribe los cálculos en texto plano (sin fórmulas).`,
+Comenta el margen por producto, si alguno se vende con pérdida, el punto de equilibrio y la recuperación de la inversión. Si un producto se vende con pérdida, di con claridad que ningún volumen lo vuelve rentable. Escribe los cálculos en texto plano (sin fórmulas). Los precios y costos son estimaciones de la persona: no los presentes como datos de mercado.`,
   personal_fit_analysis: (ctx) =>
     `Analiza qué tan bien encajas tú con ESTE negocio en particular. Primero piensa qué exige concretamente esta idea (tipo de trabajo, ventas, operación diaria, contratar o no) y compáralo con lo que sabemos de ti: actividades que disfrutas, preferencia de trabajo, comodidad vendiendo, tolerancia a la incertidumbre, comodidad con procesos y si contratarías.
-Da 2 puntos donde encajas y 2 brechas, cada brecha con una acción concreta.
-Idea: ${ctx.idea}
+Da 2 puntos donde encajas y 2 brechas PERSONALES (de tus habilidades, tiempo o preferencias; no uses la viabilidad comercial ni el nivel de riesgo como brecha personal), cada brecha con una acción concreta. No presentes como encaje algo que tus propias respuestas contradicen.
+${ideaBlock(ctx)}
 Emprendedor (tú): ${ctx.profile}
 Puntajes y semáforos: ${ctx.scores}`,
   time_operation_analysis: (ctx) =>
     `Analiza si ESTE negocio cabe en tu tiempo. Con la idea y las unidades mensuales, describe qué trabajo concreto implica (por ejemplo: producción, entregas, atención a clientes, compras) y compáralo con tus horas por semana y tu disponibilidad horaria. Di qué parte podría saturarte y cómo organizarla.
-No propongas otros modelos de negocio: trabaja con el que describió la persona. No inventes tiempos que no se desprendan de los datos; si estimas, di que es una estimación.
-Idea: ${ctx.idea}
+Distingue lo que se hace una vez (crear el producto) de lo que se repite con cada venta; no multipliques una por la otra. No propongas otros modelos de negocio: trabaja con el que describió la persona. No inventes tiempos que no se desprendan de los datos; si estimas, di que es una estimación.
+${ideaBlock(ctx)}
 Productos/servicios y volumen mensual: ${ctx.products}
+Canal para conseguir clientes: ${ctx.market}
 Emprendedor (tú): ${ctx.profile}
 Puntajes y semáforos: ${ctx.scores}`,
   scalability_analysis: (ctx) =>
-    `Analiza el potencial de crecimiento de ESTE negocio: qué lo haría crecer sin que crezca igual tu carga de trabajo, y qué lo frenaría (capacidad, dependencias, contratación). Usa tu preferencia de contratación y las dependencias declaradas.
-Idea: ${ctx.idea}
+    `Analiza el potencial de crecimiento de ESTE negocio: qué lo haría crecer sin que crezca igual tu carga de trabajo, y qué lo frenaría (capacidad, dependencias, competencia, contratación). Usa tu preferencia de contratación, las dependencias declaradas, el nivel de competencia que declaraste y el canal con el que piensas conseguir clientes; propón crecimiento coherente con ese canal.
+${ideaBlock(ctx)}
 Productos/servicios: ${ctx.products}
 Dependencias críticas: ${ctx.dependencies}
+Mercado declarado por la persona: ${ctx.market}
 Emprendedor (tú): ${ctx.profile}
 Puntajes y semáforos: ${ctx.scores}`,
   final_recommendation: (ctx) =>
     `Escribe la recomendación final en 2 párrafos: primero el veredicto, que debe coincidir con la recomendación de la interpretación, y luego los 2 o 3 siguientes pasos más importantes para tu caso, en orden.
+${ctx.clarityLevel === "clara" ? "" : "La idea NO está clara: el primer paso debe ser aclarar lo que falta (ver «falta_saber» en la claridad).\n"}Si la persona declaró una mayor preocupación y una condición de éxito, el siguiente paso debe ayudarle a responder a esa preocupación.
 Interpretación: ${ctx.interpretation}
 Puntajes y semáforos: ${ctx.scores}
-Idea: ${ctx.idea}`,
+${ideaBlock(ctx)}
+Mercado declarado por la persona: ${ctx.market}`,
 };
 
 async function generateSection(
@@ -211,6 +249,9 @@ async function generateStrengthsRisks(
       products: ctx.products,
       dependencies: ctx.dependencies,
       interpretation: ctx.interpretation,
+      market: ctx.market,
+      clarity: ctx.clarity,
+      ideaOriginal: ctx.ideaOriginal,
       verifiedFacts,
     }),
     getNarrativeModel(),
@@ -230,6 +271,9 @@ async function generateValidationPlan(
       interpretation: ctx.interpretation,
       products: ctx.products,
       profile: ctx.profile,
+      market: ctx.market,
+      clarity: ctx.clarity,
+      ideaOriginal: ctx.ideaOriginal,
     }),
     getNarrativeModel(),
     observability
