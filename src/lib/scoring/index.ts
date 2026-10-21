@@ -113,7 +113,12 @@ async function interpretScores(
   }
 }
 
-export async function runScoringPipeline(
+/**
+ * Todo el cálculo del scoring (reglas + interpretación con IA), sin tocar la
+ * base de datos. Lo usan `runScoringPipeline` (que además persiste) y los
+ * evals, que corren el pipeline sin BD.
+ */
+export async function computeScoring(
   assessment: AssessmentWithRelations,
   observability?: AiObservabilityContext
 ) {
@@ -179,6 +184,18 @@ export async function runScoringPipeline(
     ascs_calculated_metrics: deterministic.metrics,
     ascs_scoring_version: `${deterministic.scoringVersion}+${getReasoningModel()}`,
   };
+
+  return { deterministic, interpretation, scoreData };
+}
+
+export async function runScoringPipeline(
+  assessment: AssessmentWithRelations,
+  observability?: AiObservabilityContext
+) {
+  const { deterministic, interpretation, scoreData } = await computeScoring(
+    assessment,
+    observability
+  );
 
   await prisma.assessment_scores.upsert({
     where: { ascs_asmt_id: assessment.asmt_id },
