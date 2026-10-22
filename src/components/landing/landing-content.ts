@@ -144,7 +144,7 @@ export const FAQ_ITEMS = [
   {
     question: "¿Usan inteligencia artificial?",
     answer:
-      "Sí, pero con reglas claras: los puntajes y los cálculos financieros salen de reglas fijas aplicadas a tus respuestas, y la inteligencia artificial ayuda a interpretarlos y a redactar el reporte. No sustituye asesoría profesional.",
+      "Sí, pero con reglas claras: los puntajes y los cálculos financieros salen de reglas fijas aplicadas a tus respuestas, y la inteligencia artificial ayuda a interpretarlos, a investigar tu mercado en fuentes públicas que se citan en el reporte y a redactarlo. No sustituye asesoría profesional.",
   },
   {
     question: "¿Qué pasa si el reporte no se genera?",
