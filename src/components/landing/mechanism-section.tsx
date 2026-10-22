@@ -24,6 +24,16 @@ export function MechanismSection() {
         ))}
       </ol>
 
+      <p
+        data-testid="ai-mechanism-note"
+        className="mx-auto mb-14 max-w-3xl rounded-xl border border-[#6baed6]/40 bg-[#e8f4fa] px-5 py-4 text-sm leading-relaxed text-primary sm:text-base"
+      >
+        <span className="font-semibold">Potenciado con IA, con reglas claras:</span>{" "}
+        los puntajes y los cálculos salen de reglas fijas aplicadas a tus
+        respuestas. La IA interpreta tu idea, investiga tu mercado en fuentes
+        que puedes consultar y redacta el reporte.
+      </p>
+
       <div className="mx-auto max-w-4xl">
         <h3 className="mb-6 text-center text-base font-semibold text-primary sm:text-lg">
           Dimensiones que cruzamos con tu situación
