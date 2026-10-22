@@ -10,10 +10,7 @@ export function HeroSection() {
     >
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
         <div className="decida-reveal space-y-8">
-          <div className="flex flex-wrap items-center gap-3">
-            <p className="text-sm font-semibold tracking-tight text-primary">
-              Decida
-            </p>
+          <div>
             <span
               data-testid="ai-badge"
               className="inline-flex items-center gap-1.5 rounded-full border border-[#6baed6]/40 bg-[#e8f4fa] px-2.5 py-1 text-xs font-medium text-primary"
