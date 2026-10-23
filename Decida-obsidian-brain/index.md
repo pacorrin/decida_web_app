@@ -70,7 +70,8 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | [[wiki/decisiones/evolucion-del-producto]] | Registro vivo de brechas Notion vs código (9 confirmadas) |
 | [[wiki/decisiones/plan-lanzamiento-60-90-dias]] | Auditoría de código, puntos críticos, plan de 12 semanas y estrategia comercial |
 | [[wiki/decisiones/alcance-campos-restantes-sprint-2]] | Qué campos del onboarding entran al MVP y cuáles se posponen (2026-08-28) |
-| [[wiki/decisiones/modelo-de-creditos-hibrido]] | Opción en evaluación: créditos + suscripción con créditos incluidos, interruptor de investigación, costos y pendientes (2026-10-21) |
+| [[wiki/decisiones/modelo-de-creditos-hibrido]] | Especificación del sistema de créditos: precios, costos 0.5/1.5, tablas, flujos, cuidados y fases (2026-10-22) |
+| [[wiki/decisiones/prompt-cursor-creditos]] | Prompt para delegar la implementación de créditos a Cursor |
 
 ## Reuniones
 | Página | Resumen |

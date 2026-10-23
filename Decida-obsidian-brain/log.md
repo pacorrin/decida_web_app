@@ -526,3 +526,7 @@ Paso 0: `docs/report-pipeline-current.md` (PR 8). Paso 1: arnés de evals sin ba
 ## [2026-10-21] decision | Modelo de créditos híbrido (en evaluación)
 
 A partir del costo de la investigación web (~$0.25–0.40 USD por análisis) se documentó la opción de pasar de la suscripción de 99 MXN a créditos con suscripción híbrida y un interruptor de «Investigación de mercado» (1 vs 2 créditos). Sin decisión tomada. Detalle en `wiki/decisiones/modelo-de-creditos-hibrido.md`.
+
+## [2026-10-22] decision | Créditos: precios y reglas cerradas
+
+Se cerró el modelo: 1 crédito = $59 MXN, paquetes 1/3/10, análisis básico 0.5 y con investigación 1.5 créditos, sin caducidad, costo techo $0.30 USD por reporte con investigación, beta sin suscriptores (suscripción detrás de flag, fase 2 opcional). Se documentó la especificación en `wiki/decisiones/modelo-de-creditos-hibrido.md` y el prompt para Cursor en `wiki/decisiones/prompt-cursor-creditos.md`.
