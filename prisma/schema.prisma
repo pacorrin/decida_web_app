@@ -53,6 +53,15 @@ enum subscription_status {
   past_due
 }
 
+enum credit_ledger_type {
+  purchase
+  welcome_bonus
+  subscription_grant
+  spend
+  refund
+  adjustment
+}
+
 model verification_codes {
   vc_id          String               @id @default(cuid())
   vc_identifier  String
@@ -94,6 +103,9 @@ model assessments {
   asmt_started_at          DateTime?
   asmt_completed_at        DateTime?
   asmt_report_generated_at DateTime?
+  asmt_research_enabled    Boolean           @default(true)
+  asmt_credit_cost         Int?
+  asmt_credits_charged_at  DateTime?
 
   user                 users?               @relation(fields: [asmt_user_id], references: [user_id], onDelete: SetNull)
   assessment_profile   assessment_profiles?
@@ -104,6 +116,7 @@ model assessments {
   assessment_score     assessment_scores?
   assessment_report    assessment_reports?
   payments             payments[]
+  credit_ledger        credit_ledger[]
   feedback             feedback?
 
   @@index([asmt_email])
@@ -266,14 +279,35 @@ model payments {
   paym_paid_at           DateTime?
   paym_raw_payload       Json?
 
-  assessment assessments? @relation(fields: [paym_asmt_id], references: [asmt_id], onDelete: Cascade)
-  user       users?       @relation(fields: [paym_user_id], references: [user_id], onDelete: SetNull)
+  assessment    assessments?    @relation(fields: [paym_asmt_id], references: [asmt_id], onDelete: Cascade)
+  user          users?          @relation(fields: [paym_user_id], references: [user_id], onDelete: SetNull)
+  credit_ledger credit_ledger[]
 
   @@index([paym_asmt_id])
   @@index([paym_user_id])
   @@unique([paym_provider, paym_provider_payment_id])
   @@index([paym_status])
   @@map("payments")
+}
+
+model credit_ledger {
+  cled_id              String             @id @default(cuid())
+  cled_user_id         String
+  cled_type            credit_ledger_type
+  cled_amount          Int
+  cled_balance_after   Int
+  cled_asmt_id         String?
+  cled_payment_id      String?
+  cled_idempotency_key String             @unique
+  cled_metadata        Json?
+  cled_created_at      DateTime           @default(now())
+
+  user       users        @relation(fields: [cled_user_id], references: [user_id], onDelete: Restrict)
+  assessment assessments? @relation(fields: [cled_asmt_id], references: [asmt_id], onDelete: SetNull)
+  payment    payments?    @relation(fields: [cled_payment_id], references: [paym_id], onDelete: SetNull)
+
+  @@index([cled_user_id, cled_created_at])
+  @@map("credit_ledger")
 }
 
 model users {
@@ -290,12 +324,14 @@ model users {
   user_subscription_provider        String?
   user_subscription_provider_id     String?
   user_stripe_customer_id           String?             @unique
+  user_credits_balance              Int                 @default(0)
   user_created_at                   DateTime            @default(now())
   user_updated_at                   DateTime            @updatedAt
 
   user_sessions user_sessions[]
   assessments   assessments[]
   payments      payments[]
+  credit_ledger credit_ledger[]
 
   @@map("users")
 }

@@ -32,6 +32,9 @@ function makeAssessment(
     asmt_started_at: null,
     asmt_completed_at: null,
     asmt_report_generated_at: null,
+    asmt_research_enabled: true,
+    asmt_credit_cost: null,
+    asmt_credits_charged_at: null,
     assessment_profile: {
       aprf_current_situation: "empleado",
       aprf_main_goal: "ingreso_extra",
