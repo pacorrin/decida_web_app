@@ -751,6 +751,14 @@ export async function saveEvaluation(
   const refreshed = await getAssessmentById(assessment.asmt_id);
   if (!refreshed) redirectToStep("contacto");
 
+  if (refreshed.asmt_user_id) {
+    await trackServer(
+      refreshed.asmt_user_id,
+      ANALYTICS_EVENTS.researchToggled,
+      { enabled: researchEnabled, assessment_id: assessment.asmt_id },
+    );
+  }
+
   await trackServer(
     refreshed.asmt_user_id,
     ANALYTICS_EVENTS.onboardingCompleted,

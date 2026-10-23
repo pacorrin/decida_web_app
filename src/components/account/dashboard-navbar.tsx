@@ -16,9 +16,13 @@ import { resetAnalytics } from "@/lib/analytics/client";
 
 type DashboardNavbarProps = {
   user: { user_name: string | null; user_email: string };
+  showSubscription?: boolean;
 };
 
-export function DashboardNavbar({ user }: DashboardNavbarProps) {
+export function DashboardNavbar({
+  user,
+  showSubscription = false,
+}: DashboardNavbarProps) {
   const [, startTransition] = useTransition();
   const label = user.user_name ?? user.user_email;
 
@@ -54,9 +58,11 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
             <DropdownMenuItem render={<Link href="/cuenta/creditos" />}>
               Créditos
             </DropdownMenuItem>
-            <DropdownMenuItem render={<Link href="/cuenta/suscripcion" />}>
-              Suscripción
-            </DropdownMenuItem>
+            {showSubscription && (
+              <DropdownMenuItem render={<Link href="/cuenta/suscripcion" />}>
+                Suscripción
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               data-testid="dashboard-logout"

@@ -11,7 +11,7 @@ describe("copy de la landing", () => {
     expect(plan?.text).toMatch(/cuatro semanas/);
   });
 
-  it("cada elemento del reporte dice si es gratis, parcial o de suscripción", () => {
+  it("cada elemento del reporte dice si es gratis, parcial o de pago", () => {
     for (const item of REPORT_INCLUDES) {
       expect(["free", "partial", "paid"]).toContain(item.plan);
     }
@@ -24,12 +24,14 @@ describe("copy de la landing", () => {
     expect(JSON.stringify(FAQ_ITEMS)).not.toMatch(/10 a 15|diez a quince/i);
   });
 
-  it("el FAQ cubre el modelo de suscripción, la cancelación y la privacidad", () => {
+  it("el FAQ cubre créditos, reembolsos y la privacidad (ya no $99/mes)", () => {
     const preguntas = FAQ_ITEMS.map((f) => f.question).join(" | ");
     expect(preguntas).toMatch(/gratis/i);
-    expect(preguntas).toMatch(/cancelo/i);
+    expect(preguntas).toMatch(/créditos/i);
+    expect(preguntas).toMatch(/reembolso/i);
     expect(preguntas).toMatch(/privada/i);
     expect(preguntas).toMatch(/inteligencia artificial/i);
+    expect(JSON.stringify(FAQ_ITEMS)).not.toMatch(/\$99/);
   });
 
   it("sin anglicismos en el FAQ y con etiquetas claras en el menú", () => {

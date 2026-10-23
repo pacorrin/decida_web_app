@@ -67,7 +67,7 @@ export default function PrivacidadPage() {
         <ul className="list-disc space-y-2 pl-5">
           <li>Generar y entregarte tu diagnóstico de viabilidad.</li>
           <li>Mantener tu sesión de evaluación y recuperar tu progreso.</li>
-          <li>Procesar el pago de tu suscripción.</li>
+          <li>Procesar el pago de tus paquetes de créditos.</li>
           <li>Mejorar la calidad del producto y la experiencia de usuario.</li>
           <li>Cumplir obligaciones legales y responder solicitudes de soporte.</li>
         </ul>
@@ -76,12 +76,12 @@ export default function PrivacidadPage() {
           fines de marketing.
         </p>
         <p>
-          Los pagos de la suscripción los procesa Stripe. Al pagar, tus datos
-          de tarjeta se capturan directamente en la página segura de Stripe:
+          Los pagos de créditos los procesa Stripe. Al pagar, tus datos de
+          tarjeta se capturan directamente en la página segura de Stripe:
           Decida no los recibe ni los almacena. Compartimos con Stripe tu
           correo electrónico para asociar el cobro a tu cuenta, y guardamos
-          únicamente identificadores del cliente y de la suscripción, los
-          montos y las fechas de cobro.
+          únicamente identificadores del cliente y del pago, los montos y las
+          fechas de cobro.
         </p>
       </LegalSection>
 
@@ -98,7 +98,7 @@ export default function PrivacidadPage() {
           </li>
           <li>
             <strong className="text-foreground">Stripe</strong>: procesa los
-            pagos de la suscripción (ver arriba).
+            pagos de créditos (ver arriba).
           </li>
         </ul>
       </LegalSection>

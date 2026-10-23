@@ -1,8 +1,9 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -29,6 +30,8 @@ import type { ActionState } from "@/lib/onboarding/schemas";
 import { CheckCircle2, CreditCard, ShieldCheck } from "lucide-react";
 import { track } from "@/lib/analytics/client";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { CREDITS_PACKAGES_PATH } from "@/lib/credits/paths";
+import { cn } from "@/lib/utils";
 
 const initialState: ActionState = { success: false };
 
@@ -48,7 +51,11 @@ function FeatureList({ items }: { items: readonly string[] }) {
   );
 }
 
-export function PaymentStep() {
+export function PaymentStep({
+  subscriptionsEnabled = false,
+}: {
+  subscriptionsEnabled?: boolean;
+}) {
   const [state, action, pending] = useActionState(savePayment, initialState);
   const remaining = getRemainingMinutes("pago");
   useEffect(() => {
@@ -59,8 +66,11 @@ export function PaymentStep() {
     <div className="space-y-6">
       <BackButton currentSlug="pago" />
 
-      {/* El título «Elige tu plan» lo pone el encabezado del paso (OnboardingShell). */}
-      <p className="text-sm text-muted-foreground">{PAYMENT_ANCHOR_COPY}</p>
+      <p className="text-sm text-muted-foreground">
+        {subscriptionsEnabled
+          ? PAYMENT_ANCHOR_COPY
+          : "Continúa gratis con una vista previa, o compra créditos para el reporte completo y más ideas."}
+      </p>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
@@ -72,8 +82,9 @@ export function PaymentStep() {
           <CardContent className="space-y-3">
             <FeatureList items={PAYMENT_FREE_FEATURES} />
             <p className="text-sm text-muted-foreground">
-              Te faltan ~{remaining} min de preguntas. El reporte se guarda
-              completo y lo desbloqueas cuando te suscribas.
+              Te faltan ~{remaining} min de preguntas. La prueba no incluye
+              investigación de mercado; desbloqueas el reporte completo con
+              créditos.
             </p>
           </CardContent>
           <CardFooter>
@@ -91,56 +102,106 @@ export function PaymentStep() {
           </CardFooter>
         </Card>
 
-        <form action={action} className="contents">
-          <input type="hidden" name="planId" value="monthly" />
+        {subscriptionsEnabled ? (
+          <form action={action} className="contents">
+            <input type="hidden" name="planId" value="monthly" />
+            <Card className="border-primary/30 shadow-lg shadow-primary/5">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl">Suscripción</CardTitle>
+                  <Badge variant="secondary">Recomendado</Badge>
+                </div>
+                <CardDescription>
+                  Reporte completo, sin límite de ideas
+                </CardDescription>
+                <p className="pt-2 text-4xl font-semibold text-primary">
+                  $99{" "}
+                  <span className="text-lg font-medium text-muted-foreground">
+                    MXN / mes
+                  </span>
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <FeatureList items={PAYMENT_PAID_FEATURES} />
+                <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <ShieldCheck className="size-4 text-[#6baed6]" aria-hidden />
+                  {PAYMENT_CANCEL_COPY}
+                </p>
+                <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <CreditCard className="size-4 text-[#6baed6]" aria-hidden />
+                  Pago seguro con Stripe
+                </p>
+              </CardContent>
+              <CardFooter className="flex-col items-stretch gap-2">
+                <Button
+                  type="submit"
+                  disabled={pending}
+                  size="lg"
+                  className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                  data-testid="payment-submit"
+                  onClick={() =>
+                    track(ANALYTICS_EVENTS.subscribeClicked, {
+                      location: "onboarding_plan",
+                    })
+                  }
+                >
+                  {pending ? "Procesando..." : "Suscribirme — $99 MXN/mes"}
+                </Button>
+                {state.message && (
+                  <p className="text-sm text-destructive">{state.message}</p>
+                )}
+              </CardFooter>
+            </Card>
+          </form>
+        ) : (
           <Card className="border-primary/30 shadow-lg shadow-primary/5">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xl">Suscripción</CardTitle>
-                <Badge variant="secondary">Recomendado</Badge>
+                <CardTitle className="text-xl">Créditos</CardTitle>
+                <Badge variant="secondary">Desde $59</Badge>
               </div>
-              <CardDescription>Reporte completo, sin límite de ideas</CardDescription>
+              <CardDescription>
+                Desbloquea reportes y analiza más ideas
+              </CardDescription>
               <p className="pt-2 text-4xl font-semibold text-primary">
-                $99{" "}
+                0.5–1.5{" "}
                 <span className="text-lg font-medium text-muted-foreground">
-                  MXN / mes
+                  créditos / análisis
                 </span>
               </p>
             </CardHeader>
             <CardContent className="space-y-3">
-              <FeatureList items={PAYMENT_PAID_FEATURES} />
-              <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                <ShieldCheck className="size-4 text-[#6baed6]" aria-hidden />
-                {PAYMENT_CANCEL_COPY}
-              </p>
-              <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CreditCard className="size-4 text-[#6baed6]" aria-hidden />
-                Pago seguro con Stripe
-              </p>
+              <FeatureList
+                items={[
+                  "Reporte completo desbloqueado",
+                  "Investigación de mercado opcional",
+                  "Los créditos no caducan",
+                  "Paquetes de 1, 3 o 10 créditos",
+                ]}
+              />
             </CardContent>
-            <CardFooter className="flex-col items-stretch gap-2">
-              <Button
-                type="submit"
-                disabled={pending}
-                size="lg"
-                className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
-                data-testid="payment-submit"
-                onClick={() =>
-                  track(ANALYTICS_EVENTS.subscribeClicked, { location: "onboarding_plan" })
-                }
+            <CardFooter>
+              <Link
+                href={CREDITS_PACKAGES_PATH}
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "w-full bg-secondary text-secondary-foreground hover:bg-secondary/90",
+                )}
+                data-testid="payment-credits"
               >
-                {pending ? "Procesando..." : "Suscribirme — $99 MXN/mes"}
-              </Button>
-              {state.message && (
-                <p className="text-sm text-destructive">{state.message}</p>
-              )}
+                Ver paquetes de créditos
+              </Link>
             </CardFooter>
           </Card>
-        </form>
+        )}
       </div>
 
       <form action={saveAndContinueLater}>
-        <Button type="submit" variant="ghost" className="w-full text-muted-foreground">
+        <Button
+          type="submit"
+          variant="ghost"
+          className="w-full text-muted-foreground"
+        >
           Guardar y continuar después
         </Button>
       </form>

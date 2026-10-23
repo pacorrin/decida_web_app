@@ -5,6 +5,8 @@ import type { AiObservabilityContext } from "@/lib/ai/openai";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
 import type { ScoringInterpretResult } from "@/lib/ai/schemas/scoring-interpret";
 import type { DeterministicScoreResult } from "@/lib/scoring/types";
+import { trackServer } from "@/lib/analytics/server";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import {
   planAndChargeForReport,
   refundDegradedResearch,
@@ -39,7 +41,20 @@ export async function generateReportWithCredits(params: {
   });
 
   if (plan.mode === "insufficient") {
+    await trackServer(params.userId, ANALYTICS_EVENTS.creditsInsufficient, {
+      required: plan.cost,
+      research: plan.research,
+      assessment_id: assessment.asmt_id,
+    });
     return { kind: "insufficient", plan };
+  }
+
+  if (plan.mode === "paid" && plan.cost > 0) {
+    await trackServer(params.userId, ANALYTICS_EVENTS.creditsSpent, {
+      amount: plan.cost,
+      research: plan.research,
+      assessment_id: assessment.asmt_id,
+    });
   }
 
   try {

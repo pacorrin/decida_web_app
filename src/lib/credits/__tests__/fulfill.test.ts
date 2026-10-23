@@ -7,11 +7,13 @@ const m = vi.hoisted(() => ({
 }));
 
 vi.mock("server-only", () => ({}));
+vi.mock("@/lib/analytics/server", () => ({ trackServer: vi.fn() }));
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     payments: {
       create: m.paymentsCreate,
       findFirst: m.paymentsFindFirst,
+      findUnique: m.paymentsFindFirst,
     },
   },
 }));

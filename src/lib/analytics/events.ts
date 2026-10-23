@@ -14,6 +14,10 @@ export const ANALYTICS_EVENTS = {
   subscriptionActivated: "subscription_activated",
   subscriptionCancelled: "subscription_cancelled",
   feedbackSubmitted: "feedback_submitted",
+  creditsPurchased: "credits_purchased",
+  creditsSpent: "credits_spent",
+  creditsInsufficient: "credits_insufficient",
+  researchToggled: "research_toggled",
 } as const;
 
 export type AnalyticsEvent =

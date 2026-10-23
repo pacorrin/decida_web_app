@@ -4,6 +4,8 @@ import type { users } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getStripe } from "@/lib/stripe/client";
 import { describeStripeError } from "@/lib/subscription/stripe-errors";
+import { trackServer } from "@/lib/analytics/server";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { createCreditsCheckoutSession } from "./checkout";
 import { recordPurchase } from "./ledger";
 import {
@@ -68,6 +70,12 @@ export async function startCreditPurchase(
         price_mxn: pkg.priceMxn,
         simulated: true,
       },
+    });
+    await trackServer(user.user_id, ANALYTICS_EVENTS.creditsPurchased, {
+      package_id: pkg.id,
+      credits: pkg.credits,
+      price_mxn: pkg.priceMxn,
+      simulated: true,
     });
     return { kind: "credited" };
   }

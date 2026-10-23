@@ -7,6 +7,9 @@ import { getCurrentUser } from "@/lib/auth/session-server";
 import { buttonVariants } from "@/components/ui/button";
 import { CancelSubscription } from "@/components/account/cancel-subscription";
 import { describeSubscription } from "@/lib/subscription/cancel";
+import { isSubscriptionsEnabled } from "@/lib/subscription/flag";
+import { CREDITS_PATH } from "@/lib/credits/paths";
+import { formatCredits } from "@/lib/credits/costs";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("es-MX", {
@@ -70,44 +73,66 @@ export default async function PerfilPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Suscripción</CardTitle>
+          <CardTitle className="text-lg">Créditos</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground">Estado</p>
-            <p className="text-sm text-foreground">{subLabel}</p>
-          </div>
-          {sub.kind === "active" && (
-            <CancelSubscription
-              accessUntil={sub.renewsAt ? formatDate(sub.renewsAt) : null}
-            />
-          )}
-          {sub.kind === "canceled" && (
-            <p className="text-sm text-muted-foreground">
-              No se te volverá a cobrar. Mantienes el reporte completo hasta
-              esa fecha.
+            <p className="text-xs font-medium text-muted-foreground">Saldo</p>
+            <p className="text-sm text-foreground">
+              {formatCredits(user.user_credits_balance)} créditos
             </p>
-          )}
-          {(sub.kind === "active" || sub.kind === "canceled") && (
-            <Link
-              href="/cuenta/suscripcion"
-              className="inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
-            >
-              Ver planes y detalles
-            </Link>
-          )}
-          {(sub.kind === "none" || sub.kind === "expired") && (
-            <TrackedLink
-              href="/cuenta/suscripcion"
-              event={ANALYTICS_EVENTS.subscribeClicked}
-              eventProps={{ location: "perfil" }}
-              className={buttonVariants()}
-            >
-              Suscribirme
-            </TrackedLink>
-          )}
+          </div>
+          <Link
+            href={CREDITS_PATH}
+            className={buttonVariants()}
+          >
+            Ver créditos y comprar
+          </Link>
         </CardContent>
       </Card>
+
+      {isSubscriptionsEnabled() && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Suscripción</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">Estado</p>
+              <p className="text-sm text-foreground">{subLabel}</p>
+            </div>
+            {sub.kind === "active" && (
+              <CancelSubscription
+                accessUntil={sub.renewsAt ? formatDate(sub.renewsAt) : null}
+              />
+            )}
+            {sub.kind === "canceled" && (
+              <p className="text-sm text-muted-foreground">
+                No se te volverá a cobrar. Mantienes el reporte completo hasta
+                esa fecha.
+              </p>
+            )}
+            {(sub.kind === "active" || sub.kind === "canceled") && (
+              <Link
+                href="/cuenta/suscripcion"
+                className="inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
+              >
+                Ver planes y detalles
+              </Link>
+            )}
+            {(sub.kind === "none" || sub.kind === "expired") && (
+              <TrackedLink
+                href="/cuenta/suscripcion"
+                event={ANALYTICS_EVENTS.subscribeClicked}
+                eventProps={{ location: "perfil" }}
+                className={buttonVariants()}
+              >
+                Suscribirme
+              </TrackedLink>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

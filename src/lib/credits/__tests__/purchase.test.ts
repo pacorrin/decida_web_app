@@ -8,6 +8,7 @@ const m = vi.hoisted(() => ({
 }));
 
 vi.mock("server-only", () => ({}));
+vi.mock("@/lib/analytics/server", () => ({ trackServer: vi.fn() }));
 vi.mock("@/lib/stripe/client", () => ({ getStripe: m.getStripe }));
 vi.mock("../checkout", () => ({
   createCreditsCheckoutSession: m.createCreditsCheckoutSession,

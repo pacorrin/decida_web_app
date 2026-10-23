@@ -54,7 +54,7 @@ export type ReportInclude = {
 export const REPORT_PLAN_LABELS: Record<ReportInclude["plan"], string> = {
   free: "Gratis",
   partial: "Parcial gratis",
-  paid: "Suscripción",
+  paid: "Con créditos",
 };
 
 export const REPORT_INCLUDES: readonly ReportInclude[] = [
@@ -68,14 +68,16 @@ export const REPORT_INCLUDES: readonly ReportInclude[] = [
 ];
 
 export const PRICING_FREE_INCLUDES = [
-  "Una evaluación completa de tu idea",
+  "Una evaluación de prueba de tu idea",
   "Resumen y semáforos por dimensión",
   "Tu negocio, fortalezas y riesgos principales",
+  "Sin investigación de mercado (las cifras son tus supuestos)",
   "Vista parcial de lo financiero y del plan de validación",
 ] as const;
 
+/** @deprecated Sustituido por paquetes de créditos en la landing. */
 export const PRICING_PAID_INCLUDES = [
-  "Evaluaciones ilimitadas",
+  "Reporte completo desbloqueado",
   "Compatibilidad personal, tiempo y operación, y escalabilidad",
   "Recomendación final y cómo reducir cada riesgo",
   "Alertas, desglose financiero y plan de validación completo",
@@ -99,7 +101,7 @@ export const FAQ_ITEMS = [
   {
     question: "¿Es gratis?",
     answer:
-      "Tu primera evaluación es gratis y no pide tarjeta. Incluye el resumen, los semáforos por dimensión, tu negocio, fortalezas y riesgos principales. Para el reporte completo y más ideas te suscribes por $99 MXN al mes.",
+      "Tu primera evaluación es gratis y no pide tarjeta. Incluye una vista previa del diagnóstico (sin investigación de mercado). Para el reporte completo o más ideas compras créditos: desde $59 MXN por 1 crédito.",
   },
   {
     question: "¿Decida me dice qué negocio abrir?",
@@ -119,7 +121,7 @@ export const FAQ_ITEMS = [
   {
     question: "¿Qué tipo de ideas puedo evaluar?",
     answer:
-      "Físicas, digitales, servicios, producto, franquicia, negocio secundario o proyectos independientes. Cada evaluación es de una idea; el plan gratuito incluye una y la suscripción no tiene límite.",
+      "Físicas, digitales, servicios, producto, franquicia, negocio secundario o proyectos independientes. Cada evaluación es de una idea; la prueba gratuita incluye una y con créditos puedes analizar más.",
   },
   {
     question: "¿Qué pasa si el riesgo sale alto?",
@@ -127,14 +129,14 @@ export const FAQ_ITEMS = [
       "También es un resultado útil: puedes ajustar la idea, validar o pausar antes de perder dinero.",
   },
   {
-    question: "¿Cómo funciona la suscripción y cómo la cancelo?",
+    question: "¿Cómo funcionan los créditos?",
     answer:
-      "Cuesta $99 MXN al mes y se paga con tarjeta a través de Stripe. Puedes cancelarla cuando quieras desde tu cuenta: conservas el acceso completo hasta el fin del periodo ya pagado. No hacemos reembolsos por el periodo pagado.",
+      "Compras paquetes de 1, 3 o 10 créditos (desde $59 MXN). Un análisis básico cuesta 0.5 créditos; con investigación de mercado, 1.5. Los créditos no caducan. Si el sistema falla al generar el reporte, te devolvemos los créditos gastados.",
   },
   {
-    question: "¿Qué pasa con mis evaluaciones si cancelo?",
+    question: "¿Puedo pedir reembolso en dinero?",
     answer:
-      "Se quedan guardadas en tu cuenta. Al terminar tu periodo vuelves a ver la versión gratuita de cada reporte, y si te suscribes de nuevo se desbloquean todas.",
+      "Los fallos del sistema se compensan devolviendo créditos a tu cuenta. Para otros casos escríbenos a hello@decida.mx.",
   },
   {
     question: "¿Mi idea es privada?",
@@ -149,7 +151,7 @@ export const FAQ_ITEMS = [
   {
     question: "¿Qué pasa si el reporte no se genera?",
     answer:
-      "Tus respuestas quedan guardadas y puedes reintentar desde la misma pantalla. Si el problema sigue, escríbenos a hello@decida.mx con el código que te mostramos y lo revisamos.",
+      "Tus respuestas quedan guardadas y puedes reintentar desde la misma pantalla sin gastar créditos de nuevo. Si el problema sigue, escríbenos a hello@decida.mx con el código que te mostramos y lo revisamos.",
   },
   {
     question: "¿Cuánto tarda?",

@@ -10,6 +10,7 @@ const m = vi.hoisted(() => ({
 }));
 
 vi.mock("server-only", () => ({}));
+vi.mock("@/lib/analytics/server", () => ({ trackServer: vi.fn() }));
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     assessments: {

@@ -18,6 +18,8 @@ import { SubscribeButton } from "@/components/account/subscribe-button";
 import { CheckoutNotice } from "@/components/account/checkout-notice";
 import { resolveCheckoutReturn } from "@/lib/subscription/checkout-return";
 import { describeSubscription } from "@/lib/subscription/cancel";
+import { isSubscriptionsEnabled } from "@/lib/subscription/flag";
+import { CREDITS_PACKAGES_PATH } from "@/lib/credits/paths";
 import {
   PAYMENT_CANCEL_COPY,
   PAYMENT_FREE_FEATURES,
@@ -60,6 +62,10 @@ export default async function SuscripcionPage({
 }) {
   const initialUser = await getCurrentUser();
   if (!initialUser) redirect("/cuenta/iniciar-sesion");
+
+  if (!isSubscriptionsEnabled()) {
+    redirect(CREDITS_PACKAGES_PATH);
+  }
 
   const { limite, checkout, session_id } = await searchParams;
   const resolvedCheckout = await resolveCheckoutReturn(

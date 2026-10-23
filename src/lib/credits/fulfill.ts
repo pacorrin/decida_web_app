@@ -2,6 +2,8 @@ import "server-only";
 
 import type Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
+import { trackServer } from "@/lib/analytics/server";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { recordPurchase } from "./ledger";
 import {
   getCreditPackage,
@@ -94,6 +96,14 @@ export async function fulfillCreditCheckoutSession(
       price_mxn: pkg.priceMxn,
     },
   });
+
+  if (result.created) {
+    await trackServer(userId, ANALYTICS_EVENTS.creditsPurchased, {
+      package_id: pkg.id,
+      credits: pkg.credits,
+      price_mxn: pkg.priceMxn,
+    });
+  }
 
   return result.created ? "credited" : "already";
 }

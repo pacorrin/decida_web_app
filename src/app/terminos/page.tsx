@@ -82,18 +82,18 @@ export default function TerminosPage() {
         </ul>
       </LegalSection>
 
-      <LegalSection title="Planes, suscripción y cancelación">
+      <LegalSection title="Planes, créditos y reembolsos">
         <p>
-          Decida ofrece un plan gratuito, que incluye una evaluación, y una
-          suscripción mensual de pago (hoy $99 MXN al mes) con reporte completo
-          y evaluaciones ilimitadas. Puedes cancelar la suscripción en cualquier
-          momento desde tu cuenta: conservas el acceso completo hasta el fin del
-          periodo ya pagado y después tu cuenta vuelve al plan gratuito.
+          Decida ofrece una evaluación de prueba gratuita (vista previa del
+          diagnóstico, sin investigación de mercado) y paquetes de créditos de
+          pago para desbloquear el reporte completo o analizar más ideas. Los
+          créditos no caducan. Un análisis básico consume 0.5 créditos; con
+          investigación de mercado, 1.5 créditos.
         </p>
         <p>
-          No hacemos reembolsos ni prorrateos por el periodo ya pagado. Los
-          pagos de la suscripción los procesa Stripe, un procesador de pagos
-          externo; Decida no almacena los datos de tu tarjeta.
+          Si el sistema falla al generar un reporte ya cobrado, te devolvemos
+          los créditos gastados en esa evaluación. Los pagos de créditos los
+          procesa Stripe; Decida no almacena los datos de tu tarjeta.
         </p>
       </LegalSection>
 

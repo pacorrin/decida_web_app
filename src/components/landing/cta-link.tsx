@@ -5,9 +5,10 @@ import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-/** Ir a la pantalla de suscripción cuenta como «clic en suscribirse». */
+/** Ir a planes de pago cuenta como «clic en suscribirse» (legado + créditos). */
 function eventForHref(href: string) {
-  return href.startsWith("/cuenta/suscripcion")
+  return href.startsWith("/cuenta/suscripcion") ||
+    href.startsWith("/cuenta/creditos")
     ? ANALYTICS_EVENTS.subscribeClicked
     : ANALYTICS_EVENTS.ctaClicked;
 }

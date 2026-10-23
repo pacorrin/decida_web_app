@@ -44,7 +44,7 @@ export function ExampleResultSection() {
           </ul>
           <p className="mt-4 text-sm text-muted-foreground">
             Tu primera evaluación es gratis; el reporte completo y más ideas
-            se desbloquean con la suscripción.
+            se desbloquean con créditos.
           </p>
         </div>
 
