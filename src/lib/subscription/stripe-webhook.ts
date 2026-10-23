@@ -1,6 +1,8 @@
 import "server-only";
 
 import type Stripe from "stripe";
+import { fulfillCreditCheckoutSession } from "@/lib/credits/fulfill";
+import { handleStripeChargeRefunded } from "@/lib/credits/refund-stripe";
 import { sendBillingEmail } from "@/lib/email/billing";
 import {
   applyStripeSubscription,
@@ -33,6 +35,10 @@ export async function handleStripeEvent(
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
+      if (session.mode === "payment") {
+        await fulfillCreditCheckoutSession(session);
+        return;
+      }
       if (session.mode !== "subscription") return;
       const subId = idOf(session.subscription);
       if (!subId) return;
@@ -42,6 +48,15 @@ export async function handleStripeEvent(
         "stripe_webhook",
         session.metadata?.user_id ?? session.client_reference_id,
       );
+      return;
+    }
+    case "checkout.session.async_payment_succeeded": {
+      const session = event.data.object as Stripe.Checkout.Session;
+      await fulfillCreditCheckoutSession(session);
+      return;
+    }
+    case "charge.refunded": {
+      await handleStripeChargeRefunded(event.data.object as Stripe.Charge);
       return;
     }
     case "customer.subscription.updated":

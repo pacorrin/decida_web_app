@@ -51,6 +51,9 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
             <DropdownMenuItem render={<Link href="/cuenta/perfil" />}>
               Perfil
             </DropdownMenuItem>
+            <DropdownMenuItem render={<Link href="/cuenta/creditos" />}>
+              Créditos
+            </DropdownMenuItem>
             <DropdownMenuItem render={<Link href="/cuenta/suscripcion" />}>
               Suscripción
             </DropdownMenuItem>

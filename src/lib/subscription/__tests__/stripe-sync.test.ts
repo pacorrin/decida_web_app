@@ -7,11 +7,19 @@ const m = vi.hoisted(() => ({
   paymentsCreate: vi.fn(),
   trackServer: vi.fn(),
   sendBillingEmail: vi.fn(),
+  fulfillCredits: vi.fn(),
+  chargeRefunded: vi.fn(),
 }));
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/analytics/server", () => ({ trackServer: m.trackServer }));
 vi.mock("@/lib/email/billing", () => ({ sendBillingEmail: m.sendBillingEmail }));
+vi.mock("@/lib/credits/fulfill", () => ({
+  fulfillCreditCheckoutSession: m.fulfillCredits,
+}));
+vi.mock("@/lib/credits/refund-stripe", () => ({
+  handleStripeChargeRefunded: m.chargeRefunded,
+}));
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     users: { findUnique: m.findUnique, updateMany: m.updateMany, update: m.update },
@@ -188,5 +196,44 @@ describe("handleStripeEvent", () => {
     expect(m.sendBillingEmail).toHaveBeenCalledTimes(1);
     expect(m.sendBillingEmail.mock.calls[0][1].kind).toBe("reactivated");
     expect(m.trackServer).not.toHaveBeenCalled();
+  });
+
+  it("checkout.session.completed en mode payment acredita créditos", async () => {
+    const session = {
+      id: "cs_credits",
+      mode: "payment",
+      payment_status: "paid",
+      metadata: { user_id: "u1", package_id: "credits_1" },
+    };
+    m.fulfillCredits.mockResolvedValue("credited");
+    await handleStripeEvent(stripe, {
+      type: "checkout.session.completed",
+      data: { object: session },
+    } as never);
+    expect(m.fulfillCredits).toHaveBeenCalledWith(session);
+    expect(
+      (stripe as { subscriptions: { retrieve: ReturnType<typeof vi.fn> } })
+        .subscriptions.retrieve,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("checkout.session.async_payment_succeeded acredita créditos", async () => {
+    const session = { id: "cs_async", mode: "payment", payment_status: "paid" };
+    m.fulfillCredits.mockResolvedValue("credited");
+    await handleStripeEvent(stripe, {
+      type: "checkout.session.async_payment_succeeded",
+      data: { object: session },
+    } as never);
+    expect(m.fulfillCredits).toHaveBeenCalledWith(session);
+  });
+
+  it("charge.refunded despacha el ajuste de créditos", async () => {
+    const charge = { id: "ch_1", payment_intent: "pi_1" };
+    m.chargeRefunded.mockResolvedValue("adjusted");
+    await handleStripeEvent(stripe, {
+      type: "charge.refunded",
+      data: { object: charge },
+    } as never);
+    expect(m.chargeRefunded).toHaveBeenCalledWith(charge);
   });
 });

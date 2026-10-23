@@ -2,8 +2,8 @@ import "server-only";
 
 import type Stripe from "stripe";
 import type { users } from "@/generated/prisma/client";
-import { prisma } from "@/lib/prisma";
 import { getAppUrl, getStripePriceId } from "@/lib/stripe/config";
+import { ensureStripeCustomer } from "@/lib/stripe/customer";
 import {
   SUBSCRIPTION_CURRENCY,
   SUBSCRIPTION_PRICE_MXN,
@@ -11,28 +11,13 @@ import {
 
 type CheckoutUser = Pick<users, "user_id" | "user_email" | "user_stripe_customer_id">;
 
-/** Reutiliza el Customer de la cuenta o lo crea (sin datos más allá del correo). */
-async function ensureCustomer(stripe: Stripe, user: CheckoutUser): Promise<string> {
-  if (user.user_stripe_customer_id) return user.user_stripe_customer_id;
-  const customer = await stripe.customers.create(
-    { email: user.user_email, metadata: { user_id: user.user_id } },
-    { idempotencyKey: `customer-${user.user_id}` },
-  );
-  // El unique evita que dos peticiones guarden clientes distintos.
-  await prisma.users.update({
-    where: { user_id: user.user_id },
-    data: { user_stripe_customer_id: customer.id },
-  });
-  return customer.id;
-}
-
 /** Crea la Checkout Session (suscripción mensual en MXN) y devuelve su URL. */
 export async function createCheckoutSession(
   stripe: Stripe,
   user: CheckoutUser,
   returnPath: string,
 ): Promise<string> {
-  const customer = await ensureCustomer(stripe, user);
+  const customer = await ensureStripeCustomer(stripe, user);
   const base = getAppUrl();
   const priceId = getStripePriceId();
 

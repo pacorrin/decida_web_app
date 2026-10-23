@@ -14,8 +14,11 @@ export function creditCostForResearch(researchEnabled: boolean): number {
   return researchEnabled ? CREDIT_COST_RESEARCH : CREDIT_COST_BASIC;
 }
 
-/** Formato legible: 50 → "0.5", 150 → "1.5", 100 → "1". */
+/** Formato legible: 50 → "0.5", 150 → "1.5", 100 → "1", −50 → "−0.5". */
 export function formatCredits(centesimos: number): string {
   const units = centesimos / CREDIT_CENTESIMOS_PER_UNIT;
-  return Number.isInteger(units) ? String(units) : units.toFixed(1);
+  const abs = Math.abs(units);
+  const body = Number.isInteger(abs) ? String(abs) : abs.toFixed(1);
+  if (centesimos < 0) return `−${body}`;
+  return body;
 }

@@ -23,5 +23,6 @@ describe("costs", () => {
     expect(formatCredits(50)).toBe("0.5");
     expect(formatCredits(100)).toBe("1");
     expect(formatCredits(150)).toBe("1.5");
+    expect(formatCredits(-50)).toBe("−0.5");
   });
 });

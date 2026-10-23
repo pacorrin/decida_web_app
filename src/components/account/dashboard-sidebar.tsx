@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileText } from "lucide-react";
+import { Coins, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/cuenta", label: "Análisis realizados", icon: FileText },
+  { href: "/cuenta", label: "Análisis realizados", icon: FileText, match: "analisis" as const },
+  { href: "/cuenta/creditos", label: "Créditos", icon: Coins, match: "creditos" as const },
 ];
 
 export function DashboardSidebar() {
@@ -17,7 +18,10 @@ export function DashboardSidebar() {
       <nav aria-label="Navegación de la cuenta" className="space-y-1">
         {NAV_ITEMS.map((item) => {
           const active =
-            pathname === item.href || pathname.startsWith("/cuenta/evaluaciones");
+            item.match === "analisis"
+              ? pathname === "/cuenta" ||
+                pathname.startsWith("/cuenta/evaluaciones")
+              : pathname.startsWith("/cuenta/creditos");
           const Icon = item.icon;
           return (
             <Link
