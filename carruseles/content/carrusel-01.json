@@ -1,0 +1,64 @@
+{
+  "id": "carrusel-01",
+  "slides": [
+    {
+      "type": "cover",
+      "etiqueta": "Antes de invertir",
+      "titulo": "5 señales de que tu idea de negocio es solo [emoción]",
+      "apoyo": "Y todavía no un plan",
+      "hint": "Desliza →"
+    },
+    {
+      "type": "signal",
+      "etiqueta": "Señal 1",
+      "titulo": "Solo hiciste cuentas del mejor escenario",
+      "apoyo": "Si en tu Excel todo sale bien, no es un análisis. Es un deseo.",
+      "icon": "trending-up",
+      "cardTone": "moss"
+    },
+    {
+      "type": "signal",
+      "etiqueta": "Señal 2",
+      "titulo": "No sabes cuánto necesitas vender para que valga la pena",
+      "apoyo": "Sin ese número, no sabes si estás armando un negocio o un pasatiempo caro.",
+      "icon": "calculator",
+      "cardTone": "sky"
+    },
+    {
+      "type": "signal",
+      "etiqueta": "Señal 3",
+      "titulo": "Tu prueba es que a tu familia le encantó",
+      "apoyo": "Quien te quiere te aplaude. Quien va a pagar te dice la verdad.",
+      "icon": "messages-square",
+      "cardTone": "moss"
+    },
+    {
+      "type": "signal",
+      "etiqueta": "Señal 4",
+      "titulo": "No has pensado qué pasa si sale mal",
+      "apoyo": "Emprender implica riesgo. Se entiende y se gestiona, no se ignora.",
+      "icon": "shield",
+      "cardTone": "sky"
+    },
+    {
+      "type": "signal",
+      "etiqueta": "Señal 5",
+      "titulo": "Imaginas el logo, pero no un lunes cualquiera",
+      "apoyo": "Te emociona tener el negocio, pero ¿y el trabajo diario que implica?",
+      "icon": "calendar",
+      "cardTone": "moss"
+    },
+    {
+      "type": "text",
+      "titulo": "Si te identificaste, no significa que tu idea sea mala. Significa que [falta información].",
+      "apoyo": "Mejor descubrirlo ahora que después de invertir."
+    },
+    {
+      "type": "cta",
+      "titulo": "Decide con claridad",
+      "apoyo": "Guárdalo y mándaselo a alguien que esté pensando en emprender.",
+      "boton": "¿Cuál señal te tocó? Cuéntanos en comentarios",
+      "lema": "Tú decides, nosotros te impulsamos."
+    }
+  ]
+}
