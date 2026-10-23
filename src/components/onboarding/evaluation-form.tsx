@@ -232,6 +232,38 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
             />
           </Field>
         </FieldSet>
+
+        <FieldSet>
+          <FieldLegend>Investigación de mercado</FieldLegend>
+          <FieldDescription>
+            Con investigación usamos fuentes externas (tamaño de mercado,
+            competidores, precios). Sin ella, las cifras de mercado son solo tus
+            supuestos. La prueba gratuita no incluye investigación.
+          </FieldDescription>
+          <Field>
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border/80 bg-background px-4 py-3">
+              <input
+                type="checkbox"
+                name="researchEnabled"
+                value="true"
+                defaultChecked={assessment.asmt_research_enabled !== false}
+                className="mt-1 size-4 accent-primary"
+                data-testid="research-toggle"
+              />
+              <span className="space-y-1 text-sm">
+                <span className="block font-medium text-foreground">
+                  Incluir investigación de mercado
+                </span>
+                <span className="block text-muted-foreground">
+                  Costo: 1.5 créditos con investigación · 0.5 sin ella. Si apagas
+                  el interruptor, el reporte no traerá fuentes externas.
+                </span>
+              </span>
+            </label>
+            {/* Checkbox no envía valor si está apagado; el hidden deja constancia. */}
+            <input type="hidden" name="researchEnabled" value="false" />
+          </Field>
+        </FieldSet>
       </FieldGroup>
 
       <StepNavigation

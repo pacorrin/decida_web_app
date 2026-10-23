@@ -6,7 +6,6 @@ import {
   REPORT_TOC_SECTION_IDS,
   type ReportTocSectionId,
 } from "@/components/report/report-toc";
-import { PrimaryCtaButton } from "@/components/landing/cta-link";
 import {
   RECOMMENDATION_LABELS,
   SIGNAL_LABELS,
@@ -33,6 +32,8 @@ import {
 import { ReportErrorState } from "@/components/onboarding/report-error-state";
 import { FeedbackForm } from "@/components/onboarding/feedback-form";
 import { AnalyzeAnotherButton } from "@/components/onboarding/analyze-another-button";
+import { UnlockReportButtons } from "@/components/onboarding/unlock-report-buttons";
+import { CREDITS_PACKAGES_PATH } from "@/lib/credits/paths";
 import { Markdown } from "@/components/ui/markdown";
 import {
   Table,
@@ -170,6 +171,19 @@ export function ResultReport({
             event={ANALYTICS_EVENTS.reportViewed}
             props={{ access: isFree ? "free" : "full" }}
           />
+        )}
+        {isFree && report && (
+          <p
+            className="mb-6 rounded-xl border border-border/80 bg-muted/40 px-4 py-3 text-sm text-muted-foreground"
+            data-testid="free-preview-legend"
+          >
+            Esta es tu prueba gratuita: incluye una vista previa del diagnóstico{" "}
+            <strong className="font-medium text-foreground">
+              sin investigación de mercado
+            </strong>
+            . Las cifras de mercado son tus supuestos. Desbloquea el reporte
+            completo con créditos cuando quieras.
+          </p>
         )}
         {/* Table of Contents - Mobile */}
         <div className="lg:hidden">
@@ -714,7 +728,7 @@ export function ResultReport({
               title="Recomendación final"
               description="El veredicto explicado y los siguientes pasos concretos para tu caso."
             />
-            <FullReportCta />
+            <FullReportCta assessmentId={assessment.asmt_id} />
           </>
         )}
 
@@ -792,10 +806,10 @@ function LockedSection({
             <TrackedLink
               event={ANALYTICS_EVENTS.subscribeClicked}
               eventProps={{ location: "report_lock" }}
-              href="/cuenta/suscripcion"
+              href={CREDITS_PACKAGES_PATH}
               className="text-sm font-medium text-primary underline-offset-4 hover:underline"
             >
-              Desbloquear con la suscripción
+              Desbloquear con créditos
             </TrackedLink>
           </div>
         </CardContent>
@@ -821,16 +835,17 @@ function LockedNote({
   );
 }
 
-function FullReportCta() {
+function FullReportCta({ assessmentId }: { assessmentId: string }) {
   return (
     <div className="border-b border-border/60 py-10 md:py-14">
       <Card className="border-[#6baed6]/30 bg-accent/20">
         <CardHeader>
           <CardTitle className="text-primary">
-            Lo que desbloquea la suscripción
+            Desbloquea el diagnóstico completo
           </CardTitle>
           <CardDescription>
-            Suscríbete para leer el resto de este diagnóstico.
+            Con 0.5 créditos ves todo lo ya generado. Con 1.5 regeneramos el
+            reporte incluyendo investigación de mercado.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -848,11 +863,7 @@ function FullReportCta() {
               </li>
             ))}
           </ul>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <PrimaryCtaButton href="/cuenta/suscripcion">
-              Suscribirme para ver el reporte completo
-            </PrimaryCtaButton>
-          </div>
+          <UnlockReportButtons assessmentId={assessmentId} />
         </CardContent>
       </Card>
     </div>

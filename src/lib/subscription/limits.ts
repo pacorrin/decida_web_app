@@ -1,26 +1,29 @@
-/** Pantalla de planes de la cuenta (no depende de ninguna evaluación). */
+import { CREDIT_COST_BASIC } from "@/lib/credits/costs";
+import { CREDITS_PACKAGES_PATH } from "@/lib/credits/paths";
+
+/** @deprecated Prefer CREDITS_PACKAGES_PATH; se mantiene por imports legacy. */
 export const SUBSCRIPTION_PATH = "/cuenta/suscripcion";
-export const PLANS_PATH = `${SUBSCRIPTION_PATH}?limite=1`;
+
+/** Destino cuando no hay saldo para otra evaluación. */
+export const PLANS_PATH = `${CREDITS_PACKAGES_PATH}?limite=1`;
 
 export type AssessmentStartDecision = "create" | "resume" | "limit";
 
 /**
- * Freemium accounts get a single evaluation. Decides what happens when a
- * logged-in user asks to start one and has no in-progress assessment in
- * their cookie:
- * - full access: always a fresh evaluation
- * - no evaluations yet: the free one
- * - latest is still in progress (e.g. cookie lost): resume it
- * - latest is completed: limit reached, send them to the plans screen
+ * Decide qué hacer al pedir una nueva evaluación:
+ * - sin evaluaciones: la gratuita
+ * - en curso: retomar
+ * - ya completó alguna: crear solo si saldo ≥ costo básico (50)
  */
 export function decideAssessmentStart({
-  fullAccess,
   latest,
+  creditsBalance = 0,
 }: {
-  fullAccess: boolean;
   latest: { completed: boolean } | null;
+  /** Centésimos de crédito disponibles. */
+  creditsBalance?: number;
 }): AssessmentStartDecision {
-  if (fullAccess) return "create";
   if (!latest) return "create";
-  return latest.completed ? "limit" : "resume";
+  if (!latest.completed) return "resume";
+  return creditsBalance >= CREDIT_COST_BASIC ? "create" : "limit";
 }

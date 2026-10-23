@@ -9,7 +9,6 @@ import {
   type AssessmentWithRelations,
 } from "./session-server";
 import { isAssessmentCompleted } from "./assessment-utils";
-import { hasFullAccess } from "@/lib/subscription/access";
 import { decideAssessmentStart } from "@/lib/subscription/limits";
 
 export type EnsureAssessmentResult =
@@ -44,8 +43,8 @@ export async function ensureAssessmentForCurrentUser(): Promise<EnsureAssessment
   const latest = latestRow ? await getAssessmentById(latestRow.asmt_id) : null;
 
   const decision = decideAssessmentStart({
-    fullAccess: hasFullAccess(user),
     latest: latest ? { completed: isAssessmentCompleted(latest) } : null,
+    creditsBalance: user.user_credits_balance,
   });
 
   if (decision === "limit") {

@@ -368,20 +368,33 @@ type ReviewOutcome = {
   issues: number;
 };
 
+export type BuildReportOptions = {
+  /** Vista previa gratuita: nunca investiga, aunque el interruptor esté on. */
+  forceNoResearch?: boolean;
+};
+
 /**
  * Genera las 9 secciones y devuelve los datos del reporte, sin tocar la base
  * de datos. Lo usan `generateReport` (que además persiste) y los evals.
+ *
+ * Investigación = `REPORT_RESEARCH_ENABLED` (maestro) AND `asmt_research_enabled`
+ * (por evaluación), salvo `forceNoResearch`.
  */
 export async function buildReportData(
   assessment: AssessmentWithRelations,
   deterministic: DeterministicScoreResult,
   interpretation: ScoringInterpretResult,
-  observability?: AiObservabilityContext
+  observability?: AiObservabilityContext,
+  opts: BuildReportOptions = {},
 ) {
   // Etapa de investigación (detrás de un flag). Nunca tumba el reporte: si falla,
   // el reporte se genera sin ficha y se indica.
   let research: ResearchOutcome | null = null;
-  if (await isResearchEnabled(assessment.asmt_user_id)) {
+  const perAssessment =
+    (assessment as { asmt_research_enabled?: boolean }).asmt_research_enabled !==
+    false;
+  const masterOn = await isResearchEnabled(assessment.asmt_user_id);
+  if (!opts.forceNoResearch && masterOn && perAssessment) {
     const idea = assessment.business_idea;
     research = await runResearch(
       {
@@ -609,13 +622,15 @@ export async function generateReport(
   assessment: AssessmentWithRelations,
   deterministic: DeterministicScoreResult,
   interpretation: ScoringInterpretResult,
-  observability?: AiObservabilityContext
+  observability?: AiObservabilityContext,
+  opts: BuildReportOptions = {},
 ) {
   const reportData = await buildReportData(
     assessment,
     deterministic,
     interpretation,
-    observability
+    observability,
+    opts,
   );
 
   // Las columnas JSON aceptan null solo como Prisma.DbNull.

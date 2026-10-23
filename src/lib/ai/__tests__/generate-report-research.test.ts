@@ -30,6 +30,7 @@ import { STRENGTHS_RISKS_SYSTEM_PROMPT, VALIDATION_PLAN_SYSTEM_PROMPT } from "..
 const assessment = {
   asmt_id: "a1",
   asmt_user_id: "u1",
+  asmt_research_enabled: true,
   business_idea: {
     bide_original_description: "Quiero abrir una cafetería en la colonia Roma Norte para oficinistas.",
     bide_ai_summary: "Cafetería en Roma Norte.",
@@ -137,5 +138,29 @@ describe("la ficha de mercado en buildReportData", () => {
     expect(r.arep_executive_summary).toBe("Texto de la sección.");
     for (const p of sectionPrompts()) expect(p).toContain("no disponible");
     expect(r.arep_research).toMatchObject({ status: "failed", ficha: null, error: "sin cuota" });
+  });
+
+  it("con asmt_research_enabled=false no investiga aunque el maestro esté on", async () => {
+    m.isEnabled.mockResolvedValue(true);
+    const r = await buildReportData(
+      Object.assign({}, assessment, { asmt_research_enabled: false }) as never,
+      deterministic,
+      interpretation,
+    );
+    expect(m.runResearch).not.toHaveBeenCalled();
+    expect(r.arep_research).toBeNull();
+  });
+
+  it("forceNoResearch salta la investigación (preview gratis)", async () => {
+    m.isEnabled.mockResolvedValue(true);
+    const r = await buildReportData(
+      assessment,
+      deterministic,
+      interpretation,
+      undefined,
+      { forceNoResearch: true },
+    );
+    expect(m.runResearch).not.toHaveBeenCalled();
+    expect(r.arep_research).toBeNull();
   });
 });

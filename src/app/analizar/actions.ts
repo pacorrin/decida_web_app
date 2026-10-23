@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import {
   generateFallbackIdeaSummary,
   generateFallbackIdeaRefinement,
@@ -12,8 +13,13 @@ import {
 } from "@/lib/ai/openai";
 import { parseAssumptions, packIdeaAiPayload, unpackIdeaAiPayload } from "@/lib/ai/schemas/idea-assumptions";
 import type { StructuredUnderstanding } from "@/lib/ai/schemas/structured-understanding";
-import { generateReport } from "@/lib/ai/generate-report";
 import { runScoringPipeline } from "@/lib/scoring";
+import { generateReportWithCredits } from "@/lib/credits/generate";
+import {
+  chargeForResearchUpgrade,
+  unlockReportWithoutRegenerate,
+} from "@/lib/credits/charge";
+import { CREDITS_PACKAGES_PATH } from "@/lib/credits/paths";
 import {
   contactSchema,
   ideaSchema,
@@ -730,9 +736,16 @@ export async function saveEvaluation(
     },
   });
 
+  const researchEnabled = formData
+    .getAll("researchEnabled")
+    .some((v) => v === "true" || v === "on");
+
   await prisma.assessments.update({
     where: { asmt_id: assessment.asmt_id },
-    data: { asmt_status: "in_progress" },
+    data: {
+      asmt_status: "in_progress",
+      asmt_research_enabled: researchEnabled,
+    },
   });
 
   const refreshed = await getAssessmentById(assessment.asmt_id);
@@ -744,38 +757,56 @@ export async function saveEvaluation(
     { assessmentId: assessment.asmt_id }
   );
 
+  const user = await getCurrentUser();
+  if (!user || !refreshed.asmt_user_id) {
+    return {
+      success: false,
+      message: "Inicia sesión para generar tu diagnóstico.",
+    };
+  }
+
   const observability = createAiObservabilityContext(
     refreshed.asmt_id,
     refreshed.asmt_user_id
   );
 
+  const { deterministic, interpretation } =
+    await runScoringPipeline(refreshed, observability);
 
-  try {
-    const { deterministic, interpretation } =
-      await runScoringPipeline(refreshed, observability);
-    await generateReport(refreshed, deterministic, interpretation, observability);
+  const gen = await generateReportWithCredits({
+    assessment: refreshed,
+    userId: user.user_id,
+    creditsBalance: user.user_credits_balance,
+    deterministic,
+    interpretation,
+    observability,
+  });
 
-    logReportGenerationSuccess("Report generated successfully", {
-      assessmentId: assessment.asmt_id,
-      metadata: { email: assessment.asmt_email },
-    });
-  } catch (error) {
+  if (gen.kind === "insufficient") {
+    redirect(`${CREDITS_PACKAGES_PATH}?saldo=1`);
+  }
 
+  if (gen.kind === "failed") {
     logReportGenerationError("Report generation failed during evaluation", {
       assessmentId: assessment.asmt_id,
-      error,
+      error: gen.error,
       metadata: {
         email: assessment.asmt_email,
         status: assessment.asmt_status,
       },
     });
-    
+
     await prisma.assessments.update({
       where: { asmt_id: assessment.asmt_id },
-      data: { 
+      data: {
         asmt_status: "failed",
         asmt_completed_at: new Date(),
       },
+    });
+  } else {
+    logReportGenerationSuccess("Report generated successfully", {
+      assessmentId: assessment.asmt_id,
+      metadata: { email: assessment.asmt_email },
     });
   }
 
@@ -811,35 +842,45 @@ export async function retryReportGeneration(): Promise<ActionState> {
   );
 
 
-  try {
-    await prisma.assessments.update({
-      where: { asmt_id: assessment.asmt_id },
-      data: { asmt_status: "in_progress" },
-    });
-
-    const { deterministic, interpretation } =
-      await runScoringPipeline(refreshed, observability);
-    await generateReport(refreshed, deterministic, interpretation, observability);
-
-    logReportGenerationSuccess("Report generated successfully on retry", {
-      assessmentId: assessment.asmt_id,
-    });
-
+  const user = await getCurrentUser();
+  if (!user || !refreshed.asmt_user_id) {
     return {
-      success: true,
-      message: "Reporte generado exitosamente.",
+      success: false,
+      message: "Inicia sesión para reintentar la generación.",
     };
-  } catch (error) {
+  }
 
+  await prisma.assessments.update({
+    where: { asmt_id: assessment.asmt_id },
+    data: { asmt_status: "in_progress" },
+  });
+
+  const { deterministic, interpretation } =
+    await runScoringPipeline(refreshed, observability);
+
+  const gen = await generateReportWithCredits({
+    assessment: refreshed,
+    userId: user.user_id,
+    creditsBalance: user.user_credits_balance,
+    deterministic,
+    interpretation,
+    observability,
+  });
+
+  if (gen.kind === "insufficient") {
+    redirect(`${CREDITS_PACKAGES_PATH}?saldo=1`);
+  }
+
+  if (gen.kind === "failed") {
     logReportGenerationError("Report generation retry failed", {
       assessmentId: assessment.asmt_id,
-      error,
+      error: gen.error,
       metadata: { retryAttempt: true },
     });
-    
+
     await prisma.assessments.update({
       where: { asmt_id: assessment.asmt_id },
-      data: { 
+      data: {
         asmt_status: "failed",
         asmt_completed_at: new Date(),
       },
@@ -850,6 +891,122 @@ export async function retryReportGeneration(): Promise<ActionState> {
       message: "No se pudo generar el reporte. Por favor, contacta a soporte.",
     };
   }
+
+  logReportGenerationSuccess("Report generated successfully on retry", {
+    assessmentId: assessment.asmt_id,
+  });
+
+  return {
+    success: true,
+    message: "Reporte generado exitosamente.",
+  };
+}
+
+async function resolveOwnedAssessment(assessmentId?: string | null) {
+  const user = await getCurrentUser();
+  if (!user) return { error: "Inicia sesión para desbloquear." as const };
+
+  const fromCookie = await getCurrentAssessment();
+  const id = assessmentId || fromCookie?.asmt_id;
+  if (!id) return { error: "No se encontró la evaluación." as const };
+
+  const assessment = await getAssessmentById(id);
+  if (!assessment || assessment.asmt_user_id !== user.user_id) {
+    return { error: "No se encontró la evaluación." as const };
+  }
+  return { user, assessment };
+}
+
+/** Desbloquear preview: cobra básico y quita el gate UI (sin regenerar). */
+export async function unlockReportBasic(
+  assessmentId?: string,
+): Promise<ActionState> {
+  const resolved = await resolveOwnedAssessment(assessmentId);
+  if ("error" in resolved) {
+    return { success: false, message: resolved.error };
+  }
+  const { user, assessment } = resolved;
+
+  const result = await unlockReportWithoutRegenerate({
+    userId: user.user_id,
+    assessmentId: assessment.asmt_id,
+    alreadyChargedAt: assessment.asmt_credits_charged_at,
+    creditsBalance: user.user_credits_balance,
+  });
+
+  if (result === "insufficient") {
+    redirect(`${CREDITS_PACKAGES_PATH}?saldo=1`);
+  }
+
+  revalidatePath("/analizar/resultado");
+  revalidatePath(`/cuenta/evaluaciones/${assessment.asmt_id}`);
+  return { success: true, message: "Reporte desbloqueado." };
+}
+
+/**
+ * Desbloquear con investigación: cobra (o la diferencia), regenera el reporte.
+ */
+export async function unlockReportWithResearch(
+  assessmentId?: string,
+): Promise<ActionState> {
+  const resolved = await resolveOwnedAssessment(assessmentId);
+  if ("error" in resolved) {
+    return { success: false, message: resolved.error };
+  }
+  const { user, assessment } = resolved;
+
+  const charge = await chargeForResearchUpgrade({
+    userId: user.user_id,
+    assessmentId: assessment.asmt_id,
+    alreadyChargedAt: assessment.asmt_credits_charged_at,
+    priorCost: assessment.asmt_credit_cost,
+    creditsBalance: user.user_credits_balance,
+  });
+
+  if (charge.kind === "insufficient") {
+    redirect(`${CREDITS_PACKAGES_PATH}?saldo=1`);
+  }
+
+  const refreshed = await getAssessmentById(assessment.asmt_id);
+  if (!refreshed) {
+    return { success: false, message: "No se encontró la evaluación." };
+  }
+
+  const observability = createAiObservabilityContext(
+    refreshed.asmt_id,
+    refreshed.asmt_user_id,
+  );
+
+  await prisma.assessments.update({
+    where: { asmt_id: assessment.asmt_id },
+    data: { asmt_status: "in_progress" },
+  });
+
+  const { deterministic, interpretation } =
+    await runScoringPipeline(refreshed, observability);
+
+  const gen = await generateReportWithCredits({
+    assessment: { ...refreshed, asmt_research_enabled: true },
+    userId: user.user_id,
+    creditsBalance: user.user_credits_balance,
+    deterministic,
+    interpretation,
+    observability,
+  });
+
+  if (gen.kind === "failed") {
+    await prisma.assessments.update({
+      where: { asmt_id: assessment.asmt_id },
+      data: { asmt_status: "failed", asmt_completed_at: new Date() },
+    });
+    return {
+      success: false,
+      message: "No se pudo regenerar el reporte con investigación.",
+    };
+  }
+
+  revalidatePath("/analizar/resultado");
+  return { success: true, message: "Reporte actualizado con investigación." };
 }
 
 export async function saveAndContinueLater(): Promise<void> {

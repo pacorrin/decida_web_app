@@ -24,9 +24,6 @@ vi.mock("../session-server", () => ({
 
 import { ensureAssessmentForCurrentUser } from "../for-user";
 
-const future = new Date(Date.now() + 30 * 24 * 3600 * 1000);
-const past = new Date(Date.now() - 24 * 3600 * 1000);
-
 function user(overrides: Record<string, unknown> = {}) {
   return {
     user_id: "u1",
@@ -35,6 +32,7 @@ function user(overrides: Record<string, unknown> = {}) {
     user_phone: "5512345678",
     user_subscription_status: "none",
     user_subscription_period_end: null,
+    user_credits_balance: 0,
     ...overrides,
   };
 }
@@ -64,7 +62,7 @@ describe("ensureAssessmentForCurrentUser", () => {
     expect(mocks.create).not.toHaveBeenCalled();
   });
 
-  it("freemium sin evaluaciones: crea la gratuita precargada con el perfil", async () => {
+  it("sin evaluaciones: crea la gratuita precargada con el perfil", async () => {
     mocks.getCurrentUser.mockResolvedValue(user());
     mocks.create.mockResolvedValue({ asmt_id: "nueva" });
     mocks.getAssessmentById.mockResolvedValue({ asmt_id: "nueva" });
@@ -79,17 +77,16 @@ describe("ensureAssessmentForCurrentUser", () => {
     expect(mocks.setAssessmentCookie).toHaveBeenCalledWith("nueva");
   });
 
-  it("freemium con la evaluación completada: límite alcanzado y NO crea otra", async () => {
-    mocks.getCurrentUser.mockResolvedValue(user());
+  it("con evaluación completada y sin saldo: límite alcanzado", async () => {
+    mocks.getCurrentUser.mockResolvedValue(user({ user_credits_balance: 0 }));
     mocks.findFirst.mockResolvedValue({ asmt_id: "a-done" });
     mocks.getAssessmentById.mockResolvedValue(completed);
     expect(await ensureAssessmentForCurrentUser()).toEqual({ status: "limit_reached" });
     expect(mocks.create).not.toHaveBeenCalled();
-    // la cookie apunta a su evaluación para que la pantalla de planes sea accesible
     expect(mocks.setAssessmentCookie).toHaveBeenCalledWith("a-done");
   });
 
-  it("freemium con una evaluación sin terminar (cookie perdida): la retoma", async () => {
+  it("con evaluación sin terminar (cookie perdida): la retoma", async () => {
     mocks.getCurrentUser.mockResolvedValue(user());
     mocks.findFirst.mockResolvedValue({ asmt_id: "a-open" });
     mocks.getAssessmentById.mockResolvedValue(inProgress);
@@ -109,10 +106,8 @@ describe("ensureAssessmentForCurrentUser", () => {
     expect(await ensureAssessmentForCurrentUser()).toEqual({ status: "limit_reached" });
   });
 
-  it("suscriptor activo con evaluación completada: puede crear otra", async () => {
-    mocks.getCurrentUser.mockResolvedValue(
-      user({ user_subscription_status: "active", user_subscription_period_end: future }),
-    );
+  it("con saldo ≥ 0.5 créditos puede crear otra tras completar", async () => {
+    mocks.getCurrentUser.mockResolvedValue(user({ user_credits_balance: 50 }));
     mocks.findFirst.mockResolvedValue({ asmt_id: "a-done" });
     mocks.getAssessmentById
       .mockResolvedValueOnce(completed)
@@ -123,19 +118,13 @@ describe("ensureAssessmentForCurrentUser", () => {
     expect(mocks.create).toHaveBeenCalledTimes(1);
   });
 
-  it("cancelada con periodo vigente conserva el derecho a nuevas evaluaciones", async () => {
+  it("suscripción activa ya no abre evaluaciones ilimitadas sin créditos", async () => {
     mocks.getCurrentUser.mockResolvedValue(
-      user({ user_subscription_status: "canceled", user_subscription_period_end: future }),
-    );
-    mocks.findFirst.mockResolvedValue({ asmt_id: "a-done" });
-    mocks.getAssessmentById.mockResolvedValueOnce(completed).mockResolvedValueOnce({ asmt_id: "n" });
-    mocks.create.mockResolvedValue({ asmt_id: "n" });
-    expect((await ensureAssessmentForCurrentUser()).status).toBe("ready");
-  });
-
-  it("cancelada con periodo vencido vuelve al límite freemium", async () => {
-    mocks.getCurrentUser.mockResolvedValue(
-      user({ user_subscription_status: "canceled", user_subscription_period_end: past }),
+      user({
+        user_subscription_status: "active",
+        user_subscription_period_end: new Date(Date.now() + 30 * 24 * 3600 * 1000),
+        user_credits_balance: 0,
+      }),
     );
     mocks.findFirst.mockResolvedValue({ asmt_id: "a-done" });
     mocks.getAssessmentById.mockResolvedValue(completed);
