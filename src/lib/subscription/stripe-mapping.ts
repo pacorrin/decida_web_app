@@ -1,5 +1,5 @@
 import { hasFullAccess } from "./access";
-import { SUBSCRIPTION_PLAN_ID } from "./activate";
+import { planFromSubscription } from "@/lib/credits/plans";
 
 /** Subconjunto de `Stripe.Subscription` que usamos (facilita probar sin SDK). */
 export type StripeSubscriptionLike = {
@@ -7,7 +7,13 @@ export type StripeSubscriptionLike = {
   status: string;
   cancel_at_period_end: boolean;
   canceled_at?: number | null;
-  items: { data: Array<{ current_period_end: number }> };
+  metadata?: Record<string, string> | null;
+  items: {
+    data: Array<{
+      current_period_end: number;
+      price?: { id?: string | null } | null;
+    }>;
+  };
 };
 
 export type StripeSubscriptionUpdate = {
@@ -47,7 +53,8 @@ export function mapStripeSubscription(
 ): StripeSubscriptionUpdate | null {
   const periodEnd = stripePeriodEnd(sub);
   const base = {
-    user_subscription_plan: SUBSCRIPTION_PLAN_ID,
+    // Plan por lo que cobra Stripe; si no se reconoce, se conserva el id genérico.
+    user_subscription_plan: planFromSubscription(sub)?.id ?? "unknown",
     user_subscription_period_end: periodEnd,
     user_subscription_provider: "stripe" as const,
     user_subscription_provider_id: sub.id,

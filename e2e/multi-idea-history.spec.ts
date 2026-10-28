@@ -28,9 +28,9 @@ test.describe("Multi-idea y historial", () => {
       timeout: 30_000,
     });
     await expect(
-      page.getByText("La cuenta gratuita incluye una evaluación y ya la usaste.")
+      page.getByText("Tu cuenta gratuita incluye una evaluación y ya la usaste.")
     ).toBeVisible();
-    await expect(page.getByTestId("subscribe-submit")).toBeVisible();
+    await expect(page.getByTestId("subscribe-explora")).toBeVisible();
   });
 
   test("el historial en /cuenta lista la evaluación y abre su reporte recortado", async ({

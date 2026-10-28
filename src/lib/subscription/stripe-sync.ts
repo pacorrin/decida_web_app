@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { trackServer } from "@/lib/analytics/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { sendBillingEmail } from "@/lib/email/billing";
+import { grantCreditsForInvoice } from "@/lib/credits/subscription-credits";
 import { hasFullAccess } from "./access";
 import {
   mapStripeSubscription,
@@ -198,7 +199,23 @@ export async function confirmCheckoutSession(
 
   const subId = idOf(session.subscription);
   if (!subId) return "pending";
-  const sub = await stripe.subscriptions.retrieve(subId);
+  const sub = await stripe.subscriptions.retrieve(subId, {
+    expand: ["latest_invoice"],
+  });
   const result = await applyStripeSubscription(userId, sub, entryPoint);
+  // Robusto a webhook tardío: abona los créditos de la primera factura pagada
+  // (idempotente por factura, el webhook no los duplica).
+  const invoice = sub.latest_invoice;
+  if (invoice && typeof invoice !== "string" && invoice.status === "paid" && invoice.id) {
+    await grantCreditsForInvoice({
+      userId,
+      sub,
+      invoice: {
+        id: invoice.id,
+        billing_reason: invoice.billing_reason,
+        amount_paid: invoice.amount_paid,
+      },
+    });
+  }
   return result === "activated" ? "activated" : result === "ignored" ? "pending" : "already";
 }

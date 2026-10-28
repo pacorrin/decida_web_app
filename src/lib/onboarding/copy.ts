@@ -70,10 +70,10 @@ export const IDEA_PLACEHOLDER =
   "Ejemplo: Quiero iniciar un servicio de detailing móvil los fines de semana para clientes residenciales que buscan limpieza y cuidado de autos a domicilio.";
 
 export const PAYMENT_ANCHOR_COPY =
-  "Menos que un mes probando una mala idea sin validar. Sigue con tu evaluación gratis o desbloquea el reporte completo con la suscripción.";
+  "Menos que un mes probando una mala idea sin validar. Sigue con tu evaluación gratis o elige un plan con créditos mensuales para el reporte completo.";
 
 export const PAYMENT_CANCEL_COPY =
-  "Cancela cuando quieras: conservas el acceso hasta el fin del periodo pagado.";
+  "Cancela cuando quieras: conservas tus créditos hasta el fin del periodo pagado.";
 
 export const PAYMENT_FREE_FEATURES = [
   "Una evaluación completa de tu idea",

@@ -9,6 +9,7 @@ import {
   type AssessmentWithRelations,
 } from "./session-server";
 import { isAssessmentCompleted } from "./assessment-utils";
+import { spendableBalance } from "@/lib/credits/access";
 import { decideAssessmentStart } from "@/lib/subscription/limits";
 
 export type EnsureAssessmentResult =
@@ -44,7 +45,7 @@ export async function ensureAssessmentForCurrentUser(): Promise<EnsureAssessment
 
   const decision = decideAssessmentStart({
     latest: latest ? { completed: isAssessmentCompleted(latest) } : null,
-    creditsBalance: user.user_credits_balance,
+    creditsBalance: spendableBalance(user),
   });
 
   if (decision === "limit") {

@@ -20,12 +20,17 @@ function layout(heading: string, body: string, appUrl: string): string {
         <h1 style="color:#05422c; font-size: 20px;">${heading}</h1>
         ${body}
         <p style="margin-top: 24px;">
-          <a href="${appUrl}/cuenta/suscripcion" style="color:#05422c; font-size:14px;">Ver mi suscripción</a>
+          <a href="${appUrl}/cuenta/suscripcion" style="color:#05422c; font-size:14px;">Ver mi plan</a>
         </p>
         <p style="color:#3d5c50; font-size: 13px;">¿Dudas? Responde a este correo y te ayudamos.</p>
       </div>
     `;
 }
+
+export type BillingPlan = { name: string; priceMxn: number; credits: number };
+
+const planPrice = (plan: BillingPlan | null | undefined) =>
+  plan ? `$${plan.priceMxn} MXN` : "el precio de tu plan";
 
 const P = 'style="color:#3d5c50; font-size:15px;"';
 
@@ -33,16 +38,24 @@ export function subscriptionActivatedEmail(input: {
   name: string | null;
   nextDate: Date | null;
   appUrl: string;
+  plan?: BillingPlan | null;
 }): { subject: string; html: string } {
   const hello = input.name ? `Hola ${escapeHtml(input.name)}, ` : "";
   const renewal = input.nextDate
     ? `Tu suscripción se renueva el ${formatBillingDate(input.nextDate)}. Puedes cancelarla cuando quieras desde tu cuenta.`
     : "Puedes cancelarla cuando quieras desde tu cuenta.";
   return {
-    subject: "Tu suscripción a Decida está activa",
+    subject: input.plan
+      ? `Tu plan ${input.plan.name} de Decida está activo`
+      : "Tu plan de Decida está activo",
     html: layout(
-      "Tu suscripción está activa",
-      `<p ${P}>${hello}ya tienes acceso completo a tus reportes y puedes evaluar todas las ideas que quieras. Cobramos $99 MXN al mes.</p>
+      "Tu plan está activo",
+      `<p ${P}>${hello}${
+        input.plan
+          ? `ya tienes ${input.plan.credits.toLocaleString("es-MX")} créditos para analizar tus ideas. Cobramos ${planPrice(input.plan)} al mes.`
+          : "ya puedes usar los créditos de tu plan para analizar tus ideas."
+      }</p>
+        <p ${P}>Cada mes, al renovar, tu saldo se restablece a los créditos de tu plan: los que no uses no se acumulan.</p>
         <p ${P}>${renewal}</p>
         <p ${P}>Stripe te enviará por separado el recibo de tu pago.</p>`,
       input.appUrl,
@@ -54,16 +67,17 @@ export function subscriptionReactivatedEmail(input: {
   name: string | null;
   nextDate: Date | null;
   appUrl: string;
+  plan?: BillingPlan | null;
 }): { subject: string; html: string } {
   const hello = input.name ? `Hola ${escapeHtml(input.name)}, ` : "";
   const renewal = input.nextDate
-    ? `Tu suscripción se renueva el ${formatBillingDate(input.nextDate)} por $99 MXN. Puedes cancelarla cuando quieras desde tu cuenta.`
+    ? `Tu suscripción se renueva el ${formatBillingDate(input.nextDate)} por ${planPrice(input.plan)}. Puedes cancelarla cuando quieras desde tu cuenta.`
     : "Puedes cancelarla cuando quieras desde tu cuenta.";
   return {
     subject: "Reactivamos tu suscripción a Decida",
     html: layout(
       "Tu suscripción fue reactivada",
-      `<p ${P}>${hello}reactivamos tu suscripción y conservas el acceso completo a tus reportes.</p>
+      `<p ${P}>${hello}reactivamos tu plan y conservas tus créditos hasta el fin del periodo.</p>
         <p ${P}>No se te cobró ahora: ya habías pagado este periodo.</p>
         <p ${P}>${renewal}</p>`,
       input.appUrl,
@@ -78,8 +92,8 @@ export function subscriptionCanceledEmail(input: {
 }): { subject: string; html: string } {
   const hello = input.name ? `Hola ${escapeHtml(input.name)}, ` : "";
   const until = input.accessUntil
-    ? `Mantienes el acceso completo hasta el ${formatBillingDate(input.accessUntil)}; después tu cuenta vuelve al plan gratuito.`
-    : "Mantienes el acceso completo hasta el fin del periodo ya pagado.";
+    ? `Conservas tus créditos hasta el ${formatBillingDate(input.accessUntil)}; después vencen y tu cuenta vuelve al plan gratuito.`
+    : "Conservas tus créditos hasta el fin del periodo ya pagado.";
   return {
     subject: "Cancelamos tu suscripción a Decida",
     html: layout(
@@ -102,7 +116,7 @@ export function paymentFailedEmail(input: {
     html: layout(
       "No pudimos procesar tu pago",
       `<p ${P}>${hello}el cobro de tu suscripción no se pudo completar.</p>
-        <p ${P}>Actualiza tu método de pago desde tu cuenta para no perder el acceso completo a tus reportes. Volveremos a intentar el cobro automáticamente.</p>`,
+        <p ${P}>Actualiza tu método de pago desde tu cuenta: mientras no se regularice no podrás usar tus créditos. Volveremos a intentar el cobro automáticamente.</p>`,
       input.appUrl,
     ),
   };

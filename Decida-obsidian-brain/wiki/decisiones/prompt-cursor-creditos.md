@@ -4,7 +4,9 @@ tags: [decida, creditos, cursor]
 updated: 2026-10-22
 ---
 
-# Prompt para Cursor — sistema de créditos
+# Prompt para Cursor — sistema de créditos (OBSOLETO)
+
+> **Obsoleto desde 2026-10-28.** El modelo pasó de paquetes de pago único a planes mensuales con créditos que se restablecen; el cambio se implementó directamente en el repo. Ver [[modelo-de-creditos-hibrido]]. Se conserva solo como histórico.
 
 Especificación completa: [[modelo-de-creditos-hibrido]] (leerla primero). Este es el texto a pegar en Cursor.
 

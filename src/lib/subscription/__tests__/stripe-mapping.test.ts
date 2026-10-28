@@ -96,3 +96,14 @@ describe("shouldApplyStripeSubscription", () => {
     ).toBe(true);
   });
 });
+
+describe("plan de la suscripción", () => {
+  it("lo toma de la metadata del checkout cuando no hay price ids configurados", () => {
+    const r = mapStripeSubscription(sub({ metadata: { plan_id: "valida" } }), NOW)!;
+    expect(r.user_subscription_plan).toBe("valida");
+  });
+
+  it("si no se reconoce el plan, guarda «unknown» en vez de inventar uno", () => {
+    expect(mapStripeSubscription(sub(), NOW)!.user_subscription_plan).toBe("unknown");
+  });
+});

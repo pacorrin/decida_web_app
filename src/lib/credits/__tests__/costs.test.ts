@@ -8,7 +8,7 @@ import {
 } from "../costs";
 
 describe("costs", () => {
-  it("usa centésimos: básico 50, investigación 150", () => {
+  it("básico 50, investigación 150 créditos", () => {
     expect(CREDIT_COST_BASIC).toBe(50);
     expect(CREDIT_COST_RESEARCH).toBe(150);
     expect(CREDIT_RESEARCH_DIFF).toBe(100);
@@ -19,10 +19,10 @@ describe("costs", () => {
     expect(creditCostForResearch(true)).toBe(150);
   });
 
-  it("formatea créditos legibles", () => {
-    expect(formatCredits(50)).toBe("0.5");
-    expect(formatCredits(100)).toBe("1");
-    expect(formatCredits(150)).toBe("1.5");
-    expect(formatCredits(-50)).toBe("−0.5");
+  it("formatea créditos enteros con separador de miles", () => {
+    expect(formatCredits(50)).toBe("50");
+    expect(formatCredits(150)).toBe("150");
+    expect(formatCredits(2000)).toBe("2,000");
+    expect(formatCredits(-50)).toBe("−50");
   });
 });

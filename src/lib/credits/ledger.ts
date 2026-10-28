@@ -73,13 +73,13 @@ async function findByIdempotencyKey(
 }
 
 /**
- * Compra / abono positivo al libro (purchase, welcome_bonus, subscription_grant,
- * refund, adjustment positivo). Idempotente por `idempotencyKey`.
+ * Abono positivo al libro (welcome_bonus, subscription_grant, refund,
+ * adjustment positivo). Idempotente por `idempotencyKey`.
  */
 export async function creditLedgerEntry(params: {
   userId: string;
   amount: number;
-  type: "purchase" | "welcome_bonus" | "subscription_grant" | "refund" | "adjustment";
+  type: "welcome_bonus" | "subscription_grant" | "refund" | "adjustment";
   idempotencyKey: string;
   assessmentId?: string | null;
   paymentId?: string | null;
@@ -124,22 +124,107 @@ export async function creditLedgerEntry(params: {
   }
 }
 
-/** Atajo de compra: tipo `purchase` + clave `purchase:{stripeSessionId}`. */
-export async function recordPurchase(params: {
+/**
+ * Renovación del plan: RESTABLECE el saldo a `credits`. Si quedaba saldo, lo
+ * registra como `expire` (para que el historial cuadre) y luego abona el plan
+ * (`subscription_grant`), todo en una transacción. Idempotente por
+ * `idempotencyKey` (p. ej. `grant:{invoiceId}`).
+ */
+export async function resetCreditsToPlan(params: {
   userId: string;
-  amount: number;
-  paymentId: string;
-  stripeSessionId: string;
+  credits: number;
+  idempotencyKey: string;
+  paymentId?: string | null;
   metadata?: Prisma.InputJsonValue;
-}): Promise<LedgerResult> {
-  return creditLedgerEntry({
-    userId: params.userId,
-    amount: params.amount,
-    type: "purchase",
-    idempotencyKey: `purchase:${params.stripeSessionId}`,
-    paymentId: params.paymentId,
-    metadata: params.metadata,
-  });
+}): Promise<{ created: boolean; expired: number; entry: credit_ledger }> {
+  assertPositiveInt(params.credits);
+
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const existing = await findByIdempotencyKey(tx, params.idempotencyKey);
+      if (existing) return { created: false, expired: 0, entry: existing };
+
+      const balance = await lockUserBalance(tx, params.userId);
+
+      if (balance > 0) {
+        await tx.credit_ledger.create({
+          data: {
+            cled_user_id: params.userId,
+            cled_type: "expire",
+            cled_amount: -balance,
+            cled_balance_after: 0,
+            cled_idempotency_key: `${params.idempotencyKey}:expire`,
+            cled_metadata: { reason: "renewal" },
+          },
+        });
+      }
+
+      await tx.users.update({
+        where: { user_id: params.userId },
+        data: { user_credits_balance: params.credits },
+      });
+
+      const entry = await tx.credit_ledger.create({
+        data: {
+          cled_user_id: params.userId,
+          cled_type: "subscription_grant",
+          cled_amount: params.credits,
+          cled_balance_after: params.credits,
+          cled_payment_id: params.paymentId ?? null,
+          cled_idempotency_key: params.idempotencyKey,
+          cled_metadata: params.metadata ?? undefined,
+        },
+      });
+
+      return { created: true, expired: balance, entry };
+    });
+  } catch (err) {
+    if (isUniqueViolation(err)) {
+      const entry = await findByIdempotencyKey(prisma, params.idempotencyKey);
+      if (entry) return { created: false, expired: 0, entry };
+    }
+    throw err;
+  }
+}
+
+/**
+ * Vence todo el saldo (suscripción terminada). No hace nada si el saldo es 0.
+ * Idempotente por `idempotencyKey`.
+ */
+export async function expireCredits(params: {
+  userId: string;
+  idempotencyKey: string;
+  reason: string;
+  metadata?: Prisma.InputJsonValue;
+}): Promise<{ expired: number }> {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const existing = await findByIdempotencyKey(tx, params.idempotencyKey);
+      if (existing) return { expired: 0 };
+
+      const balance = await lockUserBalance(tx, params.userId);
+      if (balance <= 0) return { expired: 0 };
+
+      await tx.users.update({
+        where: { user_id: params.userId },
+        data: { user_credits_balance: 0 },
+      });
+      await tx.credit_ledger.create({
+        data: {
+          cled_user_id: params.userId,
+          cled_type: "expire",
+          cled_amount: -balance,
+          cled_balance_after: 0,
+          cled_idempotency_key: params.idempotencyKey,
+          cled_metadata: params.metadata ?? { reason: params.reason },
+        },
+      });
+      return { expired: balance };
+    });
+  } catch (err) {
+    if (isUniqueViolation(err)) return { expired: 0 };
+    throw err;
+  }
 }
 
 /**

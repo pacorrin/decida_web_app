@@ -33,7 +33,8 @@ import { ReportErrorState } from "@/components/onboarding/report-error-state";
 import { FeedbackForm } from "@/components/onboarding/feedback-form";
 import { AnalyzeAnotherButton } from "@/components/onboarding/analyze-another-button";
 import { UnlockReportButtons } from "@/components/onboarding/unlock-report-buttons";
-import { CREDITS_PACKAGES_PATH } from "@/lib/credits/paths";
+import { CREDIT_COST_BASIC, CREDIT_COST_RESEARCH } from "@/lib/credits/costs";
+import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
 import { Markdown } from "@/components/ui/markdown";
 import {
   Table,
@@ -182,7 +183,7 @@ export function ResultReport({
               sin investigación de mercado
             </strong>
             . Las cifras de mercado son tus supuestos. Desbloquea el reporte
-            completo con créditos cuando quieras.
+            completo con un plan cuando quieras.
           </p>
         )}
         {/* Table of Contents - Mobile */}
@@ -806,10 +807,10 @@ function LockedSection({
             <TrackedLink
               event={ANALYTICS_EVENTS.subscribeClicked}
               eventProps={{ location: "report_lock" }}
-              href={CREDITS_PACKAGES_PATH}
+              href={CREDITS_PLANS_PATH}
               className="text-sm font-medium text-primary underline-offset-4 hover:underline"
             >
-              Desbloquear con créditos
+              Elegir un plan para desbloquear
             </TrackedLink>
           </div>
         </CardContent>
@@ -844,8 +845,9 @@ function FullReportCta({ assessmentId }: { assessmentId: string }) {
             Desbloquea el diagnóstico completo
           </CardTitle>
           <CardDescription>
-            Con 0.5 créditos ves todo lo ya generado. Con 1.5 regeneramos el
-            reporte incluyendo investigación de mercado.
+            Con {CREDIT_COST_BASIC} créditos ves todo lo ya generado. Con{" "}
+            {CREDIT_COST_RESEARCH} regeneramos el reporte incluyendo
+            investigación de mercado.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

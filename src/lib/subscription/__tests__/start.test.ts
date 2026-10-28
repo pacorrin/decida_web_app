@@ -43,7 +43,7 @@ describe("startSubscription", () => {
   it("sin Stripe usa el flujo simulado", async () => {
     m.getStripe.mockReturnValue(null);
     m.simulated.mockResolvedValue(true);
-    const r = await startSubscription(free, { returnTo: "account" });
+    const r = await startSubscription(free, { returnTo: "account", planId: "explora" });
     expect(r).toEqual({ kind: "activated" });
     expect(m.simulated).toHaveBeenCalledTimes(1);
     expect(m.checkout).not.toHaveBeenCalled();
@@ -53,13 +53,13 @@ describe("startSubscription", () => {
   it("sin Stripe y con suscripción vigente responde already", async () => {
     m.getStripe.mockReturnValue(null);
     m.simulated.mockResolvedValue(false);
-    expect(await startSubscription(free, { returnTo: "account" })).toEqual({ kind: "already" });
+    expect(await startSubscription(free, { returnTo: "account", planId: "explora" })).toEqual({ kind: "already" });
   });
 
   it("con Stripe devuelve la URL de Checkout y no activa nada localmente", async () => {
     m.getStripe.mockReturnValue(stripe);
     m.checkout.mockResolvedValue("https://checkout.stripe.com/c/pay/cs_test_1");
-    const r = await startSubscription(free, { returnTo: "onboarding" });
+    const r = await startSubscription(free, { returnTo: "onboarding", planId: "explora" });
     expect(r).toEqual({ kind: "redirect", url: "https://checkout.stripe.com/c/pay/cs_test_1" });
     expect(m.checkout.mock.calls[0][2]).toBe("/analizar/pago");
     expect(m.simulated).not.toHaveBeenCalled();
@@ -69,7 +69,7 @@ describe("startSubscription", () => {
   it("con Stripe, un error se traduce a mensaje comprensible", async () => {
     m.getStripe.mockReturnValue(stripe);
     m.checkout.mockRejectedValue({ type: "StripeConnectionError" });
-    const r = await startSubscription(free, { returnTo: "account" });
+    const r = await startSubscription(free, { returnTo: "account", planId: "explora" });
     expect(r.kind).toBe("error");
   });
 
@@ -85,7 +85,7 @@ describe("startSubscription", () => {
         user_subscription_provider: "stripe",
         user_subscription_provider_id: "sub_1",
       },
-      { returnTo: "account" },
+      { returnTo: "account", planId: "explora" },
     );
     expect(r).toEqual({ kind: "activated" });
     expect(m.subsUpdate).toHaveBeenCalledWith("sub_1", { cancel_at_period_end: false });
@@ -107,7 +107,7 @@ describe("startSubscription", () => {
         user_subscription_provider: "stripe",
         user_subscription_provider_id: "sub_1",
       },
-      { returnTo: "account" },
+      { returnTo: "account", planId: "explora" },
     );
     expect(m.sendBillingEmail).not.toHaveBeenCalled();
   });
@@ -123,7 +123,7 @@ describe("startSubscription", () => {
         user_subscription_provider: "stripe",
         user_subscription_provider_id: "sub_1",
       },
-      { returnTo: "account" },
+      { returnTo: "account", planId: "explora" },
     );
     expect(r.kind).toBe("error");
     expect(m.updateMany).not.toHaveBeenCalled();
@@ -134,7 +134,7 @@ describe("startSubscription", () => {
     m.getStripe.mockReturnValue(stripe);
     const r = await startSubscription(
       { ...free, user_subscription_status: "active", user_subscription_period_end: future },
-      { returnTo: "account" },
+      { returnTo: "account", planId: "explora" },
     );
     expect(r).toEqual({ kind: "already" });
     expect(m.checkout).not.toHaveBeenCalled();

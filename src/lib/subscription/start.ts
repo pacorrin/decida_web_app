@@ -2,6 +2,7 @@ import "server-only";
 
 import type { users } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import type { PlanId } from "@/lib/credits/plans";
 import { getStripe } from "@/lib/stripe/client";
 import { trackServer } from "@/lib/analytics/server";
 import { sendBillingEmail } from "@/lib/email/billing";
@@ -36,7 +37,7 @@ type StartUser = Pick<
 >;
 
 /**
- * Punto único de «Suscribirme» (cuenta y onboarding). Con Stripe habilitado
+ * Punto único de «Suscribirme a un plan» (cuenta y onboarding). Con Stripe habilitado
  * crea una Checkout Session y devuelve su URL (el llamador redirige, fuera de
  * try/catch); sin él ejecuta el flujo simulado. Una cancelada dentro de su
  * periodo se reactiva sin cobrar (en Stripe: cancel_at_period_end=false).
@@ -45,7 +46,11 @@ type StartUser = Pick<
  */
 export async function startSubscription(
   user: StartUser,
-  opts: { returnTo: SubscriptionEntryPoint; assessmentId?: string | null },
+  opts: {
+    returnTo: SubscriptionEntryPoint;
+    planId: PlanId;
+    assessmentId?: string | null;
+  },
 ): Promise<StartSubscriptionResult> {
   const now = new Date();
   const stripe = getStripe();
@@ -82,7 +87,7 @@ export async function startSubscription(
       await track();
       return { kind: "activated" };
     }
-    await activateSimulatedSubscription(user, opts.assessmentId);
+    await activateSimulatedSubscription(user, opts.planId, opts.assessmentId);
     await track();
     return { kind: "activated" };
   }
@@ -90,7 +95,7 @@ export async function startSubscription(
   if (!shouldActivate(user, now)) return { kind: "already" };
 
   if (!stripe) {
-    const activated = await activateSimulatedSubscription(user, opts.assessmentId);
+    const activated = await activateSimulatedSubscription(user, opts.planId, opts.assessmentId);
     if (!activated) return { kind: "already" };
     await track();
     return { kind: "activated" };
@@ -107,7 +112,12 @@ export async function startSubscription(
         .cancel(user.user_subscription_provider_id)
         .catch(() => undefined);
     }
-    const url = await createCheckoutSession(stripe, user, RETURN_PATHS[opts.returnTo]);
+    const url = await createCheckoutSession(
+      stripe,
+      user,
+      RETURN_PATHS[opts.returnTo],
+      opts.planId,
+    );
     return { kind: "redirect", url };
   } catch (err) {
     return { kind: "error", message: describeStripeError(err) };

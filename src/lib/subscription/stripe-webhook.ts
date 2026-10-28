@@ -1,7 +1,10 @@
 import "server-only";
 
 import type Stripe from "stripe";
-import { fulfillCreditCheckoutSession } from "@/lib/credits/fulfill";
+import {
+  expireCreditsForEndedSubscription,
+  grantCreditsForInvoice,
+} from "@/lib/credits/subscription-credits";
 import { handleStripeChargeRefunded } from "@/lib/credits/refund-stripe";
 import { sendBillingEmail } from "@/lib/email/billing";
 import {
@@ -35,10 +38,6 @@ export async function handleStripeEvent(
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
-      if (session.mode === "payment") {
-        await fulfillCreditCheckoutSession(session);
-        return;
-      }
       if (session.mode !== "subscription") return;
       const subId = idOf(session.subscription);
       if (!subId) return;
@@ -50,21 +49,18 @@ export async function handleStripeEvent(
       );
       return;
     }
-    case "checkout.session.async_payment_succeeded": {
-      const session = event.data.object as Stripe.Checkout.Session;
-      await fulfillCreditCheckoutSession(session);
-      return;
-    }
     case "charge.refunded": {
-      await handleStripeChargeRefunded(event.data.object as Stripe.Charge);
+      await handleStripeChargeRefunded(stripe, event.data.object as Stripe.Charge);
       return;
     }
     case "customer.subscription.updated":
     case "customer.subscription.deleted": {
-      await syncSubscription(
-        event.data.object as Stripe.Subscription,
-        "stripe_webhook",
-      );
+      const sub = event.data.object as Stripe.Subscription;
+      const user = await syncSubscription(sub, "stripe_webhook");
+      // La suscripción terminó (fin del periodo tras cancelar): vencen los créditos.
+      if (user && event.type === "customer.subscription.deleted") {
+        await expireCreditsForEndedSubscription(user.user_id, sub.id);
+      }
       return;
     }
     case "invoice.paid":
@@ -80,6 +76,15 @@ export async function handleStripeEvent(
       );
       if (user && event.type === "invoice.paid") {
         await recordStripeInvoicePayment(user.user_id, invoice);
+        await grantCreditsForInvoice({
+          userId: user.user_id,
+          sub,
+          invoice: {
+            id: invoice.id,
+            billing_reason: invoice.billing_reason,
+            amount_paid: invoice.amount_paid,
+          },
+        });
       }
       // Stripe reintenta el cobro varias veces y emite este evento en cada
       // intento: se avisa solo en el primero.

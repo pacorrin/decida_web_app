@@ -31,7 +31,7 @@ describe("sendBillingEmail", () => {
     const arg = m.sendEmail.mock.calls[0][0];
     expect(arg.to).toBe("ana@example.com");
     expect(arg.from).toContain("billing@decida.mx");
-    expect(arg.subject).toMatch(/activa/i);
+    expect(arg.subject).toMatch(/activo/i);
   });
 
   it("no hace nada si la cuenta no existe", async () => {
@@ -57,9 +57,12 @@ describe("plantillas de cobro", () => {
       name: "Ana",
       nextDate: new Date("2026-11-16T12:00:00Z"),
       appUrl,
+      plan: { name: "Valida", priceMxn: 149, credits: 600 },
     });
     expect(html).toContain("16 de noviembre de 2026");
-    expect(html).toContain("$99 MXN");
+    expect(html).toContain("$149 MXN");
+    expect(html).toContain("600 créditos");
+    expect(html).toContain("no se acumulan");
     expect(html).toContain("https://decida.mx/cuenta/suscripcion");
   });
 

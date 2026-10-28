@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth/session-server";
 import { redirect } from "next/navigation";
 import { createPortalUrl } from "@/lib/stripe/portal";
 import { describeStripeError } from "@/lib/subscription/stripe-errors";
+import { getPlan } from "@/lib/credits/plans";
 import { startSubscription } from "@/lib/subscription/start";
 
 export type SubscribeState = {
@@ -12,14 +13,22 @@ export type SubscribeState = {
   message?: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function subscribe(_prev: SubscribeState): Promise<SubscribeState> {
+export async function subscribe(
+  _prev: SubscribeState,
+  formData: FormData,
+): Promise<SubscribeState> {
   const user = await getCurrentUser();
   if (!user) {
     return { success: false, message: "Tu sesión expiró. Inicia sesión de nuevo." };
   }
 
-  const result = await startSubscription(user, { returnTo: "account" });
+  const plan = getPlan(String(formData.get("planId") ?? ""));
+  if (!plan) return { success: false, message: "Ese plan no existe." };
+
+  const result = await startSubscription(user, {
+    returnTo: "account",
+    planId: plan.id,
+  });
   if (result.kind === "error") return { success: false, message: result.message };
   if (result.kind === "already") {
     return { success: false, message: "Tu cuenta ya tiene una suscripción vigente." };

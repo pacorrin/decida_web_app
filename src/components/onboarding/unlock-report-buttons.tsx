@@ -7,9 +7,10 @@ import {
   unlockReportBasic,
   unlockReportWithResearch,
 } from "@/app/analizar/actions";
-import { CREDITS_PACKAGES_PATH } from "@/lib/credits/paths";
+import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { CREDIT_COST_BASIC, CREDIT_COST_RESEARCH } from "@/lib/credits/costs";
 import { cn } from "@/lib/utils";
 
 export function UnlockReportButtons({
@@ -45,7 +46,7 @@ export function UnlockReportButtons({
           });
         }}
       >
-        {pending ? "Procesando…" : "Desbloquear (0.5 créditos)"}
+        {pending ? "Procesando…" : `Desbloquear (${CREDIT_COST_BASIC} créditos)`}
       </Button>
       <Button
         type="button"
@@ -66,14 +67,14 @@ export function UnlockReportButtons({
           });
         }}
       >
-        Con investigación (1.5 créditos)
+        {`Con investigación (${CREDIT_COST_RESEARCH} créditos)`}
       </Button>
       {!compact && (
         <Link
-          href={CREDITS_PACKAGES_PATH}
+          href={CREDITS_PLANS_PATH}
           className={cn(buttonVariants({ size: "lg", variant: "ghost" }))}
         >
-          Comprar créditos
+          Ver planes
         </Link>
       )}
     </div>

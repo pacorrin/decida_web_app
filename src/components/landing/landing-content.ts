@@ -47,7 +47,7 @@ export const MECHANISM_STEPS = [
 
 export type ReportInclude = {
   text: string;
-  /** free: en el plan gratuito · partial: versión parcial gratis · paid: solo con suscripción */
+  /** free: en el plan gratuito · partial: versión parcial gratis · paid: solo con créditos */
   plan: "free" | "partial" | "paid";
 };
 
@@ -75,7 +75,7 @@ export const PRICING_FREE_INCLUDES = [
   "Vista parcial de lo financiero y del plan de validación",
 ] as const;
 
-/** @deprecated Sustituido por paquetes de créditos en la landing. */
+/** @deprecated Sustituido por los planes con créditos en la landing. */
 export const PRICING_PAID_INCLUDES = [
   "Reporte completo desbloqueado",
   "Compatibilidad personal, tiempo y operación, y escalabilidad",
@@ -101,7 +101,7 @@ export const FAQ_ITEMS = [
   {
     question: "¿Es gratis?",
     answer:
-      "Tu primera evaluación es gratis y no pide tarjeta. Incluye una vista previa del diagnóstico (sin investigación de mercado). Para el reporte completo o más ideas compras créditos: desde $59 MXN por 1 crédito.",
+      "Tu primera evaluación es gratis y no pide tarjeta. Incluye una vista previa del diagnóstico (sin investigación de mercado). Para el reporte completo o más ideas eliges un plan mensual con créditos, desde $59 MXN al mes.",
   },
   {
     question: "¿Decida me dice qué negocio abrir?",
@@ -121,7 +121,7 @@ export const FAQ_ITEMS = [
   {
     question: "¿Qué tipo de ideas puedo evaluar?",
     answer:
-      "Físicas, digitales, servicios, producto, franquicia, negocio secundario o proyectos independientes. Cada evaluación es de una idea; la prueba gratuita incluye una y con créditos puedes analizar más.",
+      "Físicas, digitales, servicios, producto, franquicia, negocio secundario o proyectos independientes. Cada evaluación es de una idea; la prueba gratuita incluye una y con un plan puedes analizar más.",
   },
   {
     question: "¿Qué pasa si el riesgo sale alto?",
@@ -131,12 +131,12 @@ export const FAQ_ITEMS = [
   {
     question: "¿Cómo funcionan los créditos?",
     answer:
-      "Compras paquetes de 1, 3 o 10 créditos (desde $59 MXN). Un análisis básico cuesta 0.5 créditos; con investigación de mercado, 1.5. Los créditos no caducan. Si el sistema falla al generar el reporte, te devolvemos los créditos gastados.",
+      "Eliges un plan mensual: Explora ($59 MXN, 200 créditos), Valida ($149, 600 créditos) o Escala ($399, 2,000 créditos). Un análisis básico cuesta 50 créditos; con investigación de mercado, 150. Los créditos se restablecen en cada renovación: los que no uses no se acumulan. Si cancelas, los conservas hasta el fin del periodo pagado. Si el sistema falla al generar el reporte, te devolvemos los créditos gastados.",
   },
   {
     question: "¿Puedo pedir reembolso en dinero?",
     answer:
-      "Los fallos del sistema se compensan devolviendo créditos a tu cuenta. Para otros casos escríbenos a hello@decida.mx.",
+      "Los fallos del sistema se compensan devolviendo créditos a tu cuenta. Puedes cancelar tu plan cuando quieras; no se hacen reembolsos de periodos ya iniciados salvo error nuestro. Para otros casos escríbenos a hello@decida.mx.",
   },
   {
     question: "¿Mi idea es privada?",

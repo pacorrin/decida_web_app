@@ -1,8 +1,6 @@
 import type { users } from "@/generated/prisma/client";
 import { hasFullAccess } from "./access";
 
-export const SUBSCRIPTION_PLAN_ID = "monthly";
-export const SUBSCRIPTION_PRICE_MXN = 99;
 export const SUBSCRIPTION_CURRENCY = "MXN";
 export const SIMULATED_PROVIDER = "simulated";
 
@@ -35,11 +33,12 @@ export type SimulatedActivation = {
  */
 export function buildSimulatedActivation(
   userId: string,
+  planId: string,
   now: Date = new Date(),
 ): SimulatedActivation {
   return {
     user_subscription_status: "active",
-    user_subscription_plan: SUBSCRIPTION_PLAN_ID,
+    user_subscription_plan: planId,
     user_subscription_period_end: addOneMonth(now),
     user_subscription_canceled_at: null,
     user_subscription_provider: SIMULATED_PROVIDER,

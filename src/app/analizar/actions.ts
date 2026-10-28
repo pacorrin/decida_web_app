@@ -14,12 +14,13 @@ import {
 import { parseAssumptions, packIdeaAiPayload, unpackIdeaAiPayload } from "@/lib/ai/schemas/idea-assumptions";
 import type { StructuredUnderstanding } from "@/lib/ai/schemas/structured-understanding";
 import { runScoringPipeline } from "@/lib/scoring";
+import { spendableBalance } from "@/lib/credits/access";
 import { generateReportWithCredits } from "@/lib/credits/generate";
 import {
   chargeForResearchUpgrade,
   unlockReportWithoutRegenerate,
 } from "@/lib/credits/charge";
-import { CREDITS_PACKAGES_PATH } from "@/lib/credits/paths";
+import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
 import {
   contactSchema,
   ideaSchema,
@@ -37,7 +38,6 @@ import {
   type RefineIdeaState,
 } from "@/lib/onboarding/schemas";
 import type { z } from "zod";
-import { SUBSCRIPTION_PLAN_ID } from "@/lib/subscription/activate";
 import { startSubscription } from "@/lib/subscription/start";
 import {
   getCurrentAssessment,
@@ -468,8 +468,8 @@ export async function editIdeaRedirect(): Promise<void> {
 
 /**
  * «Suscribirme»: con Stripe habilitado redirige a Checkout; sin él, activa la
- * suscripción simulada de la CUENTA ($99 MXN/mes). El gate de reportes mira la cuenta (`hasFullAccess`), así
- * que desbloquea todas las evaluaciones, también las anteriores.
+ * suscripción simulada del plan elegido. Cada plan deja sus créditos del mes; el
+ * reporte completo se desbloquea al gastarlos en un análisis.
  */
 export async function savePayment(
   _prev: ActionState,
@@ -478,7 +478,7 @@ export async function savePayment(
   const assessment = await requireAssessment();
 
   const parsed = paymentSchema.safeParse({
-    planId: formData.get("planId") ?? SUBSCRIPTION_PLAN_ID,
+    planId: formData.get("planId"),
   });
 
   if (!parsed.success) {
@@ -495,6 +495,7 @@ export async function savePayment(
 
   const result = await startSubscription(user, {
     returnTo: "onboarding",
+    planId: parsed.data.planId,
     assessmentId: assessment.asmt_id,
   });
   if (result.kind === "error") return { success: false, message: result.message };
@@ -784,14 +785,14 @@ export async function saveEvaluation(
   const gen = await generateReportWithCredits({
     assessment: refreshed,
     userId: user.user_id,
-    creditsBalance: user.user_credits_balance,
+    creditsBalance: spendableBalance(user),
     deterministic,
     interpretation,
     observability,
   });
 
   if (gen.kind === "insufficient") {
-    redirect(`${CREDITS_PACKAGES_PATH}?saldo=1`);
+    redirect(`${CREDITS_PLANS_PATH}?saldo=1`);
   }
 
   if (gen.kind === "failed") {
@@ -869,14 +870,14 @@ export async function retryReportGeneration(): Promise<ActionState> {
   const gen = await generateReportWithCredits({
     assessment: refreshed,
     userId: user.user_id,
-    creditsBalance: user.user_credits_balance,
+    creditsBalance: spendableBalance(user),
     deterministic,
     interpretation,
     observability,
   });
 
   if (gen.kind === "insufficient") {
-    redirect(`${CREDITS_PACKAGES_PATH}?saldo=1`);
+    redirect(`${CREDITS_PLANS_PATH}?saldo=1`);
   }
 
   if (gen.kind === "failed") {
@@ -939,11 +940,11 @@ export async function unlockReportBasic(
     userId: user.user_id,
     assessmentId: assessment.asmt_id,
     alreadyChargedAt: assessment.asmt_credits_charged_at,
-    creditsBalance: user.user_credits_balance,
+    creditsBalance: spendableBalance(user),
   });
 
   if (result === "insufficient") {
-    redirect(`${CREDITS_PACKAGES_PATH}?saldo=1`);
+    redirect(`${CREDITS_PLANS_PATH}?saldo=1`);
   }
 
   revalidatePath("/analizar/resultado");
@@ -968,11 +969,11 @@ export async function unlockReportWithResearch(
     assessmentId: assessment.asmt_id,
     alreadyChargedAt: assessment.asmt_credits_charged_at,
     priorCost: assessment.asmt_credit_cost,
-    creditsBalance: user.user_credits_balance,
+    creditsBalance: spendableBalance(user),
   });
 
   if (charge.kind === "insufficient") {
-    redirect(`${CREDITS_PACKAGES_PATH}?saldo=1`);
+    redirect(`${CREDITS_PLANS_PATH}?saldo=1`);
   }
 
   const refreshed = await getAssessmentById(assessment.asmt_id);
@@ -996,7 +997,7 @@ export async function unlockReportWithResearch(
   const gen = await generateReportWithCredits({
     assessment: { ...refreshed, asmt_research_enabled: true },
     userId: user.user_id,
-    creditsBalance: user.user_credits_balance,
+    creditsBalance: spendableBalance(user),
     deterministic,
     interpretation,
     observability,

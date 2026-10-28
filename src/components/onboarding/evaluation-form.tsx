@@ -255,7 +255,7 @@ export function EvaluationForm({ assessment }: EvaluationFormProps) {
                   Incluir investigación de mercado
                 </span>
                 <span className="block text-muted-foreground">
-                  Costo: 1.5 créditos con investigación · 0.5 sin ella. Si apagas
+                  Costo: 150 créditos con investigación · 50 sin ella. Si apagas
                   el interruptor, el reporte no traerá fuentes externas.
                 </span>
               </span>

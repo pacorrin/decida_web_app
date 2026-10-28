@@ -2,31 +2,34 @@ import "server-only";
 
 import type Stripe from "stripe";
 import type { users } from "@/generated/prisma/client";
-import { getAppUrl, getStripePriceId } from "@/lib/stripe/config";
+import { getPlan, getStripePriceIdForPlan, type PlanId } from "@/lib/credits/plans";
+import { getAppUrl } from "@/lib/stripe/config";
 import { ensureStripeCustomer } from "@/lib/stripe/customer";
-import {
-  SUBSCRIPTION_CURRENCY,
-  SUBSCRIPTION_PRICE_MXN,
-} from "./activate";
+import { SUBSCRIPTION_CURRENCY } from "./activate";
 
 type CheckoutUser = Pick<users, "user_id" | "user_email" | "user_stripe_customer_id">;
 
-/** Crea la Checkout Session (suscripción mensual en MXN) y devuelve su URL. */
+/** Crea la Checkout Session (suscripción mensual del plan, en MXN) y devuelve su URL. */
 export async function createCheckoutSession(
   stripe: Stripe,
   user: CheckoutUser,
   returnPath: string,
+  planId: PlanId,
 ): Promise<string> {
+  const plan = getPlan(planId);
+  if (!plan) throw new Error(`Plan desconocido: ${planId}`);
+
   const customer = await ensureStripeCustomer(stripe, user);
   const base = getAppUrl();
-  const priceId = getStripePriceId();
+  const priceId = getStripePriceIdForPlan(plan.id);
+  const metadata = { user_id: user.user_id, plan_id: plan.id };
 
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
     customer,
     client_reference_id: user.user_id,
-    metadata: { user_id: user.user_id },
-    subscription_data: { metadata: { user_id: user.user_id } },
+    metadata,
+    subscription_data: { metadata },
     line_items: [
       priceId
         ? { price: priceId, quantity: 1 }
@@ -34,9 +37,12 @@ export async function createCheckoutSession(
             quantity: 1,
             price_data: {
               currency: SUBSCRIPTION_CURRENCY.toLowerCase(),
-              unit_amount: SUBSCRIPTION_PRICE_MXN * 100,
+              unit_amount: plan.priceMxn * 100,
               recurring: { interval: "month" },
-              product_data: { name: "Decida — Suscripción" },
+              product_data: {
+                name: `Decida ${plan.name}`,
+                description: `${plan.credits} créditos al mes`,
+              },
             },
           },
     ],

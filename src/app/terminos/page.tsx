@@ -85,14 +85,23 @@ export default function TerminosPage() {
       <LegalSection title="Planes, créditos y reembolsos">
         <p>
           Decida ofrece una evaluación de prueba gratuita (vista previa del
-          diagnóstico, sin investigación de mercado) y paquetes de créditos de
-          pago para desbloquear el reporte completo o analizar más ideas. Los
-          créditos no caducan. Un análisis básico consume 0.5 créditos; con
-          investigación de mercado, 1.5 créditos.
+          diagnóstico, sin investigación de mercado) y planes de suscripción
+          mensual (Explora, Valida y Escala) que otorgan créditos para
+          desbloquear el reporte completo o analizar más ideas. Un análisis
+          básico consume 50 créditos; con investigación de mercado, 150.
+        </p>
+        <p>
+          Los créditos se restablecen en cada renovación del plan: el saldo
+          vuelve a los créditos de tu plan y los que no hayas usado no se
+          acumulan. Si cancelas, conservas tus créditos hasta el fin del
+          periodo ya pagado y después vencen. Si un cobro falla, no podrás usar
+          tus créditos hasta regularizar el pago. Puedes cancelar cuando
+          quieras; la cancelación evita cargos futuros y no genera reembolso
+          del periodo en curso.
         </p>
         <p>
           Si el sistema falla al generar un reporte ya cobrado, te devolvemos
-          los créditos gastados en esa evaluación. Los pagos de créditos los
+          los créditos gastados en esa evaluación. Los pagos de los planes los
           procesa Stripe; Decida no almacena los datos de tu tarjeta.
         </p>
       </LegalSection>

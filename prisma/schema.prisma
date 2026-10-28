@@ -60,6 +60,7 @@ enum credit_ledger_type {
   spend
   refund
   adjustment
+  expire
 }
 
 model verification_codes {

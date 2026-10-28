@@ -25,9 +25,9 @@ describe("addOneMonth", () => {
 
 describe("buildSimulatedActivation", () => {
   it("deja la cuenta activa con proveedor simulado y sin cancelación", () => {
-    const data = buildSimulatedActivation("u1", now);
+    const data = buildSimulatedActivation("u1", "explora", now);
     expect(data.user_subscription_status).toBe("active");
-    expect(data.user_subscription_plan).toBe("monthly");
+    expect(data.user_subscription_plan).toBe("explora");
     expect(data.user_subscription_provider).toBe("simulated");
     expect(data.user_subscription_canceled_at).toBeNull();
     expect(data.user_subscription_period_end).toEqual(addOneMonth(now));

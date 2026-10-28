@@ -1,117 +1,68 @@
 ---
 type: decision-log
-tags: [decida, pricing, creditos, stripe, costos, especificacion]
-updated: 2026-10-27
-status: implementado en main (fases 1 a 4, commits 02fc586..dba140f); fase 5 (suscripción que otorga créditos) fuera de alcance por ahora
+tags: [decida, pricing, creditos, planes, stripe, costos, especificacion]
+updated: 2026-10-28
+status: implementado en código (2026-10-28); pendiente de crear los precios en Stripe y desplegar
 ---
 
-# Modelo de créditos (especificación para implementar)
+# Modelo de planes con créditos mensuales
 
-Reemplaza la suscripción de $99 MXN/mes sin límite. Contexto previo: [[../producto/pricing-y-gtm]]. Costos de la investigación web: `docs/resultados-paso-2c.md` y `docs/resultados-paso-4.md`. El prompt para Cursor está en [[prompt-cursor-creditos]].
+Reemplaza la suscripción única de $99 MXN y también el esquema anterior de paquetes de pago único (documentado el 2026-10-22 e implementado por Cursor). Contexto: [[../producto/pricing-y-gtm]]. Costos de la investigación web: `docs/resultados-paso-2c.md` y `docs/resultados-paso-4.md`. El prompt para Cursor ([[prompt-cursor-creditos]]) quedó **obsoleto**: este cambio se hizo directamente en el repo.
 
-## 1. Decisiones cerradas
+## 1. Decisiones cerradas (2026-10-28)
 | Tema | Decisión |
 |---|---|
-| Unidad | 1 crédito = $59 MXN (compra individual) |
-| Paquetes | 1 crédito $59 · 3 créditos $149 (~$50 c/u) · 10 créditos $399 (~$40 c/u) |
-| Costo de un análisis | **Básico (sin investigación web) = 0.5 créditos** · **Con investigación de mercado = 1.5 créditos** |
-| Caducidad | Los créditos **no caducan** |
-| Costo de referencia (techo) | **$0.30 USD por reporte con investigación**, aunque las pruebas den ~$0.24. El margen sobrante cubre funciones de IA futuras sin subir precio |
-| Costo del básico | ~$0.05–0.10 USD |
-| Objetivo financiero | Que la plataforma se sostenga sola en gastos. Utilidad solo cuando los ingresos superen los gastos operativos (beta ≈ $2,500 MXN/mes, absorbidos por el dueño) |
-| Suscripción | **Fase 2, opcional.** La beta no se ha desplegado: no hay suscriptores reales que migrar. Se deja el código de suscripción detrás de un flag, apagado |
-| Regeneraciones | No incluidas. Solo el **reintento tras un fallo** es gratis (misma evaluación, misma llave de idempotencia) |
+| Producto | Suscripción mensual con 3 planes con nombre. Cada renovación **restablece** el saldo a los créditos del plan; **no se suman** a los que sobraron |
+| Planes | **Explora** $59 MXN → 200 créditos · **Valida** $149 → 600 · **Escala** $399 → 2,000 (Valida es el destacado) |
+| Costo de un análisis | **Básico** (sin investigación web) = **50 créditos** · **Con investigación de mercado** = **150 créditos** |
+| Unidad | Créditos enteros (antes centésimos de crédito; los valores internos no cambiaron: 50 y 150) |
+| Caducidad | Los créditos **vencen** al renovar (se restablecen) y al terminar una suscripción cancelada. Debe quedar claro en la compra y en los términos; **validar con asesor legal** (normativa de consumo en México) |
+| Análisis gratis | Se conserva la vista previa gratuita del primer análisis, **sin investigación web** (no gasta ~$0.24 USD por registro) |
+| Costo de referencia (techo) | **$0.30 USD** por reporte con investigación, aunque las pruebas den ~$0.24; el margen sobrante cubre funciones de IA futuras sin subir precio |
+| Regeneraciones | No incluidas; solo el reintento tras un fallo es gratis |
+| Reembolsos | Fallo del reporte → se devuelven los créditos; investigación degradada → se devuelven 100 créditos (la diferencia 150−50) |
 
-## 2. Economía unitaria (referencia, MXN; tipo de cambio ~18.5)
-Comisión Stripe 3.6% + $3 sobre el cobro. Impuestos reservados: 50% de lo que queda.
+## 2. Reglas de ciclo de vida
+1. **Alta / renovación (`invoice.paid`, `billing_reason` = `subscription_create` o `subscription_cycle`)**: el saldo pasa a los créditos del plan. Si quedaba saldo se registra como `expire` y luego `subscription_grant`, en una transacción.
+2. **Subida de plan a mitad de mes** (`subscription_update` con cobro y más créditos que la última renovación): el saldo pasa **al instante** a los créditos del plan nuevo.
+3. **Bajada de plan**: no toca el saldo; aplica en la próxima renovación (la factura de ese ciclo ya es del plan nuevo y restablece a menos créditos). **Hay que avisar antes** de que el excedente se pierde.
+4. **Se queda sin créditos a mitad de mes**: solo puede esperar o subir de plan (no hay compras sueltas por ahora; añadir un paquete suelto que no caduque si la fricción lo exige).
+5. **Cancelación**: conserva los créditos hasta el fin del periodo pagado; al terminar (`customer.subscription.deleted`) vencen. Red de seguridad: si el aviso de Stripe se retrasa, `expireIfSubscriptionEnded` los vence al abrir `/cuenta/creditos`.
+6. **Cobro fallido (`past_due`)**: el gasto se bloquea (saldo gastable = 0, `spendableBalance`) hasta regularizar el pago; no se abona nada.
+7. **Reembolso de dinero en Stripe** (`charge.refunded`): solo reembolsos **totales** descuentan los créditos que abonó esa factura (hasta el saldo disponible, nunca negativo); los parciales solo avisan por log para revisión manual.
+8. **Idempotencia**: cada abono usa la clave `grant:{invoiceId}` (el webhook y el retorno de Checkout pueden llegar en cualquier orden sin duplicar); los vencimientos usan `expire:sub_ended:{subscriptionId}`.
 
-| Concepto | 1 crédito ($59) |
-|---|---|
-| Después de Stripe | ~$54 |
-| Costo de IA de 2 análisis básicos (1 crédito) | ~$4 MXN |
-| Después de impuestos (50%) | ~$22–25 |
-| Después de infraestructura y operación | ~0 (objetivo de la beta) |
+## 3. Economía unitaria (peor caso: el usuario gasta todo en análisis con investigación)
+Tipo de cambio ~18.5; Stripe 3.6% + $3 MXN; costo de IA $0.30 USD ≈ $5.55 MXN por análisis con investigación; reserva de impuestos 50%.
 
-Con investigación (1.5 créditos): ingreso $88.5 (compra suelta) o ~$60 (paquete de 10). Costo de IA techo $0.30 USD ≈ $5.6 MXN. Los precios por análisis salen así:
+| Plan | Análisis con investigación | Precio por análisis | Después de Stripe | Costo de IA | Libre tras impuestos |
+|---|---|---|---|---|---|
+| Explora $59 | 1.3 (o 4 básicos) | ~$44 | ~$54 | ~$7 | ~$23 |
+| Valida $149 | 4 (o 12 básicos) | ~$37 | ~$141 | ~$22 | ~$59 |
+| Escala $399 | 13 (o 40 básicos) | ~$30 | ~$382 | ~$74 | ~$154 |
 
-| Paquete | Básico (0.5) | Con investigación (1.5) |
-|---|---|---|
-| 1 crédito ($59) | $29.5 | $88.5 |
-| 3 créditos ($149) | ~$25 | ~$75 |
-| 10 créditos ($399) | ~$20 | ~$60 |
+La IA cuesta entre 12% y 19% del precio en el peor caso. Para cubrir ~$2,500 MXN/mes de beta hacen falta ~108 suscriptores de Explora, ~42 de Valida o ~16 de Escala. Como casi nadie gasta todo, el margen real será mayor. El objetivo de la beta es que la plataforma se sostenga sola; utilidades cuando los ingresos superen los gastos operativos.
 
-## 3. Modelo de datos (nuevo)
-**Los créditos se guardan como entero en centésimos** (100 = 1 crédito; 0.5 = 50; 1.5 = 150) para no usar decimales.
+## 4. Implementación (código)
+- `src/lib/credits/plans.ts`: planes, price ids de Stripe por env (`STRIPE_PRICE_EXPLORA/VALIDA/ESCALA`), `planFromSubscription` (por price id; si no hay, por `metadata.plan_id`).
+- `src/lib/credits/costs.ts`: 50 / 150 y `formatCredits`.
+- `src/lib/credits/ledger.ts`: `resetCreditsToPlan`, `expireCredits`, gasto/reembolso/ajuste atómicos con idempotencia.
+- `src/lib/credits/subscription-credits.ts`: `shouldGrantForInvoice`, `grantCreditsForInvoice`, `expireCreditsForEndedSubscription`, `expireIfSubscriptionEnded`.
+- `src/lib/credits/access.ts`: `hasReportAccess` (evaluación cobrada) y `spendableBalance` (0 si `past_due`).
+- `src/lib/subscription/*`: Checkout de suscripción por plan (`stripe-checkout.ts`), `start.ts`/`subscribe.ts` con `planId` (el modo simulado también abona créditos), webhook (`stripe-webhook.ts`) que abona en `invoice.paid` y vence en `customer.subscription.deleted`.
+- Tabla `credit_ledger` (tipos: `purchase`, `welcome_bonus`, `subscription_grant`, `spend`, `refund`, `adjustment`, `expire`), `users.user_credits_balance`, `assessments.asmt_research_enabled / asmt_credit_cost / asmt_credits_charged_at`. Migración nueva: `20261028000000_credit_expire`.
+- UI: `/cuenta/suscripcion` (planes, estado, cancelar, administrar pagos), `/cuenta/creditos` (saldo, fecha de restablecimiento, historial), paso de pago del onboarding, sección de precios de la landing, FAQ, términos, privacidad y correos de cobro con el nombre y los créditos del plan.
+- Se eliminó el flag `SUBSCRIPTIONS_ENABLED` y todo el código de paquetes de pago único.
 
-### `credit_ledger` (fuente de verdad, solo se agregan filas)
-| Campo | Tipo | Notas |
-|---|---|---|
-| `cled_id` | String cuid | PK |
-| `cled_user_id` | String | FK users, onDelete Restrict |
-| `cled_type` | enum `credit_ledger_type` | `purchase`, `welcome_bonus`, `subscription_grant`, `spend`, `refund`, `adjustment` |
-| `cled_amount` | Int | con signo (+ compra/reembolso, − gasto), en centésimos |
-| `cled_balance_after` | Int | saldo tras el movimiento (≥ 0) |
-| `cled_asmt_id` | String? | evaluación asociada (spend/refund) |
-| `cled_payment_id` | String? | FK payments (purchase) |
-| `cled_idempotency_key` | String | **UNIQUE**: `purchase:{stripeSessionId}`, `spend:{asmtId}`, `refund:{asmtId}:{motivo}` |
-| `cled_metadata` | Json? | paquete, nivel, motivo |
-| `cled_created_at` | DateTime | default now |
+## 5. Para activarlo (pendiente del dueño)
+1. En Stripe (modo prueba y luego producción): crear 3 productos con precio **recurrente mensual en MXN** ($59, $149, $399) y poner sus ids en `STRIPE_PRICE_EXPLORA`, `STRIPE_PRICE_VALIDA`, `STRIPE_PRICE_ESCALA`. Sin ids funciona con precios en línea, pero el plan se reconoce por metadata y es más frágil tras un cambio de plan.
+2. Configurar el **Customer Portal** de Stripe: permitir cambio de plan entre esos 3 precios, **subidas con cobro inmediato y bajadas al fin del periodo**, y cancelación al fin del periodo.
+3. El webhook debe recibir: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid`, `invoice.payment_failed`, `charge.refunded`.
+4. Aplicar la migración `20261028000000_credit_expire` (en desarrollo: `pnpm db:push`).
+5. Revisar con asesor legal los términos (vencimiento de créditos) y el aviso de privacidad.
 
-Índices: `(cled_user_id, cled_created_at)`, UNIQUE `cled_idempotency_key`.
-
-### `users`
-- `user_credits_balance Int @default(0)`: caché del saldo. **Invariante:** igual a la suma del libro mayor. Se actualiza en la misma transacción que cada movimiento.
-
-### `assessments`
-- `asmt_research_enabled Boolean @default(true)`: el interruptor «Investigación de mercado» elegido por la persona.
-- `asmt_credit_cost Int?`: costo cobrado (centésimos), para auditoría.
-- `asmt_credits_charged_at DateTime?`: cuándo se cobró. Una evaluación se cobra **una sola vez**.
-
-### `payments`
-- Ya existe. Cada compra de créditos crea una fila (`paym_provider = "stripe"`, `paym_provider_session_id`, estado `paid`) y el movimiento `purchase` apunta a ella.
-
-### Configuración (en código, no en tabla)
-`src/lib/credits/`: `packages.ts` (id, créditos, precio MXN, Stripe price id desde env), `costs.ts` (`BASIC=50`, `RESEARCH=150`), `ledger.ts` (operaciones atómicas).
-
-## 4. Flujos
-1. **Compra:** pantalla de paquetes → Stripe Checkout `mode: "payment"` con metadata `{user_id, package_id}` → webhook `checkout.session.completed` (y `async_payment_succeeded`) → en una transacción: marcar `payments` pagado + `purchase` en el libro + sumar saldo. **Idempotente** por `purchase:{sessionId}`: reintentos del webhook no duplican.
-2. **Cobro de un análisis:** al generar el reporte, en una sola transacción: verificar saldo ≥ costo (`UPDATE users SET balance = balance − x WHERE id = … AND balance ≥ x`, sin saldo negativo), insertar `spend` con clave `spend:{asmtId}`, guardar `asmt_credit_cost` y `asmt_credits_charged_at`. Si ya estaba cobrada, no cobra otra vez (reintentos gratis).
-3. **Sin saldo:** redirigir a la pantalla de paquetes sin perder lo capturado.
-4. **Fallo del reporte (estado failed):** `refund` por el total, clave `refund:{asmtId}:failed`.
-5. **Investigación degradada** (`arep_research.status` = `failed`/`skipped` con el interruptor encendido): reembolsar la diferencia (1.00 crédito = 100) con clave `refund:{asmtId}:research`.
-6. **Interruptor «Investigación de mercado»:** en el onboarding (paso del producto/evaluación), activado por defecto. Muestra el costo (0.5 / 1.5 créditos) y, al apagarlo, qué se pierde: «sin fuentes, las cifras de mercado son supuestos tuyos». Alimenta `asmt_research_enabled`, que el pipeline lee **por evaluación** (hoy la investigación es global con `REPORT_RESEARCH_ENABLED`; el flag global sigue como interruptor maestro).
-7. **Reembolso en Stripe** (`charge.refunded`): registrar `adjustment` negativo hasta el saldo disponible (nunca negativo) y avisar por log/Sentry para revisión manual.
-8. **Bienvenida / gratis:** se conserva la evaluación gratuita actual (vista previa con tarjetas bloqueadas). **Punto de diseño a confirmar por Cursor antes de codificar:** cómo convive el gate freemium actual (`src/lib/subscription/limits.ts`, `access.ts`, `hasFullAccess`) con créditos. Propuesta por defecto: el reporte completo se desbloquea cuando la evaluación está cobrada (`asmt_credits_charged_at` no nulo); la vista previa gratuita se genera **sin investigación web** para no gastar $0.24 por registro.
-
-## 5. Suscripción (código existente)
-- Beta sin desplegar → sin suscriptores. No borrar el código: ponerlo detrás de `SUBSCRIPTIONS_ENABLED` (por defecto `false`), ocultar en landing y cuenta. `hasFullAccess` deja de decidir el acceso; lo decide el cobro por créditos.
-- Fase 2 opcional: plan mensual que otorga créditos por ciclo (`subscription_grant` en `invoice.paid`).
-
-## 6. Interfaz
-- Cuenta: saldo visible, historial de movimientos, botón «Comprar créditos».
-- Pantalla de paquetes (3 tarjetas, el de 10 destacado por mejor precio por análisis).
-- Landing / precios: reemplazar «$99/mes» por los paquetes; actualizar FAQ, términos, privacidad y política de reembolsos (los créditos no caducan; reembolsos por fallo del sistema se devuelven en créditos).
-- Reporte: mostrar si se usó investigación (ya existe «Fuentes y límites»).
-
-## 7. Cuidados
-- **Atomicidad y concurrencia:** dos pestañas no deben gastar el mismo crédito (transacción + condición `balance ≥ costo` + clave única).
-- **Webhooks:** verificar firma, idempotencia, orden no garantizado.
-- **No tocar `src/lib/scoring`.**
-- Moneda MXN; los centavos de Stripe se convierten a pesos con cuidado (Decimal en `payments`).
-- Stripe **modo prueba** para desarrollar (tarjeta 4242…); `.env.example` actualizado (`STRIPE_PRICE_CREDITS_1/3/10`, `SUBSCRIPTIONS_ENABLED`).
-- Pruebas: libro (compra, gasto, reembolso, idempotencia, saldo insuficiente, concurrencia), webhook (duplicado, firma inválida), flujo de generación (cobra una vez, reembolsa en fallo, diferencia si la investigación se degrada), UI (interruptor, saldo, sin saldo).
-- Medir: eventos de PostHog (`credits_purchased`, `credits_spent`, `credits_insufficient`, `research_toggled`) para ver conversión y qué nivel eligen.
-- Migraciones con `prisma migrate` (la base local tiene desfase: usar `db:push` en desarrollo, ver AGENTS.md).
-
-## 8. Fases sugeridas (implementadas 2026-10-22)
-1. ✅ **Fase 1 (`02fc586`):** Libro de créditos + tablas (`credit_ledger`, `users.user_credits_balance`, `assessments.asmt_research_enabled`/`asmt_credit_cost`/`asmt_credits_charged_at`, migración `20261023000000_credit_ledger`) + `src/lib/credits/{packages,costs,ledger}.ts` + pruebas del libro (compra, gasto, reembolso, idempotencia, saldo insuficiente, concurrencia con `SELECT ... FOR UPDATE`).
-2. ✅ **Fase 2 (`567c4a1`):** Compra con Stripe Checkout (`mode: "payment"`) + modo simulado sin `STRIPE_SECRET_KEY` + webhook (`checkout.session.completed`, `checkout.session.async_payment_succeeded`, `charge.refunded`) + retorno robusto + saldo e historial en `/cuenta/creditos` + pantalla de paquetes `/cuenta/creditos/paquetes`.
-3. ✅ **Fase 3 (`a6bb2dd`):** Cobro al generar (`generateReportWithCredits` / `planAndChargeForReport`) + interruptor «Investigación de mercado» en `/analizar/evaluacion` + reembolsos por fallo total (`refund:{asmtId}:failed`) y por investigación degradada (`refund:{asmtId}:research`, 1.0 crédito) + desbloqueo de preview con 0.5 (`unlockReportBasic`, sin regenerar) o 1.5 (`unlockReportWithResearch`, regenera con investigación).
-4. ✅ **Fase 4 (`dba140f`):** Landing (`pricing-section.tsx`, `landing-content.ts`), textos legales (`/terminos`, `/privacidad`), retiro visual de la suscripción detrás de `SUBSCRIPTIONS_ENABLED="false"` (`src/lib/subscription/flag.ts`), eventos de PostHog (`credits_purchased`, `credits_spent`, `credits_insufficient`, `research_toggled`), `.env.example` actualizado.
-5. ⏸️ **(Opcional, fuera por ahora):** Suscripción que otorga créditos (`subscription_grant`).
-
-## 9. Decisiones de implementación cerradas y puntos abiertos
-- ✅ **Gate freemium definitivo (punto 8 de §4):** el acceso completo ya no mira `hasFullAccess(user)` sino `hasReportAccess(assessment)` (`asmt_credits_charged_at != null` en `src/lib/credits/access.ts`). La primera evaluación de una cuenta que no ha sido cobrada entra en modo `free_preview` (`isFreePreviewAssessment` en `src/lib/credits/charge.ts`): se genera con `forceNoResearch: true` (sin gastar $0.24 USD de búsqueda web) y se muestra con secciones bloqueadas en `result-report.tsx`. Desde el reporte recortado se ofrecen dos botones (`UnlockReportButtons`): **Desbloquear (0.5 créditos)** (`unlockReportBasic`, cobra 50 centésimos y quita el candado sin regenerar) o **Con investigación (1.5 créditos)** (`unlockReportWithResearch`, cobra 150 —o la diferencia de 100 si ya había pagado 50— y regenera con investigación web). Para iniciar una segunda evaluación (`decideAssessmentStart` en `src/lib/subscription/limits.ts`), se exige `creditsBalance >= 50` (0.5 créditos); si no alcanza, redirige a `/cuenta/creditos/paquetes?limite=1`.
-- ⚠️ **Detalle visual menor en landing (`pricing-section.tsx`):** la tarjeta de 1 crédito calcula `Math.floor(100 / 150) = 0` y muestra «O 0 con investigación (1.5 c/u)» y «1 créditos». Conviene ajustar el copy para el paquete de 1 crédito.
-- ⚠️ **Specs E2E de Playwright (`e2e/subscription-flow.spec.ts`, `e2e/multi-idea-history.spec.ts`):** siguen esperando las rutas y textos del modelo de suscripción (`/cuenta/suscripcion?limite=1`, «Desbloquear con la suscripción», `subscribe-submit`); hay que actualizarlos al flujo de créditos o correrlos con `SUBSCRIPTIONS_ENABLED=true`.
-- Pendiente de negocio: confirmar precio real de `web_search` en factura de OpenAI y si «reintento tras fallo» requiere tope numérico en base de datos.
+## 6. Pendiente / siguiente
+- Probar el ciclo completo con Stripe en modo prueba (`stripe listen`, relojes de prueba para renovar y cancelar).
+- El e2e `e2e/subscription-flow.spec.ts` sigue escrito para el modelo freemium anterior (textos y botones obsoletos): reescribirlo para planes.
+- Medir en PostHog: `credits_granted`, `credits_expired`, `credits_spent`, `credits_insufficient`, `research_toggled`, `subscribe_clicked` (con `plan_id`) para ver conversión y fricción por quedarse sin créditos.
+- Evaluar un paquete suelto que no caduque y la opción de plan anual.

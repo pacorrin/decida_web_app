@@ -67,7 +67,7 @@ export default function PrivacidadPage() {
         <ul className="list-disc space-y-2 pl-5">
           <li>Generar y entregarte tu diagnóstico de viabilidad.</li>
           <li>Mantener tu sesión de evaluación y recuperar tu progreso.</li>
-          <li>Procesar el pago de tus paquetes de créditos.</li>
+          <li>Procesar el cobro de tu plan mensual.</li>
           <li>Mejorar la calidad del producto y la experiencia de usuario.</li>
           <li>Cumplir obligaciones legales y responder solicitudes de soporte.</li>
         </ul>
@@ -76,7 +76,7 @@ export default function PrivacidadPage() {
           fines de marketing.
         </p>
         <p>
-          Los pagos de créditos los procesa Stripe. Al pagar, tus datos de
+          Los pagos de los planes los procesa Stripe. Al pagar, tus datos de
           tarjeta se capturan directamente en la página segura de Stripe:
           Decida no los recibe ni los almacena. Compartimos con Stripe tu
           correo electrónico para asociar el cobro a tu cuenta, y guardamos
@@ -98,7 +98,7 @@ export default function PrivacidadPage() {
           </li>
           <li>
             <strong className="text-foreground">Stripe</strong>: procesa los
-            pagos de créditos (ver arriba).
+            pagos de los planes (ver arriba).
           </li>
         </ul>
       </LegalSection>

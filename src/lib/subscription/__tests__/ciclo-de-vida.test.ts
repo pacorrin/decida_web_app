@@ -40,12 +40,12 @@ describe("ciclo de vida de la suscripción", () => {
 
   it("al suscribirse (legacy) hasFullAccess pasa a true", () => {
     expect(shouldActivate(free, T0)).toBe(true);
-    const sub = { ...free, ...buildSimulatedActivation("u1", T0) };
+    const sub = { ...free, ...buildSimulatedActivation("u1", "explora", T0) };
     expect(hasFullAccess(sub, T0)).toBe(true);
   });
 
   it("cancelar no quita acceso de suscripción hasta el fin del periodo", () => {
-    const activa = { ...free, ...buildSimulatedActivation("u1", T0) };
+    const activa = { ...free, ...buildSimulatedActivation("u1", "explora", T0) };
     const res = planCancellation(activa, dias(5));
     expect(res.ok).toBe(true);
     if (!res.ok) return;
@@ -67,11 +67,11 @@ describe("ciclo de vida de la suscripción", () => {
   });
 
   it("se puede volver a suscribir después de vencida la cancelación, pero no mientras sigue vigente", () => {
-    const activa = { ...free, ...buildSimulatedActivation("u1", T0) };
+    const activa = { ...free, ...buildSimulatedActivation("u1", "explora", T0) };
     const cancelada = { ...activa, user_subscription_status: "canceled" as const, user_subscription_canceled_at: dias(2) };
     expect(shouldActivate(activa, dias(3))).toBe(false);
     expect(shouldActivate(cancelada, dias(3))).toBe(true);
-    const resub = { ...cancelada, ...buildSimulatedActivation("u1", dias(40)) };
+    const resub = { ...cancelada, ...buildSimulatedActivation("u1", "explora", dias(40)) };
     expect(resub.user_subscription_canceled_at).toBeNull();
     expect(hasFullAccess(resub, dias(41))).toBe(true);
   });

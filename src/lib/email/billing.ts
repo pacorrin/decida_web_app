@@ -1,5 +1,6 @@
 import "server-only";
 
+import { getPlan } from "@/lib/credits/plans";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "./resend";
 import {
@@ -29,7 +30,7 @@ export async function sendBillingEmail(
   try {
     const user = await prisma.users.findUnique({
       where: { user_id: userId },
-      select: { user_email: true, user_name: true },
+      select: { user_email: true, user_name: true, user_subscription_plan: true },
     });
     if (!user) return;
 
@@ -37,11 +38,12 @@ export async function sendBillingEmail(
       /\/$/,
       "",
     );
+    const plan = getPlan(user.user_subscription_plan) ?? null;
     const content =
       email.kind === "activated"
-        ? subscriptionActivatedEmail({ name: user.user_name, nextDate: email.nextDate, appUrl })
+        ? subscriptionActivatedEmail({ name: user.user_name, nextDate: email.nextDate, appUrl, plan })
         : email.kind === "reactivated"
-          ? subscriptionReactivatedEmail({ name: user.user_name, nextDate: email.nextDate, appUrl })
+          ? subscriptionReactivatedEmail({ name: user.user_name, nextDate: email.nextDate, appUrl, plan })
           : email.kind === "canceled"
             ? subscriptionCanceledEmail({ name: user.user_name, accessUntil: email.accessUntil, appUrl })
             : paymentFailedEmail({ name: user.user_name, appUrl });

@@ -6,12 +6,17 @@ import { track } from "@/lib/analytics/client";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { runActionWithToast } from "@/lib/ui/toast-action";
 import { subscribe } from "@/app/cuenta/(dashboard)/suscripcion/actions";
+import type { PlanId } from "@/lib/credits/plans";
 
 export function SubscribeButton({
+  planId,
   label,
+  highlighted = false,
   mode = "subscribe",
 }: {
+  planId: PlanId;
   label: string;
+  highlighted?: boolean;
   /** `reactivate`: la cuenta ya pagó este periodo y no hay cobro. */
   mode?: "subscribe" | "reactivate";
 }) {
@@ -22,13 +27,18 @@ export function SubscribeButton({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        track(ANALYTICS_EVENTS.subscribeClicked, { location: "cuenta_suscripcion" });
+        track(ANALYTICS_EVENTS.subscribeClicked, {
+          location: "cuenta_suscripcion",
+          plan_id: planId,
+        });
         startTransition(async () => {
-          await runActionWithToast(() => subscribe({ success: false }), {
-            loading: reactivate ? "Reactivando tu suscripción…" : "Procesando tu suscripción…",
+          const fd = new FormData();
+          fd.set("planId", planId);
+          await runActionWithToast(() => subscribe({ success: false }, fd), {
+            loading: reactivate ? "Reactivando tu plan…" : "Procesando tu suscripción…",
             success: reactivate
-              ? "Suscripción reactivada. No se te cobró ahora."
-              : "¡Listo! Tu suscripción está activa.",
+              ? "Plan reactivado. No se te cobró ahora."
+              : "¡Listo! Tu plan está activo y tus créditos ya están disponibles.",
             keepLoadingOnRedirect: true,
           });
         });
@@ -38,8 +48,13 @@ export function SubscribeButton({
         type="submit"
         size="lg"
         disabled={pending}
-        className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
-        data-testid="subscribe-submit"
+        variant={highlighted ? "default" : "outline"}
+        className={
+          highlighted
+            ? "w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+            : "w-full"
+        }
+        data-testid={`subscribe-${planId}`}
       >
         {pending ? "Procesando..." : label}
       </Button>

@@ -1,11 +1,11 @@
 import { CREDIT_COST_BASIC } from "@/lib/credits/costs";
-import { CREDITS_PACKAGES_PATH } from "@/lib/credits/paths";
+import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
 
-/** @deprecated Prefer CREDITS_PACKAGES_PATH; se mantiene por imports legacy. */
+/** @deprecated Prefer CREDITS_PLANS_PATH; se mantiene por imports legacy. */
 export const SUBSCRIPTION_PATH = "/cuenta/suscripcion";
 
 /** Destino cuando no hay saldo para otra evaluación. */
-export const PLANS_PATH = `${CREDITS_PACKAGES_PATH}?limite=1`;
+export const PLANS_PATH = `${CREDITS_PLANS_PATH}?limite=1`;
 
 export type AssessmentStartDecision = "create" | "resume" | "limit";
 

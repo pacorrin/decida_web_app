@@ -8,9 +8,11 @@ import {
   InsufficientCreditsError,
   InvalidCreditAmountError,
   adjustCredits,
+  creditLedgerEntry,
+  expireCredits,
   getCreditsBalance,
-  recordPurchase,
   refundCredits,
+  resetCreditsToPlan,
   spendCredits,
 } from "../ledger";
 
@@ -79,20 +81,20 @@ async function trackUser(balance = 0) {
 }
 
 describe("credit ledger (integración)", () => {
-  it("compra: abona saldo y escribe fila purchase", async () => {
+  it("abono: suma saldo y escribe la fila del tipo pedido", async () => {
     const user = await trackUser();
     const payment = await createPayment(user.user_id);
 
-    const result = await recordPurchase({
+    const result = await creditLedgerEntry({
       userId: user.user_id,
       amount: 100,
+      type: "welcome_bonus",
+      idempotencyKey: `welcome:${suffix()}`,
       paymentId: payment.paym_id,
-      stripeSessionId: `cs_${suffix()}`,
-      metadata: { package_id: "credits_1" },
     });
 
     expect(result.created).toBe(true);
-    expect(result.entry.cled_type).toBe("purchase");
+    expect(result.entry.cled_type).toBe("welcome_bonus");
     expect(result.entry.cled_amount).toBe(100);
     expect(result.entry.cled_balance_after).toBe(100);
     expect(await getCreditsBalance(user.user_id)).toBe(100);
@@ -142,23 +144,25 @@ describe("credit ledger (integración)", () => {
     expect(rows[0].cled_idempotency_key).toBe(`refund:${asmt.asmt_id}:failed`);
   });
 
-  it("idempotencia: reintentar compra/gasto no duplica", async () => {
+  it("idempotencia: reintentar abono/gasto no duplica", async () => {
     const user = await trackUser(100);
     const payment = await createPayment(user.user_id);
     const asmt = await createAssessment(user.user_id);
-    const sessionId = `cs_${suffix()}`;
+    const key = `welcome:${suffix()}`;
 
-    const buy1 = await recordPurchase({
+    const buy1 = await creditLedgerEntry({
       userId: user.user_id,
       amount: 100,
+      type: "welcome_bonus",
+      idempotencyKey: key,
       paymentId: payment.paym_id,
-      stripeSessionId: sessionId,
     });
-    const buy2 = await recordPurchase({
+    const buy2 = await creditLedgerEntry({
       userId: user.user_id,
       amount: 100,
+      type: "welcome_bonus",
+      idempotencyKey: key,
       paymentId: payment.paym_id,
-      stripeSessionId: sessionId,
     });
     expect(buy1.created).toBe(true);
     expect(buy2.created).toBe(false);
@@ -252,17 +256,18 @@ describe("credit ledger (integración)", () => {
     expect(await getCreditsBalance(user.user_id)).toBe(0);
   });
 
-  it("rechaza montos no enteros o no positivos en compra/gasto", async () => {
+  it("rechaza montos no enteros o no positivos en abono/gasto", async () => {
     const user = await trackUser();
     const payment = await createPayment(user.user_id);
     const asmt = await createAssessment(user.user_id);
 
     await expect(
-      recordPurchase({
+      creditLedgerEntry({
         userId: user.user_id,
         amount: 1.5,
+        type: "welcome_bonus",
+        idempotencyKey: "welcome:x",
         paymentId: payment.paym_id,
-        stripeSessionId: "cs_x",
       }),
     ).rejects.toBeInstanceOf(InvalidCreditAmountError);
 
@@ -274,5 +279,98 @@ describe("credit ledger (integración)", () => {
         idempotencyKey: "spend:x",
       }),
     ).rejects.toBeInstanceOf(InvalidCreditAmountError);
+  });
+
+  it("renovación: restablece el saldo al plan y registra lo vencido", async () => {
+    const user = await trackUser(130);
+    const key = `grant:in_${suffix()}`;
+
+    const result = await resetCreditsToPlan({
+      userId: user.user_id,
+      credits: 200,
+      idempotencyKey: key,
+      metadata: { plan_id: "explora" },
+    });
+
+    expect(result.created).toBe(true);
+    expect(result.expired).toBe(130);
+    expect(result.entry.cled_type).toBe("subscription_grant");
+    expect(await getCreditsBalance(user.user_id)).toBe(200);
+
+    const rows = await prisma.credit_ledger.findMany({
+      where: { cled_user_id: user.user_id },
+      orderBy: { cled_created_at: "asc" },
+    });
+    expect(rows.map((r) => [r.cled_type, r.cled_amount, r.cled_balance_after])).toEqual([
+      ["expire", -130, 0],
+      ["subscription_grant", 200, 200],
+    ]);
+  });
+
+  it("renovación sin saldo previo solo abona el plan", async () => {
+    const user = await trackUser(0);
+    const result = await resetCreditsToPlan({
+      userId: user.user_id,
+      credits: 600,
+      idempotencyKey: `grant:in_${suffix()}`,
+    });
+    expect(result.expired).toBe(0);
+    expect(await getCreditsBalance(user.user_id)).toBe(600);
+    expect(await prisma.credit_ledger.count({ where: { cled_user_id: user.user_id } })).toBe(1);
+  });
+
+  it("renovación es idempotente: repetir la misma factura no abona dos veces", async () => {
+    const user = await trackUser(50);
+    const key = `grant:in_${suffix()}`;
+    const first = await resetCreditsToPlan({ userId: user.user_id, credits: 200, idempotencyKey: key });
+    await spendCredits({
+      userId: user.user_id,
+      amount: 50,
+      assessmentId: (await createAssessment(user.user_id)).asmt_id,
+      idempotencyKey: `spend:${suffix()}`,
+    });
+    const again = await resetCreditsToPlan({ userId: user.user_id, credits: 200, idempotencyKey: key });
+
+    expect(first.created).toBe(true);
+    expect(again.created).toBe(false);
+    expect(await getCreditsBalance(user.user_id)).toBe(150);
+  });
+
+  it("renovaciones concurrentes de la misma factura abonan una sola vez", async () => {
+    const user = await trackUser(10);
+    const key = `grant:in_${suffix()}`;
+    const results = await Promise.all(
+      Array.from({ length: 5 }, () =>
+        resetCreditsToPlan({ userId: user.user_id, credits: 200, idempotencyKey: key }),
+      ),
+    );
+    expect(results.filter((r) => r.created)).toHaveLength(1);
+    expect(await getCreditsBalance(user.user_id)).toBe(200);
+  });
+
+  it("vencimiento: deja el saldo en 0 y es idempotente", async () => {
+    const user = await trackUser(120);
+    const key = `expire:sub_${suffix()}`;
+
+    const first = await expireCredits({ userId: user.user_id, idempotencyKey: key, reason: "subscription_ended" });
+    const second = await expireCredits({ userId: user.user_id, idempotencyKey: key, reason: "subscription_ended" });
+
+    expect(first.expired).toBe(120);
+    expect(second.expired).toBe(0);
+    expect(await getCreditsBalance(user.user_id)).toBe(0);
+    const rows = await prisma.credit_ledger.findMany({ where: { cled_user_id: user.user_id } });
+    expect(rows).toHaveLength(1);
+    expect(rows[0].cled_type).toBe("expire");
+  });
+
+  it("vencimiento con saldo 0 no escribe filas", async () => {
+    const user = await trackUser(0);
+    const result = await expireCredits({
+      userId: user.user_id,
+      idempotencyKey: `expire:sub_${suffix()}`,
+      reason: "subscription_ended",
+    });
+    expect(result.expired).toBe(0);
+    expect(await prisma.credit_ledger.count({ where: { cled_user_id: user.user_id } })).toBe(0);
   });
 });

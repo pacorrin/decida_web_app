@@ -4,7 +4,8 @@ import { formatCredits } from "@/lib/credits/costs";
 const TYPE_LABEL: Record<credit_ledger["cled_type"], string> = {
   purchase: "Compra",
   welcome_bonus: "Bienvenida",
-  subscription_grant: "Suscripción",
+  subscription_grant: "Renovación del plan",
+  expire: "Créditos vencidos",
   spend: "Gasto",
   refund: "Reembolso",
   adjustment: "Ajuste",
