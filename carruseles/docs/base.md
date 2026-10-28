@@ -2,7 +2,9 @@
 
 Este archivo reúne todo lo que comparten los carruseles 02 a 12 del plan de 4 semanas: índice, formato, preparación del proyecto (una sola vez) y reglas de calidad. Cada carrusel vive en su propio archivo `docs/carrusel-NN.md`. El carrusel 01 ya está generado (`content/carrusel-01.json`).
 
-**Cómo usarlo con Cursor.** Primera vez: pídele que lea este archivo y aplique la sección "Preparación del proyecto". Después, para cada carrusel: *«Lee `docs/base.md` y ejecuta el prompt de `docs/carrusel-NN.md`»*. Cada prompt trae el JSON exacto del contenido, así que no hay que transcribir texto y se evitan errores de ortografía. El pie de foto es para pegarlo en Instagram, no para Cursor.
+**Cómo usarlo con Cursor.** Primera vez: pídele que lea este archivo y aplique la sección "Preparación del proyecto". Después, para cada carrusel: *«Lee `docs/base.md`, `docs/diseno.md` y ejecuta el prompt de `docs/carrusel-NN.md`»*. Cada prompt trae el JSON exacto del contenido, así que no hay que transcribir texto y se evitan errores de ortografía. El pie de foto es para pegarlo en Instagram, no para Cursor.
+
+**Diseño.** Cada carrusel tiene identidad propia (`builds/carrusel-NN.js` + `template/carrusel-NN.css`). La referencia visual acumulada está en [diseno.md](diseno.md) — léela antes de armar el siguiente para no repetir fondo, textura ni layout.
 
 ## Índice
 

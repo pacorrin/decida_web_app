@@ -8,6 +8,7 @@
     "build": "node builds/carrusel-01.js carrusel-01",
     "build:01": "node builds/carrusel-01.js carrusel-01",
     "build:02": "node builds/carrusel-02.js",
+    "build:03": "node builds/carrusel-03.js",
     "postinstall": "npx playwright install chromium"
   },
   "dependencies": {

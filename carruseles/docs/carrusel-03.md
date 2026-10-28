@@ -1,11 +1,14 @@
 # Carrusel 03: ¿Cuánto necesitas ahorrar antes de renunciar? La cuenta real
 
-> Antes de generarlo, lee [base.md](base.md) (preparación del proyecto y reglas de calidad).
+> Antes de generarlo, lee [base.md](base.md) (preparación del proyecto y reglas de calidad).  
+> Identidad visual final documentada en [diseno.md](diseno.md) → sección **Carrusel 03 — Cuenta clara**.
 
 - **ID:** `carrusel-03`
+- **Identidad:** Cuenta clara (cielo + puntos coral + número de paso gigante)
 - **Pilar:** P3 Dejar el trabajo / ingresos extra · **Semana:** 1 · **Slides:** 8 · **Formato:** 4:5 (1080x1350)
 - **Objetivo:** Dar una fórmula concreta y guardable para calcular el colchón antes de dar el salto.
 - **Tipos nuevos que usa:** `calc` (definidos en [base.md](base.md))
+- **Build:** `pnpm build:03` → `builds/carrusel-03.js` + `template/carrusel-03.css`
 
 ## Prompt para Cursor
 
