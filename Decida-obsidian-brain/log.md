@@ -530,3 +530,11 @@ A partir del costo de la investigación web (~$0.25–0.40 USD por análisis) se
 ## [2026-10-22] decision | Créditos: precios y reglas cerradas
 
 Se cerró el modelo: 1 crédito = $59 MXN, paquetes 1/3/10, análisis básico 0.5 y con investigación 1.5 créditos, sin caducidad, costo techo $0.30 USD por reporte con investigación, beta sin suscriptores (suscripción detrás de flag, fase 2 opcional). Se documentó la especificación en `wiki/decisiones/modelo-de-creditos-hibrido.md` y el prompt para Cursor en `wiki/decisiones/prompt-cursor-creditos.md`.
+
+## [2026-10-27] lint | Auditoría de implementación del sistema de créditos (Fases 1 a 4) y sincronización del wiki
+
+Se verificó el estado del código en `main` contra `wiki/decisiones/modelo-de-creditos-hibrido.md` y `wiki/decisiones/prompt-cursor-creditos.md`:
+- **Las Fases 1 a 4 ya están implementadas y commiteadas en `main`** (`02fc586` Fase 1 libro mayor; `567c4a1` Fase 2 Stripe Checkout y `/cuenta/creditos`; `a6bb2dd` Fase 3 cobro al generar, interruptor de investigación, reembolsos y desbloqueo; `dba140f` Fase 4 landing, legales, `SUBSCRIPTIONS_ENABLED="false"` y eventos de PostHog).
+- **Pruebas y tipos**: `npx tsc --noEmit` limpio y **40 archivos / 292 tests en verde** en Vitest.
+- **Verificación en navegador**: landing (`/#precio`, `/#faq`) y `/terminos` muestran los paquetes de 1/3/10 créditos, la vista previa gratuita sin investigación y la política de reembolso en créditos. Hallazgo visual menor anotado: en la tarjeta de «1 crédito ($59 MXN)» de la landing aparece «1 créditos» y «O 0 con investigación (1.5 c/u)» (`Math.floor(100 / 150)`). Además, los specs E2E de Playwright (`e2e/subscription-flow.spec.ts` y `e2e/multi-idea-history.spec.ts`) aún esperan las rutas y textos del modelo de suscripción anterior.
+- **Páginas actualizadas**: `wiki/decisiones/modelo-de-creditos-hibrido.md`, `wiki/decisiones/evolucion-del-producto.md` (#14), `wiki/producto/pricing-y-gtm.md`, `wiki/arquitectura/modelo-de-datos.md`, `wiki/arquitectura/pagos-con-stripe.md`, `wiki/arquitectura/manejo-de-errores-y-reembolsos.md`, `wiki/arquitectura/dashboard-de-cuenta.md`, `wiki/experiencia/reporte-de-resultado.md`, `wiki/experiencia/flujo-de-onboarding.md`, `wiki/overview.md` e `index.md`.

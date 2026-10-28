@@ -1,7 +1,7 @@
 ---
 type: arquitectura
 tags: [decida, errores, reembolsos, confiabilidad]
-updated: 2026-09-07
+updated: 2026-10-27
 ---
 
 # Manejo de errores y reembolsos
@@ -34,7 +34,15 @@ started → paid → in_progress → report_generated ✓
 
 > Nota de coherencia con [[../producto/pricing-y-gtm]]: este proceso de reembolso está documentado para un **pago real único** vía proveedor, pero el paso de pago en producción hoy es **simulado**. Con el cambio a suscripción (2026-09-07, ver abajo) este proceso **queda obsoleto**: ya no habrá reembolsos.
 
-## Cambio a suscripción (2026-09-07) — cancelación, sin reembolsos
+## Reembolsos automáticos en el modelo de créditos (vigente desde 2026-10-22)
+
+Con el [[../decisiones/modelo-de-creditos-hibrido|sistema de créditos]] (`a6bb2dd`), los reembolsos ante fallos técnicos ya no son manuales en dinero, sino **automáticos e idempotentes en el libro mayor de créditos (`credit_ledger`)**:
+
+1. **Fallo total del reporte (`refundFailedReport` en `src/lib/credits/charge.ts`):** si `generateReport` lanza error después de haber descontado créditos, `generateReportWithCredits` acredita de vuelta el total cobrado (`50` o `150` centésimos) con tipo `refund` y llave de idempotencia `refund:{asmtId}:failed`. Además, como `asmt_credits_charged_at` ya quedó marcado o si se reintenta con `retryReportGeneration`, la evaluación no vuelve a cobrarse dos veces por la misma llave `spend:{asmtId}`.
+2. **Investigación de mercado degradada (`refundDegradedResearch`):** si el usuario pagó 1.5 créditos (`150`) con el interruptor de investigación encendido, pero la etapa de búsqueda web termina con `arep_research.status === "failed"` o `"skipped"`, el reporte sí se entrega (sin ficha externa) y se reembolsa automáticamente la diferencia de **1.0 crédito (`100` centésimos)** con llave `refund:{asmtId}:research`.
+3. **Reembolso de un cargo en Stripe (`handleStripeChargeRefunded` en `src/lib/credits/refund-stripe.ts`):** si se reembolsa un pago en el Dashboard de Stripe (evento `charge.refunded`), el webhook registra un `adjustment` negativo por los créditos de ese paquete hasta el saldo disponible del usuario (nunca deja `user_credits_balance < 0`) y deja un `console.warn` para revisión manual.
+
+## Cambio a suscripción (2026-09-07, reemplazado por créditos el 2026-10-22) — cancelación, sin reembolsos
 
 El [[../producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)|modelo de cobro pasó a suscripción mensual + freemium]]. Decisión del usuario sobre esta capa:
 

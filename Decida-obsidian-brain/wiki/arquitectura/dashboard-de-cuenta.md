@@ -1,7 +1,7 @@
 ---
 type: arquitectura
 tags: [decida, dashboard, ui, usuarios]
-updated: 2026-08-05
+updated: 2026-10-27
 ---
 
 # Dashboard de cuenta — navbar, sidebar y rutas
@@ -41,11 +41,15 @@ Layout estándar confirmado con el usuario antes de construir (su mensaje origin
 
 ## Sidebar (`src/components/account/dashboard-sidebar.tsx`)
 
-Un solo ítem hoy, a propósito: **"Análisis realizados"** → `/cuenta`, marcado activo también cuando la ruta empieza con `/cuenta/evaluaciones` (el detalle de un análisis es conceptualmente parte de la misma sección). Construido como lista de `NAV_ITEMS` para que agregar más opciones en el futuro sea trivial. Oculto en mobile (`hidden sm:block`) — con un solo ítem que además coincide con la página raíz del panel, no hay pérdida de funcionalidad en pantallas chicas.
+Tiene dos ítems (`NAV_ITEMS`, actualizado el 2026-10-22 en `567c4a1`):
+1. **"Análisis realizados"** → `/cuenta` (activo también en `/cuenta/evaluaciones/[id]`).
+2. **"Créditos"** → `/cuenta/creditos` (activo en `/cuenta/creditos` y `/cuenta/creditos/paquetes`), donde la persona consulta su saldo en formato decimal (`formatCredits`), su historial de movimientos (`CreditLedgerList`) y compra paquetes.
+
+Oculto en mobile (`hidden sm:block`); en el navbar (`dashboard-navbar.tsx`) también se enlaza a Créditos y Perfil.
 
 ## Página de perfil (`(dashboard)/perfil/page.tsx`)
 
-Nueva, mínima a propósito (el usuario pidió "algo básico" para no dejar el link del dropdown roto): tarjeta de solo lectura con nombre, correo y teléfono de la cuenta. Sin edición todavía — eso queda abierto para cuando se decida qué more debe vivir ahí.
+Tarjeta de solo lectura con nombre, correo y teléfono de la cuenta, más una tarjeta **"Créditos"** con el saldo actual y botón «Ver créditos y comprar» (`/cuenta/creditos`). El bloque de **"Suscripción"** solo se renderiza si `isSubscriptionsEnabled()` (`SUBSCRIPTIONS_ENABLED="true"`). Sin edición de datos personales todavía.
 
 ## Nuevo primitivo de UI: `dropdown-menu.tsx`
 

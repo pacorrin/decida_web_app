@@ -1,8 +1,8 @@
 ---
 type: decision-log
 tags: [decida, pricing, creditos, stripe, costos, especificacion]
-updated: 2026-10-22
-status: decidido (precios y reglas cerradas el 2026-10-22); pendiente de implementar
+updated: 2026-10-27
+status: implementado en main (fases 1 a 4, commits 02fc586..dba140f); fase 5 (suscripción que otorga créditos) fuera de alcance por ahora
 ---
 
 # Modelo de créditos (especificación para implementar)
@@ -103,14 +103,15 @@ Con investigación (1.5 créditos): ingreso $88.5 (compra suelta) o ~$60 (paquet
 - Medir: eventos de PostHog (`credits_purchased`, `credits_spent`, `credits_insufficient`, `research_toggled`) para ver conversión y qué nivel eligen.
 - Migraciones con `prisma migrate` (la base local tiene desfase: usar `db:push` en desarrollo, ver AGENTS.md).
 
-## 8. Fases sugeridas
-1. Libro de créditos + tablas + pruebas (sin UI).
-2. Compra con Stripe Checkout (paquetes) + webhook + saldo en la cuenta.
-3. Cobro al generar + interruptor de investigación + reembolsos.
-4. Landing, textos legales, retiro visual de la suscripción, eventos de analítica.
-5. (Opcional) Suscripción que otorga créditos.
+## 8. Fases sugeridas (implementadas 2026-10-22)
+1. ✅ **Fase 1 (`02fc586`):** Libro de créditos + tablas (`credit_ledger`, `users.user_credits_balance`, `assessments.asmt_research_enabled`/`asmt_credit_cost`/`asmt_credits_charged_at`, migración `20261023000000_credit_ledger`) + `src/lib/credits/{packages,costs,ledger}.ts` + pruebas del libro (compra, gasto, reembolso, idempotencia, saldo insuficiente, concurrencia con `SELECT ... FOR UPDATE`).
+2. ✅ **Fase 2 (`567c4a1`):** Compra con Stripe Checkout (`mode: "payment"`) + modo simulado sin `STRIPE_SECRET_KEY` + webhook (`checkout.session.completed`, `checkout.session.async_payment_succeeded`, `charge.refunded`) + retorno robusto + saldo e historial en `/cuenta/creditos` + pantalla de paquetes `/cuenta/creditos/paquetes`.
+3. ✅ **Fase 3 (`a6bb2dd`):** Cobro al generar (`generateReportWithCredits` / `planAndChargeForReport`) + interruptor «Investigación de mercado» en `/analizar/evaluacion` + reembolsos por fallo total (`refund:{asmtId}:failed`) y por investigación degradada (`refund:{asmtId}:research`, 1.0 crédito) + desbloqueo de preview con 0.5 (`unlockReportBasic`, sin regenerar) o 1.5 (`unlockReportWithResearch`, regenera con investigación).
+4. ✅ **Fase 4 (`dba140f`):** Landing (`pricing-section.tsx`, `landing-content.ts`), textos legales (`/terminos`, `/privacidad`), retiro visual de la suscripción detrás de `SUBSCRIPTIONS_ENABLED="false"` (`src/lib/subscription/flag.ts`), eventos de PostHog (`credits_purchased`, `credits_spent`, `credits_insufficient`, `research_toggled`), `.env.example` actualizado.
+5. ⏸️ **(Opcional, fuera por ahora):** Suscripción que otorga créditos (`subscription_grant`).
 
-## 9. Pendiente de confirmar con el dueño
-- Gate freemium definitivo (punto 8 de §4) y si el primer análisis gratis incluye investigación (por defecto: no).
-- Precio real de `web_search` (la tarifa de $0.03 es conservadora).
-- Si «reintento tras fallo» tiene un tope (por defecto: 3).
+## 9. Decisiones de implementación cerradas y puntos abiertos
+- ✅ **Gate freemium definitivo (punto 8 de §4):** el acceso completo ya no mira `hasFullAccess(user)` sino `hasReportAccess(assessment)` (`asmt_credits_charged_at != null` en `src/lib/credits/access.ts`). La primera evaluación de una cuenta que no ha sido cobrada entra en modo `free_preview` (`isFreePreviewAssessment` en `src/lib/credits/charge.ts`): se genera con `forceNoResearch: true` (sin gastar $0.24 USD de búsqueda web) y se muestra con secciones bloqueadas en `result-report.tsx`. Desde el reporte recortado se ofrecen dos botones (`UnlockReportButtons`): **Desbloquear (0.5 créditos)** (`unlockReportBasic`, cobra 50 centésimos y quita el candado sin regenerar) o **Con investigación (1.5 créditos)** (`unlockReportWithResearch`, cobra 150 —o la diferencia de 100 si ya había pagado 50— y regenera con investigación web). Para iniciar una segunda evaluación (`decideAssessmentStart` en `src/lib/subscription/limits.ts`), se exige `creditsBalance >= 50` (0.5 créditos); si no alcanza, redirige a `/cuenta/creditos/paquetes?limite=1`.
+- ⚠️ **Detalle visual menor en landing (`pricing-section.tsx`):** la tarjeta de 1 crédito calcula `Math.floor(100 / 150) = 0` y muestra «O 0 con investigación (1.5 c/u)» y «1 créditos». Conviene ajustar el copy para el paquete de 1 crédito.
+- ⚠️ **Specs E2E de Playwright (`e2e/subscription-flow.spec.ts`, `e2e/multi-idea-history.spec.ts`):** siguen esperando las rutas y textos del modelo de suscripción (`/cuenta/suscripcion?limite=1`, «Desbloquear con la suscripción», `subscribe-submit`); hay que actualizarlos al flujo de créditos o correrlos con `SUBSCRIPTIONS_ENABLED=true`.
+- Pendiente de negocio: confirmar precio real de `web_search` en factura de OpenAI y si «reintento tras fallo» requiere tope numérico en base de datos.

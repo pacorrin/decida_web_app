@@ -1,7 +1,7 @@
 ---
 type: arquitectura
 tags: [decida, datos, prisma]
-updated: 2026-08-05
+updated: 2026-10-27
 ---
 
 # Modelo de datos
@@ -32,8 +32,14 @@ Todas las tablas usan **prefijos de 4 letras** por entidad en snake_case (`asmt_
 | `history_sessions` | `hses_` | — | Sesiones de acceso a `/mis-evaluaciones` por email (mecanismo passwordless, ver [[historial-de-evaluaciones]]) |
 | `users` | `user_` | 1:N con `assessments` (`asmt_user_id`) | Cuenta con email + contraseña. Agregada 2026-08-05, Sprint 1 — ver [[modulo-de-usuarios-y-autenticacion]] |
 | `user_sessions` | `usess_` | — | Sesión de cuenta autenticada (cookie httpOnly + token), agregada junto con `users` |
+| `credit_ledger` | `cled_` | N:1 opcional con `assessments` (`cled_asmt_id`) y `payments` (`cled_payment_id`) | Libro mayor inmutable de créditos (en centésimos: `100` = 1 crédito). Agregada el 2026-10-22 (`20261023000000_credit_ledger`) — ver [[../decisiones/modelo-de-creditos-hibrido]] |
 
-> Suscripción en `users` (S3-07, 2026-10-14): `user_subscription_status` (none/active/canceled/past_due), `user_subscription_period_end` y `user_subscription_canceled_at`. Cancelar solo cambia el estado y la fecha de cancelación; el acceso completo llega hasta `period_end` (ver [[manejo-de-errores-y-reembolsos]]).
+> **Sistema de créditos (2026-10-22, commits `02fc586`..`dba140f`):**
+> - `credit_ledger`: fuente de verdad append-only (`cled_type` enum `credit_ledger_type`: `purchase`, `welcome_bonus`, `subscription_grant`, `spend`, `refund`, `adjustment`; `cled_amount` con signo en centésimos; `cled_balance_after` ≥ 0; `cled_idempotency_key` UNIQUE).
+> - `users.user_credits_balance Int @default(0)`: caché del saldo actualizada en la misma transacción con bloqueo `SELECT ... FOR UPDATE`.
+> - `assessments`: `asmt_research_enabled Boolean @default(true)`, `asmt_credit_cost Int?`, `asmt_credits_charged_at DateTime?`. Una evaluación se cobra una sola vez y `asmt_credits_charged_at != null` desbloquea el reporte completo (`hasReportAccess`).
+>
+> Suscripción en `users` (S3-07, 2026-10-14; oculta por defecto tras `SUBSCRIPTIONS_ENABLED="false"` desde 2026-10-22): `user_subscription_status` (none/active/canceled/past_due), `user_subscription_period_end` y `user_subscription_canceled_at`. Cancelar solo cambia el estado y la fecha de cancelación; el acceso completo llega hasta `period_end` (ver [[manejo-de-errores-y-reembolsos]]).
 >
 > S3-06 (2026-10-14): suscribirse (simulado) escribe en `users`: `status=active`, `plan=monthly`, `period_end` = ahora + 1 mes, `canceled_at=null`, `provider=simulated`, `provider_id=sim_<user>_<ts>`, y crea una fila en `payments` (`paym_provider=simulated`, $99 MXN) ligada a la cuenta (`paym_user_id`) y, si se suscribió desde el onboarding, a esa evaluación. Ya no se toca `asmt_status`/`asmt_payment_status` al suscribirse; el flujo no depende de ellos. Cambio de schema posterior (2026-10-14): `paym_asmt_id` pasó a opcional y se agregó `paym_user_id`, para suscribirse desde `/cuenta/suscripcion` sin evaluación.
 
@@ -51,6 +57,7 @@ Esto coincide casi 1:1 con las "Core Entities" que Notion proponía como alterna
 - `final_recommendation`: `proceed_small_test` · `validate_first` · `adjust_idea` · `pause_for_now`
 - `verification_method`: `email` (único método soportado hoy)
 - `verification_purpose`: `history_access` · `signup_verification` · `password_reset` (extendido 2026-08-05 — originalmente solo tenía `history_access`, "diseñado para extenderse" resultó cierto en la práctica, ver [[modulo-de-usuarios-y-autenticacion]])
+- `credit_ledger_type`: `purchase` · `welcome_bonus` · `subscription_grant` · `spend` · `refund` · `adjustment` (agregado 2026-10-22 para el libro mayor de créditos)
 
 ## Campos nuevos no documentados en Notion
 `asmt_name`, `asmt_phone` — agregados vía `git log` (`Modified Prisma schema to include optional fields for assessments`) y confirmados como necesarios por `AGENTS.md` (la migración committeada estaba desincronizada y le faltaban estos campos). Corresponden al paso `contacto` del [[../experiencia/flujo-de-onboarding|flujo real]], que tampoco existía en el diseño Notion original.

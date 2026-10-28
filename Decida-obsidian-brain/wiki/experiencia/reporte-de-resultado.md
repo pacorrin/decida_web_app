@@ -1,7 +1,7 @@
 ---
 type: experiencia
 tags: [decida, reporte, output]
-updated: 2026-09-07
+updated: 2026-10-27
 ---
 
 # Reporte de resultado
@@ -67,7 +67,16 @@ El usuario reportó que la sección **Fortalezas** casi siempre mostraba un solo
 
 > Los 33 reportes viejos se dejaron como están: son datos de prueba locales (el producto no ha lanzado, no hay clientes reales) y la forma nueva no se puede sintetizar desde los strings guardados. El renderer los muestra sin romperse.
 
-## Vista freemium (recortada) — decidida 2026-09-07
+## Vista previa gratuita y desbloqueo por créditos (vigente desde 2026-10-22)
+
+Con el cambio al [[../decisiones/modelo-de-creditos-hibrido|sistema de créditos]], el gate del reporte pasó de mirar la cuenta (`hasFullAccess(user)`) a mirar **cada evaluación** (`hasReportAccess(assessment)` = `asmt_credits_charged_at != null` en `src/lib/credits/access.ts`):
+
+- **Primera evaluación (vista previa gratuita)**: se genera sin cobro y **sin investigación de mercado** (`forceNoResearch: true` en `buildReportData`, para no incurrir en el costo de ~$0.24 USD de búsqueda web). En `result-report.tsx` se muestra una leyenda superior explicando que es una prueba sin investigación externa y se recortan las secciones de análisis financiero detallado, cómo reducir cada riesgo, alertas numéricas, compatibilidad personal, tiempo y operación, escalabilidad, semanas 2–4 del plan de validación y recomendación final.
+- **Dos opciones de desbloqueo (`UnlockReportButtons`)**:
+  1. **Desbloquear (0.5 créditos)** (`unlockReportBasic`): cobra 50 centésimos (`spend:{asmtId}`), marca `asmt_credits_charged_at` y descubre de inmediato el reporte completo que ya estaba guardado en `assessment_reports` (sin regenerar).
+  2. **Con investigación (1.5 créditos)** (`unlockReportWithResearch`): cobra 150 centésimos (o la diferencia de 100 centésimos con llave `spend:{asmtId}:research_upgrade` si ya había desbloqueado el básico), activa `asmt_research_enabled = true` y regenera el reporte corriendo la etapa de investigación web y la sección «Fuentes y límites» (`ReportSources`).
+
+## Vista freemium (recortada) — diseño original de suscripción (2026-09-07)
 
 Con el cambio a **modelo de suscripción + freemium** ([[../producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)]]), el reporte tiene ahora **dos vistas sobre el mismo dato**:
 

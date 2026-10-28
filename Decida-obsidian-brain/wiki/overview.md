@@ -1,7 +1,7 @@
 ---
 type: overview
 tags: [decida, hub]
-updated: 2026-09-07
+updated: 2026-10-27
 ---
 
 # Decida — Overview
@@ -67,7 +67,7 @@ Salida siempre es una de 4: **Proceed small test / Validate first / Adjust idea 
 
 - No existen minutas de reuniones de Decida en Notion todavía — ver [[reuniones/minutas]].
 - No hay evidencia de clientes reales, testimonios o métricas de validación registradas en ninguna fuente (ni Notion ni código) — `PRODUCT.md` lo marca explícitamente como "no fabricar".
-- El pago en producción es simulado (beta). **Modelo de cobro decidido el 2026-09-07: suscripción + freemium** ($99 el nivel más barato). Las pantallas de pago + el gating freemium/suscriptor entran al Sprint 3; el cobro recurrente real (Stripe / Mercado Pago) sigue en el Sprint 5 — ver [[producto/pricing-y-gtm#Modelo de cobro decidido (2026-09-07)]] y [[decisiones/plan-lanzamiento-60-90-dias#Sprint 3 — Modelo de suscripción y freemium (pantallas de pago)]].
+- **Modelo de cobro vigente (2026-10-22): paquetes de créditos sin caducidad + vista previa gratuita** (1 crédito = $59 MXN, 3 = $149, 10 = $399; análisis básico 0.5 créditos y con investigación de mercado 1.5 créditos). Ya implementado en `main` con Stripe Checkout (`mode: "payment"`) y modo simulado sin claves (`02fc586`..`dba140f`, 292 tests en Vitest). La suscripción de $99/mes quedó apagada detrás de `SUBSCRIPTIONS_ENABLED="false"`. Ver [[decisiones/modelo-de-creditos-hibrido]] y [[producto/pricing-y-gtm]].
 - ~~El score de "Nivel de riesgo" está roto en producción~~ — ✅ resuelto (commit `43d1112` + cruce inversión-vs-capital y red flags determinísticas del 2026-08-27). Ver [[framework/scoring-engine]].
 - `/mis-evaluaciones` fue reemplazado por `/cuenta` (commit `43d1112`) — la migración del sistema passwordless viejo ya no es un gap abierto.
 - **Retención sin diseñar (2026-10-16)**: el reporte entrega un plan de 4 semanas solo de lectura; no hay seguimiento, recordatorios ni registro de resultados. Ver [[producto/retencion-y-plan-de-ejecucion]].

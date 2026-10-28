@@ -1,7 +1,7 @@
 ---
 type: experiencia
 tags: [decida, onboarding, ux]
-updated: 2026-09-07
+updated: 2026-10-27
 ---
 
 # Flujo de onboarding — diseño vs implementado
@@ -97,11 +97,13 @@ El blend es exacto para la utilidad bruta mensual (= Σ (precio−costo)·unidad
 ### Verificado end-to-end (2026-08-28)
 Con un assessment real (cookie sembrada, sin pasar por el contacto roto de los e2e): el paso renderiza, guarda 2 productos, el blend en BD queda correcto (precio $900, costo $206.67, 30 uds. para el ejemplo probado), `evaluacion` ya no tiene los 3 campos, el guard no deja saltar a `resultado`, y el reporte final muestra la tabla de productos + el margen −7% en rojo + la red flag de venta bajo costo. `tsc`, `eslint` y `vitest` (19 tests, +5 de `products.ts`) limpios.
 
-## El paso «evaluacion» — dependencias del negocio (2026-08-28)
+## El paso «evaluacion» — dependencias del negocio (2026-08-28) e interruptor de investigación (2026-10-22)
 
 Al `FieldSet` "Mercado y riesgos" del paso `evaluacion` se le agregó un grid de checkboxes "¿De qué depende tu negocio para funcionar?" (`BUSINESS_DEPENDENCY_OPTIONS`): 6 dependencias + "ninguna" (proveedor único · 1-2 clientes = mayoría de ingresos · plataforma externa · permiso/licencia/regulación · ubicación física específica · inventario perecedero). Va después de "¿cómo conseguirías tus primeros clientes?".
 
 `saveEvaluation` lo persiste en `mrsk_business_dependencies` (JSON, columna que ya existía sin usarse). Alimenta la dimensión 4 (Riesgo): penalización ponderada al `riskScore` (plataforma/permiso +6, resto +3, tope +16) y 3 red flags determinísticas (`detectDependencyRedFlags()` en `src/lib/scoring/types.ts`). Detalle del scoring en [[../framework/scoring-engine#Penalizaciones al riskScore (alto = más riesgo)]]. Verificado end-to-end (grid renderiza, se guarda como array, las 3 red flags aparecen en el reporte). +9 tests.
+
+**Interruptor «Incluir investigación de mercado» (2026-10-22, `a6bb2dd`):** al final de `evaluation-form.tsx` se agregó un `FieldSet` con el checkbox `researchEnabled` (`data-testid="research-toggle"`, encendido por defecto según `assessment.asmt_research_enabled !== false`). Explica el costo (1.5 créditos con investigación · 0.5 sin ella) y que la prueba gratuita no incluye investigación. `saveEvaluation` guarda `asmt_research_enabled`, emite `research_toggled` a PostHog y llama a `generateReportWithCredits`. Si es una evaluación de pago y el saldo no alcanza, redirige a `/cuenta/creditos/paquetes?saldo=1` conservando todas las respuestas capturadas.
 
 ## Paso "ajuste" — no existía en el diseño original
 `ajuste` (fase diagnóstico, ~3 min) no tiene equivalente directo en los 12 pasos de Notion. Por el nombre ("Ajuste personal") probablemente corresponde a lo que Notion llamaba "Personal Work Fit" (Step 4) — pero movido de antes-del-pago a después-del-pago, y separado de "perfil" como su propio paso. A verificar leyendo `src/app/analizar/ajuste/page.tsx` en una próxima sesión si se necesita el detalle exacto de qué preguntas contiene hoy.

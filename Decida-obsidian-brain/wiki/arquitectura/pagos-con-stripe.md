@@ -1,14 +1,26 @@
 ---
 type: arquitectura
 tags: [decida, pagos, stripe, suscripcion]
-updated: 2026-10-16
+updated: 2026-10-27
 ---
 
 # Pagos con Stripe
 
-Fuentes: `src/lib/stripe/`, `src/lib/subscription/` (`start.ts`, `stripe-checkout.ts`, `stripe-sync.ts`, `stripe-webhook.ts`, `stripe-mapping.ts`, `checkout-return.ts`), `src/app/api/stripe/webhook/route.ts`. Reglas de negocio en [[../producto/pricing-y-gtm]].
+Fuentes: `src/lib/stripe/`, `src/lib/credits/` (`checkout.ts`, `fulfill.ts`, `purchase.ts`, `checkout-return.ts`, `refund-stripe.ts`), `src/lib/subscription/` (`start.ts`, `stripe-checkout.ts`, `stripe-sync.ts`, `stripe-webhook.ts`, `stripe-mapping.ts`, `checkout-return.ts`), `src/app/api/stripe/webhook/route.ts`. Reglas de negocio en [[../producto/pricing-y-gtm]] y [[../decisiones/modelo-de-creditos-hibrido]].
 
-La suscripción de **$99 MXN/mes** se cobra con **Stripe Checkout alojado**. Si no hay `STRIPE_SECRET_KEY`, la app sigue con la suscripción **simulada** (desarrollo local y e2e). Con la clave puesta, el banner «Modo beta — pago simulado» desaparece.
+Desde el 2026-10-22 (`567c4a1`, `dba140f`), el cobro principal es la **compra de paquetes de créditos (1 = $59, 3 = $149, 10 = $399 MXN)** mediante **Stripe Checkout `mode: "payment"`**. Si no hay `STRIPE_SECRET_KEY`, `startCreditPurchase` acredita el paquete en modo simulado de inmediato. La suscripción de **$99 MXN/mes** (`mode: "subscription"`) sigue en el código pero apagada por defecto detrás de `SUBSCRIPTIONS_ENABLED="false"`.
+
+## Compra de paquetes de créditos (`mode: "payment"`, vigente)
+
+1. «Comprar X créditos» en `/cuenta/creditos/paquetes` llama a `startCreditPurchase(user, packageId)` (`src/lib/credits/purchase.ts`).
+2. Con Stripe: reutiliza/crea el Customer (`ensureStripeCustomer` en `src/lib/stripe/customer.ts`) y abre una Checkout Session `mode: "payment"` en MXN. Usa `STRIPE_PRICE_CREDITS_1` / `STRIPE_PRICE_CREDITS_3` / `STRIPE_PRICE_CREDITS_10` si existen en variables de entorno; si no, genera `price_data` en línea con los montos de `CREDIT_PACKAGES`. Lleva `client_reference_id = user.user_id` y `metadata: { user_id, package_id, credits }`.
+3. `success_url` = `/cuenta/creditos/paquetes?checkout=success&session_id={CHECKOUT_SESSION_ID}`; `cancel_url` = `/cuenta/creditos/paquetes?checkout=cancelled`.
+4. **Retorno y webhook idempotentes (`fulfillCreditCheckoutSession` en `src/lib/credits/fulfill.ts`):** tanto al volver con `session_id` como en los eventos `checkout.session.completed` y `checkout.session.async_payment_succeeded`, se inserta/recupera la fila en `payments` (`paym_provider_payment_id = payment_intent ?? session.id`) y se ejecuta `recordPurchase` con llave única `purchase:{sessionId}` en `credit_ledger`. Emite `credits_purchased` a PostHog solo cuando `result.created === true`.
+5. **Reembolsos en Stripe (`charge.refunded`, `src/lib/credits/refund-stripe.ts`):** busca el pago y el movimiento `purchase` asociado y registra un `adjustment` negativo por `adjustCredits` (con llave `adjustment:charge_refunded:{charge.id}`), acotado al saldo disponible para nunca dejar saldo negativo, y emite un `console.warn` para revisión manual.
+
+## Suscripción mensual ($99 MXN/mes, detrás de `SUBSCRIPTIONS_ENABLED`)
+
+La suscripción de **$99 MXN/mes** se cobra con **Stripe Checkout alojado** cuando `SUBSCRIPTIONS_ENABLED="true"`. Si no hay `STRIPE_SECRET_KEY`, la app sigue con la suscripción **simulada** (desarrollo local y e2e). Con la clave puesta, el banner «Modo beta — pago simulado» desaparece.
 
 ## Flujo
 

@@ -1,7 +1,7 @@
 ---
 type: decision-log
 tags: [decida, decisiones, evolucion]
-updated: 2026-09-07
+updated: 2026-10-27
 ---
 
 # Evolución del producto — dónde el código se separó del PRD
@@ -90,6 +90,17 @@ Mapeo completo del resto de campos del onboarding aún pendientes en [[../produc
 **Código (hoy)**: el reporte ya genera para todos un plan de validación de 4 semanas (`arep_validation_plan`, `src/lib/ai/schemas/report-sections.ts`), pero solo como texto de lectura: las tareas son strings en un `Json`, sin estado, sin recordatorios y sin registro de resultados. El freemium ve solo la semana 1.
 **Decisión / dirección del usuario (2026-10-16)**: reconoce que la retención se gana en la ejecución (seguimiento, recordatorios, pequeños logros) y no en el diagnóstico; la visión pasa de «analizador de ideas» a plataforma de ejecución y organización financiera.
 **Estado**: dirección definida, **sin alcance ni fecha**. Análisis de brecha técnica y orden sugerido en [[../producto/retencion-y-plan-de-ejecucion]].
+
+## 14. De suscripción mensual ($99/mes) a modelo de créditos sin caducidad (2026-10-22)
+**Decisión previa (2026-09-07, entrada #12)**: suscripción de $99 MXN/mes sin límite de evaluaciones y desbloqueo retroactivo por cuenta (`hasFullAccess`).
+**Motivo del cambio (2026-10-21/22)**: la etapa de investigación de mercado con búsqueda web cuesta ~$0.24 USD por reporte (techo de diseño $0.30 USD ≈ $5.6 MXN). Una suscripción de $99 MXN/mes sin límite exponía a pérdidas si una cuenta generaba varios reportes con investigación.
+**Código (implementado el 2026-10-22 en commits `02fc586`..`dba140f`)**:
+- **Paquetes de créditos (sin caducidad)**: 1 crédito ($59 MXN), 3 créditos ($149 MXN), 10 créditos ($399 MXN, destacado). Guardados en entero como centésimos (`100` = 1 crédito) en `credit_ledger` (libro mayor append-only con idempotencia única) y `users.user_credits_balance` (caché actualizada en la misma transacción con `SELECT ... FOR UPDATE`).
+- **Dos niveles de análisis**: básico sin investigación web = **0.5 créditos (`50`)** · con investigación de mercado = **1.5 créditos (`150`)**. El usuario elige con el interruptor «Incluir investigación de mercado» en `/analizar/evaluacion` (`asmt_research_enabled`).
+- **Gate por evaluación, no por cuenta**: `hasReportAccess(assessment)` revisa `asmt_credits_charged_at != null`. La primera evaluación de una cuenta es una **vista previa gratuita generada sin investigación web** (`forceNoResearch: true`). Desde el reporte recortado se puede desbloquear lo ya generado por **0.5 créditos** (`unlockReportBasic`) o regenerar con investigación por **1.5 créditos** (`unlockReportWithResearch`, o pagar la diferencia de 1.0 si ya pagó 0.5).
+- **Reembolsos automáticos en créditos**: si la generación falla tras cobrar, se reembolsa el total (`refund:{asmtId}:failed`); si se cobró investigación (1.5) pero `arep_research.status` quedó en `failed` o `skipped`, se reembolsa la diferencia de 1.0 crédito (`refund:{asmtId}:research`).
+- **Suscripción oculta tras flag**: como la beta aún no se desplegó y no hay suscriptores reales, el código de suscripción se conserva detrás de `SUBSCRIPTIONS_ENABLED="false"` (`src/lib/subscription/flag.ts`).
+**Estado**: **implementado en `main`** (Fases 1 a 4 completas, 292 tests en Vitest). Especificación completa en [[modelo-de-creditos-hibrido]].
 
 ## Patrón general observado
 En casi todos los casos, el código **construyó más resiliencia y más superficie de producto** de lo que el PRD original consideraba necesario para un MVP de validación (ver la advertencia explícita en [[../producto/prd#Riesgo estratégico]]: *"el mayor riesgo es construir demasiada funcionalidad antes de confirmar que la gente paga"*). Ninguna fuente ingerida (Notion o repo) documenta si esto respondió a feedback real de clientes pagados o fue trabajo anticipado. **Esta es la pregunta más valiosa para la primera minuta de reunión que se ingiera** — ver [[../reuniones/minutas]].
