@@ -1,0 +1,68 @@
+{
+  "id": "carrusel-02",
+  "slides": [
+    {
+      "type": "cover",
+      "etiqueta": "Si tienes mil ideas",
+      "titulo": "Tener ideas no es tu problema. [Probarlas] sí.",
+      "apoyo": "Una idea sin prueba es solo una opinión",
+      "hint": "Desliza →"
+    },
+    {
+      "type": "signal",
+      "etiqueta": "El patrón",
+      "titulo": "Imaginas, te emocionas y la idea se queda en pausa",
+      "apoyo": "Casi siempre no es falta de ideas ni de ganas, sino no saber cómo probarlas.",
+      "icon": "lightbulb",
+      "cardTone": "moss"
+    },
+    {
+      "type": "signal",
+      "etiqueta": "Traba 1",
+      "titulo": "Esperas a tenerlo todo listo",
+      "apoyo": "Mientras esperas el momento perfecto, la idea se enfría y no decides nada.",
+      "icon": "hourglass",
+      "cardTone": "sky"
+    },
+    {
+      "type": "signal",
+      "etiqueta": "Traba 2",
+      "titulo": "Crees que probar es lanzar todo el negocio",
+      "apoyo": "Probar puede ser una conversación, un cálculo o una página sencilla.",
+      "icon": "rocket",
+      "cardTone": "moss"
+    },
+    {
+      "type": "signal",
+      "etiqueta": "Traba 3",
+      "titulo": "No defines qué significaría que funciona",
+      "apoyo": "Sin un criterio claro, interpretas los resultados como más te convenga.",
+      "icon": "target",
+      "cardTone": "sky"
+    },
+    {
+      "type": "checklist",
+      "etiqueta": "Cómo empezar",
+      "titulo": "Prueba una idea en 4 pasos pequeños",
+      "items": [
+        "Escribe la idea en una sola frase",
+        "Define qué tendría que pasar para seguir",
+        "Haz una prueba barata esta semana",
+        "Decide: seguir, ajustar o descartar"
+      ],
+      "cardTone": "moss"
+    },
+    {
+      "type": "text",
+      "titulo": "No necesitas más ideas. Necesitas elegir una y [probarla].",
+      "apoyo": "Una idea probada te da datos. Una idea guardada solo te da dudas."
+    },
+    {
+      "type": "cta",
+      "titulo": "Decide con claridad",
+      "apoyo": "Guárdalo y elige hoy la idea que vas a probar primero.",
+      "boton": "¿Cuál idea vas a probar? Cuéntanos en comentarios",
+      "lema": "Tú decides, nosotros te impulsamos."
+    }
+  ]
+}

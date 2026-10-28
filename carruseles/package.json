@@ -5,7 +5,9 @@
   "description": "Generador de carruseles Instagram 4:5 para Decida (HTML/CSS → PNG)",
   "type": "commonjs",
   "scripts": {
-    "build": "node build.js",
+    "build": "node builds/carrusel-01.js carrusel-01",
+    "build:01": "node builds/carrusel-01.js carrusel-01",
+    "build:02": "node builds/carrusel-02.js",
     "postinstall": "npx playwright install chromium"
   },
   "dependencies": {

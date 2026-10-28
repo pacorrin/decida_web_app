@@ -304,3 +304,198 @@ body {
   line-height: 1.3;
   color: var(--tinta-secundaria);
 }
+
+/* —— Compare (dos tarjetas apiladas) —— */
+.slide--compare .top {
+  flex: 1;
+  min-height: 0;
+}
+
+.slide--compare .titulo {
+  max-width: 900px;
+}
+
+.compare-cards {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 900px;
+  max-width: 100%;
+}
+
+.compare-card {
+  border-radius: 28px;
+  padding: 48px;
+}
+
+.compare-card--moss {
+  background: var(--musgo-suave);
+}
+
+.compare-card--sky {
+  background: var(--cielo-tenue);
+}
+
+.compare-label {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--azul-guia);
+  margin-bottom: 16px;
+}
+
+.compare-texto {
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--verde-confianza);
+  text-wrap: pretty;
+}
+
+.compare-texto .accent {
+  color: var(--coral-accion);
+}
+
+/* —— Calc (filas + total) —— */
+.slide--calc .top {
+  flex: 1;
+  min-height: 0;
+}
+
+.slide--calc .titulo {
+  max-width: 900px;
+}
+
+.calc-block {
+  margin-top: auto;
+  width: 900px;
+  max-width: 100%;
+}
+
+.calc-card {
+  background: var(--musgo-suave);
+  border-radius: 28px;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.calc-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 22px 0;
+  border-bottom: 2px solid var(--cielo-tenue);
+}
+
+.calc-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.calc-row:first-child {
+  padding-top: 0;
+}
+
+.calc-label {
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--tinta-secundaria);
+}
+
+.calc-valor {
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--verde-confianza);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.calc-row--total .calc-label {
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--verde-confianza);
+}
+
+.calc-row--total .calc-valor {
+  font-size: 64px;
+  font-weight: 600;
+  color: var(--coral-accion);
+}
+
+.calc-nota {
+  margin-top: 24px;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--tinta-secundaria);
+}
+
+/* —— Checklist (lista con palomitas) —— */
+.slide--checklist .top {
+  flex: 1;
+  min-height: 0;
+}
+
+.slide--checklist .titulo {
+  max-width: 900px;
+}
+
+.checklist-card {
+  margin-top: auto;
+  width: 900px;
+  max-width: 100%;
+  border-radius: 28px;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.checklist-card--moss {
+  background: var(--musgo-suave);
+}
+
+.checklist-card--sky {
+  background: var(--cielo-tenue);
+}
+
+.checklist-row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.checklist-mark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid var(--verde-confianza);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.checklist-mark svg {
+  width: 32px;
+  height: 32px;
+  stroke: var(--verde-confianza);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.checklist-text {
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--verde-confianza);
+  text-wrap: pretty;
+}

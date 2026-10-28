@@ -1,21 +1,12 @@
-#!/usr/bin/env node
 "use strict";
 
 const fs = require("fs");
 const path = require("path");
 const { chromium } = require("playwright");
 
-const ROOT = __dirname;
+const ROOT = path.join(__dirname, "..");
 const WIDTH = 1080;
 const HEIGHT = 1350;
-
-const ICON_FILES = {
-  "trending-up": "trending-up.svg",
-  calculator: "calculator.svg",
-  "messages-square": "messages-square.svg",
-  shield: "shield.svg",
-  calendar: "calendar.svg",
-};
 
 function escapeHtml(text) {
   return String(text)
@@ -25,7 +16,7 @@ function escapeHtml(text) {
     .replace(/"/g, "&quot;");
 }
 
-/** Mark [word] spans as coral accent. */
+/** Mark [word] spans as accent. */
 function renderMarked(text) {
   const escaped = escapeHtml(text);
   return escaped.replace(
@@ -34,31 +25,43 @@ function renderMarked(text) {
   );
 }
 
-function resolveLogoHtml() {
+/**
+ * @param {{ theme?: "light" | "dark" }} [opts]
+ */
+function resolveLogoHtml(opts = {}) {
+  const theme = opts.theme === "dark" ? "dark" : "light";
   const svgPath = path.join(ROOT, "assets", "logo.svg");
   const pngPath = path.join(ROOT, "assets", "logo.png");
   const wordmark = `<span class="logo-wordmark">decida.mx</span>`;
 
   if (fs.existsSync(svgPath)) {
-    const svg = fs.readFileSync(svgPath, "utf8");
+    let svg = fs.readFileSync(svgPath, "utf8");
+    if (theme === "dark") {
+      // Wave was brand green — on emerald it vanishes; lift to white.
+      svg = svg
+        .replace(/fill="#0E482F"/gi, 'fill="#ffffff"')
+        .replace(/fill="#05422c"/gi, 'fill="#ffffff"');
+    }
     const mark = svg.replace(/<svg\b/, '<svg class="logo-mark" ');
-    return `<div class="logo-lockup" aria-label="decida.mx">${mark}${wordmark}</div>`;
+    return `<div class="logo-lockup logo-lockup--${theme}" aria-label="decida.mx">${mark}${wordmark}</div>`;
   }
 
   if (fs.existsSync(pngPath)) {
     const data = fs.readFileSync(pngPath).toString("base64");
-    return `<div class="logo-lockup" aria-label="decida.mx"><img class="logo-mark" src="data:image/png;base64,${data}" alt="" />${wordmark}</div>`;
+    return `<div class="logo-lockup logo-lockup--${theme}" aria-label="decida.mx"><img class="logo-mark" src="data:image/png;base64,${data}" alt="" />${wordmark}</div>`;
   }
 
-  return `<div class="logo-lockup logo-lockup--text" aria-label="decida.mx">${wordmark}</div>`;
+  return `<div class="logo-lockup logo-lockup--text logo-lockup--${theme}" aria-label="decida.mx">${wordmark}</div>`;
 }
 
-function loadIconSvg(iconName) {
-  const fileName = ICON_FILES[iconName];
-  if (!fileName) {
-    throw new Error(`Ícono desconocido: "${iconName}". Añádelo a ICON_FILES en build.js`);
-  }
-
+/**
+ * @param {string} iconName
+ * @param {number} [size]
+ * @param {{ stroke?: string }} [opts]
+ */
+function loadIconSvg(iconName, size = 120, opts = {}) {
+  const stroke = opts.stroke || "#05422c";
+  const fileName = `${iconName}.svg`;
   const candidates = [
     path.join(ROOT, "node_modules", "lucide-static", "icons", fileName),
     path.join(ROOT, "assets", "icons", fileName),
@@ -67,20 +70,21 @@ function loadIconSvg(iconName) {
   for (const candidate of candidates) {
     if (fs.existsSync(candidate)) {
       let svg = fs.readFileSync(candidate, "utf8");
-      // Normalize stroke to brand green; lucide-static uses currentColor
       svg = svg
-        .replace(/\swidth="[^"]*"/, ' width="120"')
-        .replace(/\sheight="[^"]*"/, ' height="120"')
-        .replace(/\sstroke="[^"]*"/g, ' stroke="#05422c"')
+        .replace(/\swidth="[^"]*"/, ` width="${size}"`)
+        .replace(/\sheight="[^"]*"/, ` height="${size}"`)
+        .replace(/\sstroke="[^"]*"/g, ` stroke="${stroke}"`)
         .replace(/\sstroke-width="[^"]*"/g, ' stroke-width="2"');
       if (!/stroke=/.test(svg)) {
-        svg = svg.replace("<svg", '<svg stroke="#05422c"');
+        svg = svg.replace("<svg", `<svg stroke="${stroke}"`);
       }
       return svg;
     }
   }
 
-  throw new Error(`No se encontró el SVG del ícono "${iconName}"`);
+  throw new Error(
+    `No se encontró el SVG del ícono "${iconName}" (buscado como ${fileName} en lucide-static/icons o assets/icons)`
+  );
 }
 
 function ensureFonts() {
@@ -113,7 +117,6 @@ function ensureFonts() {
       if (found) break;
     }
 
-    // Broader search under geist package
     if (!found) {
       const geistPkg = path.join(ROOT, "node_modules", "geist");
       if (fs.existsSync(geistPkg)) {
@@ -147,92 +150,13 @@ function ensureFonts() {
   }
 }
 
-function slideHtml(slide, index, total, css, logoHtml) {
-  const n = String(index + 1).padStart(2, "0");
-  let body = "";
-
-  switch (slide.type) {
-    case "cover":
-      body = `
-        <div class="slide slide--cover" data-slide="${n}">
-          <header class="cover-header">
-            <div class="logo-wrap">${logoHtml}</div>
-            <div class="cover-lead">
-              <div class="etiqueta">${escapeHtml(slide.etiqueta)}</div>
-              <h1 class="titulo">${renderMarked(slide.titulo)}</h1>
-            </div>
-          </header>
-          <section class="cover-punch">
-            <p class="apoyo">${escapeHtml(slide.apoyo)}</p>
-            <div class="hint">${escapeHtml(slide.hint || "Desliza →")}</div>
-          </section>
-        </div>`;
-      break;
-
-    case "signal": {
-      const tone = slide.cardTone === "sky" ? "sky" : "moss";
-      const icon = loadIconSvg(slide.icon);
-      body = `
-        <div class="slide slide--signal" data-slide="${n}">
-          <div class="top">
-            <div class="logo-wrap">${logoHtml}</div>
-            <div class="etiqueta">${escapeHtml(slide.etiqueta)}</div>
-            <h1 class="titulo">${renderMarked(slide.titulo)}</h1>
-          </div>
-          <div class="bottom">
-            <p class="apoyo">${escapeHtml(slide.apoyo)}</p>
-            <div class="icon-card icon-card--${tone}">${icon}</div>
-          </div>
-        </div>`;
-      break;
-    }
-
-    case "text":
-      body = `
-        <div class="slide slide--text" data-slide="${n}">
-          <div class="logo-wrap">${logoHtml}</div>
-          <div class="text-body">
-            <h1 class="titulo">${renderMarked(slide.titulo)}</h1>
-            <p class="apoyo">${escapeHtml(slide.apoyo)}</p>
-          </div>
-        </div>`;
-      break;
-
-    case "cta":
-      body = `
-        <div class="slide slide--cta" data-slide="${n}">
-          <div class="logo-wrap">${logoHtml}</div>
-          <div class="cta-lead">
-            <h1 class="titulo">${renderMarked(slide.titulo)}</h1>
-            <p class="apoyo">${escapeHtml(slide.apoyo)}</p>
-          </div>
-          <div class="cta-action">
-            <div class="cta-button">${escapeHtml(slide.boton)}</div>
-          </div>
-          <div class="footer">
-            <p class="lema">${escapeHtml(slide.lema)}</p>
-          </div>
-        </div>`;
-      break;
-
-    default:
-      throw new Error(`Tipo de slide desconocido: "${slide.type}" (slide ${n})`);
-  }
-
-  return `<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <title>Slide ${n} / ${total}</title>
-  <style>${css}</style>
-  <style>
-    .logo-mark, svg.logo-mark { height: 40px; width: auto; display: block; }
-  </style>
-</head>
-<body>
-${body}
-</body>
-</html>`;
+function loadCss(cssRelativePath) {
+  const fontsDir = path.join(ROOT, "fonts");
+  const cssRaw = fs.readFileSync(path.join(ROOT, cssRelativePath), "utf8");
+  return cssRaw.replace(
+    /url\("\.\.\/fonts\/([^"]+)"\)/g,
+    (_, file) => `url("file://${path.join(fontsDir, file)}")`
+  );
 }
 
 function clearNonPng(outDir) {
@@ -244,18 +168,37 @@ function clearNonPng(outDir) {
   }
 }
 
-async function main() {
-  const id = process.argv[2];
-  if (!id) {
-    console.error("Uso: node build.js <id-carrusel>");
-    console.error("Ejemplo: node build.js carrusel-01");
-    process.exit(1);
-  }
+function wrapDocument(body, css, title) {
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>${escapeHtml(title)}</title>
+  <style>${css}</style>
+  <style>
+    .logo-mark, svg.logo-mark { height: 40px; width: auto; display: block; }
+  </style>
+</head>
+<body>
+${body}
+</body>
+</html>`;
+}
+
+/**
+ * @param {{
+ *   id: string,
+ *   cssPath: string,
+ *   slideHtml: (slide: object, index: number, total: number, logoHtml: string) => string,
+ *   logoTheme?: "light" | "dark",
+ * }} opts
+ */
+async function renderCarousel(opts) {
+  const { id, cssPath, slideHtml, logoTheme = "light" } = opts;
 
   const contentPath = path.join(ROOT, "content", `${id}.json`);
   if (!fs.existsSync(contentPath)) {
-    console.error(`No existe content/${id}.json`);
-    process.exit(1);
+    throw new Error(`No existe content/${id}.json`);
   }
 
   ensureFonts();
@@ -263,18 +206,11 @@ async function main() {
   const content = JSON.parse(fs.readFileSync(contentPath, "utf8"));
   const slides = content.slides;
   if (!Array.isArray(slides) || slides.length === 0) {
-    console.error("El JSON debe incluir un array \"slides\" no vacío.");
-    process.exit(1);
+    throw new Error('El JSON debe incluir un array "slides" no vacío.');
   }
 
-  const fontsDir = path.join(ROOT, "fonts");
-  const cssRaw = fs.readFileSync(path.join(ROOT, "template", "slide.css"), "utf8");
-  // HTML vive en output/<id>/; reescribir urls de fuente a file:// absolutos
-  const css = cssRaw.replace(
-    /url\("\.\.\/fonts\/([^"]+)"\)/g,
-    (_, file) => `url("file://${path.join(fontsDir, file)}")`
-  );
-  const logoHtml = resolveLogoHtml();
+  const css = loadCss(cssPath);
+  const logoHtml = resolveLogoHtml({ theme: logoTheme });
   const outDir = path.join(ROOT, "output", id);
   fs.mkdirSync(outDir, { recursive: true });
   clearNonPng(outDir);
@@ -284,12 +220,12 @@ async function main() {
     viewport: { width: WIDTH, height: HEIGHT },
     deviceScaleFactor: 1,
   });
-
   const page = await context.newPage();
 
   for (let i = 0; i < slides.length; i++) {
     const n = String(i + 1).padStart(2, "0");
-    const html = slideHtml(slides[i], i, slides.length, css, logoHtml);
+    const body = slideHtml(slides[i], i, slides.length, logoHtml);
+    const html = wrapDocument(body, css, `Slide ${n} / ${slides.length}`);
 
     await page.setContent(html, { waitUntil: "load" });
     await page.evaluate(() => document.fonts.ready);
@@ -307,7 +243,6 @@ async function main() {
   await browser.close();
   clearNonPng(outDir);
 
-  // Verificar dimensiones vía cabecera IHDR del PNG
   let ok = true;
   for (let i = 0; i < slides.length; i++) {
     const n = String(i + 1).padStart(2, "0");
@@ -326,14 +261,24 @@ async function main() {
     }
   }
 
-  if (ok) {
-    console.log(`\nListo: ${slides.length} PNG a ${WIDTH}x${HEIGHT} en output/${id}/`);
-  } else {
+  if (!ok) {
     process.exit(1);
   }
+
+  console.log(`\nListo: ${slides.length} PNG a ${WIDTH}x${HEIGHT} en output/${id}/`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+module.exports = {
+  ROOT,
+  WIDTH,
+  HEIGHT,
+  escapeHtml,
+  renderMarked,
+  resolveLogoHtml,
+  loadIconSvg,
+  ensureFonts,
+  loadCss,
+  clearNonPng,
+  wrapDocument,
+  renderCarousel,
+};
