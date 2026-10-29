@@ -5,7 +5,6 @@ import { useActionState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -54,9 +53,6 @@ export function ContactForm({ assessment }: ContactFormProps) {
             required
             aria-invalid={!!state.fieldErrors?.email}
           />
-          <FieldDescription>
-            Te enviaremos tu reporte a este correo.
-          </FieldDescription>
           <FieldError errors={state.fieldErrors?.email?.map((m) => ({ message: m }))} />
         </Field>
 
@@ -71,9 +67,6 @@ export function ContactForm({ assessment }: ContactFormProps) {
             required
             aria-invalid={!!state.fieldErrors?.password}
           />
-          <FieldDescription>
-            Con esto creamos tu cuenta para guardar este diagnóstico y los que hagas después.
-          </FieldDescription>
           <FieldError errors={state.fieldErrors?.password?.map((m) => ({ message: m }))} />
         </Field>
 

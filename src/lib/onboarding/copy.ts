@@ -10,7 +10,7 @@ export const STEP_COPY: Record<OnboardingStepSlug, StepCopy> = {
   contacto: {
     title: "Empecemos con lo básico",
     subtitle:
-      "Necesitamos tus datos para enviarte tu reporte cuando esté listo.",
+      "Necesitamos tus datos para crear tu cuenta y mantener el historial de tus análisis y la actividad de tu cuenta.",
     reassurance: "Tus datos están seguros y no compartimos tu información.",
   },
   idea: {
