@@ -114,23 +114,27 @@ export async function logIn(
   const { email, password } = parsed.data;
   const user = await findUserByEmail(email);
 
-  if (!user || !user.user_email_verified_at) {
-    return {
-      success: false,
-      message: "Correo o contraseña incorrectos.",
-      values: formDataToValues(formData),
-      step: "form",
-    };
-  }
+  const invalid: AuthActionState = {
+    success: false,
+    message: "Correo o contraseña incorrectos.",
+    values: formDataToValues(formData),
+    step: "form",
+  };
+
+  if (!user) return invalid;
 
   const validPassword = await verifyPassword(password, user.user_password_hash);
-  if (!validPassword) {
-    return {
-      success: false,
-      message: "Correo o contraseña incorrectos.",
-      values: formDataToValues(formData),
-      step: "form",
-    };
+  if (!validPassword) return invalid;
+
+  // Cuenta creada pero nunca confirmada: solo con la contraseña correcta se manda
+  // un código nuevo y se lleva a la pantalla de verificación.
+  if (!user.user_email_verified_at) {
+    const sent = await sendSignupCode(user.user_email);
+    if (!sent.success) {
+      return { ...invalid, message: sent.message };
+    }
+    await setPendingVerification({ email: user.user_email, flow: "registro" });
+    redirect(VERIFICATION_PATHS.registro);
   }
 
   await createUserSession(user.user_id);

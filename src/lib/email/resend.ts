@@ -16,6 +16,12 @@ export async function sendEmail(input: {
   from?: string;
 }): Promise<void> {
   const from = input.from ?? FROM_EMAIL;
+  // `.test` es un dominio reservado que nunca recibe correo: lo usan las pruebas e2e,
+  // que leen el código directo de la base de datos.
+  if (input.to.toLowerCase().endsWith(".test")) {
+    console.log(`[email:test] Omitido (dominio .test) → ${input.to} | ${input.subject}`);
+    return;
+  }
   if (!resend) {
     if (process.env.NODE_ENV === "production") {
       throw new Error(

@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { E2E_PASSWORD } from "./db-helpers";
+import { confirmarCodigo } from "./flow";
 import { cleanupTrackedData, trackedEmail } from "./test-data";
 
 /**
@@ -108,7 +109,8 @@ test.describe("Auditoría UX del onboarding", () => {
     });
 
     await page.fill("#name", "Usuario UX");
-    await page.fill("#email", uniqueEmail());
+    const contactoEmail = uniqueEmail();
+    await page.fill("#email", contactoEmail);
     await page.fill("#phone", "5512345678");
     await page.selectOption("#country", "MX");
     await page.fill("#password", E2E_PASSWORD);
@@ -117,7 +119,7 @@ test.describe("Auditoría UX del onboarding", () => {
     metricas.push(
       await medirPaso(page, "1→2 · Contacto → Idea", async () => {
         await page.getByRole("button", { name: "Continuar" }).click();
-        await expect(page).toHaveURL(/\/analizar\/idea/, { timeout: 30_000 });
+        await confirmarCodigo(page, contactoEmail);
       })
     );
 
@@ -401,13 +403,14 @@ test.describe("Auditoría UX del onboarding", () => {
   test("confirmación y pago tienen botón Atrás", async ({ page }) => {
     await page.goto("/analizar/contacto");
     await page.fill("#name", "Navegación");
-    await page.fill("#email", uniqueEmail());
+    const email = uniqueEmail();
+    await page.fill("#email", email);
     await page.fill("#phone", "5512345678");
     await page.selectOption("#country", "MX");
     await page.fill("#password", E2E_PASSWORD);
     await page.check("#acceptedTerms");
     await page.getByRole("button", { name: "Continuar" }).click();
-    await expect(page).toHaveURL(/\/analizar\/idea/, { timeout: 30_000 });
+    await confirmarCodigo(page, email);
 
     await page.fill(
       "#description",
@@ -435,13 +438,14 @@ test.describe("Auditoría UX del onboarding", () => {
     // Reutilizamos flujo rápido hasta perfil (plan gratuito, sin suscribirse)
     await page.goto("/analizar/contacto");
     await page.fill("#name", "Back Test");
-    await page.fill("#email", uniqueEmail());
+    const email = uniqueEmail();
+    await page.fill("#email", email);
     await page.fill("#phone", "5512345678");
     await page.selectOption("#country", "MX");
     await page.fill("#password", E2E_PASSWORD);
     await page.check("#acceptedTerms");
     await page.getByRole("button", { name: "Continuar" }).click();
-    await expect(page).toHaveURL(/\/analizar\/idea/, { timeout: 30_000 });
+    await confirmarCodigo(page, email);
 
     await page.fill("#description", "Idea corta para test de navegación atrás.");
     await page.getByRole("button", { name: "Continuar" }).click();

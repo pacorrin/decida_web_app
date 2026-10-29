@@ -1,5 +1,5 @@
 import { expect, type Page } from "@playwright/test";
-import { E2E_PASSWORD } from "./db-helpers";
+import { E2E_PASSWORD, getLatestVerificationCode } from "./db-helpers";
 
 /**
  * Recorrido mínimo del onboarding (consultoría de marketing) reutilizable por
@@ -23,7 +23,19 @@ export async function selectOptionCard(
   }).toPass({ timeout: 20_000 });
 }
 
-/** Crea la cuenta en el paso de contacto (queda con sesión iniciada). */
+/**
+ * Pantalla de verificación (`/analizar/verificar`): lee el código que se guardó para
+ * el correo y lo ingresa. Al confirmar queda con sesión iniciada en `/analizar/idea`.
+ */
+export async function confirmarCodigo(page: Page, email: string): Promise<void> {
+  await expect(page).toHaveURL(/\/analizar\/verificar/, { timeout: 30_000 });
+  const code = await getLatestVerificationCode(email, "signup_verification");
+  await page.fill("#verify-code", code);
+  await page.getByRole("button", { name: "Confirmar y continuar" }).click();
+  await expect(page).toHaveURL(/\/analizar\/idea/, { timeout: 30_000 });
+}
+
+/** Crea la cuenta en el paso de contacto y confirma el código (queda con sesión iniciada). */
 export async function crearCuenta(
   page: Page,
   email: string,
@@ -38,7 +50,7 @@ export async function crearCuenta(
   await page.fill("#password", E2E_PASSWORD);
   await page.check("#acceptedTerms");
   await page.getByRole("button", { name: "Continuar" }).click();
-  await expect(page).toHaveURL(/\/analizar\/idea/, { timeout: 30_000 });
+  await confirmarCodigo(page, email);
 }
 
 /** Desde `/analizar/idea` hasta llegar a `/analizar/pago`. */

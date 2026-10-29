@@ -14,18 +14,21 @@ function getPool(): Pool {
   return pool;
 }
 
-export async function getLatestVerificationCode(email: string): Promise<string> {
+export async function getLatestVerificationCode(
+  email: string,
+  purpose: "history_access" | "signup_verification" | "password_reset" = "history_access"
+): Promise<string> {
   const normalized = email.trim().toLowerCase();
   const result = await getPool().query<{ vc_code: string }>(
     `SELECT vc_code
      FROM verification_codes
      WHERE vc_identifier = $1
        AND vc_method = 'email'
-       AND vc_purpose = 'history_access'
+       AND vc_purpose = $2
        AND vc_used_at IS NULL
      ORDER BY vc_created_at DESC
      LIMIT 1`,
-    [normalized]
+    [normalized, purpose]
   );
 
   const code = result.rows[0]?.vc_code;
