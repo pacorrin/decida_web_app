@@ -563,3 +563,7 @@ En `vendors-y-costos.md`: el correo de Hostinger está en capa gratuita con tope
 
 El respaldo de la interpretación del puntaje (razonamiento) era mudo y el de `target_market` también; ahora todos los respaldos de la IA se reportan a Sentry con la etiqueta `ai_fallback`, agrupados por función y tipo de error. Documentado en `wiki/arquitectura/seguridad-y-proteccion-de-costos.md`. Pendiente: crear la regla de alerta en Sentry.
 
+## [2026-10-29] ingest | Regla de alerta de Sentry para `ai_fallback`
+
+Se creó en Sentry (org `atino`) la regla «La IA cayó a un respaldo (ai_fallback)», id `6261497`: correo cuando aparece una incidencia nueva o que reaparece con la etiqueta `ai_fallback`. Cierra el pendiente de [[wiki/arquitectura/seguridad-y-proteccion-de-costos]].
+

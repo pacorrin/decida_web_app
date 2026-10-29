@@ -59,7 +59,9 @@ Si un modelo de OpenAI falla, el reporte **sigue con un respaldo** (interpretaci
 - **Funciones cubiertas:** `scoring_interpretation` (razonamiento, antes **sin ningún log**), `report_review`, `report_review_rewrite`, `strengths_risks`, `validation_plan`, `research` y `target_market` (antes también mudo).
 - **Agrupación:** una incidencia por función y tipo de error, no una por reporte. Un modelo dado de baja es **una sola incidencia** que se repite, y se nota de inmediato.
 - Los errores de generación que no son un respaldo conservan su etiqueta `area:report-generation`.
-- **Pendiente (lo crea quien tenga la cuenta de Sentry):** la regla de alerta que avise por correo cuando aparezca una incidencia con la etiqueta `ai_fallback`. Sin la regla, los eventos llegan a Sentry pero nadie recibe aviso.
+- **Regla de alerta creada (2026-10-29)** en Sentry (org `atino`, proyecto `javascript-nextjs`): «La IA cayó a un respaldo (ai_fallback)», id `6261497` ([abrir](https://atino.sentry.io/monitors/alerts/6261497/)). Manda **correo** (mismos destinatarios que la regla de prioridad alta: dueños de la incidencia, o miembros activos) cuando aparece una incidencia **nueva** o que **reaparece** con la etiqueta `ai_fallback`, con un mínimo de 30 minutos entre avisos.
+- **Cómo se comporta:** como las incidencias se agrupan por función y tipo de error, llega **un correo por cada tipo de problema nuevo**, no uno por reporte. Si un modelo se da de baja, el aviso llega con el primer reporte afectado y no se repite por cada uno de los siguientes.
+- **Sin DSN no hay aviso:** `SENTRY_DSN` debe estar configurado en Railway; en local sin DSN Sentry no envía nada. El envío real a Sentry no se probó en local, solo con pruebas automáticas.
 
 ## Qué sigue protegiendo poco (pendiente)
 | Riesgo | Estado |
@@ -67,7 +69,7 @@ Si un modelo de OpenAI falla, el reporte **sigue con un respaldo** (interpretaci
 | **Límite mensual de gasto y alertas en OpenAI** | Pendiente, lo hace el usuario en el panel de OpenAI antes de publicar. Es la red de seguridad final. |
 | **Límite por IP** | No existe. El freno actual es por correo (3 códigos/hora) más el captcha. Alguien con muchos correos reales sí podría crear cuentas; cada una gasta ~US$0.04 solo si además confirma el correo. |
 | **Captcha en el login y en «Reenviar código»** | No. Reenviar está limitado a 3 por hora por correo; el login con cuenta sin verificar exige la contraseña correcta. |
-| **Alerta de Sentry cuando la IA cae a su respaldo** | **Código hecho (2026-10-29)**: cada respaldo se reporta a Sentry con la etiqueta `ai_fallback`. Falta crear la **regla de alerta** en Sentry (ver [[#Aviso cuando la IA falla (Sentry)]]). |
+| **Alerta de Sentry cuando la IA cae a su respaldo** | **Código hecho (2026-10-29)**: cada respaldo se reporta a Sentry con la etiqueta `ai_fallback`. Regla de alerta ya creada en Sentry (ver [[#Aviso cuando la IA falla (Sentry)]]). |
 | **Agotar el envío de correos** | La capa gratuita de Resend permite 100 correos al día; cada registro manda 2 (código y bienvenida), así que ~50 registros al día. Ver [[vendors-y-costos#Resend]]. |
 | **Despliegue** | Correr `pnpm db:deploy` en producción **antes** de la versión nueva (la migración `vc_attempts` es obligatoria) y cargar las claves de Turnstile con el dominio de Railway en sus hostnames. |
 
