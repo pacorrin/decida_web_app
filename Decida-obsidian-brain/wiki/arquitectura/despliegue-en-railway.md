@@ -21,7 +21,7 @@ Fuentes: `package.json` (scripts), `prisma.config.ts`, [[variables-de-entorno]],
 | Base de datos | servicio `Postgres` (plantilla de Railway, PostgreSQL 18). **Sin proxy TCP público**: solo se alcanza por la red privada (`postgres.railway.internal`) |
 | App | servicio `decida-app`, conectado al repo `pacorrin/decida_web_app`, **rama `main`**; se construye con Railpack (Node y pnpm) |
 | Plan | Hobby |
-| Dominio | `decida.mx` agregado al servicio el 2026-10-29; **pendiente de DNS en Hostinger** (ver abajo) |
+| Dominio | `decida.mx`, **activo el 2026-10-29** (DNS en Hostinger, certificado válido). `www.decida.mx` no está agregado: sin certificado, da error |
 
 ## Migraciones
 Las migraciones corren **solas antes de cada despliegue**: el servicio tiene como comando de pre-despliegue `pnpm db:deploy` (`prisma migrate deploy`), que se ejecuta por la red privada contra la base de producción. Si una migración falla, el despliegue falla y la versión anterior sigue sirviendo. Primer despliegue (2026-10-29): se aplicaron las 7 migraciones, hasta `20261030000000_verification_attempts`.
@@ -47,10 +47,14 @@ Registros que pide Railway para `decida.mx` (se editan en el DNS de [[vendors-y-
 - **Tráfico:** registro en la raíz (`@`) hacia `4bkylcrn.up.railway.app`. Una raíz no admite un CNAME común sin romper el correo (MX): usar **ALIAS/ANAME** (o CNAME con aplanado) si Hostinger lo ofrece.
 - **Verificación:** TXT en `_railway-verify` con el valor `railway-verify=…` que muestra `railway domain status decida.mx --service decida-app`.
 - **No borrar** los registros MX ni los TXT existentes (correo de Decida, SPF) ni los de Resend. Solo reemplazar el registro A/AAAA/CNAME de la raíz que apunte al hosting de Hostinger.
-- Cuando el DNS propague, Railway emite el certificado solo. Estado: `railway domain status decida.mx --service decida-app --json`.
+- Hostinger convierte el CNAME de `@` en ALIAS por su cuenta. Primero hubo que **borrar el registro A** de la raíz (`2.57.91.91`, página de estacionamiento): ALIAS y A no pueden coexistir. La propagación tardó unos minutos; antes de eso la raíz no resolvía.
+- Cuando el DNS propaga, Railway emite el certificado solo. Estado: `railway domain status decida.mx --service decida-app --json`.
+
+## Verificación del 2026-10-29 (sin enviar datos)
+`https://decida.mx` responde 200 desde Railway, igual `/cuenta/registro`, `/analizar/contacto` y `/email/logo.png`; el webhook sin firma responde 400 (rechaza, como debe).
 
 ## Pendiente
-Cargar las claves (hecho el 2026-10-29: OpenAI y los `price_` de Stripe corregidos), webhook y portal de Stripe en modo real, la compra real de MX$59 con su reembolso, y el límite mensual de gasto en OpenAI. Ver [[seguridad-y-proteccion-de-costos]].
+Webhook y portal de Stripe en modo real, la compra real de MX$59 con su reembolso, y el límite mensual de gasto en OpenAI. Ver [[seguridad-y-proteccion-de-costos]].
 
 ## Ver también
 [[variables-de-entorno]] · [[vendors-y-costos]] · [[seguridad-y-proteccion-de-costos]] · [[pagos-con-stripe]] · [[stack-tecnico]]
