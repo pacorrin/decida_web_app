@@ -55,7 +55,6 @@ export function welcomeEmail(input: {
         <p style="margin: 24px 0;">
           <a href="${input.appUrl}/analizar" style="background:#05422c; color:#ffffff; text-decoration:none; padding:12px 20px; border-radius:8px; font-size:15px; display:inline-block;">Analizar mi idea</a>
         </p>
-        <p ${p}>Decida está en beta: si algo no te cuadra o tienes una sugerencia, cuéntanos desde tu cuenta o responde a este correo.</p>
         <p style="color:#3d5c50; font-size: 13px;">¿Dudas? Responde a este correo y te ayudamos.</p>
       </div>
     `,
