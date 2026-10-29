@@ -48,6 +48,7 @@ import {
 import { isAssessmentCompleted } from "@/lib/onboarding/assessment-utils";
 import { getStepBySlug } from "@/lib/onboarding/steps";
 import { getResumeStep } from "@/lib/onboarding/navigation";
+import { requireVerifiedOwner } from "@/lib/onboarding/guard";
 import { ensureAssessmentForCurrentUser } from "@/lib/onboarding/for-user";
 import { PLANS_PATH } from "@/lib/subscription/limits";
 import { hasFullAccess } from "@/lib/subscription/access";
@@ -62,9 +63,11 @@ import {
 } from "@/lib/ai/research/target-market";
 import { trackServer } from "@/lib/analytics/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
-import { createUser, findUserByEmail, updateUserPassword, markEmailVerified } from "@/lib/auth/users";
+import { createUser, findUserByEmail, resetUnverifiedUser } from "@/lib/auth/users";
+import { sendSignupCode } from "@/lib/auth/signup-code";
+import { setPendingVerification, VERIFICATION_PATHS } from "@/lib/auth/pending-verification";
 import { normalizeEmail } from "@/lib/auth/verification";
-import { createUserSession, getCurrentUser } from "@/lib/auth/session-server";
+import { getCurrentUser } from "@/lib/auth/session-server";
 import {
   logReportGenerationError,
   logReportGenerationRetry,
@@ -75,12 +78,9 @@ function redirectToStep(slug: Parameters<typeof getStepBySlug>[0]): never {
   redirect(getStepBySlug(slug).path);
 }
 
-function requireAssessment() {
-  const assessmentPromise = getCurrentAssessment();
-  return assessmentPromise.then((assessment) => {
-    if (!assessment) redirectToStep("contacto");
-    return assessment;
-  });
+/** Análisis en curso de la persona con sesión verificada; si no, vuelve al contacto o a la verificación. */
+async function requireAssessment() {
+  return requireVerifiedOwner(await getCurrentAssessment());
 }
 
 function validationError(
@@ -168,50 +168,43 @@ export async function saveContact(
     };
   }
 
-  // No verified account yet for this email: create (or claim an abandoned,
-  // never-verified) account and sign them in immediately — same trust level
-  // the anonymous flow already granted this email, now backed by a real
-  // account instead of a throwaway assessment.
-  const user = existingUser
-    ? await updateUserPassword(existingUser.user_id, password)
-    : await createUser({ email: normalizedEmail, password, name, phone });
-  await markEmailVerified(user.user_id);
-  await createUserSession(user.user_id);
-  await trackServer(user.user_id, ANALYTICS_EVENTS.accountCreated, {
-    source: "onboarding",
-  });
-
-  const existing = await getCurrentAssessment();
-  let asmtId: string;
-
-  if (existing && !isAssessmentCompleted(existing)) {
-    await prisma.assessments.update({
-      where: { asmt_id: existing.asmt_id },
-      data: {
-        asmt_email: normalizedEmail,
-        asmt_name: name,
-        asmt_phone: phone,
-        asmt_country: country,
-        asmt_user_id: user.user_id,
-      },
-    });
-    asmtId = existing.asmt_id;
+  // Sin cuenta verificada para este correo: se crea (o se reclama una que nunca se
+  // verificó) pero sin abrir sesión. La cuenta solo queda activa y con sesión cuando
+  // se confirma el código en la pantalla siguiente; hasta entonces no se avanza.
+  if (existingUser) {
+    await resetUnverifiedUser(existingUser.user_id, { password, name, phone });
   } else {
-    const assessment = await prisma.assessments.create({
-      data: {
-        asmt_email: normalizedEmail,
-        asmt_name: name,
-        asmt_phone: phone,
-        asmt_country: country,
-        asmt_user_id: user.user_id,
-        asmt_started_at: new Date(),
-      },
-    });
-    asmtId = assessment.asmt_id;
-    await setAssessmentCookie(asmtId);
+    await createUser({ email: normalizedEmail, password, name, phone });
   }
 
-  redirectToStep("idea");
+  const sent = await sendSignupCode(normalizedEmail);
+  if (!sent.success) {
+    return { success: false, message: sent.message, values: redisplayValues };
+  }
+
+  // El análisis se guarda sin dueño; se liga a la cuenta al confirmar el correo.
+  const existing = await getCurrentAssessment();
+  const assessmentData = {
+    asmt_email: normalizedEmail,
+    asmt_name: name,
+    asmt_phone: phone,
+    asmt_country: country,
+  };
+
+  if (existing && !isAssessmentCompleted(existing) && !existing.asmt_user_id) {
+    await prisma.assessments.update({
+      where: { asmt_id: existing.asmt_id },
+      data: assessmentData,
+    });
+  } else {
+    const assessment = await prisma.assessments.create({
+      data: { ...assessmentData, asmt_started_at: new Date() },
+    });
+    await setAssessmentCookie(assessment.asmt_id);
+  }
+
+  await setPendingVerification({ email: normalizedEmail, flow: "onboarding" });
+  redirect(VERIFICATION_PATHS.onboarding);
 }
 
 export async function saveIdea(

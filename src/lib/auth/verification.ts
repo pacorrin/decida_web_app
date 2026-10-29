@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import {
   AUTH_CODE_TTL_MS,
   AUTH_METHOD,
+  MAX_AUTH_CODE_ATTEMPTS,
   MAX_AUTH_CODES_PER_HOUR,
 } from "./constants";
 
@@ -72,6 +73,61 @@ export async function requestAuthCode(
   return { success: true, code };
 }
 
+const INVALID_CODE = {
+  success: false as const,
+  message: "Código inválido o expirado. Solicita uno nuevo.",
+};
+
+/**
+ * Compara el código con el último vigente del correo. Cada fallo cuenta como un
+ * intento; al llegar al tope el código se invalida, así que un código de 6 dígitos
+ * no se puede adivinar a base de fuerza bruta.
+ */
+async function matchActiveCode(
+  email: string,
+  code: string,
+  purpose: AuthCodePurpose
+): Promise<
+  { success: true; id: string } | { success: false; message: string }
+> {
+  const identifier = normalizeEmail(email);
+  const now = new Date();
+
+  const record = await prisma.verification_codes.findFirst({
+    where: {
+      vc_identifier: identifier,
+      vc_method: AUTH_METHOD,
+      vc_purpose: purpose,
+      vc_used_at: null,
+      vc_expires_at: { gt: now },
+    },
+    orderBy: { vc_created_at: "desc" },
+  });
+
+  if (!record || record.vc_attempts >= MAX_AUTH_CODE_ATTEMPTS) {
+    return INVALID_CODE;
+  }
+
+  if (record.vc_code !== code.trim()) {
+    const attempts = record.vc_attempts + 1;
+    await prisma.verification_codes.update({
+      where: { vc_id: record.vc_id },
+      data: {
+        vc_attempts: attempts,
+        ...(attempts >= MAX_AUTH_CODE_ATTEMPTS ? { vc_used_at: now } : {}),
+      },
+    });
+    return attempts >= MAX_AUTH_CODE_ATTEMPTS
+      ? {
+          success: false,
+          message: "Demasiados intentos. Solicita un código nuevo.",
+        }
+      : INVALID_CODE;
+  }
+
+  return { success: true, id: record.vc_id };
+}
+
 /**
  * Checks a code without consuming it. Used when the flow needs to confirm the
  * code on one screen and only spend it on a later screen (e.g. password reset:
@@ -83,29 +139,8 @@ export async function checkAuthCode(
   code: string,
   purpose: AuthCodePurpose
 ): Promise<{ success: true } | { success: false; message: string }> {
-  const identifier = normalizeEmail(email);
-  const normalizedCode = code.trim();
-  const now = new Date();
-
-  const record = await prisma.verification_codes.findFirst({
-    where: {
-      vc_identifier: identifier,
-      vc_method: AUTH_METHOD,
-      vc_purpose: purpose,
-      vc_code: normalizedCode,
-      vc_used_at: null,
-      vc_expires_at: { gt: now },
-    },
-  });
-
-  if (!record) {
-    return {
-      success: false,
-      message: "Código inválido o expirado. Solicita uno nuevo.",
-    };
-  }
-
-  return { success: true };
+  const result = await matchActiveCode(email, code, purpose);
+  return result.success ? { success: true } : result;
 }
 
 export async function verifyAuthCode(
@@ -113,32 +148,12 @@ export async function verifyAuthCode(
   code: string,
   purpose: AuthCodePurpose
 ): Promise<{ success: true } | { success: false; message: string }> {
-  const identifier = normalizeEmail(email);
-  const normalizedCode = code.trim();
-  const now = new Date();
-
-  const record = await prisma.verification_codes.findFirst({
-    where: {
-      vc_identifier: identifier,
-      vc_method: AUTH_METHOD,
-      vc_purpose: purpose,
-      vc_code: normalizedCode,
-      vc_used_at: null,
-      vc_expires_at: { gt: now },
-    },
-    orderBy: { vc_created_at: "desc" },
-  });
-
-  if (!record) {
-    return {
-      success: false,
-      message: "Código inválido o expirado. Solicita uno nuevo.",
-    };
-  }
+  const result = await matchActiveCode(email, code, purpose);
+  if (!result.success) return result;
 
   await prisma.verification_codes.update({
-    where: { vc_id: record.vc_id },
-    data: { vc_used_at: now },
+    where: { vc_id: result.id },
+    data: { vc_used_at: new Date() },
   });
 
   return { success: true };

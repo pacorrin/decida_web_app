@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation";
 import {
   signUpSchema,
-  verifySignupSchema,
   logInSchema,
   requestResetSchema,
   verifyResetCodeSchema,
@@ -13,7 +12,6 @@ import { parseFieldErrors, formDataToValues } from "@/lib/onboarding/schemas";
 import {
   createUser,
   findUserByEmail,
-  markEmailVerified,
   updateUserPassword,
 } from "@/lib/auth/users";
 import {
@@ -29,13 +27,18 @@ import { prisma } from "@/lib/prisma";
 import { trackServer } from "@/lib/analytics/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { verificationCodeEmail } from "@/lib/email/templates";
+import { sendSignupCode } from "@/lib/auth/signup-code";
+import {
+  setPendingVerification,
+  VERIFICATION_PATHS,
+} from "@/lib/auth/pending-verification";
 
 export type AuthActionState = {
   success: boolean;
   message?: string;
   fieldErrors?: Record<string, string[]>;
   values?: Record<string, string | string[]>;
-  step?: "form" | "verify" | "code" | "password";
+  step?: "form" | "code" | "password";
 };
 
 export async function signUp(
@@ -76,69 +79,18 @@ export async function signUp(
     await createUser({ email: normalizedEmail, password, name });
   }
 
-  const codeResult = await requestAuthCode(normalizedEmail, "signup_verification");
-  if (!codeResult.success) {
+  const sent = await sendSignupCode(normalizedEmail);
+  if (!sent.success) {
     return {
       success: false,
-      message: codeResult.message,
+      message: sent.message,
       values: formDataToValues(formData),
       step: "form",
     };
   }
 
-  const { subject, html } = verificationCodeEmail(codeResult.code, "signup");
-  await sendEmail({ to: normalizedEmail, subject, html });
-
-  return {
-    success: true,
-    message: "Te enviamos un código de verificación a tu correo.",
-    step: "verify",
-  };
-}
-
-export async function verifySignup(
-  _prev: AuthActionState,
-  formData: FormData
-): Promise<AuthActionState> {
-  const parsed = verifySignupSchema.safeParse({
-    email: formData.get("email"),
-    code: formData.get("code"),
-  });
-
-  if (!parsed.success) {
-    return {
-      success: false,
-      fieldErrors: parseFieldErrors(parsed.error),
-      step: "verify",
-    };
-  }
-
-  const result = await verifyAuthCode(
-    parsed.data.email,
-    parsed.data.code,
-    "signup_verification"
-  );
-
-  if (!result.success) {
-    return { success: false, message: result.message, step: "verify" };
-  }
-
-  const user = await findUserByEmail(parsed.data.email);
-  if (!user) {
-    return {
-      success: false,
-      message: "No encontramos la cuenta. Regístrate de nuevo.",
-      step: "form",
-    };
-  }
-
-  await markEmailVerified(user.user_id);
-  await createUserSession(user.user_id);
-  await trackServer(user.user_id, ANALYTICS_EVENTS.accountCreated, {
-    source: "registro",
-  });
-
-  redirect("/cuenta");
+  await setPendingVerification({ email: normalizedEmail, flow: "registro" });
+  redirect(VERIFICATION_PATHS.registro);
 }
 
 export async function logIn(

@@ -25,10 +25,13 @@ const PHASE_LABELS: Record<OnboardingPhase, string> = {
 
 type OnboardingShellProps = {
   currentSlug: OnboardingStepSlug;
+  /** Sustituyen el título y subtítulo del paso (p. ej. la pantalla de verificación). */
+  title?: string;
+  subtitle?: string;
   children: React.ReactNode;
 };
 
-export function OnboardingShell({ currentSlug, children }: OnboardingShellProps) {
+export function OnboardingShell({ currentSlug, title, subtitle, children }: OnboardingShellProps) {
   const { skipPlan } = useOnboardingFlow();
   const flow = { skipPlan };
   const step = getStepBySlug(currentSlug);
@@ -95,12 +98,12 @@ export function OnboardingShell({ currentSlug, children }: OnboardingShellProps)
       <main className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
         <div className="mb-8 space-y-2">
           <h1 className="text-2xl font-semibold tracking-tight text-primary sm:text-3xl">
-            {copy.title}
+            {title ?? copy.title}
           </h1>
           <p className="text-base leading-relaxed text-muted-foreground">
-            {copy.subtitle}
+            {subtitle ?? copy.subtitle}
           </p>
-          {copy.reassurance && (
+          {!title && copy.reassurance && (
             <p className="text-sm text-[#6baed6]">{copy.reassurance}</p>
           )}
         </div>

@@ -53,7 +53,12 @@ export async function getCurrentUser() {
     if (session) {
       await prisma.user_sessions.delete({ where: { usess_id: session.usess_id } });
     }
-    await clearUserSessionCookie();
+    try {
+      await clearUserSessionCookie();
+    } catch {
+      // Durante el render de una página Next no permite tocar cookies; la cookie
+      // inválida se ignora y se reemplaza al iniciar sesión de nuevo.
+    }
     return null;
   }
 

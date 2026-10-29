@@ -1,14 +1,13 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import { signUp, verifySignup, type AuthActionState } from "@/app/cuenta/actions";
+import { signUp, type AuthActionState } from "@/app/cuenta/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -19,26 +18,7 @@ import { fieldValue } from "@/lib/onboarding/schemas";
 const initialState: AuthActionState = { success: false, step: "form" };
 
 export function SignUpForm() {
-  const [email, setEmail] = useState("");
-  const [codeStep, setCodeStep] = useState(false);
-
-  const [signUpState, signUpAction, signUpPending] = useActionState(
-    async (prev: AuthActionState, formData: FormData) => {
-      const result = await signUp(prev, formData);
-      if (result.success && result.step === "verify") {
-        setCodeStep(true);
-        const submittedEmail = formData.get("email");
-        if (typeof submittedEmail === "string") setEmail(submittedEmail);
-      }
-      return result;
-    },
-    initialState
-  );
-
-  const [verifyState, verifyAction, verifyPending] = useActionState(
-    verifySignup,
-    initialState
-  );
+  const [signUpState, signUpAction, signUpPending] = useActionState(signUp, initialState);
 
   const v = signUpState.values;
 
@@ -59,7 +39,6 @@ export function SignUpForm() {
                   defaultValue={fieldValue(v, "name")}
                   placeholder="Tu nombre"
                   required
-                  disabled={codeStep}
                   aria-invalid={!!signUpState.fieldErrors?.name}
                 />
                 <FieldError
@@ -77,7 +56,6 @@ export function SignUpForm() {
                   defaultValue={fieldValue(v, "email")}
                   placeholder="tu@correo.com"
                   required
-                  disabled={codeStep}
                   aria-invalid={!!signUpState.fieldErrors?.email}
                 />
                 <FieldError
@@ -94,7 +72,6 @@ export function SignUpForm() {
                   autoComplete="new-password"
                   placeholder="Mínimo 8 caracteres"
                   required
-                  disabled={codeStep}
                   aria-invalid={!!signUpState.fieldErrors?.password}
                 />
                 <FieldError
@@ -111,64 +88,19 @@ export function SignUpForm() {
               </p>
             )}
 
-            <Button type="submit" className="w-full" disabled={signUpPending || codeStep}>
+            <Button type="submit" className="w-full" disabled={signUpPending}>
               {signUpPending ? (
                 <>
                   <Loader2 className="size-4 animate-spin" aria-hidden />
-                  Creando cuenta…
+                  Enviando código…
                 </>
               ) : (
-                "Crear cuenta"
+                "Continuar"
               )}
             </Button>
           </form>
         </CardContent>
       </Card>
-
-      {codeStep && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Confirma tu correo</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form action={verifyAction} className="space-y-4">
-              <input type="hidden" name="email" value={email} readOnly />
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="signup-code">Código de verificación</FieldLabel>
-                  <Input
-                    id="signup-code"
-                    name="code"
-                    inputMode="numeric"
-                    pattern="[0-9]{6}"
-                    maxLength={6}
-                    placeholder="000000"
-                    required
-                    aria-invalid={!!verifyState.fieldErrors?.code}
-                  />
-                  <FieldDescription>Revisa tu correo. El código expira en 15 minutos.</FieldDescription>
-                  <FieldError
-                    errors={verifyState.fieldErrors?.code?.map((m) => ({ message: m }))}
-                  />
-                </Field>
-              </FieldGroup>
-              {verifyState.message && !verifyState.success && (
-                <p className="text-sm text-destructive">{verifyState.message}</p>
-              )}
-              <Button type="submit" className="w-full" disabled={verifyPending}>
-                {verifyPending ? (
-                  <>
-                    <Loader2 className="size-4 animate-spin" aria-hidden />
-                    Verificando…
-                  </>
-                ) : (
-                  "Confirmar y entrar"
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      )}
 
       <p className="text-center text-sm text-muted-foreground">
         ¿Ya tienes cuenta?{" "}

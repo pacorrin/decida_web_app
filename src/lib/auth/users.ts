@@ -41,3 +41,19 @@ export async function updateUserPassword(userId: string, newPassword: string) {
     data: { user_password_hash: passwordHash },
   });
 }
+
+/** Reclama una cuenta que nunca se verificó: la nueva persona define sus datos y contraseña. */
+export async function resetUnverifiedUser(
+  userId: string,
+  input: { password: string; name?: string; phone?: string }
+) {
+  const passwordHash = await hashPassword(input.password);
+  return prisma.users.update({
+    where: { user_id: userId },
+    data: {
+      user_password_hash: passwordHash,
+      user_name: input.name,
+      user_phone: input.phone,
+    },
+  });
+}
