@@ -22,7 +22,7 @@ export function BetaAccountNotice() {
         href={`mailto:${FEEDBACK_EMAIL}`}
         className="mt-2 inline-block font-medium text-primary underline-offset-4 hover:underline"
       >
-        Cuéntanos qué mejorar
+        Cuéntanos qué función te gustaría ver
       </a>
     </aside>
   );
