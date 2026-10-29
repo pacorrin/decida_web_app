@@ -542,3 +542,7 @@ Se verificó el estado del código en `main` contra `wiki/decisiones/modelo-de-c
 ## [2026-10-28] decision | Créditos pasan a planes mensuales con reseteo
 
 Se reestructuró el modelo: tres planes con nombre (Explora $59/200, Valida $149/600, Escala $399/2000 créditos), el saldo se restablece en cada renovación, análisis básico 50 y con investigación 150 créditos. Implementado en el repo reutilizando la suscripción de Stripe; el esquema de paquetes de pago único se eliminó. Especificación y pendientes en `wiki/decisiones/modelo-de-creditos-hibrido.md`.
+
+## [2026-10-29] query | Variables de entorno documentadas
+
+Se agregaron a `.env.example` las tres variables de modelos de investigación (`OPENAI_MODEL_RESEARCH`, `_OFFICIAL`, `_STRUCTURE`) y se documentaron todas las variables en el `README.md` y en `wiki/arquitectura/variables-de-entorno.md`. Se detectó que `o4-mini` fue dado de baja por OpenAI y el modelo de razonamiento por defecto pasó a `gpt-5-mini`; precios de OpenAI verificados.

@@ -39,6 +39,7 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | Página | Resumen |
 |---|---|
 | [[wiki/arquitectura/stack-tecnico]] | Next.js 16, React 19, Prisma 7, Postgres, OpenAI |
+| [[wiki/arquitectura/variables-de-entorno]] | Todas las variables de entorno: modelos de OpenAI, reporte, Stripe, correo, monitoreo y checklist de producción (2026-10-29) |
 | [[wiki/arquitectura/modelo-de-datos]] | 12 modelos Prisma, decisión relacional vs JSON simple |
 | [[wiki/arquitectura/manejo-de-errores-y-reembolsos]] | Retry, logging, proceso de reembolso (DEC-10) |
 | [[wiki/arquitectura/historial-de-evaluaciones]] | `/mis-evaluaciones` — non-goal original superado (en migración al módulo de cuentas) |
