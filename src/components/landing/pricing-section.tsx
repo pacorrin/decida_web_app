@@ -24,7 +24,7 @@ export function PricingSection() {
     <SectionShell
       id="precio"
       title="Empieza gratis, elige un plan cuando lo necesites"
-      description="Tu primera evaluación es gratis (vista previa, sin investigación de mercado). Para el reporte completo o más ideas, un plan mensual te da créditos cada mes. Cancelas cuando quieras."
+      description="Tu primera evaluación es gratis (vista previa, sin investigación de mercado). Para el reporte completo o más ideas, un plan mensual te da créditos cada mes: al renovar se restablecen y los que no uses no se acumulan. Cancelas cuando quieras."
       variant="muted"
     >
       <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-4">

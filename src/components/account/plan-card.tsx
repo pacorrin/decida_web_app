@@ -17,7 +17,6 @@ export function planFeatures(plan: Plan): string[] {
     `${formatCredits(plan.credits)} créditos cada mes`,
     `Hasta ${analysesPerPlan(plan, CREDIT_COST_RESEARCH)} análisis con investigación de mercado (${CREDIT_COST_RESEARCH} créditos c/u)`,
     `O hasta ${analysesPerPlan(plan, CREDIT_COST_BASIC)} análisis básicos (${CREDIT_COST_BASIC} créditos c/u)`,
-    "Los créditos se restablecen cada mes: no se acumulan",
   ];
 }
 
