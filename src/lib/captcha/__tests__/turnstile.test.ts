@@ -37,6 +37,14 @@ describe("verifyTurnstile", () => {
     expect(body.get("remoteip")).toBe("203.0.113.9");
   });
 
+  it("devuelve el motivo del rechazo para medirlo en analítica", async () => {
+    respond({ success: false });
+    expect(await verifyTurnstile(form("tok"))).toMatchObject({ success: false, reason: "rejected" });
+    expect(await verifyTurnstile(form())).toMatchObject({ success: false, reason: "missing_token" });
+    vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("red"));
+    expect(await verifyTurnstile(form("tok"))).toMatchObject({ success: false, reason: "unavailable" });
+  });
+
   it("rechaza sin token sin llamar a Cloudflare", async () => {
     const spy = respond({ success: true });
     expect((await verifyTurnstile(form())).success).toBe(false);

@@ -61,7 +61,7 @@ import {
   parseTargetMarketText,
   type StoredTargetMarket,
 } from "@/lib/ai/research/target-market";
-import { trackServer } from "@/lib/analytics/server";
+import { trackAnonymous, trackServer, trackServerDeferred } from "@/lib/analytics/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { createUser, findUserByEmail, resetUnverifiedUser } from "@/lib/auth/users";
 import { verifyTurnstile } from "@/lib/captcha/turnstile";
@@ -74,6 +74,15 @@ import {
   logReportGenerationRetry,
   logReportGenerationSuccess,
 } from "@/lib/logging/report-logger";
+
+/** Marca un paso del análisis como completado (no solo visto). Se envía después de responder. */
+async function trackStep(
+  step: Parameters<typeof getStepBySlug>[0],
+  props: Record<string, string> = {},
+): Promise<void> {
+  const user = await getCurrentUser();
+  trackServerDeferred(user?.user_id, ANALYTICS_EVENTS.onboardingStepCompleted, { step, ...props });
+}
 
 function redirectToStep(slug: Parameters<typeof getStepBySlug>[0]): never {
   redirect(getStepBySlug(slug).path);
@@ -162,8 +171,13 @@ export async function saveContact(
 
   const captcha = await verifyTurnstile(formData);
   if (!captcha.success) {
+    await trackAnonymous(ANALYTICS_EVENTS.captchaRejected, {
+      source: "onboarding",
+      reason: captcha.reason,
+    });
     return { success: false, message: captcha.message, values: redisplayValues };
   }
+  await trackAnonymous(ANALYTICS_EVENTS.signupSubmitted, { source: "onboarding" });
 
   const existingUser = await findUserByEmail(normalizedEmail);
   if (existingUser?.user_email_verified_at) {
@@ -187,6 +201,8 @@ export async function saveContact(
   if (!sent.success) {
     return { success: false, message: sent.message, values: redisplayValues };
   }
+
+  await trackAnonymous(ANALYTICS_EVENTS.verificationCodeSent, { source: "onboarding" });
 
   // El análisis se guarda sin dueño; se liga a la cuenta al confirmar el correo.
   const existing = await getCurrentAssessment();
@@ -275,6 +291,7 @@ export async function saveIdea(
     },
   });
 
+  await trackStep("idea");
   redirectToStep("confirmacion");
 }
 
@@ -459,6 +476,9 @@ export async function confirmIdea(formData?: FormData): Promise<void> {
 
   // Quien ya tiene suscripción no necesita elegir plan.
   const user = await getCurrentUser();
+  trackServerDeferred(user?.user_id, ANALYTICS_EVENTS.onboardingStepCompleted, {
+    step: "confirmacion",
+  });
   redirectToStep(hasFullAccess(user) ? "perfil" : "pago");
 }
 
@@ -501,12 +521,14 @@ export async function savePayment(
   if (result.kind === "error") return { success: false, message: result.message };
   if (result.kind === "redirect") return { success: true, redirectUrl: result.url };
 
+  await trackStep("pago", { choice: "plan" });
   redirectToStep("perfil");
 }
 
 /** «Continuar gratis»: sigue el onboarding sin suscribirse (freemium). */
 export async function continueFree(): Promise<void> {
   await requireAssessment();
+  await trackStep("pago", { choice: "free" });
   redirectToStep("perfil");
 }
 
@@ -558,6 +580,7 @@ export async function saveSituation(
     },
   });
 
+  await trackStep("perfil");
   redirectToStep("ajuste");
 }
 
@@ -618,6 +641,7 @@ export async function savePersonalFit(
     data: { asmt_status: "in_progress" },
   });
 
+  await trackStep("ajuste");
   redirectToStep("productos");
 }
 
@@ -665,6 +689,7 @@ export async function saveProducts(
     data: { asmt_status: "in_progress" },
   });
 
+  await trackStep("productos");
   redirectToStep("evaluacion");
 }
 
@@ -796,6 +821,9 @@ export async function saveEvaluation(
   }
 
   if (gen.kind === "failed") {
+    trackServerDeferred(user.user_id, ANALYTICS_EVENTS.reportGenerationFailed, {
+      stage: "evaluation",
+    });
     logReportGenerationError("Report generation failed during evaluation", {
       assessmentId: assessment.asmt_id,
       error: gen.error,
@@ -881,6 +909,9 @@ export async function retryReportGeneration(): Promise<ActionState> {
   }
 
   if (gen.kind === "failed") {
+    trackServerDeferred(user.user_id, ANALYTICS_EVENTS.reportGenerationFailed, {
+      stage: "retry",
+    });
     logReportGenerationError("Report generation retry failed", {
       assessmentId: assessment.asmt_id,
       error: gen.error,

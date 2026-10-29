@@ -575,3 +575,7 @@ El usuario decidió no facturar durante la beta (solo el recibo de Stripe). Se d
 
 Se creó la rama `dev` (trabajo diario); `main` queda como producción y es la que despliega Railway. En el proyecto `Decida MX` se creó el servicio `Postgres` y el servicio `decida-app` conectado al repo en `main`, con `DATABASE_URL` por referencia y `OPENAI_MODEL_REASONING=gpt-5-mini`. Las migraciones corren como comando de pre-despliegue (`pnpm db:deploy`); se aplicaron las 7 en producción. Documentado en `wiki/arquitectura/despliegue-en-railway.md`. Pendiente: el resto de las variables, dominio, y Stripe en modo real.
 
+## [2026-10-29] decision | Eventos de analítica ampliados
+
+Se agregaron a PostHog: `cta_clicked` con `location`, `onboarding_step_completed`, los eventos del registro (`signup_submitted`, `verification_code_sent`, `verification_failed`, `verification_resent`, `captcha_rejected`) y `report_generation_failed`. Los de visitantes sin cuenta usan el id anónimo de la cookie de PostHog. Documentado en `wiki/arquitectura/analitica-y-eventos.md`. Pendiente: crear los embudos en PostHog y verificar los eventos en vivo tras desplegar.
+

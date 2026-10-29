@@ -34,7 +34,7 @@ export function PricingSection() {
           <p className="mt-2 text-sm text-muted-foreground">Tu primera evaluación (vista previa)</p>
           <IncludeList items={PRICING_FREE_INCLUDES} />
           <div className="mt-auto flex justify-center pt-8">
-            <CtaLink href="/analizar" variant="outline">
+            <CtaLink href="/analizar" location="pricing_free" variant="outline">
               Analizar mi idea gratis
             </CtaLink>
           </div>
@@ -61,7 +61,7 @@ export function PricingSection() {
             <p className="mt-2 text-sm text-muted-foreground">al mes · {plan.tagline}</p>
             <IncludeList items={planFeatures(plan)} />
             <div className="mt-auto flex flex-col items-center gap-2 pt-8">
-              <CtaLink href={CREDITS_PLANS_PATH} variant="primary">
+              <CtaLink href={CREDITS_PLANS_PATH} location="pricing_plans" variant="primary">
                 Elegir {plan.name}
               </CtaLink>
             </div>

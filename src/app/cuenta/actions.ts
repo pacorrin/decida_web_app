@@ -24,7 +24,7 @@ import { createUserSession, clearUserSessionCookie } from "@/lib/auth/session-se
 import { verifyPassword } from "@/lib/auth/password";
 import { sendEmail } from "@/lib/email/resend";
 import { prisma } from "@/lib/prisma";
-import { trackServer } from "@/lib/analytics/server";
+import { trackAnonymous, trackServer } from "@/lib/analytics/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { verificationCodeEmail } from "@/lib/email/templates";
 import { verifyTurnstile } from "@/lib/captcha/turnstile";
@@ -63,6 +63,10 @@ export async function signUp(
 
   const captcha = await verifyTurnstile(formData);
   if (!captcha.success) {
+    await trackAnonymous(ANALYTICS_EVENTS.captchaRejected, {
+      source: "registro",
+      reason: captcha.reason,
+    });
     return {
       success: false,
       message: captcha.message,
@@ -70,6 +74,8 @@ export async function signUp(
       step: "form",
     };
   }
+
+  await trackAnonymous(ANALYTICS_EVENTS.signupSubmitted, { source: "registro" });
 
   const { name, email, password } = parsed.data;
   const normalizedEmail = normalizeEmail(email);
@@ -100,6 +106,7 @@ export async function signUp(
     };
   }
 
+  await trackAnonymous(ANALYTICS_EVENTS.verificationCodeSent, { source: "registro" });
   await setPendingVerification({ email: normalizedEmail, flow: "registro" });
   redirect(VERIFICATION_PATHS.registro);
 }
@@ -144,6 +151,7 @@ export async function logIn(
     if (!sent.success) {
       return { ...invalid, message: sent.message };
     }
+    await trackAnonymous(ANALYTICS_EVENTS.verificationCodeSent, { source: "login" });
     await setPendingVerification({ email: user.user_email, flow: "registro" });
     redirect(VERIFICATION_PATHS.registro);
   }

@@ -86,7 +86,7 @@ export function ExampleResultSection() {
           </div>
 
           <div className="mt-6">
-            <CtaLink href="/ejemplo" variant="outline" className="w-full sm:w-auto">
+            <CtaLink href="/ejemplo" location="example_section" variant="outline" className="w-full sm:w-auto">
               Ver reporte completo de ejemplo
             </CtaLink>
           </div>

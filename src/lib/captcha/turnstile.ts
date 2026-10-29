@@ -22,10 +22,15 @@ export function turnstileSiteKey(): string | null {
   return process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || null;
 }
 
-type VerifyResult = { success: true } | { success: false; message: string };
+export type CaptchaFailureReason = "missing_token" | "rejected" | "unavailable" | "not_configured";
+
+type VerifyResult =
+  | { success: true }
+  | { success: false; message: string; reason: CaptchaFailureReason };
 
 const MISSING_TOKEN: VerifyResult = {
   success: false,
+  reason: "missing_token",
   message: "Espera a que termine la verificación de seguridad e inténtalo de nuevo.",
 };
 
@@ -48,6 +53,7 @@ export async function verifyTurnstile(formData: FormData): Promise<VerifyResult>
       console.error("[turnstile] Falta TURNSTILE_SECRET_KEY: se rechaza el formulario.");
       return {
         success: false,
+        reason: "not_configured",
         message: "No pudimos verificar tu solicitud. Inténtalo más tarde.",
       };
     }
@@ -72,12 +78,14 @@ export async function verifyTurnstile(formData: FormData): Promise<VerifyResult>
     console.warn("[turnstile] token rechazado:", data["error-codes"]?.join(",") ?? "sin código");
     return {
       success: false,
+      reason: "rejected",
       message: "No pudimos verificar que eres una persona. Inténtalo de nuevo.",
     };
   } catch (err) {
     console.error("[turnstile] no se pudo validar el token:", err);
     return {
       success: false,
+      reason: "unavailable",
       message: "No pudimos completar la verificación de seguridad. Inténtalo de nuevo.",
     };
   }

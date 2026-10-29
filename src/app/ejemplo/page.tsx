@@ -739,7 +739,7 @@ export default function ExampleReportPage() {
                       {report.executiveSummary.recommendationText}
                     </p>
                     <div className="flex flex-col gap-3 sm:flex-row">
-                      <PrimaryCtaButton href="/analizar">
+                      <PrimaryCtaButton href="/analizar" location="ejemplo_page">
                         Analizar mi idea gratis
                       </PrimaryCtaButton>
                     </div>

@@ -16,7 +16,7 @@ import { sendSignupCode } from "@/lib/auth/signup-code";
 import { getAssessmentIdFromCookie } from "@/lib/onboarding/session-server";
 import { getStepBySlug } from "@/lib/onboarding/steps";
 import { prisma } from "@/lib/prisma";
-import { trackServer } from "@/lib/analytics/server";
+import { trackAnonymous, trackServer, trackServerDeferred } from "@/lib/analytics/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import type { AuthActionState } from "./actions";
 
@@ -49,7 +49,13 @@ export async function verifyEmailCode(
     parsed.data.code,
     "signup_verification"
   );
-  if (!result.success) return { success: false, message: result.message };
+  if (!result.success) {
+    await trackAnonymous(ANALYTICS_EVENTS.verificationFailed, {
+      source: pending.flow,
+      reason: result.message.includes("intentos") ? "attempts_exhausted" : "invalid_or_expired",
+    });
+    return { success: false, message: result.message };
+  }
 
   const user = await findUserByEmail(pending.email);
   if (!user) {
@@ -70,6 +76,12 @@ export async function verifyEmailCode(
   // Un solo punto para los dos flujos (registro y contacto del análisis): solo la
   // primera vez que se confirma el correo, no al volver a verificar una cuenta.
   if (firstVerification) await sendWelcomeEmail(user);
+
+  if (pending.flow === "onboarding") {
+    trackServerDeferred(user.user_id, ANALYTICS_EVENTS.onboardingStepCompleted, {
+      step: "contacto",
+    });
+  }
 
   if (pending.flow === "registro") redirect("/cuenta");
 
@@ -94,6 +106,7 @@ export async function resendVerificationCode(): Promise<AuthActionState> {
 
   const result = await sendSignupCode(pending.email);
   if (!result.success) return { success: false, message: result.message };
+  await trackAnonymous(ANALYTICS_EVENTS.verificationResent, { source: pending.flow });
   return { success: true, message: "Te enviamos un código nuevo." };
 }
 

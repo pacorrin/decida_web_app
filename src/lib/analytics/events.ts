@@ -20,6 +20,15 @@ export const ANALYTICS_EVENTS = {
   creditsInsufficient: "credits_insufficient",
   researchToggled: "research_toggled",
   suggestionSent: "suggestion_sent",
+  // Registro y verificación del correo (fricción del alta)
+  signupSubmitted: "signup_submitted",
+  verificationCodeSent: "verification_code_sent",
+  verificationFailed: "verification_failed",
+  verificationResent: "verification_resent",
+  captchaRejected: "captcha_rejected",
+  // Pasos del análisis completados (no solo vistos) y reportes que fallan
+  onboardingStepCompleted: "onboarding_step_completed",
+  reportGenerationFailed: "report_generation_failed",
 } as const;
 
 export type AnalyticsEvent =

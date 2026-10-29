@@ -26,7 +26,7 @@ export function ReportHeader() {
             <span className="text-sm font-semibold text-primary">Decida</span>
           </Link>
         </div>
-        <PrimaryCtaButton href="/analizar" className="text-sm">
+        <PrimaryCtaButton href="/analizar" location="report_header" className="text-sm">
           Analizar mi idea
         </PrimaryCtaButton>
       </div>

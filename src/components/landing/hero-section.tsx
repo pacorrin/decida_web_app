@@ -37,10 +37,10 @@ export function HeroSection() {
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <PrimaryCtaButton href="/analizar">
+            <PrimaryCtaButton href="/analizar" location="hero">
               Analizar mi idea gratis
             </PrimaryCtaButton>
-            <CtaLink href="/ejemplo" variant="outline">
+            <CtaLink href="/ejemplo" location="hero_example" variant="outline">
               Ver ejemplo de reporte
             </CtaLink>
           </div>

@@ -45,10 +45,10 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <CtaLink href={LOGIN_LINK.href} variant="outline">
+          <CtaLink href={LOGIN_LINK.href} location="header_login" variant="outline">
             {LOGIN_LINK.label}
           </CtaLink>
-          <PrimaryCtaButton href="/analizar">
+          <PrimaryCtaButton href="/analizar" location="header">
             Analizar mi idea gratis
           </PrimaryCtaButton>
         </div>
@@ -85,13 +85,13 @@ export function SiteHeader() {
               ))}
               <div className="flex flex-col gap-3 pt-4">
                 <CtaLink
-                  href={LOGIN_LINK.href}
+                  href={LOGIN_LINK.href} location="header_mobile_login"
                   variant="outline"
                   className="w-full sm:w-full"
                 >
                   {LOGIN_LINK.label}
                 </CtaLink>
-                <PrimaryCtaButton href="/analizar">
+                <PrimaryCtaButton href="/analizar" location="header_mobile">
                   Analizar mi idea gratis
                 </PrimaryCtaButton>
               </div>

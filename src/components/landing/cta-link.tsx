@@ -15,6 +15,8 @@ function eventForHref(href: string) {
 
 type CtaLinkProps = {
   href: string;
+  /** Dónde está el botón (hero, header, pricing…): sin esto no se sabe cuál convierte. */
+  location: string;
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "outline";
   className?: string;
@@ -22,6 +24,7 @@ type CtaLinkProps = {
 
 export function CtaLink({
   href,
+  location,
   children,
   variant = "primary",
   className,
@@ -30,7 +33,7 @@ export function CtaLink({
     <TrackedLink
       href={href}
       event={eventForHref(href)}
-      eventProps={{ href }}
+      eventProps={{ href, location }}
       className={cn(
         buttonVariants({
           variant: variant === "outline" ? "outline" : "secondary",
@@ -51,10 +54,12 @@ export function CtaLink({
 
 export function PrimaryCtaButton({
   href,
+  location,
   children,
   className,
 }: {
   href: string;
+  location: string;
   children: React.ReactNode;
   className?: string;
 }) {
@@ -64,7 +69,7 @@ export function PrimaryCtaButton({
         <TrackedLink
           href={href}
           event={eventForHref(href)}
-          eventProps={{ href }}
+          eventProps={{ href, location }}
         />
       }
       nativeButton={false}

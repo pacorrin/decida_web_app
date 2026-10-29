@@ -19,7 +19,7 @@ export function FinalCtaSection() {
         </p>
         <div className="mt-8 flex justify-center">
           <PrimaryCtaButton
-            href="/analizar"
+            href="/analizar" location="final_cta"
             className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
           >
             Analizar mi idea gratis
