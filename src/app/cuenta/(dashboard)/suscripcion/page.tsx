@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CreditCard, ShieldCheck } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/session-server";
-import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -15,6 +14,7 @@ import { CancelSubscription } from "@/components/account/cancel-subscription";
 import { PortalButton } from "@/components/account/portal-button";
 import { SubscribeButton } from "@/components/account/subscribe-button";
 import { CheckoutNotice } from "@/components/account/checkout-notice";
+import { FreePlanCard } from "@/components/account/free-plan-card";
 import { PlanCard } from "@/components/account/plan-card";
 import { resolveCheckoutReturn } from "@/lib/subscription/checkout-return";
 import { describeSubscription } from "@/lib/subscription/cancel";
@@ -144,6 +144,8 @@ export default async function SuscripcionPage({
         </Card>
       )}
 
+      <FreePlanCard isCurrent={!isActive && !isCanceled} />
+
       <div className="grid gap-4 md:grid-cols-3">
         {PLANS.map((plan) => {
           const isCurrent = (isActive || isCanceled) && currentPlan?.id === plan.id;
@@ -191,7 +193,6 @@ export default async function SuscripcionPage({
           <CreditCard className="size-4 text-[#6baed6]" aria-hidden />
           Pago seguro con Stripe
         </p>
-        {!isActive && !isCanceled && <Badge variant="outline">Plan gratuito: una evaluación</Badge>}
       </div>
     </div>
   );

@@ -82,6 +82,24 @@ export const PAYMENT_FREE_FEATURES = [
   "Vista parcial de lo financiero y del plan de validación",
 ] as const;
 
+/** Plan gratuito: qué incluye y qué queda bloqueado (coincide con la vista del reporte). */
+export const FREE_PLAN_INCLUDES = [
+  "Un solo análisis, en versión básica (vista previa de tu diagnóstico)",
+  "Sin investigación de mercado: las cifras de mercado son tus supuestos, sin fuentes",
+  "Resumen ejecutivo y semáforos por dimensión",
+  "Entendimiento de tu negocio, fortalezas y riesgos principales",
+  "Vista parcial de lo financiero y la primera semana del plan de validación",
+] as const;
+
+export const FREE_PLAN_LOCKED = [
+  "Desglose de productos, cálculos y análisis financiero completo",
+  "Cómo reducir cada riesgo y las alertas de tus números (solo ves cuántas hay)",
+  "Compatibilidad personal, tiempo y operación, y escalabilidad",
+  "Las semanas 2 a 4 del plan de validación",
+  "Recomendación final y siguientes pasos concretos",
+  "Investigación de mercado con fuentes",
+] as const;
+
 export const PAYMENT_PAID_FEATURES = [
   "Evaluaciones ilimitadas",
   "Compatibilidad personal, tiempo y operación, y escalabilidad",
