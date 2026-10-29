@@ -27,13 +27,17 @@ export const TOPIC_PLAN: Record<ResearchTopic, { official: boolean }> = {
   canales: { official: false },
 };
 
-/** Precios aproximados en USD por millón de tokens (entrada, salida). Verifícalos antes de fiarte del costo. */
+/**
+ * Precios en USD por millón de tokens (entrada, salida). Verificados contra
+ * developers.openai.com/api/docs/pricing el 2026-10-29. Los tokens de razonamiento de
+ * los modelos gpt-5 se cobran como salida. La búsqueda web cuesta $10 por 1,000 llamadas
+ * ($0.01 c/u); `searchFeeUsd` usa $0.03 a propósito, como colchón.
+ */
 export const MODEL_PRICES_USD_PER_M: Record<string, { in: number; out: number }> = {
   "gpt-4.1": { in: 2, out: 8 },
   "gpt-4.1-mini": { in: 0.4, out: 1.6 },
   "gpt-4o-mini": { in: 0.15, out: 0.6 },
   "o4-mini": { in: 1.1, out: 4.4 }, // dado de baja
-  // Verifica estas tarifas contra la factura de OpenAI antes de fiarte del costo.
   "gpt-5-mini": { in: 0.25, out: 2 },
 };
 

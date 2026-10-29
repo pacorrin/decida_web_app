@@ -41,7 +41,7 @@ Tipo de cambio ~18.5; Stripe 3.6% + $3 MXN; costo de IA $0.30 USD ≈ $5.55 MXN 
 | Valida $149 | 4 (o 12 básicos) | ~$37 | ~$141 | ~$22 | ~$59 |
 | Escala $399 | 13 (o 40 básicos) | ~$30 | ~$382 | ~$74 | ~$154 |
 
-La IA cuesta entre 12% y 19% del precio en el peor caso. Para cubrir ~$2,500 MXN/mes de beta hacen falta ~108 suscriptores de Explora, ~42 de Valida o ~16 de Escala. Como casi nadie gasta todo, el margen real será mayor. El objetivo de la beta es que la plataforma se sostenga sola; utilidades cuando los ingresos superen los gastos operativos.
+La IA cuesta entre 12% y 19% del precio en el peor caso. **Costo real medido el 2026-10-29** con precios oficiales de OpenAI (gpt-5-mini para razonamiento, gpt-4o-mini para redacción): ~$0.13 USD por reporte con investigación (tokens ~$0.08 + 5 búsquedas a $0.01); el código estima $0.23 por usar $0.03 por búsqueda. Se mantiene $0.30 como techo. Para cubrir ~$2,500 MXN/mes de beta hacen falta ~108 suscriptores de Explora, ~42 de Valida o ~16 de Escala. Como casi nadie gasta todo, el margen real será mayor. El objetivo de la beta es que la plataforma se sostenga sola; utilidades cuando los ingresos superen los gastos operativos.
 
 ## 4. Implementación (código)
 - `src/lib/credits/plans.ts`: planes, price ids de Stripe por env (`STRIPE_PRICE_EXPLORA/VALIDA/ESCALA`), `planFromSubscription` (por price id; si no hay, por `metadata.plan_id`).
