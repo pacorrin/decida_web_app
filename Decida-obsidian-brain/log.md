@@ -567,3 +567,7 @@ El respaldo de la interpretación del puntaje (razonamiento) era mudo y el de `t
 
 Se creó en Sentry (org `atino`) la regla «La IA cayó a un respaldo (ai_fallback)», id `6261497`: correo cuando aparece una incidencia nueva o que reaparece con la etiqueta `ai_fallback`. Cierra el pendiente de [[wiki/arquitectura/seguridad-y-proteccion-de-costos]].
 
+## [2026-10-29] decision | Facturación y CFDI fuera de la beta
+
+El usuario decidió no facturar durante la beta (solo el recibo de Stripe). Se documentó como pendiente posterior: al formalizar la plataforma, captura de datos de facturación, emisión del CFDI y lo relacionado con el SAT. Página nueva `wiki/decisiones/facturacion-y-cfdi-despues-de-la-beta.md`; se agregó a `tareas/tablero.md`, `producto/pricing-y-gtm.md` y `arquitectura/vendors-y-costos.md`. La revisión legal de los términos sigue abierta aparte.
+

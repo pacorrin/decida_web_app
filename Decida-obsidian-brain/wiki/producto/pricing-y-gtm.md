@@ -66,6 +66,9 @@ El freemium es explícitamente un **embudo de conversión**: dar suficiente señ
 
 El paso `/analizar/pago` ofrece desde S3-06 (2026-10-14) **«Gratis» o «Suscripción $99 MXN/mes»** y la suscripción es **simulada (beta)**: `savePayment` activa la suscripción de la cuenta (`users.user_subscription_*`, provider `simulated`, `period_end` = ahora + 1 mes) sin llamar a ningún proveedor. El cobro recurrente real sigue en el Sprint 5. (Lo que sigue describe el estado previo, de pago único:) `savePayment` marcaba el assessment como `paid`. No hay integración real con Stripe o Mercado Pago. Es un paso de "compromiso" con promesa de reembolso si el reporte llega a fallar (ver [[../arquitectura/manejo-de-errores-y-reembolsos]]). **El pricing real de mercado sigue sin validarse con dinero real** — y con el cambio a suscripción (2026-09-07), la promesa de reembolso de pago único hay que replantearla.
 
+## Facturación (2026-10-29)
+Durante la beta **no se factura** (solo el recibo de Stripe). La captura de datos fiscales, el CFDI y lo relacionado con el SAT quedan como pendiente para cuando la plataforma se formalice: [[../decisiones/facturacion-y-cfdi-despues-de-la-beta]].
+
 ## Canales de venta propuestos (Notion, no confirmados como ejecutados)
 - **LinkedIn** — posicionamiento profesional (errores al evaluar side hustle, autoempleo vs negocio escalable).
 - **TikTok/Reels** — alcance (análisis de casos concretos, señales de riesgo).

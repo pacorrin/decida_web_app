@@ -116,6 +116,7 @@ Todo lo siguiente son **estimaciones** para planear, no un presupuesto del vendo
 ---
 
 ## Costos que este documento no cubre (a documentar)
+- **Facturación (PAC o servicio de CFDI):** no hay proveedor ni costo, porque no se factura en la beta; ver [[../decisiones/facturacion-y-cfdi-despues-de-la-beta]].
 - **Herramientas internas** (Notion, Linear) y el costo de ampliar las cuentas de correo más allá de 5.
 - **Impuestos y facturación** (IVA sobre comisiones, CFDI): pendiente de revisar con asesoría contable y legal, está en la lista previa al lanzamiento.
 
