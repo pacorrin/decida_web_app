@@ -64,6 +64,7 @@ import {
 import { trackServer } from "@/lib/analytics/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { createUser, findUserByEmail, resetUnverifiedUser } from "@/lib/auth/users";
+import { verifyTurnstile } from "@/lib/captcha/turnstile";
 import { sendSignupCode } from "@/lib/auth/signup-code";
 import { setPendingVerification, VERIFICATION_PATHS } from "@/lib/auth/pending-verification";
 import { normalizeEmail } from "@/lib/auth/verification";
@@ -158,6 +159,11 @@ export async function saveContact(
   // Never round-trip the password back to the client, even on error.
   const redisplayValues = formDataToValues(formData);
   delete redisplayValues.password;
+
+  const captcha = await verifyTurnstile(formData);
+  if (!captcha.success) {
+    return { success: false, message: captcha.message, values: redisplayValues };
+  }
 
   const existingUser = await findUserByEmail(normalizedEmail);
   if (existingUser?.user_email_verified_at) {

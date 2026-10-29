@@ -10,7 +10,8 @@ import { defineConfig, devices } from "@playwright/test";
  * - `.env` presente con `DATABASE_URL`.
  *
  * El dev server se levanta automáticamente vía `webServer`. Si ya tienes uno
- * corriendo en localhost:3000, se reutiliza (salvo en CI).
+ * corriendo en localhost:3000, se reutiliza (salvo en CI): en ese caso arráncalo con
+ * `TURNSTILE_DISABLED=true pnpm dev`, o los formularios de cuenta pedirán el captcha.
  */
 
 const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:3000";
@@ -57,6 +58,8 @@ export default defineConfig({
       // Sin Stripe los e2e usan la suscripción simulada.
       STRIPE_SECRET_KEY: "",
       STRIPE_WEBHOOK_SECRET: "",
+      // Turnstile pide un clic humano; en pruebas se apaga (solo funciona fuera de producción).
+      TURNSTILE_DISABLED: "true",
     },
     stdout: "pipe",
     stderr: "pipe",

@@ -9,6 +9,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { TurnstileWidget } from "@/components/auth/turnstile-widget";
 import { MexicoPhoneInput } from "@/components/onboarding/mexico-phone-input";
 import { StepNavigation } from "@/components/onboarding/step-navigation";
 import { saveContact } from "@/app/analizar/actions";
@@ -20,9 +21,10 @@ const initialState: ActionState = { success: false };
 
 type ContactFormProps = {
   assessment: AssessmentWithRelations | null;
+  turnstileSiteKey: string | null;
 };
 
-export function ContactForm({ assessment }: ContactFormProps) {
+export function ContactForm({ assessment, turnstileSiteKey }: ContactFormProps) {
   const [state, action, pending] = useActionState(saveContact, initialState);
   const v = state.values;
 
@@ -149,6 +151,12 @@ export function ContactForm({ assessment }: ContactFormProps) {
           />
         </Field>
       </FieldGroup>
+
+      {turnstileSiteKey && (
+        <div className="mt-4">
+          <TurnstileWidget siteKey={turnstileSiteKey} resetSignal={state} />
+        </div>
+      )}
 
       {state.message && !state.success && (
         <p className="mt-4 text-sm text-destructive">

@@ -13,11 +13,12 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TurnstileWidget } from "@/components/auth/turnstile-widget";
 import { fieldValue } from "@/lib/onboarding/schemas";
 
 const initialState: AuthActionState = { success: false, step: "form" };
 
-export function SignUpForm() {
+export function SignUpForm({ turnstileSiteKey }: { turnstileSiteKey: string | null }) {
   const [signUpState, signUpAction, signUpPending] = useActionState(signUp, initialState);
 
   const v = signUpState.values;
@@ -79,6 +80,10 @@ export function SignUpForm() {
                 />
               </Field>
             </FieldGroup>
+
+            {turnstileSiteKey && (
+              <TurnstileWidget siteKey={turnstileSiteKey} resetSignal={signUpState} />
+            )}
 
             {signUpState.message && (
               <p

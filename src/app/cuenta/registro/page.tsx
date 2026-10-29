@@ -1,5 +1,6 @@
 import { SiteHeader } from "@/components/landing/site-header";
 import { SiteFooter } from "@/components/landing/site-footer";
+import { turnstileSiteKey } from "@/lib/captcha/turnstile";
 import { SignUpForm } from "@/components/auth/sign-up-form";
 
 export const metadata = {
@@ -24,7 +25,7 @@ export default function RegistroPage() {
               Guarda tus diagnósticos y consúltalos cuando quieras.
             </p>
           </div>
-          <SignUpForm />
+          <SignUpForm turnstileSiteKey={turnstileSiteKey()} />
         </div>
       </main>
       <SiteFooter />

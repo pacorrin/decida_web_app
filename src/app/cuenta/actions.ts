@@ -27,6 +27,7 @@ import { prisma } from "@/lib/prisma";
 import { trackServer } from "@/lib/analytics/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { verificationCodeEmail } from "@/lib/email/templates";
+import { verifyTurnstile } from "@/lib/captcha/turnstile";
 import { sendSignupCode } from "@/lib/auth/signup-code";
 import {
   setPendingVerification,
@@ -55,6 +56,16 @@ export async function signUp(
     return {
       success: false,
       fieldErrors: parseFieldErrors(parsed.error),
+      values: formDataToValues(formData),
+      step: "form",
+    };
+  }
+
+  const captcha = await verifyTurnstile(formData);
+  if (!captcha.success) {
+    return {
+      success: false,
+      message: captcha.message,
       values: formDataToValues(formData),
       step: "form",
     };

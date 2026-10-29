@@ -93,6 +93,15 @@ Sin los `STRIPE_PRICE_*`, Checkout usa precios en línea con los montos del cód
 | `RESEND_FROM_EMAIL` | No | — | Remitente de códigos de verificación y restablecimiento. Debe ser de un dominio verificado en Resend, p. ej. `Decida <hello@decida.mx>` |
 | `RESEND_BILLING_FROM_EMAIL` | No | `Decida <billing@decida.mx>` | Remitente de los correos de cobro del plan (los recibos los manda Stripe) |
 
+### Captcha (Cloudflare Turnstile)
+| Variable | Obligatoria | Para qué sirve |
+|---|---|---|
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Sí, en producción | Clave pública del widget (debe existir antes del build) |
+| `TURNSTILE_SECRET_KEY` | Sí, en producción | Clave secreta; el servidor valida con ella el token de cada registro. Sin ella, en producción el formulario se rechaza |
+| `TURNSTILE_DISABLED` | No | `true` apaga el captcha. **Solo funciona fuera de producción** (desarrollo y e2e); en producción se ignora |
+
+Cloudflare ofrece claves de prueba que siempre aprueban (`1x00000000000000000000AA` / `1x0000000000000000000000000000000AA`). El widget se pone en `/analizar/contacto` y `/cuenta/registro`; el widget real debe tener en su lista de hostnames `localhost` y el dominio de producción.
+
 ### Monitoreo y analítica
 | Variable | Para qué sirve |
 |---|---|
@@ -105,7 +114,7 @@ Sin los `STRIPE_PRICE_*`, Checkout usa precios en línea con los montos del cód
 ### Pruebas y herramientas (no son de la app)
 | Variable | Para qué sirve |
 |---|---|
-| `E2E_BASE_URL` | URL contra la que corre Playwright (`pnpm test:e2e`) |
+| `E2E_BASE_URL` | URL contra la que corre Playwright (`pnpm test:e2e`). Si reutilizas un `pnpm dev` ya abierto, arráncalo con `TURNSTILE_DISABLED=true` |
 | `CI` | La define el entorno de CI; Playwright y la subida de source maps la leen |
 | `LINEAR_API_KEY` | Solo para `scripts/create-onboarding-linear-items.mjs` |
 | `NODE_ENV`, `NEXT_RUNTIME` | Las define Next.js; no se configuran a mano |
