@@ -555,3 +555,7 @@ Se documentó el paquete de protección de costos y seguridad previo a la beta: 
 
 Se agregó Hostinger (dominio `decida.mx` y cuentas de correo de Decida): renovación anual de MX$816.99, vigente hasta octubre de 2030. Pendiente documentar el costo y la renovación de las cuentas de correo.
 
+## [2026-10-29] ingest | Promedio de costo mensual de la infraestructura y correo de Hostinger
+
+En `vendors-y-costos.md`: el correo de Hostinger está en capa gratuita con tope de 5 cuentas, y se agregó la sección «Costo mensual promedio de la infraestructura» (fijo ~US$14 a 24; promedio para planear la beta ~US$20 a 30 al mes, con tres escenarios de uso y supuesto de MX$18.5 por dólar).
+

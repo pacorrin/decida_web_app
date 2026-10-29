@@ -18,9 +18,38 @@ Inventario de los proveedores de los que depende Decida. Las cifras son **aproxi
 | **PostHog** | Analítica de producto y *feature flags* | Capa gratuita | **US$0**; hasta 1 millón de eventos al mes |
 | **Sentry** | Errores en producción | Capa gratuita | **US$0**; hasta 5,000 errores al mes |
 | **Cloudflare Turnstile** | Captcha del registro | Gratis | **US$0**; verificaciones ilimitadas |
-| **Hostinger** | Dominio `decida.mx` y cuentas de correo de Decida | Renovación anual | **MX$816.99 al año** el dominio (~MX$68 al mes); vence en octubre de 2030 |
+| **Hostinger** | Dominio `decida.mx` y cuentas de correo de Decida | Renovación anual | **MX$816.99 al año** el dominio (~MX$68 al mes), vence en octubre de 2030; correo en capa gratuita (hasta 5 cuentas) |
 
 El costo que **escala con el uso real** es OpenAI, y el que se descuenta de cada venta es Stripe. El resto cabe hoy en capas gratuitas o en un plan fijo; el dominio es un cargo anual fijo.
+
+## Costo mensual promedio de la infraestructura
+Todo lo siguiente son **estimaciones** para planear, no un presupuesto del vendor. **Supuesto de tipo de cambio: US$1 = MX$18.5** (ajústalo si cambia). Cifras de OpenAI: las medidas en pruebas (~US$0.04 la vista previa gratuita, ~US$0.13 el reporte con investigación). No incluye la comisión de Stripe, que se descuenta de cada cobro y no es un costo fijo.
+
+**Costo fijo mensual (no depende de cuánta gente use Decida):**
+| Concepto | US$ al mes |
+|---|---|
+| Railway (app y base de datos) | 10 a 20 |
+| Hostinger (dominio, MX$816.99 al año ÷ 12 ≈ MX$68) | ~3.7 |
+| Resend, PostHog, Sentry, Turnstile, correo de Hostinger | 0 (capas gratuitas) |
+| **Total fijo** | **~14 a 24** |
+
+**Costo variable (OpenAI) y total, según el uso de la beta:**
+| Escenario | Uso al mes | OpenAI | Total aprox. (US$) | En pesos aprox. |
+|---|---|---|---|---|
+| Beta mínima | ~25 vistas previas | ~1 | **~15 a 25** | MX$280 a 460 |
+| Beta ligera | 50 vistas previas y 20 reportes con investigación | ~4.6 | **~19 a 29** | MX$350 a 540 |
+| Beta activa | 200 vistas previas y 60 reportes con investigación | ~16 | **~30 a 40** | MX$555 a 740 |
+
+**Promedio para planear la beta: ~US$20 a 30 al mes (≈ MX$370 a 560)**, casi todo hosting; OpenAI pesa poco mientras el volumen sea bajo.
+
+**Qué lo movería hacia arriba:**
+- **Resend Pro (+US$20):** si se superan ~50 registros al día (tope de 100 correos diarios en la capa gratuita).
+- **Sentry Team (~+US$26):** si se necesitan alertas personalizadas o más de 5,000 errores al mes.
+- **Railway Pro (US$20 de base):** si se pasa a ese plan; el uso incluido compensa parte del cobro.
+- **Más cuentas de correo en Hostinger:** más de 5 sale de la capa gratuita.
+- **Abuso o picos en OpenAI:** es el único costo sin techo; por eso el límite mensual de gasto es la medida pendiente más importante ([[seguridad-y-proteccion-de-costos#Qué sigue protegiendo poco (pendiente)]]).
+
+**Referencia contra ingresos:** un solo suscriptor de Explora (MX$59 al mes) deja unos MX$54 tras la comisión base de Stripe, así que la infraestructura de la beta (≈ MX$370 a 560) se cubre aproximadamente con **7 a 10 suscriptores de Explora**, sin contar el costo de OpenAI de sus propios reportes. Es una cuenta orientativa, no una proyección de negocio.
 
 ---
 
@@ -79,7 +108,7 @@ El costo que **escala con el uso real** es OpenAI, y el que se descuenta de cada
 ## Hostinger
 - **Para qué:** aloja el **dominio `decida.mx`** y las **cuentas de correo de Decida** (las direcciones de la marca, como la de contacto y soporte). **No** hospeda la app ni la base de datos: eso es Railway.
 - **Costo del dominio:** renovación anual de **MX$816.99** (~MX$68 al mes). **Ya está pagado y vence en octubre de 2030**, así que no hay cargo de dominio hasta entonces. Anotar la fecha de renovación para no perder el dominio.
-- **Costo de las cuentas de correo:** no se indicó; falta documentar si van incluidas en un plan de Hostinger o se pagan aparte y su fecha de renovación.
+- **Cuentas de correo:** hoy en **capa gratuita, con tope de 5 cuentas**. Si se necesitan más, hay que pasar a un plan de pago (costo por revisar en Hostinger).
 - **Conexión con otros vendors:** el dominio es el que se verifica en Resend para enviar correos desde `hello@decida.mx` y `billing@decida.mx` ([[correo-transaccional-resend]]), el que se agrega como *hostname* en Turnstile, y el que se apunta a Railway al publicar. Los registros DNS (SPF, DKIM, DMARC y el CNAME del dominio hacia Railway) se editan en el DNS de Hostinger.
 - **Cuidado:** correo corporativo (Hostinger) y envío transaccional (Resend) son cosas distintas. Si los registros SPF/DKIM de Resend se agregan en el dominio raíz pueden chocar con los de las cuentas de correo; por eso la guía de [[correo-transaccional-resend]] recomienda un subdominio dedicado como `mail.`.
 - **Alternativa revisada:** su VPS (~US$17 a 24 al mes) se comparó como hosting de la app y se descartó para la beta (ver [[#Railway]]).
@@ -87,7 +116,7 @@ El costo que **escala con el uso real** es OpenAI, y el que se descuenta de cada
 ---
 
 ## Costos que este documento no cubre (a documentar)
-- **Costo de las cuentas de correo** de Hostinger y herramientas internas (Notion, Linear).
+- **Herramientas internas** (Notion, Linear) y el costo de ampliar las cuentas de correo más allá de 5.
 - **Impuestos y facturación** (IVA sobre comisiones, CFDI): pendiente de revisar con asesoría contable y legal, está en la lista previa al lanzamiento.
 
 ## Ver también
