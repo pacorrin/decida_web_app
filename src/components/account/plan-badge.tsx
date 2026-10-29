@@ -62,14 +62,13 @@ const STYLES: Record<PlanBadgeTier, string> = {
   explora: "border-[#6baed6]/60 bg-[#e8f4fa] text-primary",
   // Valida: coral de acción, sólido: el primer salto fuerte.
   valida: "border-secondary bg-secondary text-secondary-foreground shadow-md shadow-secondary/30",
-  // Escala: verde de marca con acento coral (borde y ícono): el más resaltado.
-  escala:
-    "border-secondary bg-primary text-primary-foreground shadow-md shadow-primary/25 ring-2 ring-secondary/40",
+  // Escala: verde de marca sólido con corona dorada: el más resaltado.
+  escala: "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25",
 };
 
 const ICON_STYLES: Partial<Record<PlanBadgeTier, string>> = {
   valida: "text-secondary-foreground",
-  escala: "text-secondary",
+  escala: "text-[#f5b301]",
 };
 
 export function PlanBadge({ user }: { user: PlanBadgeUser }) {
