@@ -52,8 +52,12 @@ Estas **no estaban** en `.env.example` hasta el 2026-10-29 y tienen un valor por
 - **PostHog:** `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST`.
 - **Base y app:** `DATABASE_URL`, `NEXT_PUBLIC_APP_URL`, `OPENAI_API_KEY`.
 
+- **Cloudflare Turnstile (captcha):** `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (pública, antes del build) y `TURNSTILE_SECRET_KEY`. En producción sin la secreta el registro se rechaza a propósito. `TURNSTILE_DISABLED=true` apaga el captcha solo fuera de producción (e2e). En el widget de Cloudflare agregar `localhost` y el dominio de producción a los hostnames.
+
 ## Para producción (Railway)
-Checklist al desplegar: `DATABASE_URL`, `OPENAI_API_KEY`, **`OPENAI_MODEL_REASONING=gpt-5-mini`**, `NEXT_PUBLIC_APP_URL`, claves de Stripe de **modo real**, los tres `STRIPE_PRICE_*` de modo real y el endpoint de webhook con sus 6 eventos, `RESEND_API_KEY`, Sentry y PostHog (antes del build), y `REPORT_RESEARCH_ENABLED=true` (o el flag en PostHog).
+Checklist al desplegar: `DATABASE_URL`, `OPENAI_API_KEY`, **`OPENAI_MODEL_REASONING=gpt-5-mini`**, `NEXT_PUBLIC_APP_URL`, claves de Stripe de **modo real**, los tres `STRIPE_PRICE_*` de modo real y el endpoint de webhook con sus 6 eventos, `RESEND_API_KEY`, **las dos claves de Turnstile (y el dominio de Railway en sus hostnames)**, Sentry y PostHog (antes del build), y `REPORT_RESEARCH_ENABLED=true` (o el flag en PostHog).
 
 ## Retiradas
 `STRIPE_PRICE_ID` (suscripción única de $99), `STRIPE_PRICE_CREDITS_1/3/10` (paquetes de pago único) y `SUBSCRIPTIONS_ENABLED` ya no existen.
+
+**Base de datos al desplegar:** correr `pnpm db:deploy` contra la base de producción *antes* de levantar la versión nueva. La última migración es `20261030000000_verification_attempts` (agrega `vc_attempts` a `verification_codes`, el tope de 5 intentos por código de correo); sin ella, confirmar el correo falla. Verificado el 2026-10-30: las migraciones aplicadas sobre una base vacía dejan exactamente `schema.prisma` (`prisma migrate diff` sin diferencias).
