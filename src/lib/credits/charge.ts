@@ -158,6 +158,34 @@ export async function refundDegradedResearch(params: {
   return true;
 }
 
+/**
+ * «Con investigación»: si la regeneración falla o la investigación se degrada, se
+ * devuelve la parte de investigación (100 créditos) y la evaluación se queda con el
+ * desbloqueo básico ya pagado (50). No hace nada si el
+ * cobro de la mejora fue 0 (ya había pagado la investigación antes).
+ */
+export async function refundResearchUpgrade(params: {
+  userId: string;
+  assessmentId: string;
+  chargedAmount: number;
+  reason: "failed" | "degraded";
+}): Promise<boolean> {
+  if (params.chargedAmount <= 0) return false;
+  await refundCredits({
+    userId: params.userId,
+    amount: CREDIT_RESEARCH_DIFF,
+    assessmentId: params.assessmentId,
+    // Una clave por intento: así un segundo intento fallido también se devuelve.
+    reason: `research_upgrade_${Date.now()}`,
+    metadata: { reason: params.reason, charged: params.chargedAmount },
+  });
+  await prisma.assessments.update({
+    where: { asmt_id: params.assessmentId },
+    data: { asmt_credit_cost: CREDIT_COST_BASIC },
+  });
+  return true;
+}
+
 /** Desbloquear preview sin regenerar (cobra básico si aún no cobrada). */
 export async function unlockReportWithoutRegenerate(params: {
   userId: string;

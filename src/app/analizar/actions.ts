@@ -18,6 +18,7 @@ import { spendableBalance } from "@/lib/credits/access";
 import { generateReportWithCredits } from "@/lib/credits/generate";
 import {
   chargeForResearchUpgrade,
+  refundResearchUpgrade,
   unlockReportWithoutRegenerate,
 } from "@/lib/credits/charge";
 import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
@@ -1008,14 +1009,43 @@ export async function unlockReportWithResearch(
       where: { asmt_id: assessment.asmt_id },
       data: { asmt_status: "failed", asmt_completed_at: new Date() },
     });
+    // No se entregó la investigación: se devuelve esa parte del cobro.
+    await refundResearchUpgrade({
+      userId: user.user_id,
+      assessmentId: assessment.asmt_id,
+      chargedAmount: charge.amount,
+      reason: "failed",
+    });
     return {
       success: false,
-      message: "No se pudo regenerar el reporte con investigación.",
+      message:
+        "No se pudo regenerar el reporte con investigación. Te devolvimos los créditos de la investigación.",
     };
   }
 
+  // La investigación puede degradarse sin tumbar el reporte (sin fuentes): si pasó, se devuelve su parte.
+  const generated = await getAssessmentById(assessment.asmt_id);
+  const researchStatus = (
+    generated?.assessment_report?.arep_research as { status?: string } | null | undefined
+  )?.status;
+  const degraded = researchStatus === "failed" || researchStatus === "skipped";
+  if (degraded) {
+    await refundResearchUpgrade({
+      userId: user.user_id,
+      assessmentId: assessment.asmt_id,
+      chargedAmount: charge.amount,
+      reason: "degraded",
+    });
+  }
+
   revalidatePath("/analizar/resultado");
-  return { success: true, message: "Reporte actualizado con investigación." };
+  revalidatePath(`/cuenta/evaluaciones/${assessment.asmt_id}`);
+  return {
+    success: true,
+    message: degraded
+      ? "No pudimos completar la investigación de mercado; te devolvimos esos créditos y desbloqueamos el reporte."
+      : "Reporte actualizado con investigación.",
+  };
 }
 
 export async function saveAndContinueLater(): Promise<void> {

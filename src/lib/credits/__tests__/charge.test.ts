@@ -39,6 +39,7 @@ import {
   planAndChargeForReport,
   refundDegradedResearch,
   refundFailedReport,
+  refundResearchUpgrade,
 } from "../charge";
 
 beforeEach(() => {
@@ -165,6 +166,36 @@ describe("reembolsos", () => {
         researchStatus: "failed",
       }),
     ).toBe(false);
+    expect(m.refundCredits).not.toHaveBeenCalled();
+  });
+});
+
+describe("refundResearchUpgrade", () => {
+  it("devuelve la parte de investigación (100) y deja el costo en el básico (50)", async () => {
+    const ok = await refundResearchUpgrade({
+      userId: "u1",
+      assessmentId: "a1",
+      chargedAmount: 150,
+      reason: "failed",
+    });
+    expect(ok).toBe(true);
+    expect(m.refundCredits).toHaveBeenCalledWith(
+      expect.objectContaining({ userId: "u1", assessmentId: "a1", amount: 100, reason: expect.stringMatching(/^research_upgrade_/) }),
+    );
+    expect(m.update).toHaveBeenCalledWith({
+      where: { asmt_id: "a1" },
+      data: { asmt_credit_cost: 50 },
+    });
+  });
+
+  it("si ya había pagado el básico y la mejora costó 100, también devuelve 100", async () => {
+    await refundResearchUpgrade({ userId: "u1", assessmentId: "a1", chargedAmount: 100, reason: "degraded" });
+    expect(m.refundCredits).toHaveBeenCalledWith(expect.objectContaining({ amount: 100 }));
+  });
+
+  it("si la mejora no cobró nada, no devuelve nada", async () => {
+    const ok = await refundResearchUpgrade({ userId: "u1", assessmentId: "a1", chargedAmount: 0, reason: "failed" });
+    expect(ok).toBe(false);
     expect(m.refundCredits).not.toHaveBeenCalled();
   });
 });
