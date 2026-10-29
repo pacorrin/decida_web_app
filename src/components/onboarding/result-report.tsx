@@ -29,11 +29,12 @@ import {
   AlertCircle,
   Lock,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { ReportErrorState } from "@/components/onboarding/report-error-state";
 import { FeedbackForm } from "@/components/onboarding/feedback-form";
 import { AnalyzeAnotherButton } from "@/components/onboarding/analyze-another-button";
 import { UnlockReportButtons } from "@/components/onboarding/unlock-report-buttons";
-import { CREDIT_COST_BASIC, CREDIT_COST_RESEARCH } from "@/lib/credits/costs";
+import { CREDIT_COST_BASIC, CREDIT_COST_RESEARCH, formatCredits } from "@/lib/credits/costs";
 import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
 import { Markdown } from "@/components/ui/markdown";
 import {
@@ -87,11 +88,15 @@ const FULL_REPORT_INCLUDES = [
   "Recomendación final",
 ] as const;
 
+/** Quién mira el reporte: si tiene un plan vigente, los candados se abren con sus créditos. */
+export type ReportViewer = { hasPlan: boolean; creditsBalance: number };
+
 type ResultReportProps = {
   assessment: AssessmentWithRelations;
   showFeedback?: boolean;
   showAnalyzeAnother?: boolean;
   access?: "full" | "free";
+  viewer?: ReportViewer;
 };
 
 export function ResultReport({
@@ -99,8 +104,10 @@ export function ResultReport({
   showFeedback = true,
   showAnalyzeAnother = true,
   access = "full",
+  viewer,
 }: ResultReportProps) {
   const isFree = access === "free";
+  const hasPlan = viewer?.hasPlan ?? false;
   const report = assessment.assessment_report;
   const scores = assessment.assessment_score;
   const financial = assessment.financial_inputs;
@@ -182,9 +189,18 @@ export function ResultReport({
             <strong className="font-medium text-foreground">
               sin investigación de mercado
             </strong>
-            . Las cifras de mercado son tus supuestos. Desbloquea el reporte
-            completo con un plan cuando quieras.
+            . Las cifras de mercado son tus supuestos.{" "}
+            {hasPlan
+              ? "Esta evaluación aún no está desbloqueada: usa tus créditos para ver el reporte completo."
+              : "Desbloquea el reporte completo con un plan cuando quieras."}
           </p>
+        )}
+        {isFree && report && hasPlan && (
+          <FullReportCta
+            assessmentId={assessment.asmt_id}
+            viewer={viewer}
+            className="mb-6 border-0 py-0 md:py-0"
+          />
         )}
         {/* Table of Contents - Mobile */}
         <div className="lg:hidden">
@@ -493,7 +509,7 @@ export function ResultReport({
             {isFree && (
               <LockedNote>
                 El desglose de productos, los cálculos y el análisis financiero
-                completo se desbloquean con la suscripción.
+                completo se desbloquean {hasPlan ? "con tus créditos" : "con un plan"}.
               </LockedNote>
             )}
 
@@ -587,7 +603,7 @@ export function ResultReport({
                     {isFree && risk.howToReduce && (
                       <CardContent>
                         <LockedNote className="mt-0">
-                          Cómo reducirlo: disponible con la suscripción.
+                          Cómo reducirlo: disponible {hasPlan ? "al desbloquear con tus créditos" : "con un plan"}.
                         </LockedNote>
                       </CardContent>
                     )}
@@ -601,7 +617,7 @@ export function ResultReport({
                 {redFlags.length === 1
                   ? "Detectamos 1 alerta en tus números."
                   : `Detectamos ${redFlags.length} alertas en tus números.`}{" "}
-                Suscríbete para ver cuáles son.
+                {hasPlan ? "Desbloquea con tus créditos para ver cuáles son." : "Elige un plan para ver cuáles son."}
               </LockedNote>
             )}
 
@@ -637,6 +653,7 @@ export function ResultReport({
         )}
         {isFree && report && (
           <LockedSection
+            hasPlan={hasPlan}
             id="personal"
             title="Compatibilidad personal"
             description="Qué tan bien encajan tu perfil, tu experiencia y tus objetivos con esta idea, y dónde te conviene apoyarte."
@@ -654,6 +671,7 @@ export function ResultReport({
         )}
         {isFree && report && (
           <LockedSection
+            hasPlan={hasPlan}
             id="tiempo"
             title="Tiempo y operación"
             description="Cuánta dedicación pide el negocio, cómo sería tu operación del día a día y qué puede saturarte."
@@ -671,6 +689,7 @@ export function ResultReport({
         )}
         {isFree && report && (
           <LockedSection
+            hasPlan={hasPlan}
             id="escalabilidad"
             title="Escalabilidad"
             description="Qué tanto puede crecer la idea sin crecer tu carga, y qué la frenaría."
@@ -706,7 +725,7 @@ export function ResultReport({
                 {lockedWeeks === 1
                   ? "Falta 1 semana del plan de validación."
                   : `Faltan ${lockedWeeks} semanas del plan de validación.`}{" "}
-                Se desbloquean con la suscripción.
+                Se desbloquean {hasPlan ? "con tus créditos" : "con un plan"}.
               </LockedNote>
             )}
           </ReportSection>
@@ -725,11 +744,12 @@ export function ResultReport({
         {isFree && report && (
           <>
             <LockedSection
+            hasPlan={hasPlan}
               id="recomendacion"
               title="Recomendación final"
               description="El veredicto explicado y los siguientes pasos concretos para tu caso."
             />
-            <FullReportCta assessmentId={assessment.asmt_id} />
+            <FullReportCta assessmentId={assessment.asmt_id} viewer={viewer} />
           </>
         )}
 
@@ -789,10 +809,12 @@ function LockedSection({
   id,
   title,
   description,
+  hasPlan,
 }: {
   id: ReportTocSectionId;
   title: string;
   description: string;
+  hasPlan: boolean;
 }) {
   return (
     <ReportSection id={id} title={title}>
@@ -807,10 +829,10 @@ function LockedSection({
             <TrackedLink
               event={ANALYTICS_EVENTS.subscribeClicked}
               eventProps={{ location: "report_lock" }}
-              href={CREDITS_PLANS_PATH}
+              href={hasPlan ? "#desbloquear" : CREDITS_PLANS_PATH}
               className="text-sm font-medium text-primary underline-offset-4 hover:underline"
             >
-              Elegir un plan para desbloquear
+              {hasPlan ? "Desbloquear con tus créditos" : "Elegir un plan para desbloquear"}
             </TrackedLink>
           </div>
         </CardContent>
@@ -836,9 +858,17 @@ function LockedNote({
   );
 }
 
-function FullReportCta({ assessmentId }: { assessmentId: string }) {
+function FullReportCta({
+  assessmentId,
+  viewer,
+  className,
+}: {
+  assessmentId: string;
+  viewer?: ReportViewer;
+  className?: string;
+}) {
   return (
-    <div className="border-b border-border/60 py-10 md:py-14">
+    <div id="desbloquear" className={cn("scroll-mt-24 border-b border-border/60 py-10 md:py-14", className)}>
       <Card className="border-[#6baed6]/30 bg-accent/20">
         <CardHeader>
           <CardTitle className="text-primary">
@@ -848,6 +878,12 @@ function FullReportCta({ assessmentId }: { assessmentId: string }) {
             Con {CREDIT_COST_BASIC} créditos ves todo lo ya generado. Con{" "}
             {CREDIT_COST_RESEARCH} regeneramos el reporte incluyendo
             investigación de mercado.
+            {viewer?.hasPlan && (
+              <>
+                {" "}
+                Tu saldo: <strong className="font-medium text-foreground">{formatCredits(viewer.creditsBalance)} créditos</strong>.
+              </>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

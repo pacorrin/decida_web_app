@@ -4,7 +4,7 @@ import { ResultReport } from "@/components/onboarding/result-report";
 import { enforceStepAccess } from "@/lib/onboarding/guard";
 import { getCurrentUser } from "@/lib/auth/session-server";
 import { hasFullAccess } from "@/lib/subscription/access";
-import { hasReportAccess } from "@/lib/credits/access";
+import { hasReportAccess, spendableBalance } from "@/lib/credits/access";
 import { AutoRefresh } from "@/components/onboarding/auto-refresh";
 import {
   ONBOARDING_STEPS,
@@ -99,6 +99,11 @@ export default async function ResultadoPage() {
         <ResultReport
           assessment={assessment}
           access={hasReportAccess(assessment) ? "full" : "free"}
+          viewer={
+            user
+              ? { hasPlan: hasFullAccess(user), creditsBalance: spendableBalance(user) }
+              : undefined
+          }
         />
       </main>
     </div>
