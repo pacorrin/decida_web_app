@@ -21,6 +21,7 @@ Fuentes: `package.json` (scripts), `prisma.config.ts`, [[variables-de-entorno]],
 | Base de datos | servicio `Postgres` (plantilla de Railway, PostgreSQL 18). **Sin proxy TCP público**: solo se alcanza por la red privada (`postgres.railway.internal`) |
 | App | servicio `decida-app`, conectado al repo `pacorrin/decida_web_app`, **rama `main`**; se construye con Railpack (Node y pnpm) |
 | Plan | Hobby |
+| Dominio | `decida.mx` agregado al servicio el 2026-10-29; **pendiente de DNS en Hostinger** (ver abajo) |
 
 ## Migraciones
 Las migraciones corren **solas antes de cada despliegue**: el servicio tiene como comando de pre-despliegue `pnpm db:deploy` (`prisma migrate deploy`), que se ejecuta por la red privada contra la base de producción. Si una migración falla, el despliegue falla y la versión anterior sigue sirviendo. Primer despliegue (2026-10-29): se aplicaron las 7 migraciones, hasta `20261030000000_verification_attempts`.
@@ -41,8 +42,15 @@ Consecuencia: una migración nueva llega a producción junto con el merge a `mai
 - Un despliegue puede fallar por la infraestructura de Railway y no por el código (el 2026-10-29 el servicio de construcción respondió «connection refused»): se reintenta.
 - No hay acceso por SSH sin una llave configurada en Railway.
 
+## Dominio y DNS (Hostinger)
+Registros que pide Railway para `decida.mx` (se editan en el DNS de [[vendors-y-costos#Hostinger]]):
+- **Tráfico:** registro en la raíz (`@`) hacia `4bkylcrn.up.railway.app`. Una raíz no admite un CNAME común sin romper el correo (MX): usar **ALIAS/ANAME** (o CNAME con aplanado) si Hostinger lo ofrece.
+- **Verificación:** TXT en `_railway-verify` con el valor `railway-verify=…` que muestra `railway domain status decida.mx --service decida-app`.
+- **No borrar** los registros MX ni los TXT existentes (correo de Decida, SPF) ni los de Resend. Solo reemplazar el registro A/AAAA/CNAME de la raíz que apunte al hosting de Hostinger.
+- Cuando el DNS propague, Railway emite el certificado solo. Estado: `railway domain status decida.mx --service decida-app --json`.
+
 ## Pendiente
-Dominio público y DNS en Hostinger ([[vendors-y-costos#Hostinger]]), cargar las claves, webhook y portal de Stripe en modo real, la compra real de MX$59 con su reembolso, y el límite mensual de gasto en OpenAI. Ver [[seguridad-y-proteccion-de-costos]].
+Cargar las claves (hecho el 2026-10-29: OpenAI y los `price_` de Stripe corregidos), webhook y portal de Stripe en modo real, la compra real de MX$59 con su reembolso, y el límite mensual de gasto en OpenAI. Ver [[seguridad-y-proteccion-de-costos]].
 
 ## Ver también
 [[variables-de-entorno]] · [[vendors-y-costos]] · [[seguridad-y-proteccion-de-costos]] · [[pagos-con-stripe]] · [[stack-tecnico]]
