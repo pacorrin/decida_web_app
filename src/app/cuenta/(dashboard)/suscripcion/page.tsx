@@ -68,8 +68,7 @@ export default async function SuscripcionPage({
       <div className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight text-primary">Plan</h1>
         <p className="text-sm text-muted-foreground">
-          Cada plan te da créditos cada mes. Al renovar, tu saldo se restablece a los créditos de
-          tu plan: los que no uses no se acumulan.
+          Cada plan te da créditos cada mes para analizar tus ideas.
         </p>
       </div>
 

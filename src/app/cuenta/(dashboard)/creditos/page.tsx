@@ -40,8 +40,7 @@ export default async function CreditosPage() {
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold tracking-tight text-primary">Créditos</h1>
           <p className="text-sm text-muted-foreground">
-            Tu plan te da créditos cada mes. Se usan al desbloquear o generar un análisis y se
-            restablecen en cada renovación: los que no uses no se acumulan.
+            Tu plan te da créditos cada mes. Se usan al desbloquear o generar un análisis.
           </p>
         </div>
         <Link
