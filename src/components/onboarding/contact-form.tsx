@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import { PasswordField } from "@/components/auth/password-field";
 import { Input } from "@/components/ui/input";
 import {
   Field,
@@ -60,11 +61,9 @@ export function ContactForm({ assessment, turnstileSiteKey }: ContactFormProps) 
 
         <Field>
           <FieldLabel htmlFor="password">Contraseña</FieldLabel>
-          <Input
+          <PasswordField
             id="password"
             name="password"
-            type="password"
-            autoComplete="new-password"
             placeholder="Mínimo 8 caracteres"
             required
             aria-invalid={!!state.fieldErrors?.password}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { signUp, type AuthActionState } from "@/app/cuenta/actions";
 import { Button } from "@/components/ui/button";
+import { PasswordField } from "@/components/auth/password-field";
 import { Input } from "@/components/ui/input";
 import {
   Field,
@@ -66,11 +67,9 @@ export function SignUpForm({ turnstileSiteKey }: { turnstileSiteKey: string | nu
 
               <Field>
                 <FieldLabel htmlFor="password">Contraseña</FieldLabel>
-                <Input
+                <PasswordField
                   id="password"
                   name="password"
-                  type="password"
-                  autoComplete="new-password"
                   placeholder="Mínimo 8 caracteres"
                   required
                   aria-invalid={!!signUpState.fieldErrors?.password}
