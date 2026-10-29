@@ -58,12 +58,18 @@ function emphasisOf(id: PlanId): 1 | 2 | 3 {
 const STYLES: Record<PlanBadgeTier, string> = {
   // Gratis: discreto, solo contorno.
   free: "border-border bg-transparent text-muted-foreground",
-  // Explora: tinte suave del verde de marca.
-  explora: "border-border bg-muted text-primary",
-  // Valida: azul guía, más presente.
-  valida: "border-[#6baed6] bg-[#e8f4fa] text-primary shadow-[0_0_0_1px_rgba(107,174,214,0.35)]",
-  // Escala: verde de marca sólido, el más resaltado.
-  escala: "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25",
+  // Explora: los azules de Decida (cielo tenue + azul guía).
+  explora: "border-[#6baed6]/60 bg-[#e8f4fa] text-primary",
+  // Valida: coral de acción, sólido: el primer salto fuerte.
+  valida: "border-secondary bg-secondary text-secondary-foreground shadow-md shadow-secondary/30",
+  // Escala: verde de marca con acento coral (borde y ícono): el más resaltado.
+  escala:
+    "border-secondary bg-primary text-primary-foreground shadow-md shadow-primary/25 ring-2 ring-secondary/40",
+};
+
+const ICON_STYLES: Partial<Record<PlanBadgeTier, string>> = {
+  valida: "text-secondary-foreground",
+  escala: "text-secondary",
 };
 
 export function PlanBadge({ user }: { user: PlanBadgeUser }) {
@@ -86,7 +92,7 @@ export function PlanBadge({ user }: { user: PlanBadgeUser }) {
         STYLES[state.tier],
       )}
     >
-      {Icon && <Icon className="size-3.5" aria-hidden />}
+      {Icon && <Icon className={cn("size-3.5", ICON_STYLES[state.tier])} aria-hidden />}
       <span>{state.label}</span>
       {state.note && <span className="font-normal opacity-80">· {state.note}</span>}
     </Link>
