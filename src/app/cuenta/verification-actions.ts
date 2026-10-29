@@ -11,6 +11,7 @@ import {
   getPendingVerification,
   VERIFICATION_BACK_PATHS,
 } from "@/lib/auth/pending-verification";
+import { sendWelcomeEmail } from "@/lib/email/welcome";
 import { sendSignupCode } from "@/lib/auth/signup-code";
 import { getAssessmentIdFromCookie } from "@/lib/onboarding/session-server";
 import { getStepBySlug } from "@/lib/onboarding/steps";
@@ -58,12 +59,17 @@ export async function verifyEmailCode(
     };
   }
 
+  const firstVerification = !user.user_email_verified_at;
   await markEmailVerified(user.user_id);
   await createUserSession(user.user_id);
   await clearPendingVerification();
   await trackServer(user.user_id, ANALYTICS_EVENTS.accountCreated, {
     source: pending.flow,
   });
+
+  // Un solo punto para los dos flujos (registro y contacto del análisis): solo la
+  // primera vez que se confirma el correo, no al volver a verificar una cuenta.
+  if (firstVerification) await sendWelcomeEmail(user);
 
   if (pending.flow === "registro") redirect("/cuenta");
 
