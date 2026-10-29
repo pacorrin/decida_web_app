@@ -13,9 +13,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { logOut } from "@/app/cuenta/actions";
 import { resetAnalytics } from "@/lib/analytics/client";
+import { PlanBadge } from "@/components/account/plan-badge";
 
 type DashboardNavbarProps = {
-  user: { user_name: string | null; user_email: string };
+  user: {
+    user_name: string | null;
+    user_email: string;
+    user_subscription_status: string;
+    user_subscription_plan: string | null;
+    user_subscription_period_end: Date | null;
+  };
 };
 
 export function DashboardNavbar({ user }: DashboardNavbarProps) {
@@ -36,41 +43,44 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
           </span>
         </Link>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className="flex items-center gap-2 rounded-lg border border-transparent px-2 py-1.5 text-sm font-medium text-foreground outline-none hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-            data-testid="dashboard-user-menu"
-          >
-            <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <UserIcon className="size-4" aria-hidden />
-            </span>
-            <span className="max-w-40 truncate">{label}</span>
-            <ChevronDown className="size-4 text-muted-foreground" aria-hidden />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem render={<Link href="/cuenta/perfil" />}>
-              Perfil
-            </DropdownMenuItem>
-            <DropdownMenuItem render={<Link href="/cuenta/creditos" />}>
-              Créditos
-            </DropdownMenuItem>
-            <DropdownMenuItem render={<Link href="/cuenta/suscripcion" />}>
-              Plan
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              data-testid="dashboard-logout"
-              onClick={() => {
-                resetAnalytics();
-                startTransition(() => {
-                  void logOut();
-                });
-              }}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <PlanBadge user={user} />
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className="flex items-center gap-2 rounded-lg border border-transparent px-2 py-1.5 text-sm font-medium text-foreground outline-none hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              data-testid="dashboard-user-menu"
             >
-              Cerrar sesión
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <UserIcon className="size-4" aria-hidden />
+              </span>
+              <span className="max-w-40 truncate">{label}</span>
+              <ChevronDown className="size-4 text-muted-foreground" aria-hidden />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem render={<Link href="/cuenta/perfil" />}>
+                Perfil
+              </DropdownMenuItem>
+              <DropdownMenuItem render={<Link href="/cuenta/creditos" />}>
+                Créditos
+              </DropdownMenuItem>
+              <DropdownMenuItem render={<Link href="/cuenta/suscripcion" />}>
+                Plan
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                data-testid="dashboard-logout"
+                onClick={() => {
+                  resetAnalytics();
+                  startTransition(() => {
+                    void logOut();
+                  });
+                }}
+              >
+                Cerrar sesión
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );
