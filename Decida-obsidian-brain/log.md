@@ -579,3 +579,7 @@ Se creó la rama `dev` (trabajo diario); `main` queda como producción y es la q
 
 Se agregaron a PostHog: `cta_clicked` con `location`, `onboarding_step_completed`, los eventos del registro (`signup_submitted`, `verification_code_sent`, `verification_failed`, `verification_resent`, `captcha_rejected`) y `report_generation_failed`. Los de visitantes sin cuenta usan el id anónimo de la cookie de PostHog. Documentado en `wiki/arquitectura/analitica-y-eventos.md`. Pendiente: crear los embudos en PostHog y verificar los eventos en vivo tras desplegar.
 
+## [2026-10-29] decision | Primer merge de dev a main y hallazgo del despliegue automático
+
+Se pasó `dev` a `main` (analítica ampliada y documentación) y se desplegó `9e53420` en Railway. Se descubrió que el servicio no tiene disparador de GitHub (la cuenta de Railway no tiene acceso al repo), así que los pushes a `main` no despliegan solos; se despliega a mano con `serviceInstanceDeployV2` y `commitSha`. Detalle y cómo activarlo en `wiki/arquitectura/despliegue-en-railway.md`.
+

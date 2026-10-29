@@ -35,6 +35,11 @@ Consecuencia: una migración nueva llega a producción junto con el merge a `mai
 - Las `NEXT_PUBLIC_*` se incrustan **al construir**: después de cargarlas hay que **redesplegar** para que surtan efecto.
 - El webhook de Stripe necesita primero un dominio público para dar de alta su URL; de ahí sale el `whsec_` que vuelve a Railway.
 
+## ⚠️ El despliegue automático desde GitHub NO está activo (2026-10-29)
+Al hacer `git push origin main` Railway **no** despliega solo: el servicio no tiene un disparador de GitHub. Intentar crearlo por la API falla con «no one in the project has access to» `pacorrin/decida_web_app`: la cuenta de Railway no tiene instalada la aplicación de GitHub para ese repo. El primer despliegue funcionó porque se creó desde la CLI, pero eso no deja el disparador.
+- **Para activarlo (lo hace el usuario):** en Railway, Account Settings → Integrations → conectar GitHub y dar acceso al repo `pacorrin/decida_web_app`; después, en el servicio `decida-app` → Settings → Source, confirmar repo y rama `main` con despliegue automático. Luego probarlo con un commit pequeño.
+- **Mientras tanto, para publicar `main`:** después del merge y el push, desplegar a mano con la mutación `serviceInstanceDeployV2` pasando `commitSha` (el hash completo de `main`, `git rev-parse origin/main`). Sin `commitSha` redespliega el último commit que Railway conoce, que puede ser uno viejo. Así se publicó `9e53420` el 2026-10-29.
+
 ## Operación (comandos útiles)
 - Ver estado: `railway deployment list --service decida-app --json`; logs de arranque y migración: `railway logs --service decida-app --deployment`.
 - **Redesplegar desde el repo** cuando el último despliegue falló o no se puede reintentar (`railway redeploy` se niega): mutación `serviceInstanceDeployV2` de la API de Railway. `railway up` **no** sirve para esto: sube la carpeta local (la rama `dev`), no `main`.
