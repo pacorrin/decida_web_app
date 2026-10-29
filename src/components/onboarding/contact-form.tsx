@@ -139,8 +139,8 @@ export function ContactForm({ assessment }: ContactFormProps) {
                 >
                   Política de privacidad
                 </Link>
-                , y autorizo el tratamiento de mis datos para enviarme el
-                reporte.
+                , y autorizo el tratamiento de mis datos para crear mi cuenta y
+                gestionar mi historial de análisis.
               </span>
             </span>
           </label>

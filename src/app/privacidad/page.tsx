@@ -35,8 +35,9 @@ export default function PrivacidadPage() {
         <ul className="list-disc space-y-2 pl-5">
           <li>
             <strong className="text-foreground">Correo electrónico:</strong>{" "}
-            para enviarte tu reporte de viabilidad y comunicaciones relacionadas
-            con tu evaluación.
+            para crear e identificar tu cuenta, iniciar sesión, recuperar tu
+            contraseña y enviarte avisos relacionados con tu cuenta y tu plan
+            (por ejemplo, cobros).
           </li>
           <li>
             <strong className="text-foreground">Teléfono:</strong> para contacto
