@@ -149,6 +149,8 @@ export type RefineIdeaState = ActionState & {
 export type ActionState = {
   success: boolean;
   message?: string;
+  /** Destino externo (Stripe) al que navega el cliente. */
+  redirectUrl?: string;
   fieldErrors?: Record<string, string[]>;
   values?: Record<string, string | string[]>;
 };

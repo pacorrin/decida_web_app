@@ -23,6 +23,9 @@ export function PaymentStep() {
   const [selected, setSelected] = useState<string | null>(null);
   useEffect(() => {
     if (state.message) toast.error(state.message);
+    // Salida a Stripe: se navega desde el cliente (un redirect() externo del servidor
+    // dispara un error del navegador justo antes de salir).
+    if (state.success && state.redirectUrl) window.location.assign(state.redirectUrl);
   }, [state]);
 
   return (

@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth/session-server";
-import { redirect } from "next/navigation";
 import { createPortalUrl } from "@/lib/stripe/portal";
 import { describeStripeError } from "@/lib/subscription/stripe-errors";
 import { getPlan } from "@/lib/credits/plans";
@@ -11,6 +10,8 @@ import { startSubscription } from "@/lib/subscription/start";
 export type SubscribeState = {
   success: boolean;
   message?: string;
+  /** Destino externo (Stripe): el cliente navega; no se usa `redirect()` para no mostrar un error. */
+  redirectUrl?: string;
 };
 
 export async function subscribe(
@@ -33,7 +34,7 @@ export async function subscribe(
   if (result.kind === "already") {
     return { success: false, message: "Tu cuenta ya tiene una suscripción vigente." };
   }
-  if (result.kind === "redirect") redirect(result.url);
+  if (result.kind === "redirect") return { success: true, redirectUrl: result.url };
 
   revalidatePath("/cuenta", "layout");
   return { success: true };
@@ -58,5 +59,5 @@ export async function openBillingPortal(
     return { success: false, message: describeStripeError(err) };
   }
   if (!url) return { success: false, message: "El portal de pagos no está disponible." };
-  redirect(url);
+  return { success: true, redirectUrl: url };
 }

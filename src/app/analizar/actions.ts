@@ -499,7 +499,7 @@ export async function savePayment(
     assessmentId: assessment.asmt_id,
   });
   if (result.kind === "error") return { success: false, message: result.message };
-  if (result.kind === "redirect") redirect(result.url);
+  if (result.kind === "redirect") return { success: true, redirectUrl: result.url };
 
   redirectToStep("perfil");
 }
