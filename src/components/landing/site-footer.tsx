@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { LOGIN_LINK, NAV_LINKS } from "@/components/landing/landing-content";
+import { BetaBadge } from "@/components/beta/beta-badge";
+import { BETA_FOOTER_TEXT, BETA_LABEL } from "@/lib/beta";
 import { LegalFooterLinks } from "@/components/legal/legal-footer-links";
 import { Separator } from "@/components/ui/separator";
 
@@ -52,6 +54,15 @@ export function SiteFooter() {
           </nav>
         </div>
         <Separator className="my-8" />
+        <div
+          data-testid="beta-footer-notice"
+          className="mx-auto mb-6 flex max-w-2xl flex-col items-center gap-2 rounded-xl border border-secondary/40 bg-secondary/10 px-4 py-3 text-center sm:flex-row sm:text-left"
+        >
+          <BetaBadge className="shrink-0">{BETA_LABEL}</BetaBadge>
+          <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+            {BETA_FOOTER_TEXT}
+          </p>
+        </div>
         <LegalFooterLinks className="mb-4" />
         <p className="text-center text-xs text-muted-foreground">
           © {new Date().getFullYear()} Decida. Diagnóstico de viabilidad de negocios.

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Coins, FileText } from "lucide-react";
+import { BetaAccountNotice } from "@/components/beta/beta-account-notice";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -14,7 +15,7 @@ export function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-56 shrink-0 self-stretch border-r border-border/80 py-8 pr-4 sm:block">
+    <aside className="hidden w-56 shrink-0 self-stretch flex-col justify-between gap-6 border-r border-border/80 py-8 pr-4 sm:flex">
       <nav aria-label="Navegación de la cuenta" className="space-y-1">
         {NAV_ITEMS.map((item) => {
           const active =
@@ -41,6 +42,7 @@ export function DashboardSidebar() {
           );
         })}
       </nav>
+      <BetaAccountNotice />
     </aside>
   );
 }

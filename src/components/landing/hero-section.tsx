@@ -1,4 +1,6 @@
 import { Sparkles } from "lucide-react";
+import { BetaBadge } from "@/components/beta/beta-badge";
+import { BETA_HERO_TEXT } from "@/lib/beta";
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
 import { HeroJudgmentCard } from "@/components/landing/hero-judgment-card";
 
@@ -10,7 +12,7 @@ export function HeroSection() {
     >
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
         <div className="decida-reveal space-y-8">
-          <div>
+          <div className="flex flex-wrap items-center gap-2">
             <span
               data-testid="ai-badge"
               className="inline-flex items-center gap-1.5 rounded-full border border-[#6baed6]/40 bg-[#e8f4fa] px-2.5 py-1 text-xs font-medium text-primary"
@@ -18,6 +20,7 @@ export function HeroSection() {
               <Sparkles className="size-3.5" aria-hidden />
               Potenciado con IA
             </span>
+            <BetaBadge>{BETA_HERO_TEXT}</BetaBadge>
           </div>
           <div className="space-y-5">
             <h1

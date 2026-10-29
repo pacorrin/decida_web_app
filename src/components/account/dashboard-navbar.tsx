@@ -14,6 +14,7 @@ import {
 import { logOut } from "@/app/cuenta/actions";
 import { resetAnalytics } from "@/lib/analytics/client";
 import { PlanBadge } from "@/components/account/plan-badge";
+import { BetaBadge } from "@/components/beta/beta-badge";
 
 type DashboardNavbarProps = {
   user: {
@@ -32,16 +33,19 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-border/80 bg-background">
       <div className="mx-auto flex h-16 w-full max-w-[2560px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link
-          href="/cuenta"
-          className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label="Decida, mi cuenta"
-        >
-          <Image src="/logo.svg" alt="" width={44} height={27} aria-hidden />
-          <span className="text-lg font-semibold tracking-tight text-primary">
-            Decida
-          </span>
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/cuenta"
+            className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label="Decida, mi cuenta"
+          >
+            <Image src="/logo.svg" alt="" width={44} height={27} aria-hidden />
+            <span className="text-lg font-semibold tracking-tight text-primary">
+              Decida
+            </span>
+          </Link>
+          <BetaBadge className="px-2 py-0.5 text-[11px]">Beta</BetaBadge>
+        </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
           <PlanBadge user={user} />
