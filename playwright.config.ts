@@ -22,7 +22,7 @@ export default defineConfig({
   forbidOnly: isCI,
   retries: isCI ? 2 : 1,
   // El paso de evaluación corre de forma SÍNCRONA un modelo de razonamiento
-  // (o4-mini) + 9 llamadas en paralelo a OpenAI para generar el reporte. Correr
+  // (modelo de razonamiento) + 9 llamadas en paralelo a OpenAI para generar el reporte. Correr
   // varios flujos a la vez satura la API (rate-limit) y provoca timeouts, así
   // que serializamos (1 worker). Súbelo con `--workers=N` si tu cuota lo tolera.
   workers: 1,

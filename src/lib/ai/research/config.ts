@@ -32,7 +32,9 @@ export const MODEL_PRICES_USD_PER_M: Record<string, { in: number; out: number }>
   "gpt-4.1": { in: 2, out: 8 },
   "gpt-4.1-mini": { in: 0.4, out: 1.6 },
   "gpt-4o-mini": { in: 0.15, out: 0.6 },
-  "o4-mini": { in: 1.1, out: 4.4 },
+  "o4-mini": { in: 1.1, out: 4.4 }, // dado de baja
+  // Verifica estas tarifas contra la factura de OpenAI antes de fiarte del costo.
+  "gpt-5-mini": { in: 0.25, out: 2 },
 };
 
 const FALLBACK_PRICE = { in: 2, out: 8 };

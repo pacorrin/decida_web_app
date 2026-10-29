@@ -366,6 +366,8 @@ type ReviewOutcome = {
   action: "none" | "rewrite" | "human_review" | "skipped" | "failed";
   rewritten: ReportSectionKey[];
   issues: number;
+  /** Motivo (corto) cuando la revisión falló; para diagnosticar sin ir a los logs. */
+  error?: string;
 };
 
 export type BuildReportOptions = {
@@ -582,6 +584,7 @@ export async function buildReportData(
     } catch (error) {
       // La revisión nunca tumba el reporte: se entrega sin ella.
       outcome.action = "failed";
+      outcome.error = (error instanceof Error ? `${error.name}: ${error.message}` : String(error)).slice(0, 400);
       logReportGenerationError("report_review: la revisión falló, se entrega sin revisar", {
         assessmentId: assessment.asmt_id,
         error,
@@ -607,6 +610,7 @@ export async function buildReportData(
       issues: outcome.issues,
       rewritten: outcome.rewritten,
       review: outcome.review,
+      ...(outcome.error ? { error: outcome.error } : {}),
     },
     arep_needs_human_review: outcome.action === "human_review",
     // null = la investigación no estaba activa para esta cuenta.

@@ -30,7 +30,7 @@ Si cualquiera de las dos llamadas lanza, `saveEvaluation` registra el error (`lo
 `runScoringPipeline(assessment)`:
 
 1. `calculateDeterministicScores` (puro, sin IA): 6 dimensiones 0–100 — compatibilidad personal, viabilidad financiera, viabilidad comercial, **nivel de riesgo (alto = más riesgo)**, tiempo y escalabilidad — más métricas (margen bruto por venta y %, utilidad neta mensual, punto de equilibrio, recuperación en meses).
-2. `interpretScores` → **IA** (`generateReasoningJson`, modelo `OPENAI_MODEL_REASONING`, por defecto `o4-mini`, esfuerzo `medium`) con `SCORING_INTERPRET_SYSTEM_PROMPT`. Devuelve JSON validado con `scoringInterpretSchema` (6 semáforos, recomendación final, `red_flags`, resumen). Si falla o no valida → `fallbackScoringInterpret` (reglas fijas).
+2. `interpretScores` → **IA** (`generateReasoningJson`, modelo `OPENAI_MODEL_REASONING`, por defecto `gpt-5-mini` (antes `o4-mini`, dado de baja por OpenAI el 2026-10), esfuerzo `medium`) con `SCORING_INTERPRET_SYSTEM_PROMPT`. Devuelve JSON validado con `scoringInterpretSchema` (6 semáforos, recomendación final, `red_flags`, resumen). Si falla o no valida → `fallbackScoringInterpret` (reglas fijas).
 3. `enforceSignals`: los semáforos se **recalculan desde los puntajes** (umbral fijo); la IA solo puede empeorar el de riesgo.
 4. Alertas deterministas (`detectFinancialRedFlags`, `detectDependencyRedFlags`) + las de la IA se mezclan en `interpretation.red_flags`; a la BD (`assessment_scores.ascs_red_flags`) solo se guardan las deterministas.
 5. Se persiste `assessment_scores` (puntajes, semáforos, recomendación, alertas, versión de scoring).

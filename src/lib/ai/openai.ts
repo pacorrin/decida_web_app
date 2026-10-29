@@ -85,7 +85,8 @@ export function getNarrativeModel(): string {
 }
 
 export function getReasoningModel(): string {
-  return process.env.OPENAI_MODEL_REASONING ?? "o4-mini";
+  // o4-mini fue dado de baja por OpenAI (404): con él la revisión y la interpretación fallaban.
+  return process.env.OPENAI_MODEL_REASONING ?? "gpt-5-mini";
 }
 
 export function getReasoningEffort(): "low" | "medium" | "high" {
