@@ -55,6 +55,7 @@ Estas **no estaban** en `.env.example` hasta el 2026-10-29 y tienen un valor por
 - **Cloudflare Turnstile (captcha):** `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (pública, antes del build) y `TURNSTILE_SECRET_KEY`. En producción sin la secreta el registro se rechaza a propósito. `TURNSTILE_DISABLED=true` apaga el captcha solo fuera de producción (e2e). En el widget de Cloudflare agregar `localhost` y el dominio de producción a los hostnames.
 
 ## Para producción (Railway)
+Estado actual del proyecto, qué variables ya están y cuáles faltan: [[despliegue-en-railway]].
 Checklist al desplegar: `DATABASE_URL`, `OPENAI_API_KEY`, **`OPENAI_MODEL_REASONING=gpt-5-mini`**, `NEXT_PUBLIC_APP_URL`, claves de Stripe de **modo real**, los tres `STRIPE_PRICE_*` de modo real y el endpoint de webhook con sus 6 eventos, `RESEND_API_KEY`, **las dos claves de Turnstile (y el dominio de Railway en sus hostnames)**, Sentry y PostHog (antes del build), y `REPORT_RESEARCH_ENABLED=true` (o el flag en PostHog).
 
 ## Retiradas

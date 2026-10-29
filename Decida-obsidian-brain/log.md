@@ -571,3 +571,7 @@ Se creó en Sentry (org `atino`) la regla «La IA cayó a un respaldo (ai_fallba
 
 El usuario decidió no facturar durante la beta (solo el recibo de Stripe). Se documentó como pendiente posterior: al formalizar la plataforma, captura de datos de facturación, emisión del CFDI y lo relacionado con el SAT. Página nueva `wiki/decisiones/facturacion-y-cfdi-despues-de-la-beta.md`; se agregó a `tareas/tablero.md`, `producto/pricing-y-gtm.md` y `arquitectura/vendors-y-costos.md`. La revisión legal de los términos sigue abierta aparte.
 
+## [2026-10-29] decision | Rama dev, proyecto de Railway y primera migración en producción
+
+Se creó la rama `dev` (trabajo diario); `main` queda como producción y es la que despliega Railway. En el proyecto `Decida MX` se creó el servicio `Postgres` y el servicio `decida-app` conectado al repo en `main`, con `DATABASE_URL` por referencia y `OPENAI_MODEL_REASONING=gpt-5-mini`. Las migraciones corren como comando de pre-despliegue (`pnpm db:deploy`); se aplicaron las 7 en producción. Documentado en `wiki/arquitectura/despliegue-en-railway.md`. Pendiente: el resto de las variables, dominio, y Stripe en modo real.
+

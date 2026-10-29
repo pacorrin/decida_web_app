@@ -38,6 +38,13 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook --events checkout.s
 | `pnpm db:studio` | Explorador visual de la base |
 | `pnpm evals` | Evals del reporte: 15 casos, juez LLM y comparación con el baseline. Cuesta dinero; ver `docs/evals.md` |
 
+## Ramas y despliegue
+
+- **`dev`**: rama de trabajo; todo cambio se sube aquí.
+- **`main`**: producción. Railway despliega desde `main`, así que un merge de `dev` a `main` publica la versión nueva.
+- Las migraciones de Prisma se aplican solas antes de cada despliegue (`pnpm db:deploy` como comando de pre-despliegue). Prueba cada migración en local con `pnpm db:push` antes de llevarla a `main`.
+- Detalle del proyecto de Railway y de las variables que faltan: nota `despliegue-en-railway` en la bóveda de Obsidian.
+
 ## Variables de entorno
 
 Plantilla: [`.env.example`](.env.example). Las que empiezan con `NEXT_PUBLIC_` se incrustan en el navegador al compilar, así que en producción deben existir **antes del build**. Cambiar una variable exige reiniciar `pnpm dev`.

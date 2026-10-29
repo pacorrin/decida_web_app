@@ -47,6 +47,7 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | [[wiki/arquitectura/correo-transaccional-resend]] | Correos que manda la app, checklist para verificar dominio en Resend (DNS), pruebas y errores típicos — S3-09, 2026-10-14 |
 | [[wiki/arquitectura/seguridad-y-proteccion-de-costos]] | Verificación de correo con código, captcha Turnstile, guardas del onboarding, tope de intentos y pendientes de costo — 2026-10-29 |
 | [[wiki/arquitectura/vendors-y-costos]] | Los 8 proveedores externos (Railway, OpenAI, Stripe, Resend, PostHog, Sentry, Turnstile, Hostinger): para qué se usa cada uno y su costo aproximado — 2026-10-29 |
+| [[wiki/arquitectura/despliegue-en-railway]] | Flujo de ramas dev/main, proyecto y servicios de Railway, migraciones automáticas antes de cada despliegue, variables puestas y pendientes — 2026-10-29 |
 | [[wiki/arquitectura/dashboard-de-cuenta]] | Navbar + sidebar + rutas del panel `/cuenta` (route group, dropdown-menu nuevo) — 2026-08-05 |
 
 ## Marca
