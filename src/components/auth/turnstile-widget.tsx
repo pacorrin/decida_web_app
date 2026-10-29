@@ -9,6 +9,8 @@ type TurnstileApi = {
     options: {
       sitekey: string;
       language?: string;
+      theme?: "light" | "dark" | "auto";
+      size?: "normal" | "flexible" | "compact";
       callback: (token: string) => void;
       "expired-callback": () => void;
       "error-callback": () => void;
@@ -67,6 +69,9 @@ export function TurnstileWidget({ siteKey, resetSignal }: TurnstileWidgetProps) 
         widgetIdRef.current = window.turnstile.render(containerRef.current, {
           sitekey: siteKey,
           language: "es",
+          // Decida solo tiene tema claro; "auto" seguiría el modo oscuro del sistema.
+          theme: "light",
+          size: "flexible",
           callback: setToken,
           "expired-callback": () => setToken(""),
           "error-callback": () => setToken(""),
