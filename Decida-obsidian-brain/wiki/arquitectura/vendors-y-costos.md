@@ -18,8 +18,9 @@ Inventario de los proveedores de los que depende Decida. Las cifras son **aproxi
 | **PostHog** | Analítica de producto y *feature flags* | Capa gratuita | **US$0**; hasta 1 millón de eventos al mes |
 | **Sentry** | Errores en producción | Capa gratuita | **US$0**; hasta 5,000 errores al mes |
 | **Cloudflare Turnstile** | Captcha del registro | Gratis | **US$0**; verificaciones ilimitadas |
+| **Hostinger** | Dominio `decida.mx` y cuentas de correo de Decida | Renovación anual | **MX$816.99 al año** el dominio (~MX$68 al mes); vence en octubre de 2030 |
 
-El costo que **escala con el uso real** es OpenAI, y el que se descuenta de cada venta es Stripe. El resto cabe hoy en capas gratuitas o en un plan fijo.
+El costo que **escala con el uso real** es OpenAI, y el que se descuenta de cada venta es Stripe. El resto cabe hoy en capas gratuitas o en un plan fijo; el dominio es un cargo anual fijo.
 
 ---
 
@@ -75,11 +76,18 @@ El costo que **escala con el uso real** es OpenAI, y el que se descuenta de cada
 - **Operación:** el widget debe tener `localhost` y el dominio de producción en su lista de *hostnames*.
 - Fuente: [developers.cloudflare.com/turnstile/plans](https://developers.cloudflare.com/turnstile/plans/).
 
+## Hostinger
+- **Para qué:** aloja el **dominio `decida.mx`** y las **cuentas de correo de Decida** (las direcciones de la marca, como la de contacto y soporte). **No** hospeda la app ni la base de datos: eso es Railway.
+- **Costo del dominio:** renovación anual de **MX$816.99** (~MX$68 al mes). **Ya está pagado y vence en octubre de 2030**, así que no hay cargo de dominio hasta entonces. Anotar la fecha de renovación para no perder el dominio.
+- **Costo de las cuentas de correo:** no se indicó; falta documentar si van incluidas en un plan de Hostinger o se pagan aparte y su fecha de renovación.
+- **Conexión con otros vendors:** el dominio es el que se verifica en Resend para enviar correos desde `hello@decida.mx` y `billing@decida.mx` ([[correo-transaccional-resend]]), el que se agrega como *hostname* en Turnstile, y el que se apunta a Railway al publicar. Los registros DNS (SPF, DKIM, DMARC y el CNAME del dominio hacia Railway) se editan en el DNS de Hostinger.
+- **Cuidado:** correo corporativo (Hostinger) y envío transaccional (Resend) son cosas distintas. Si los registros SPF/DKIM de Resend se agregan en el dominio raíz pueden chocar con los de las cuentas de correo; por eso la guía de [[correo-transaccional-resend]] recomienda un subdominio dedicado como `mail.`.
+- **Alternativa revisada:** su VPS (~US$17 a 24 al mes) se comparó como hosting de la app y se descartó para la beta (ver [[#Railway]]).
+
 ---
 
 ## Costos que este documento no cubre (a documentar)
-- **Dominio** (`decida.mx`) y su registrador: no está documentado aquí.
-- **Correo corporativo** (si se usa Google Workspace u otro) y herramientas internas (Notion, Linear).
+- **Costo de las cuentas de correo** de Hostinger y herramientas internas (Notion, Linear).
 - **Impuestos y facturación** (IVA sobre comisiones, CFDI): pendiente de revisar con asesoría contable y legal, está en la lista previa al lanzamiento.
 
 ## Ver también
