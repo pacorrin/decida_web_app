@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { CreditCard, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,8 @@ const initialState: ActionState = { success: false };
 export function PaymentStep() {
   const [state, action, pending] = useActionState(savePayment, initialState);
   const remaining = getRemainingMinutes("pago");
+  // Solo el plan elegido muestra «Procesando…»; los demás quedan quietos.
+  const [selected, setSelected] = useState<string | null>(null);
   useEffect(() => {
     if (state.message) toast.error(state.message);
   }, [state]);
@@ -29,7 +31,7 @@ export function PaymentStep() {
 
       <p className="text-sm text-muted-foreground">{PAYMENT_ANCHOR_COPY}</p>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4">
         {PLANS.map((plan) => (
           <form key={plan.id} action={action} className="contents">
             <input type="hidden" name="planId" value={plan.id} />
@@ -47,14 +49,17 @@ export function PaymentStep() {
                       : "w-full"
                   }
                   data-testid={`payment-plan-${plan.id}`}
-                  onClick={() =>
+                  onClick={() => {
+                    setSelected(plan.id);
                     track(ANALYTICS_EVENTS.subscribeClicked, {
                       location: "onboarding_plan",
                       plan_id: plan.id,
-                    })
-                  }
+                    });
+                  }}
                 >
-                  {pending ? "Procesando..." : `Elegir ${plan.name} — $${plan.priceMxn}/mes`}
+                  {pending && selected === plan.id
+                    ? "Procesando..."
+                    : `Elegir ${plan.name} — $${plan.priceMxn}/mes`}
                 </Button>
               }
             />

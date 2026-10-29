@@ -333,6 +333,7 @@ model users {
   assessments   assessments[]
   payments      payments[]
   credit_ledger credit_ledger[]
+  suggestions   suggestions[]
 
   @@map("users")
 }
@@ -348,6 +349,21 @@ model user_sessions {
 
   @@index([usess_user_id])
   @@map("user_sessions")
+}
+
+/// Sugerencias de funciones que la persona escribe desde la cuenta (beta).
+model suggestions {
+  sugg_id         String   @id @default(cuid())
+  sugg_user_id    String?
+  sugg_message    String
+  /// Ruta desde la que se envió (para contexto; no se muestra a la persona).
+  sugg_page       String?
+  sugg_created_at DateTime @default(now())
+
+  user users? @relation(fields: [sugg_user_id], references: [user_id], onDelete: SetNull)
+
+  @@index([sugg_user_id, sugg_created_at])
+  @@map("suggestions")
 }
 
 model feedback {

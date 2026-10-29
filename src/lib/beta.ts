@@ -11,4 +11,3 @@ export const BETA_ACCOUNT_TITLE = "Estás en la beta de Decida";
 export const BETA_ACCOUNT_TEXT =
   "Seguimos agregando nuevas funcionalidades. Tu opinión nos ayuda a decidir cuáles.";
 
-export const FEEDBACK_EMAIL = "hello@decida.mx";

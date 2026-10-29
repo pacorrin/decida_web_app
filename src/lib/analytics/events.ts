@@ -19,6 +19,7 @@ export const ANALYTICS_EVENTS = {
   creditsSpent: "credits_spent",
   creditsInsufficient: "credits_insufficient",
   researchToggled: "research_toggled",
+  suggestionSent: "suggestion_sent",
 } as const;
 
 export type AnalyticsEvent =
