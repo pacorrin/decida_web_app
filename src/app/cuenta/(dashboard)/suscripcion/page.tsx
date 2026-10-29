@@ -144,8 +144,6 @@ export default async function SuscripcionPage({
         </Card>
       )}
 
-      <FreePlanCard isCurrent={!isActive && !isCanceled} />
-
       <div className="grid gap-4 md:grid-cols-3">
         {PLANS.map((plan) => {
           const isCurrent = (isActive || isCanceled) && currentPlan?.id === plan.id;
@@ -183,6 +181,8 @@ export default async function SuscripcionPage({
           );
         })}
       </div>
+
+      <FreePlanCard isCurrent={!isActive && !isCanceled} />
 
       <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
         <p className="flex items-center gap-2">
