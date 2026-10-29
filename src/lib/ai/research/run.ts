@@ -268,6 +268,7 @@ ${findings}`,
     logReportGenerationError("research: la etapa de investigación falló, el reporte sigue sin ficha", {
       error,
       metadata: { detail: detail.slice(0, 400) },
+      aiFallback: { feature: "research" },
     });
     return { status: "failed", ficha: null, error: detail.slice(0, 300) };
   }

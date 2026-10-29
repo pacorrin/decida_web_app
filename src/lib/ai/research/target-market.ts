@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { generateJson, getNarrativeModel, type AiObservabilityContext } from "@/lib/ai/openai";
+import { logReportGenerationError } from "@/lib/logging/report-logger";
 import { researchConfig } from "./config";
 import { parseTargetMarket, type StoredTargetMarket } from "./market-format";
 import type { MarketTarget } from "./schema";
@@ -61,7 +62,11 @@ export async function inferTargetMarket(
       es_supuesto: !r.el_texto_lo_indica,
       editado: false,
     };
-  } catch {
+  } catch (error) {
+    logReportGenerationError("target_market: no se pudo inferir el mercado, se usa el de respaldo", {
+      error,
+      aiFallback: { feature: "target_market", model: getNarrativeModel() },
+    });
     return fallback;
   }
 }

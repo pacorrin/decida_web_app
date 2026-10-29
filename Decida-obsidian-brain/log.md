@@ -559,3 +559,7 @@ Se agregó Hostinger (dominio `decida.mx` y cuentas de correo de Decida): renova
 
 En `vendors-y-costos.md`: el correo de Hostinger está en capa gratuita con tope de 5 cuentas, y se agregó la sección «Costo mensual promedio de la infraestructura» (fijo ~US$14 a 24; promedio para planear la beta ~US$20 a 30 al mes, con tres escenarios de uso y supuesto de MX$18.5 por dólar).
 
+## [2026-10-29] decision | Aviso a Sentry cuando la IA cae a un respaldo
+
+El respaldo de la interpretación del puntaje (razonamiento) era mudo y el de `target_market` también; ahora todos los respaldos de la IA se reportan a Sentry con la etiqueta `ai_fallback`, agrupados por función y tipo de error. Documentado en `wiki/arquitectura/seguridad-y-proteccion-de-costos.md`. Pendiente: crear la regla de alerta en Sentry.
+

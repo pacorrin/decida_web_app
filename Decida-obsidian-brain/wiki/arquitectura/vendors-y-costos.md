@@ -97,7 +97,7 @@ Todo lo siguiente son **estimaciones** para planear, no un presupuesto del vendo
 ## Sentry
 - **Para qué:** captura errores del servidor y del navegador y sube los *source maps* en el build. Variables `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN` y `SENTRY_AUTH_TOKEN`.
 - **Costo:** plan **Developer gratuito** con 1 usuario y 5,000 errores al mes. El plan **Team** parte de ~US$26/mes (facturado anual) con 50,000 errores y más usuarios e integraciones. *Cifras de fuentes de terceros; confirma en la página de Sentry.*
-- **Pendiente:** una alerta cuando el modelo de razonamiento cae a su respaldo en silencio ([[seguridad-y-proteccion-de-costos#Qué sigue protegiendo poco (pendiente)]]). Las alertas personalizadas pueden requerir un plan de pago.
+- **Respaldos de la IA:** el código ya manda a Sentry cada vez que la IA cae a un respaldo (etiqueta `ai_fallback`); falta crear la regla de alerta ([[seguridad-y-proteccion-de-costos#Aviso cuando la IA falla (Sentry)]]). Las alertas personalizadas pueden requerir un plan de pago.
 
 ## Cloudflare Turnstile
 - **Para qué:** captcha en el contacto del análisis y en el registro; frena el alta masiva de cuentas falsas. Ver [[seguridad-y-proteccion-de-costos#4. Captcha: Cloudflare Turnstile]].

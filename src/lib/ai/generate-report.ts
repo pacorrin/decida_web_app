@@ -1,6 +1,7 @@
 import {
   generateJson,
   generateReasoningJson,
+  getReasoningModel,
   generateText,
   getNarrativeModel,
   type AiObservabilityContext,
@@ -450,7 +451,11 @@ export async function buildReportData(
     generateStrengthsRisks(ctx, verifiedFacts, observability).catch((error) => {
       logReportGenerationError(
         "strengths_risks: respuesta de IA inválida, usando fortalezas determinísticas",
-        { assessmentId: assessment.asmt_id, error }
+        {
+          assessmentId: assessment.asmt_id,
+          error,
+          aiFallback: { feature: "strengths_risks", model: getNarrativeModel() },
+        }
       );
       return null;
     }),
@@ -458,6 +463,7 @@ export async function buildReportData(
       logReportGenerationError("validation_plan: respuesta de IA inválida", {
         assessmentId: assessment.asmt_id,
         error,
+        aiFallback: { feature: "validation_plan", model: getNarrativeModel() },
       });
       return null;
     }),
@@ -561,6 +567,7 @@ export async function buildReportData(
               logReportGenerationError(`report_review: no se pudo reescribir ${key}`, {
                 assessmentId: assessment.asmt_id,
                 error,
+                aiFallback: { feature: "report_review_rewrite", model: getNarrativeModel() },
               });
               return null;
             }
@@ -588,6 +595,7 @@ export async function buildReportData(
       logReportGenerationError("report_review: la revisión falló, se entrega sin revisar", {
         assessmentId: assessment.asmt_id,
         error,
+        aiFallback: { feature: "report_review", model: getReasoningModel() },
       });
     }
   }

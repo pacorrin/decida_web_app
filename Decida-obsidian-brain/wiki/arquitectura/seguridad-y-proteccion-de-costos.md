@@ -53,13 +53,21 @@ Código de verificación, **bienvenida** (se manda una sola vez, al primer corre
 - `sendEmail` omite los correos a dominios `.test` (reservado, nunca entrega): los e2e no gastan envíos de Resend. Si se reutiliza un `pnpm dev` ya abierto para e2e, hay que arrancarlo con `TURNSTILE_DISABLED=true`.
 - Lo que **no** se pudo probar automáticamente: resolver la casilla real de Turnstile (la probó el usuario a mano).
 
+## Aviso cuando la IA falla (Sentry)
+Si un modelo de OpenAI falla, el reporte **sigue con un respaldo** (interpretación determinística, revisión omitida, etc.) y nadie ve un error: así pasó con `o4-mini`, dado de baja por OpenAI, y los reportes salieron degradados sin que nadie lo notara. Ahora cada respaldo se reporta a Sentry (`logReportGenerationError` con `aiFallback`, `src/lib/logging/report-logger.ts`):
+- **Etiquetas:** `ai_fallback` (la función que falló), `ai_error` (tipo de error, p. ej. `http-404`, `http-401`, `http-429`, `SyntaxError`, `ZodError`) y `ai_model` (el modelo usado).
+- **Funciones cubiertas:** `scoring_interpretation` (razonamiento, antes **sin ningún log**), `report_review`, `report_review_rewrite`, `strengths_risks`, `validation_plan`, `research` y `target_market` (antes también mudo).
+- **Agrupación:** una incidencia por función y tipo de error, no una por reporte. Un modelo dado de baja es **una sola incidencia** que se repite, y se nota de inmediato.
+- Los errores de generación que no son un respaldo conservan su etiqueta `area:report-generation`.
+- **Pendiente (lo crea quien tenga la cuenta de Sentry):** la regla de alerta que avise por correo cuando aparezca una incidencia con la etiqueta `ai_fallback`. Sin la regla, los eventos llegan a Sentry pero nadie recibe aviso.
+
 ## Qué sigue protegiendo poco (pendiente)
 | Riesgo | Estado |
 |---|---|
 | **Límite mensual de gasto y alertas en OpenAI** | Pendiente, lo hace el usuario en el panel de OpenAI antes de publicar. Es la red de seguridad final. |
 | **Límite por IP** | No existe. El freno actual es por correo (3 códigos/hora) más el captcha. Alguien con muchos correos reales sí podría crear cuentas; cada una gasta ~US$0.04 solo si además confirma el correo. |
 | **Captcha en el login y en «Reenviar código»** | No. Reenviar está limitado a 3 por hora por correo; el login con cuenta sin verificar exige la contraseña correcta. |
-| **Alerta de Sentry cuando el modelo de razonamiento cae a su respaldo en silencio** | Ofrecida, no implementada. |
+| **Alerta de Sentry cuando la IA cae a su respaldo** | **Código hecho (2026-10-29)**: cada respaldo se reporta a Sentry con la etiqueta `ai_fallback`. Falta crear la **regla de alerta** en Sentry (ver [[#Aviso cuando la IA falla (Sentry)]]). |
 | **Agotar el envío de correos** | La capa gratuita de Resend permite 100 correos al día; cada registro manda 2 (código y bienvenida), así que ~50 registros al día. Ver [[vendors-y-costos#Resend]]. |
 | **Despliegue** | Correr `pnpm db:deploy` en producción **antes** de la versión nueva (la migración `vc_attempts` es obligatoria) y cargar las claves de Turnstile con el dominio de Railway en sus hostnames. |
 

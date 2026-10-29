@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { logReportGenerationError } from "@/lib/logging/report-logger";
 import {
   generateReasoningJson,
   getReasoningModel,
@@ -99,7 +100,8 @@ function dependencyContextLine(
 async function interpretScores(
   scores: Record<string, number>,
   context: string,
-  observability?: AiObservabilityContext
+  observability?: AiObservabilityContext,
+  assessmentId?: string
 ): Promise<ScoringInterpretResult> {
   try {
     const raw = await generateReasoningJson<unknown>(
@@ -108,7 +110,17 @@ async function interpretScores(
       observability
     );
     return scoringInterpretSchema.parse(raw);
-  } catch {
+  } catch (error) {
+    // El reporte sigue con la interpretación determinística, pero se avisa: antes
+    // este respaldo era mudo y un modelo dado de baja pasó semanas sin notarse.
+    logReportGenerationError(
+      "scoring: la interpretación con IA falló, se usa el respaldo determinístico",
+      {
+        assessmentId,
+        error,
+        aiFallback: { feature: "scoring_interpretation", model: getReasoningModel() },
+      }
+    );
     return fallbackScoringInterpret(scores);
   }
 }
@@ -132,7 +144,8 @@ export async function computeScoring(
     await interpretScores(
       scoresMap,
       buildAssessmentContext(assessment),
-      observability
+      observability,
+      assessment.asmt_id
     )
   );
 

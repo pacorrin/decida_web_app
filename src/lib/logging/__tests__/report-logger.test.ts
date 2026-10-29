@@ -42,3 +42,60 @@ describe("logReportGenerationError → Sentry", () => {
     expect(options.extra.retryAttempt).toBe(true);
   });
 });
+
+describe("respaldos de la IA → Sentry (aiFallback)", () => {
+  beforeEach(() => {
+    captureException.mockClear();
+    vi.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  it("etiqueta el fallo con la función, el modelo y el tipo de error", () => {
+    const error = Object.assign(new Error("404 model not found"), { status: 404 });
+    logReportGenerationError("scoring: respaldo", {
+      assessmentId: "asmt_9",
+      error,
+      aiFallback: { feature: "scoring_interpretation", model: "o4-mini" },
+    });
+    const [, options] = captureException.mock.calls[0];
+    expect(options.tags).toEqual({
+      area: "report-generation",
+      ai_fallback: "scoring_interpretation",
+      ai_error: "http-404",
+      ai_model: "o4-mini",
+    });
+  });
+
+  it("agrupa todos los reportes con el mismo problema en una sola incidencia", () => {
+    for (const id of ["a", "b", "c"]) {
+      logReportGenerationError("scoring: respaldo", {
+        assessmentId: id,
+        error: Object.assign(new Error(`distinto ${id}`), { status: 404 }),
+        aiFallback: { feature: "scoring_interpretation" },
+      });
+    }
+    const fingerprints = captureException.mock.calls.map(([, o]) => JSON.stringify(o.fingerprint));
+    expect(new Set(fingerprints).size).toBe(1);
+    expect(fingerprints[0]).toBe('["ai-fallback","scoring_interpretation","http-404"]');
+  });
+
+  it("separa por tipo de error: un 404 y una respuesta inválida son incidencias distintas", () => {
+    logReportGenerationError("x", {
+      error: Object.assign(new Error("a"), { status: 404 }),
+      aiFallback: { feature: "report_review" },
+    });
+    logReportGenerationError("x", {
+      error: new SyntaxError("JSON inválido"),
+      aiFallback: { feature: "report_review" },
+    });
+    const [a, b] = captureException.mock.calls.map(([, o]) => o.fingerprint[2]);
+    expect(a).toBe("http-404");
+    expect(b).toBe("SyntaxError");
+  });
+
+  it("los errores sin aiFallback no cambian su etiqueta ni su agrupación", () => {
+    logReportGenerationError("Otro fallo", { error: new Error("x") });
+    const [, options] = captureException.mock.calls[0];
+    expect(options.tags).toEqual({ area: "report-generation" });
+    expect(options.fingerprint).toBeUndefined();
+  });
+});

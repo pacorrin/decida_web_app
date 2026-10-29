@@ -7,7 +7,34 @@ type LogContext = {
   userId?: string;
   error?: Error | unknown;
   metadata?: Record<string, unknown>;
+  /**
+   * Marca el fallo como «la IA falló y el sistema siguió con un respaldo» (el
+   * reporte sale, pero degradado). Es lo que alimenta la alerta de Sentry: sin
+   * esta marca estos fallos pasan desapercibidos porque nadie ve un error.
+   */
+  aiFallback?: { feature: AiFallbackFeature; model?: string };
 };
+
+export type AiFallbackFeature =
+  | "scoring_interpretation"
+  | "report_review"
+  | "report_review_rewrite"
+  | "strengths_risks"
+  | "validation_plan"
+  | "research"
+  | "target_market";
+
+/**
+ * Clasifica el error para agrupar en Sentry: un modelo dado de baja (HTTP 404),
+ * una clave inválida (401) o un límite (429) son un solo problema que se repite en
+ * cada reporte, no cientos de incidencias distintas.
+ */
+export function classifyAiError(error: unknown): string {
+  const status = (error as { status?: unknown } | null)?.status;
+  if (typeof status === "number") return `http-${status}`;
+  if (error instanceof Error) return error.name;
+  return "unknown";
+}
 
 function formatLogMessage(
   level: LogLevel,
@@ -104,11 +131,25 @@ function captureInSentry(message: string, context: LogContext): void {
   >;
   void _email;
 
+  const fallback = context.aiFallback;
+
   Sentry.captureException(
     context.error instanceof Error ? context.error : new Error(message),
     {
       level: "error",
-      tags: { area: "report-generation" },
+      tags: {
+        area: "report-generation",
+        ...(fallback
+          ? {
+              ai_fallback: fallback.feature,
+              ai_error: classifyAiError(context.error),
+              ...(fallback.model ? { ai_model: fallback.model } : {}),
+            }
+          : {}),
+      },
+      ...(fallback
+        ? { fingerprint: ["ai-fallback", fallback.feature, classifyAiError(context.error)] }
+        : {}),
       extra: {
         message,
         assessmentId: context.assessmentId,

@@ -14,6 +14,7 @@ vi.mock("@/lib/ai/openai", () => ({
   generateJson: m.generateJson,
   generateReasoningJson: m.generateReasoningJson,
   getNarrativeModel: () => "modelo-test",
+  getReasoningModel: () => "razonamiento-test",
 }));
 vi.mock("@/lib/logging/report-logger", () => ({
   logReportGenerationError: m.logError,
@@ -168,6 +169,13 @@ describe("pasada de revisión dentro de buildReportData", () => {
     expect(r.arep_review.action).toBe("failed");
     expect(r.arep_executive_summary).toBe("Texto de la sección generado.");
     expect(r.arep_needs_human_review).toBe(false);
+    // Se avisa como respaldo de la IA (alimenta la alerta de Sentry), con el modelo de razonamiento.
+    expect(m.logError).toHaveBeenCalledWith(
+      expect.stringContaining("la revisión falló"),
+      expect.objectContaining({
+        aiFallback: { feature: "report_review", model: "razonamiento-test" },
+      }),
+    );
   });
 
   it("si la revisión devuelve JSON inválido, también se entrega sin revisar", async () => {
