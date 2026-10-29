@@ -46,7 +46,7 @@ Plantilla: [`.env.example`](.env.example). Las que empiezan con `NEXT_PUBLIC_` s
 | Variable | Obligatoria | Por defecto | Para qué sirve |
 |---|---|---|---|
 | `DATABASE_URL` | Sí | — | Conexión a PostgreSQL. Local: `postgresql://decida:decida@localhost:5432/decida?schema=public` |
-| `NEXT_PUBLIC_APP_URL` | Recomendada | `http://localhost:3000` | URL pública de la app: enlaces de correos y retornos de Stripe |
+| `NEXT_PUBLIC_APP_URL` | Recomendada | `http://localhost:3000` | URL pública de la app: enlaces de correos, logo de los correos (`/email/logo.png`) y retornos de Stripe. En producción debe ser el dominio real, accesible desde internet, o el logo no carga |
 
 ### OpenAI (solo servidor)
 | Variable | Obligatoria | Por defecto | Para qué sirve |

@@ -1,5 +1,7 @@
 /** Correos de cobro (suscripción). Los recibos formales los manda Stripe. */
 
+import { emailLogoHeader } from "./brand";
+
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string,
@@ -17,6 +19,7 @@ export function formatBillingDate(date: Date): string {
 function layout(heading: string, body: string, appUrl: string): string {
   return `
       <div style="font-family: Geist, Arial, sans-serif; max-width: 480px; margin: 0 auto;">
+        ${emailLogoHeader(appUrl)}
         <h1 style="color:#05422c; font-size: 20px;">${heading}</h1>
         ${body}
         <p style="margin-top: 24px;">

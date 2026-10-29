@@ -41,3 +41,20 @@ describe("sendWelcomeEmail", () => {
     ).resolves.toBeUndefined();
   });
 });
+
+describe("logo en los correos", () => {
+  it("usa un PNG por URL absoluta (no SVG ni base64) y deja el nombre como texto", async () => {
+    const { verificationCodeEmail } = await import("../templates");
+    const { subscriptionActivatedEmail } = await import("../billing-templates");
+    const emails = [
+      welcomeEmail({ name: "Ana", appUrl: "https://decida.mx" }).html,
+      verificationCodeEmail("123456", "signup", "https://decida.mx").html,
+      subscriptionActivatedEmail({ name: "Ana", nextDate: null, appUrl: "https://decida.mx" }).html,
+    ];
+    for (const html of emails) {
+      expect(html).toContain('src="https://decida.mx/email/logo.png"');
+      expect(html).not.toContain("data:image");
+      expect(html).toContain(">Decida</td>");
+    }
+  });
+});

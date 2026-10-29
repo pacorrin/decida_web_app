@@ -1,6 +1,9 @@
+import { appBaseUrl, emailLogoHeader } from "./brand";
+
 export function verificationCodeEmail(
   code: string,
-  purpose: "signup" | "reset"
+  purpose: "signup" | "reset",
+  appUrl: string = appBaseUrl()
 ): { subject: string; html: string } {
   const heading =
     purpose === "signup"
@@ -18,6 +21,7 @@ export function verificationCodeEmail(
         : "Restablece tu contraseña — Decida",
     html: `
       <div style="font-family: Geist, Arial, sans-serif; max-width: 480px; margin: 0 auto;">
+        ${emailLogoHeader(appUrl)}
         <h1 style="color:#05422c; font-size: 20px;">${heading}</h1>
         <p style="color:#3d5c50; font-size:15px;">${intro}</p>
         <p style="font-size: 32px; font-weight: 600; letter-spacing: 6px; color:#05422c; text-align:center; padding: 16px; background:#f0f5f3; border-radius:10px;">${code}</p>
@@ -43,6 +47,7 @@ export function welcomeEmail(input: {
     subject: "Te damos la bienvenida a Decida",
     html: `
       <div style="font-family: Geist, Arial, sans-serif; max-width: 480px; margin: 0 auto;">
+        ${emailLogoHeader(input.appUrl)}
         <h1 style="color:#05422c; font-size: 20px;">Te damos la bienvenida a Decida</h1>
         <p ${p}>${hello} cuenta está lista.</p>
         <p ${p}>Decida evalúa tu idea de negocio contra tus condiciones reales (tiempo, presupuesto, perfil, mercado y riesgo) y te dice si conviene probarla a pequeña escala, validarla primero, ajustarla o pausarla.</p>
