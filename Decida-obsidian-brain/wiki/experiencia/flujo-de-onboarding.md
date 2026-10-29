@@ -37,7 +37,9 @@ Esto también significa que **perfil, recursos y ajuste personal ocurren despué
 > Ver [[../decisiones/evolucion-del-producto]] para el registro de esta decisión de reordenamiento (commit `cba2954 feat: update onboarding flow and enhance form handling`).
 
 ## El paso "contacto" ahora también es el punto de entrada de cuentas (2026-08-05)
-Desde la integración con el [[../arquitectura/modulo-de-usuarios-y-autenticacion|módulo de usuarios]], `contacto` dejó de ser un simple formulario de captura: ahora crea la cuenta del usuario (correo nuevo) o detecta una cuenta existente y pide iniciar sesión (con retorno automático al onboarding vía `?next=/analizar`). Un usuario ya logueado nunca ve este paso — se salta directo a `idea` con sus datos ya cargados. Detalle técnico completo, incluyendo el bug de prefetch que hubo que corregir en el camino, en [[../arquitectura/modulo-de-usuarios-y-autenticacion#Integración con el onboarding (mismo día)]].
+Desde la integración con el [[../arquitectura/modulo-de-usuarios-y-autenticacion|módulo de usuarios]], `contacto` dejó de ser un simple formulario de captura: ahora crea la cuenta del usuario (correo nuevo) o detecta una cuenta existente y pide iniciar sesión (con retorno automático al onboarding vía `?next=/analizar`). > Actualización 2026-10-29: después de enviar el contacto hay una **pantalla de verificación del correo** (`/analizar/verificar`, fuera de los 9 pasos del indicador) y no se avanza hasta confirmar el código. Ver [[../arquitectura/seguridad-y-proteccion-de-costos]].
+
+Un usuario ya logueado nunca ve este paso — se salta directo a `idea` con sus datos ya cargados. Detalle técnico completo, incluyendo el bug de prefetch que hubo que corregir en el camino, en [[../arquitectura/modulo-de-usuarios-y-autenticacion#Integración con el onboarding (mismo día)]].
 
 ## El paso «confirmacion» («Así entendimos tu idea») — pulido de IA (2026-08-26)
 

@@ -32,6 +32,13 @@ Remitente: variable `RESEND_FROM_EMAIL`; si falta, el código usa `Decida <onboa
   - Recuperar contraseña: el error se captura y se registra a propósito (para no filtrar qué cuentas existen); el usuario ve el mensaje genérico «si el correo tiene una cuenta...» aunque el correo nunca haya salido.
   - Pendiente opcional (no hecho, cambia el flujo de auth): capturar el fallo en `signUp` y mostrar «No pudimos enviar el código, inténtalo de nuevo» en el formulario.
 
+## Actualización 2026-10-29
+- **Fallo de envío en el registro**: `signUp` y el contacto ya capturan el error y muestran «No pudimos enviar el código a tu correo» (`src/lib/auth/signup-code.ts`); el pendiente de arriba quedó resuelto.
+- **Correo de bienvenida** (`welcomeEmail`, `src/lib/email/welcome.ts`): se manda una vez, al primer correo confirmado, desde `verifyEmailCode`. Botón «Analizar mi idea» en coral de la marca.
+- **Logo en todos los correos** (código, bienvenida y cobros): `emailLogoHeader` (`src/lib/email/brand.ts`) usa el PNG `public/email/logo.png` por URL absoluta más el nombre como texto. SVG y base64 se descartaron porque Gmail y Outlook los bloquean. **Requiere `NEXT_PUBLIC_APP_URL` con el dominio público real** o el logo no carga.
+- **Dominios `.test`**: `sendEmail` los omite (los e2e leen el código de la base de datos).
+- **Capa gratuita**: 100 correos al día; cada registro manda 2. Ver [[vendors-y-costos#Resend]].
+
 ## Checklist para ti (lo haces tú; no requiere código)
 1. **Elige el dominio.** Recomendado: un subdominio como `mail.<tu-dominio>` (por ejemplo `mail.decida.app` si el dominio es tuyo). Así los registros SPF/DKIM de Resend no chocan con el correo normal del dominio raíz (Google Workspace, etc.) y la reputación del envío transaccional queda aislada.
 2. **Agrégalo en Resend**: [resend.com/domains](https://resend.com/domains) → Add Domain → escribe el subdominio. Elige la región más cercana a tus usuarios.
@@ -64,6 +71,8 @@ Remitente: variable `RESEND_FROM_EMAIL`; si falta, el código usa `Decida <onboa
 El despliegue necesitará exactamente las mismas variables en el servicio: `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (además de `DATABASE_URL`, `OPENAI_API_KEY`, `NEXT_PUBLIC_APP_URL`). En producción, sin la key el registro falla a propósito. Haz esta guía antes de invitar usuarios a la beta.
 
 ## Ver también
+- [[vendors-y-costos]]
+- [[seguridad-y-proteccion-de-costos]]
 - [[modulo-de-usuarios-y-autenticacion]]
 - [[stack-tecnico]]
 - [[../tareas/sprint-3]]

@@ -101,6 +101,13 @@ Mapeo completo del resto de campos del onboarding aún pendientes en [[../produc
 - **Reembolsos automáticos en créditos**: si la generación falla tras cobrar, se reembolsa el total (`refund:{asmtId}:failed`); si se cobró investigación (1.5) pero `arep_research.status` quedó en `failed` o `skipped`, se reembolsa la diferencia de 1.0 crédito (`refund:{asmtId}:research`).
 - **Suscripción oculta tras flag**: como la beta aún no se desplegó y no hay suscriptores reales, el código de suscripción se conserva detrás de `SUBSCRIPTIONS_ENABLED="false"` (`src/lib/subscription/flag.ts`).
 **Estado**: **implementado en `main`** (Fases 1 a 4 completas, 292 tests en Vitest). Especificación completa en [[modelo-de-creditos-hibrido]].
+> Nota: el 2026-10-28 el modelo pasó de paquetes sin caducidad a **planes mensuales con reseteo** (Explora, Valida, Escala); lo vigente está en [[modelo-de-creditos-hibrido]].
+
+## 15. Verificación de correo obligatoria antes de la sesión (2026-10-29)
+**Decisión previa (2026-08-05)**: el paso `contacto` creaba la cuenta y la marcaba verificada «sin pedir código», con sesión inmediata ([[../arquitectura/modulo-de-usuarios-y-autenticacion#Integración con el onboarding (mismo día)]]).
+**Motivo del cambio**: protección de costos para la beta. Una cuenta falsa gastaba ~US$0.04 de OpenAI en su vista previa gratuita sin que nadie confirmara un correo real.
+**Código (en `main`)**: `contacto` y `/cuenta/registro` envían un código y redirigen a una pantalla de verificación aparte; solo al confirmarlo hay sesión. Además: guarda `requireVerifiedOwner` en pasos y acciones, tope de 5 intentos por código, captcha Cloudflare Turnstile y correo de bienvenida. Detalle en [[../arquitectura/seguridad-y-proteccion-de-costos]]; costos de cada proveedor en [[../arquitectura/vendors-y-costos]].
+**Estado**: implementado y verificado en navegador y con Playwright. Pendiente: límite de gasto en OpenAI y límite por IP.
 
 ## Patrón general observado
 En casi todos los casos, el código **construyó más resiliencia y más superficie de producto** de lo que el PRD original consideraba necesario para un MVP de validación (ver la advertencia explícita en [[../producto/prd#Riesgo estratégico]]: *"el mayor riesgo es construir demasiada funcionalidad antes de confirmar que la gente paga"*). Ninguna fuente ingerida (Notion o repo) documenta si esto respondió a feedback real de clientes pagados o fue trabajo anticipado. **Esta es la pregunta más valiosa para la primera minuta de reunión que se ingiera** — ver [[../reuniones/minutas]].

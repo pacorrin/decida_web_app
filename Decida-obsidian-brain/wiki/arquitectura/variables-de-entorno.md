@@ -60,4 +60,4 @@ Checklist al desplegar: `DATABASE_URL`, `OPENAI_API_KEY`, **`OPENAI_MODEL_REASON
 ## Retiradas
 `STRIPE_PRICE_ID` (suscripción única de $99), `STRIPE_PRICE_CREDITS_1/3/10` (paquetes de pago único) y `SUBSCRIPTIONS_ENABLED` ya no existen.
 
-**Base de datos al desplegar:** correr `pnpm db:deploy` contra la base de producción *antes* de levantar la versión nueva. La última migración es `20261030000000_verification_attempts` (agrega `vc_attempts` a `verification_codes`, el tope de 5 intentos por código de correo); sin ella, confirmar el correo falla. Verificado el 2026-10-30: las migraciones aplicadas sobre una base vacía dejan exactamente `schema.prisma` (`prisma migrate diff` sin diferencias).
+**Base de datos al desplegar:** correr `pnpm db:deploy` contra la base de producción *antes* de levantar la versión nueva. La última migración es `20261030000000_verification_attempts` (agrega `vc_attempts` a `verification_codes`, el tope de 5 intentos por código de correo); sin ella, confirmar el correo falla. Verificado el 2026-10-29: las migraciones aplicadas sobre una base vacía dejan exactamente `schema.prisma` (`prisma migrate diff` sin diferencias).

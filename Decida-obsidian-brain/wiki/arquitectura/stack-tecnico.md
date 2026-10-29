@@ -22,6 +22,8 @@ Fuente: [[../../raw/notion/08-technical-architecture-v1]] · `package.json` · `
 
 Esto es notablemente más específico y "productizado" que la hipótesis original de Notion ("Next.js, TypeScript, Server Actions, base de datos simple o JSON, Stripe o Mercado Pago, IA barata, PDF").
 
+- **Cloudflare Turnstile** — captcha del registro (script oficial, sin paquete npm; agregado 2026-10-29). Ver [[seguridad-y-proteccion-de-costos]]. Proveedores externos y su costo: [[vendors-y-costos]].
+
 ## Lo que NO se implementó (vs hipótesis original)
 - **Pago real** (Stripe/Mercado Pago): no confirmado en el código — el paso `/analizar/pago` es un **pago simulado (beta)**, con promesa de reembolso si el reporte falla. Pospuesto a propósito, ver [[../producto/pricing-y-gtm]] y [[../decisiones/plan-lanzamiento-60-90-dias]].
   - **Actualización 2026-10-16 (S3-16):** el cobro real con **Stripe** (SDK `stripe`, Checkout alojado + webhook) ya está implementado; sin `STRIPE_SECRET_KEY` se conserva el pago simulado. Ver [[pagos-con-stripe]]. Aún sin probar con claves reales.

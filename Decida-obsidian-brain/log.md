@@ -546,3 +546,8 @@ Se reestructuró el modelo: tres planes con nombre (Explora $59/200, Valida $149
 ## [2026-10-29] query | Variables de entorno documentadas
 
 Se agregaron a `.env.example` las tres variables de modelos de investigación (`OPENAI_MODEL_RESEARCH`, `_OFFICIAL`, `_STRUCTURE`) y se documentaron todas las variables en el `README.md` y en `wiki/arquitectura/variables-de-entorno.md`. Se detectó que `o4-mini` fue dado de baja por OpenAI y el modelo de razonamiento por defecto pasó a `gpt-5-mini`; precios de OpenAI verificados.
+
+## [2026-10-29] decision | Seguridad de la beta documentada y documento de vendors
+
+Se documentó el paquete de protección de costos y seguridad previo a la beta: verificación de correo con código en pantalla aparte (contacto y registro), guarda de dueño verificado en pasos y acciones, tope de 5 intentos por código (migración `20261030000000_verification_attempts`), captcha Cloudflare Turnstile, login de cuenta sin verificar, barra de seguridad de contraseña, correo de bienvenida y logo en los correos. Páginas nuevas: `wiki/arquitectura/seguridad-y-proteccion-de-costos.md` y `wiki/arquitectura/vendors-y-costos.md` (Railway, OpenAI, Stripe, Resend, PostHog, Sentry y Turnstile con propósito y costo aproximado; precios revisados en las páginas de cada vendor). Se marcó como reemplazado el contacto «sin código» en `modulo-de-usuarios-y-autenticacion.md` y se agregó la entrada #15 a `evolucion-del-producto.md`. Pendientes: límite de gasto en OpenAI, límite por IP, alerta de Sentry por respaldo silencioso y costo del dominio.
+

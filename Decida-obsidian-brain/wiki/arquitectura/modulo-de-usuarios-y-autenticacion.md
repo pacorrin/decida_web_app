@@ -57,7 +57,7 @@ El enum `verification_purpose` se extendió de un solo valor (`history_access`) 
 ### Rutas y UI (`src/app/cuenta/`, `src/components/auth/`)
 | Ruta | Qué hace |
 |---|---|
-| `/cuenta/registro` | Nombre + email + contraseña → código de verificación por correo → confirma y crea sesión |
+| `/cuenta/registro` | Nombre + email + contraseña + captcha → **pantalla aparte** `/cuenta/registro/verificar` con el código → confirma y crea sesión (actualizado 2026-10-29) |
 | `/cuenta/iniciar-sesion` | Email + contraseña → sesión |
 | `/cuenta/recuperar` | Flujo de 3 pantallas (una tarjeta reemplaza a la anterior, ya no se apilan): (1) correo → (2) ingresar el código de 6 dígitos → (3) elegir nueva contraseña. Mensaje genérico, no revela si el email existe. Ver [[#Recuperación de contraseña en 3 pantallas (2026-08-26)]] |
 | `/cuenta` | Panel protegido — redirige a `/cuenta/iniciar-sesion` si no hay sesión. Hoy solo saluda al usuario y ofrece "Analizar una idea" / "Cerrar sesión"; el historial real de evaluaciones es Sprint 2 |
@@ -87,7 +87,7 @@ El usuario notó, probando la primera versión, que entrar a `/cuenta` y darle a
 
 **Flujo 2 — el paso `contacto` (`/analizar/contacto`, "Empecemos con lo básico") ahora hace doble función.** `contactSchema` ganó un campo `password`. Al enviar el formulario, `saveContact` (`src/app/analizar/actions.ts`) revisa el correo:
 - Si ya existe una cuenta verificada con ese correo → no se crea ni modifica nada; se muestra "Ya tienes una cuenta con este correo. Inicia sesión para continuar." con link a `/cuenta/iniciar-sesion?next=/analizar`. El login soporta un parámetro `next` (validado como ruta local, nunca una URL externa) para retomar el onboarding automáticamente después de autenticar.
-- Si no existe cuenta (o existe pero nunca se verificó) → se crea/actualiza la cuenta con esa contraseña, se marca verificada de inmediato **sin pedir código** (mismo nivel de confianza que el flujo anónimo ya tenía con ese correo, ahora respaldado por una cuenta real en vez de un assessment desechable), se inicia sesión, y el assessment queda vinculado (`asmt_user_id`).
+- ~~Si no existe cuenta (o existe pero nunca se verificó) → se crea/actualiza la cuenta con esa contraseña, se marca verificada de inmediato **sin pedir código**~~ **Reemplazado el 2026-10-29**: ahora se crea la cuenta sin verificar, se envía un código y se redirige a `/analizar/verificar`; solo al confirmarlo hay sesión (ver [[seguridad-y-proteccion-de-costos]]). Texto original: se crea/actualiza la cuenta con esa contraseña, se marca verificada de inmediato **sin pedir código** (mismo nivel de confianza que el flujo anónimo ya tenía con ese correo, ahora respaldado por una cuenta real en vez de un assessment desechable), se inicia sesión, y el assessment queda vinculado (`asmt_user_id`).
 
 ### 🔴 Bug encontrado y corregido en el camino: GET con efectos secundarios + prefetch de `<Link>`
 
@@ -156,6 +156,9 @@ Se encontró probando que `requestPasswordReset` hacía `throw` si `sendEmail` f
 - `tsc --noEmit` y `pnpm lint` limpios.
 
 > Nota operativa: la prueba dejó la contraseña de `fcastellanosduarte@gmail.com` en la BD local como `DecidaReset2026!` (solo afecta la base local de desarrollo).
+
+## Actualización 2026-10-29: verificación obligatoria y captcha
+El registro y el contacto ya no abren sesión sin confirmar el código de correo; los códigos se invalidan tras 5 intentos; hay captcha (Turnstile), barra de seguridad de contraseña y correo de bienvenida. El login de una cuenta sin verificar manda un código nuevo. Todo en [[seguridad-y-proteccion-de-costos]].
 
 ## Ver también
 [[../decisiones/plan-lanzamiento-60-90-dias]] · [[historial-de-evaluaciones]] · [[dashboard-de-cuenta]] · [[modelo-de-datos]] · [[stack-tecnico]] · [[manejo-de-errores-y-reembolsos]]
