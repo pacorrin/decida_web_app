@@ -583,3 +583,7 @@ Se agregaron a PostHog: `cta_clicked` con `location`, `onboarding_step_completed
 
 Se pasó `dev` a `main` (analítica ampliada y documentación) y se desplegó `9e53420` en Railway. Se descubrió que el servicio no tiene disparador de GitHub (la cuenta de Railway no tiene acceso al repo), así que los pushes a `main` no despliegan solos; se despliega a mano con `serviceInstanceDeployV2` y `commitSha`. Detalle y cómo activarlo en `wiki/arquitectura/despliegue-en-railway.md`.
 
+## [2026-10-29] decision | Despliegue automático de Railway confirmado
+
+Se conectó GitHub en Railway y se fijó la rama `main`; el merge del PR #20 a `main` disparó solo el despliegue `cf8b38ca`, que terminó bien. Se corrigió `wiki/arquitectura/despliegue-en-railway.md`, que decía que el despliegue automático no estaba activo.
+
