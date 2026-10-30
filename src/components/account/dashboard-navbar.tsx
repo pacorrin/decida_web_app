@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { logOut } from "@/app/cuenta/actions";
 import { resetAnalytics } from "@/lib/analytics/client";
+import { DashboardMobileNav } from "@/components/account/dashboard-sidebar";
 import { PlanBadge } from "@/components/account/plan-badge";
 import { BetaBadge } from "@/components/beta/beta-badge";
 
@@ -34,6 +35,7 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
     <header className="sticky top-0 z-40 border-b border-border/80 bg-background">
       <div className="mx-auto flex h-16 w-full max-w-[2560px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <DashboardMobileNav />
           <Link
             href="/cuenta"
             className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
