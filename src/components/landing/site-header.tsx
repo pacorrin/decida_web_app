@@ -93,7 +93,7 @@ export function SiteHeader() {
                   id="menu-navegacion"
                   className="px-3 text-xs font-medium uppercase tracking-wide text-muted-foreground"
                 >
-                  Navegación
+                  Explorar
                 </p>
                 <Link
                   href="/"
