@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { ActionButton } from "@/components/cifra/form-kit";
+import { TransactionList } from "@/components/cifra/transaction-list";
 import { TransactionForm } from "@/components/cifra/transaction-form";
 import { getCifraAccess } from "@/lib/cifra/access";
-import { categoryLabel } from "@/lib/cifra/constants";
 import {
   formatDateInput,
-  formatDayMonth,
   monthRange,
   periodOf,
   todayInMexico,
@@ -14,8 +12,6 @@ import {
 import { formatMxn } from "@/lib/cifra/money";
 import { getMonthTransactions } from "@/lib/cifra/queries";
 import { summarizeTransactions } from "@/lib/cifra/summary";
-import { cn } from "@/lib/utils";
-import { deleteTransaction } from "../actions";
 
 const monthName = new Intl.DateTimeFormat("es-MX", { month: "long", year: "numeric", timeZone: "UTC" });
 
@@ -70,39 +66,7 @@ export default async function CifraMovimientosPage({
             No hay movimientos en este mes.
           </p>
         ) : (
-          <ul className="divide-y divide-border/80 rounded-2xl border border-border/80" data-testid="cifra-transactions-list">
-            {rows.map((t) => (
-              <li key={t.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
-                <div className="min-w-0">
-                  <p className="truncate font-medium">
-                    {categoryLabel(t.flow, t.category)}
-                    {t.description ? ` · ${t.description}` : ""}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatDayMonth(t.date)}
-                    {t.fromPayment ? " · pago marcado" : ""}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={cn("font-medium tabular-nums", t.flow === "income" && "text-secondary")}>
-                    {t.flow === "income" ? "+" : "−"}
-                    {formatMxn(t.amountCents)}
-                  </span>
-                  <ActionButton
-                    action={deleteTransaction.bind(null, t.id)}
-                    label="Borrar"
-                    variant="ghost"
-                    confirmText={
-                      t.fromPayment
-                        ? "Este movimiento vino de un pago marcado. Si lo borras, el saldo de la deuda se restaura. ¿Continuar?"
-                        : "¿Borrar este movimiento?"
-                    }
-                    successMessage="Movimiento borrado"
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
+          <TransactionList rows={rows} deletable testId="cifra-transactions-list" />
         )}
       </section>
     </div>

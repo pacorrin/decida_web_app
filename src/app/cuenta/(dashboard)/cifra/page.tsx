@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { PaymentList } from "@/components/cifra/payment-list";
+import { TransactionList } from "@/components/cifra/transaction-list";
 import { getCifraAccess } from "@/lib/cifra/access";
 import { categoryColor } from "@/lib/cifra/colors";
 import { categoryLabel } from "@/lib/cifra/constants";
-import { formatDayMonth, todayInMexico } from "@/lib/cifra/dates";
+import { todayInMexico } from "@/lib/cifra/dates";
 import { formatMxn } from "@/lib/cifra/money";
 import { getOverview } from "@/lib/cifra/queries";
 import type { CategoryShare } from "@/lib/cifra/summary";
@@ -167,28 +168,7 @@ export default async function CifraResumenPage() {
             .
           </p>
         ) : (
-          <ul className="divide-y divide-border/80 rounded-2xl border border-border/80" data-testid="cifra-recent-list">
-            {o.recentTransactions.map((t) => (
-              <li key={t.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-medium", categoryColor(t.flow, t.category))}>
-                      {categoryLabel(t.flow, t.category)}
-                    </span>
-                    {t.fromPayment && (
-                      <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">Pago</span>
-                    )}
-                  </div>
-                  {t.description && <p className="mt-1 truncate">{t.description}</p>}
-                  <p className="mt-1 text-xs text-muted-foreground">{formatDayMonth(t.date)}</p>
-                </div>
-                <span className={cn("font-medium tabular-nums", t.flow === "income" && "text-secondary")}>
-                  {t.flow === "income" ? "+" : "−"}
-                  {formatMxn(t.amountCents)}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <TransactionList rows={o.recentTransactions} testId="cifra-recent-list" />
         )}
       </section>
     </div>
