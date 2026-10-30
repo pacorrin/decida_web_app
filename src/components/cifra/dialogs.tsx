@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Pencil } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   ACCOUNT_KINDS,
@@ -75,8 +76,9 @@ export function AccountDialog({ item }: { item?: AccountItem }) {
   return (
     <FormDialog
       triggerLabel={item ? "Editar" : "Agregar saldo"}
-      triggerVariant={item ? "ghost" : "outline"}
+      triggerVariant="outline"
       triggerSize="xs"
+      triggerIcon={item ? <Pencil aria-hidden /> : undefined}
       title={item ? "Editar saldo" : "Agregar saldo"}
       description="El dinero que tienes hoy en una cuenta o en efectivo."
       action={saveAccount}
@@ -104,8 +106,9 @@ export function DebtDialog({ item }: { item?: DebtItem }) {
   return (
     <FormDialog
       triggerLabel={item ? "Editar" : "Agregar deuda"}
-      triggerVariant={item ? "ghost" : "outline"}
+      triggerVariant="outline"
       triggerSize="xs"
+      triggerIcon={item ? <Pencil aria-hidden /> : undefined}
       title={item ? "Editar deuda" : "Agregar deuda"}
       description="Captura tu próximo pago y nosotros calculamos el resto."
       wide
@@ -192,8 +195,9 @@ export function FixedExpenseDialog({ item }: { item?: FixedItem }) {
   return (
     <FormDialog
       triggerLabel={item ? "Editar" : "Agregar gasto fijo"}
-      triggerVariant={item ? "ghost" : "outline"}
+      triggerVariant="outline"
       triggerSize="xs"
+      triggerIcon={item ? <Pencil aria-hidden /> : undefined}
       title={item ? "Editar gasto fijo" : "Agregar gasto fijo"}
       description="Un gasto que se repite, como la renta, el internet o los salarios."
       wide

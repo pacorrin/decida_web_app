@@ -27,6 +27,7 @@ export function FormDialog({
   triggerLabel,
   triggerVariant = "outline",
   triggerSize = "sm",
+  triggerIcon,
   title,
   description,
   action,
@@ -38,6 +39,7 @@ export function FormDialog({
   triggerLabel: string;
   triggerVariant?: "default" | "outline" | "ghost" | "secondary";
   triggerSize?: "default" | "sm" | "xs";
+  triggerIcon?: React.ReactNode;
   title: string;
   description?: string;
   action: (formData: FormData) => Promise<CifraActionResult>;
@@ -87,6 +89,7 @@ export function FormDialog({
       <DialogTrigger
         render={<Button variant={triggerVariant} size={triggerSize} data-testid={testId} />}
       >
+        {triggerIcon}
         {triggerLabel}
       </DialogTrigger>
       <DialogContent
@@ -202,6 +205,8 @@ export function ActionButton({
   successMessage = "Listo",
   variant = "outline",
   size = "xs",
+  icon,
+  className,
   testId,
 }: {
   action: () => Promise<CifraActionResult>;
@@ -210,6 +215,8 @@ export function ActionButton({
   successMessage?: string;
   variant?: "default" | "outline" | "ghost" | "secondary" | "destructive";
   size?: "default" | "sm" | "xs";
+  icon?: React.ReactNode;
+  className?: string;
   testId?: string;
 }) {
   const [pending, startTransition] = useTransition();
@@ -234,9 +241,10 @@ export function ActionButton({
       size={size}
       disabled={pending}
       onClick={run}
+      className={className}
       data-testid={testId}
     >
-      {pending ? <Loader2 className="size-3 animate-spin" aria-hidden /> : null}
+      {pending ? <Loader2 className="size-3 animate-spin" aria-hidden /> : icon}
       {label}
     </Button>
   );

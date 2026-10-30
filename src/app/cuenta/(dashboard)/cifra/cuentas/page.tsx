@@ -1,4 +1,4 @@
-import { Banknote, Landmark, PiggyBank, NotebookPen, Wallet } from "lucide-react";
+import { Banknote, Trash2, Landmark, PiggyBank, NotebookPen, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ActionButton } from "@/components/cifra/form-kit";
 import { AccountDialog, DebtDialog, FixedExpenseDialog } from "@/components/cifra/dialogs";
@@ -87,6 +87,17 @@ function Card({ children, className }: { children: React.ReactNode; className?: 
   );
 }
 
+/** Editar y borrar, siempre en la parte de arriba de la tarjeta, junto al nombre. */
+function CardActions({ children }: { children: React.ReactNode }) {
+  return <div className="flex shrink-0 items-center gap-1.5">{children}</div>;
+}
+
+const deleteButton = {
+  variant: "outline" as const,
+  icon: <Trash2 aria-hidden />,
+  className: "text-destructive hover:bg-destructive/10 hover:text-destructive",
+};
+
 function Notes({ text }: { text: string | null }) {
   if (!text) return null;
   return (
@@ -152,13 +163,13 @@ export default async function CifraCuentasPage() {
                     <p className="text-xs text-muted-foreground">{label(ACCOUNT_KINDS, a.kind)}</p>
                   </div>
                 </div>
-                <p className="text-xl font-semibold tabular-nums">{formatMxn(a.balanceCents)}</p>
+                <CardActions>
+                  <AccountDialog item={a} />
+                  <ActionButton action={deleteAccount.bind(null, a.id)} label="Borrar" {...deleteButton} confirmText={`¿Borrar «${a.name}»?`} successMessage="Saldo borrado" />
+                </CardActions>
               </div>
+              <p className="text-2xl font-semibold tabular-nums">{formatMxn(a.balanceCents)}</p>
               <Notes text={a.notes} />
-              <div className="flex justify-end gap-1">
-                <AccountDialog item={a} />
-                <ActionButton action={deleteAccount.bind(null, a.id)} label="Borrar" variant="ghost" confirmText={`¿Borrar «${a.name}»?`} successMessage="Saldo borrado" />
-              </div>
             </Card>
           );
         })}
@@ -178,13 +189,17 @@ export default async function CifraCuentasPage() {
           return (
             <Card key={d.id} className={cn(d.paidOff && "opacity-70")}>
               <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="truncate font-medium">{d.paidOff ? `${d.name} (liquidada)` : d.name}</p>
-                  <div className="mt-1.5 flex flex-wrap gap-1.5">
-                    <Chip>{label(DEBT_KINDS, d.kind)}</Chip>
-                    {d.annualRatePct != null && <Chip>{d.annualRatePct}% anual</Chip>}
-                    {!d.recurring && <Chip>Pago único</Chip>}
-                  </div>
+                <p className="min-w-0 truncate font-medium">{d.paidOff ? `${d.name} (liquidada)` : d.name}</p>
+                <CardActions>
+                  <DebtDialog item={d} />
+                  <ActionButton action={deleteDebt.bind(null, d.id)} label="Borrar" {...deleteButton} confirmText={`¿Borrar «${d.name}»?`} successMessage="Deuda borrada" />
+                </CardActions>
+              </div>
+              <div className="flex items-end justify-between gap-3">
+                <div className="flex flex-wrap gap-1.5">
+                  <Chip>{label(DEBT_KINDS, d.kind)}</Chip>
+                  {d.annualRatePct != null && <Chip>{d.annualRatePct}% anual</Chip>}
+                  {!d.recurring && <Chip>Pago único</Chip>}
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-muted-foreground">Saldo</p>
@@ -238,10 +253,6 @@ export default async function CifraCuentasPage() {
               )}
 
               <Notes text={d.notes} />
-              <div className="mt-auto flex justify-end gap-1">
-                <DebtDialog item={d} />
-                <ActionButton action={deleteDebt.bind(null, d.id)} label="Borrar" variant="ghost" confirmText={`¿Borrar «${d.name}»?`} successMessage="Deuda borrada" />
-              </div>
             </Card>
           );
         })}
@@ -259,31 +270,29 @@ export default async function CifraCuentasPage() {
           return (
             <Card key={f.id} className={cn(!f.active && "opacity-70")}>
               <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="truncate font-medium">{f.active ? f.name : `${f.name} (pagado)`}</p>
-                  <div className="mt-1.5 flex flex-wrap gap-1.5">
-                    <Chip>{categoryLabel("expense", f.category)}</Chip>
-                    <Chip>{f.recurring ? "Cada mes" : "Pago único"}</Chip>
-                  </div>
+                <p className="min-w-0 truncate font-medium">{f.active ? f.name : `${f.name} (pagado)`}</p>
+                <CardActions>
+                  <FixedExpenseDialog item={f} />
+                  <ActionButton action={deleteFixedExpense.bind(null, f.id)} label="Borrar" {...deleteButton} confirmText={`¿Borrar «${f.name}»?`} successMessage="Gasto borrado" />
+                </CardActions>
+              </div>
+              <div className="flex items-end justify-between gap-3">
+                <div className="flex flex-wrap gap-1.5">
+                  <Chip>{categoryLabel("expense", f.category)}</Chip>
+                  <Chip>{f.recurring ? "Cada mes" : "Pago único"}</Chip>
                 </div>
                 <p className="text-xl font-semibold tabular-nums">
                   {f.amountCents != null ? formatMxn(f.amountCents) : "Por confirmar"}
                 </p>
               </div>
               <Notes text={f.notes} />
-              <div className="flex items-center justify-between gap-2">
-                {f.nextDueOn && chip ? (
+              {f.nextDueOn && chip && (
+                <div>
                   <span className={cn("rounded-full px-3 py-1 text-xs font-medium", chip.tone)}>
                     {formatDayMonth(f.nextDueOn)} · {chip.text.toLowerCase()}
                   </span>
-                ) : (
-                  <span />
-                )}
-                <div className="flex gap-1">
-                  <FixedExpenseDialog item={f} />
-                  <ActionButton action={deleteFixedExpense.bind(null, f.id)} label="Borrar" variant="ghost" confirmText={`¿Borrar «${f.name}»?`} successMessage="Gasto borrado" />
                 </div>
-              </div>
+              )}
             </Card>
           );
         })}
