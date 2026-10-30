@@ -26,7 +26,7 @@ export function SectionShell({
       id={id}
       aria-labelledby={headingId}
       className={cn(
-        "py-16 md:py-24",
+        "scroll-mt-28 py-16 md:py-24",
         variant === "muted" && "bg-muted/60",
         variant === "primary" && "bg-primary text-primary-foreground",
         className
