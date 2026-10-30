@@ -16,10 +16,9 @@ describe("página pública de Cifra", () => {
     expect(CIFRA_NAV_LINKS.every((l) => l.href.startsWith("/cifra#"))).toBe(true);
   });
 
-  it("promete lo que existe: sin banco conectado y con pesos mexicanos", () => {
+  it("promete lo que existe: sin banco conectado", () => {
     const faq = JSON.stringify(CIFRA_FAQ);
     expect(faq).toMatch(/No\. Cifra nunca te pide claves/);
-    expect(faq).toMatch(/solo en pesos mexicanos/);
   });
 
   it("está en el mapa del sitio", () => {

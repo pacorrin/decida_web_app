@@ -629,3 +629,6 @@ Botón «Grabar voz» con transcripción (`gpt-4o-mini-transcribe`) al campo de 
 
 ## [2026-10-30] ingest | Página pública de Cifra (/cifra)
 Landing con arco SCAR, sección completa de captura inteligente y secciones de cuentas, pagos, resumen, privacidad, precio y FAQ. Ver [[arquitectura/cifra-finanzas-personales]].
+
+## [2026-10-30] ingest | Rediseño de la página pública /cifra
+Hero partido con demo viva, barra y pie propios, tablero de pagos, selector de plan y FAQ en mosaicos; distinta del inicio de Decida. Ver [[arquitectura/cifra-finanzas-personales]].

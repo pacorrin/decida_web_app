@@ -1,357 +1,344 @@
-import { CheckCircle2, Camera, Mic, PencilLine, ShieldCheck, Sparkles } from "lucide-react";
-import { BetaBadge } from "@/components/beta/beta-badge";
+import Image from "next/image";
+import Link from "next/link";
+import { LEGAL_LINKS } from "@/components/landing/landing-content";
+import { BETA_FOOTER_TEXT } from "@/lib/beta";
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
-import { SectionShell } from "@/components/landing/section-shell";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { CREDIT_COST_CIFRA_CAPTURE } from "@/lib/credits/costs";
 import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
-import { BreakdownMock, CaptureMock, PaymentsMock, SummaryMock } from "./mocks";
+import { BreakdownMock } from "./mocks";
+import { PricingSelector } from "./pricing-selector";
+import { TicketDemo } from "./ticket-demo";
 import {
   CIFRA_ACCOUNTS,
-  CIFRA_CAPTURE_MODES,
   CIFRA_CAPTURE_RULES,
-  CIFRA_CAPTURE_STEPS,
   CIFRA_FAQ,
-  CIFRA_PAYMENTS_POINTS,
-  CIFRA_PRICING,
+  CIFRA_PLAN_ROWS,
   CIFRA_PRIVACY_POINTS,
-  CIFRA_PROBLEMS,
   CIFRA_SIGNUP,
   CIFRA_SUMMARY_POINTS,
 } from "./content";
+import { cn } from "@/lib/utils";
 
-function Check({ children }: { children: React.ReactNode }) {
+const SHELL = "mx-auto w-full max-w-7xl px-4 sm:px-8 lg:px-12";
+const H2 = "text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl";
+
+/** Barra propia de Cifra: sin bordes, sobre el campo verde del hero. */
+function CifraBar() {
   return (
-    <li className="flex items-start gap-2 text-sm leading-relaxed">
-      <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-secondary" aria-hidden />
-      <span>{children}</span>
-    </li>
+    <div className="flex items-center justify-between gap-4">
+      <Link href="/" className="flex shrink-0 items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60" aria-label="Decida, inicio">
+        <Image src="/logo.svg" alt="" width={36} height={22} aria-hidden className="brightness-0 invert" />
+        <span className="text-lg font-semibold tracking-tight text-white">Decida</span>
+        <span className="whitespace-nowrap text-lg font-semibold tracking-tight text-white/60">/ Cifra beta</span>
+      </Link>
+      <nav aria-label="Navegación principal" className="flex items-center gap-5 whitespace-nowrap text-[15px] font-medium text-white/80">
+        <Link href="/" className="hidden hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 sm:inline">
+          Inicio
+        </Link>
+        <Link href="/cuenta" className="hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
+          Iniciar sesión
+        </Link>
+      </nav>
+    </div>
   );
-}
-
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <p className="text-xs font-medium uppercase tracking-wide text-[#3d7ea6]">{children}</p>;
 }
 
 export function CifraHero() {
   return (
-    <section aria-labelledby="cifra-hero" className="border-b border-border/60 bg-background py-16 md:py-24">
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
-        <div className="decida-reveal space-y-8">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#6baed6]/40 bg-[#e8f4fa] px-2.5 py-1 text-xs font-medium text-primary">
-              <Sparkles className="size-3.5" aria-hidden />
-              Con captura inteligente
-            </span>
-            <BetaBadge>Beta</BetaBadge>
-          </div>
-          <div className="space-y-5">
-            <h1 id="cifra-hero" className="text-balance text-3xl font-semibold leading-tight tracking-tight text-primary sm:text-4xl md:text-5xl">
-              Tu dinero y tus pagos, en orden.
-            </h1>
-            <p className="max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Cifra junta tus cuentas, deudas, gastos fijos e ingresos en un solo lugar y te dice qué tienes que pagar y cuánto te
-              queda. ¿Saliste del súper? Toma una foto del ticket o cuéntalo con tu voz: Cifra lo registra por ti.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <PrimaryCtaButton href={CIFRA_SIGNUP.href} location="cifra_hero">
-              {CIFRA_SIGNUP.label}
-            </PrimaryCtaButton>
-            <CtaLink href="/cifra#captura" location="cifra_hero_capture" variant="outline">
-              Ver la captura inteligente
-            </CtaLink>
-          </div>
-          <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
-            Se usa con un plan de Decida desde ${CIFRA_PRICING.plan.priceMxn} MXN al mes. Registrar a mano no gasta créditos.
-          </p>
-        </div>
-        <div className="decida-reveal decida-reveal-delay mx-auto w-full max-w-md lg:max-w-none">
-          <SummaryMock />
+    <section aria-labelledby="cifra-hero" className="grid min-h-svh bg-primary text-white lg:grid-cols-2 lg:grid-rows-[auto_1fr]">
+      <div className="px-4 pt-6 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pt-8">
+        <CifraBar />
+      </div>
+
+      <div className="flex items-center justify-center bg-[#0d5a40] px-4 py-10 sm:px-8 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:justify-end lg:px-12">
+        <TicketDemo />
+      </div>
+
+      <div className="flex flex-col justify-end gap-6 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-2 lg:px-12 lg:pb-14">
+        <h1 id="cifra-hero" className="text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+          <span className="cifra-line"><span>Tu dinero y tus pagos,</span></span>
+          <span className="cifra-line" style={{ "--cifra-delay": "0.11s" } as React.CSSProperties}><span>en orden.</span></span>
+        </h1>
+        <p className="decida-reveal-delay decida-reveal max-w-md text-lg leading-relaxed text-white/85">
+          Foto, voz o texto: Cifra registra el gasto por ti y te dice qué pagar y cuánto te queda.
+        </p>
+        <div className="decida-reveal decida-reveal-delay flex flex-col gap-3 sm:flex-row sm:items-center">
+          <PrimaryCtaButton href={CIFRA_SIGNUP.href} location="cifra_hero">
+            {CIFRA_SIGNUP.label}
+          </PrimaryCtaButton>
+          <Link href="/cifra#captura" className="px-2 text-base font-medium text-white/85 underline-offset-4 hover:text-white hover:underline">
+            Ver cómo captura
+          </Link>
         </div>
       </div>
     </section>
   );
 }
 
-export function CifraProblem() {
+export function CifraStatement() {
   return (
-    <SectionShell
-      id="problema"
-      title="Llevar tus finanzas no debería ser un segundo trabajo"
-      description="La mayoría no falla por falta de ganas, sino porque ordenar el dinero se vuelve tedioso."
-    >
-      <ul className="grid gap-4 md:grid-cols-3">
-        {CIFRA_PROBLEMS.map((p) => (
-          <li key={p.title} className="rounded-xl border border-border/80 bg-card p-6">
-            <h3 className="text-lg font-semibold tracking-tight text-primary">{p.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.text}</p>
-          </li>
-        ))}
-      </ul>
-      <p className="mx-auto mt-10 max-w-2xl text-center text-lg font-medium text-primary">
-        Cifra pone todo en un solo lugar y quita la parte más pesada: capturar.
-      </p>
-    </SectionShell>
+    <section aria-label="Por qué Cifra" className="bg-background py-20 md:py-32">
+      <div className={SHELL}>
+        <p className="cifra-in max-w-4xl text-pretty text-2xl font-medium leading-snug tracking-tight text-primary sm:text-3xl">
+          Las fechas se pasan, no sabes cuánto te queda y anotar cada gasto da flojera. Cifra junta todo en un solo lugar y se
+          encarga de lo más pesado: capturar.
+        </p>
+      </div>
+    </section>
   );
 }
 
-const MODE_ICONS = [Camera, Mic, PencilLine] as const;
-
 export function CifraCapture() {
   return (
-    <SectionShell
-      id="captura"
-      variant="muted"
-      title="Captura inteligente: de la foto del ticket al movimiento registrado"
-      description="Sales de la tienda, tomas una foto y Cifra llena el formulario por ti. También puedes contarlo con tu voz, escribirlo o mezclar las tres formas."
-    >
-      <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.25fr] lg:gap-14">
-        <div>
-          <Eyebrow>Cómo funciona</Eyebrow>
-          <ol className="mt-4 space-y-5">
-            {CIFRA_CAPTURE_STEPS.map((s, i) => (
-              <li key={s.title} className="flex gap-4">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground" aria-hidden>
-                  {i + 1}
-                </span>
-                <div>
-                  <h3 className="text-base font-semibold text-primary">{s.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+    <section id="captura" aria-labelledby="captura-heading" className="scroll-mt-8 bg-muted py-20 md:py-32">
+      <div className={SHELL}>
+        <h2 id="captura-heading" className={cn("cifra-in", H2, "max-w-4xl text-primary")}>
+          Una captura, tres formas
+        </h2>
+        <div className="mt-14 grid gap-12 lg:grid-cols-12 lg:gap-8">
+          <ul className="cifra-in space-y-1 text-7xl font-semibold leading-[1.02] tracking-tight text-primary sm:text-8xl lg:col-span-6 lg:text-[8rem]" aria-label="Formas de capturar">
+            <li>Foto.</li>
+            <li className="text-primary/60">Voz.</li>
+            <li className="text-primary/35">Texto.</li>
+          </ul>
+          <div className="space-y-8 lg:col-span-5 lg:col-start-8">
+            <p className="text-lg leading-relaxed text-foreground">
+              Mézclalas: sube la foto del ticket y agrega por voz lo que no sale en él. Cifra propone el movimiento con tu catálogo de
+              categorías y tú lo confirmas.
+            </p>
+            <ul className="space-y-4">
+              {CIFRA_CAPTURE_RULES.map((r) => (
+                <li key={r.title}>
+                  <p className="text-base font-semibold text-primary">{r.title}</p>
+                  <p className="mt-0.5 text-base leading-relaxed text-foreground">{r.text}</p>
+                </li>
+              ))}
+            </ul>
+            <PrimaryCtaButton href={CIFRA_SIGNUP.href} location="cifra_capture">
+              Probar la captura inteligente
+            </PrimaryCtaButton>
+          </div>
         </div>
-        <CaptureMock />
       </div>
+    </section>
+  );
+}
 
-      <div className="mt-14">
-        <Eyebrow>Tres formas, una captura</Eyebrow>
-        <ul className="mt-4 grid gap-4 md:grid-cols-3">
-          {CIFRA_CAPTURE_MODES.map((m, i) => {
-            const Icon = MODE_ICONS[i];
-            return (
-              <li key={m.title} className="rounded-xl border border-border/80 bg-card p-6">
-                <span className="flex size-9 items-center justify-center rounded-lg bg-accent text-primary">
-                  <Icon className="size-4.5" aria-hidden />
-                </span>
-                <h3 className="mt-4 text-lg font-semibold tracking-tight text-primary">{m.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{m.text}</p>
-              </li>
-            );
-          })}
-        </ul>
-        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          Se pueden combinar: sube la foto del ticket y agrega por voz lo que no sale en él, o captura solo con la voz. Con cualquier
-          combinación llegas a un movimiento listo para confirmar.
+const BOARD: { name: string; status: string; tone: string; amount: string; detail: string }[] = [
+  { name: "Tarjeta Azul", status: "Vencido", tone: "bg-amber-300 text-amber-950", amount: "$1,850.00", detail: "Vencido hace 1 día. Corte el 20, fecha límite el 9." },
+  { name: "Préstamo del auto", status: "En 6 días", tone: "bg-sky-200 text-sky-950", amount: "$3,200.00", detail: "Faltan 14 pagos, estimados con tu vigencia." },
+  { name: "Renta", status: "En 8 días", tone: "bg-sky-200 text-sky-950", amount: "$6,500.00", detail: "Gasto fijo recurrente: se proyecta solo cada mes." },
+  { name: "Tarjeta Oro", status: "Por confirmar", tone: "bg-white text-primary", amount: "—", detail: "Su monto cambia cada mes: captura el estado de cuenta para confirmarlo." },
+  { name: "Internet", status: "En 12 días", tone: "bg-sky-200 text-sky-950", amount: "$599.00", detail: "Gasto fijo recurrente." },
+];
+
+export function CifraBoard() {
+  return (
+    <section id="pagos" aria-labelledby="pagos-heading" className="scroll-mt-8 bg-primary py-20 text-white md:py-32">
+      <div className={SHELL}>
+        <h2 id="pagos-heading" className={cn("cifra-in", H2, "max-w-4xl")}>
+          Qué pagar y cuándo
+        </h2>
+        <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/85">
+          Lo vencido primero, tus montos que cambian por confirmar y, al pagar, un toque en «Editar y pagar».
         </p>
       </div>
-
-      <div className="mt-14 rounded-xl border border-border/80 bg-card p-6 sm:p-8">
-        <div className="flex items-center gap-2 text-primary">
-          <ShieldCheck className="size-5" aria-hidden />
-          <h3 className="text-lg font-semibold tracking-tight">Reglas claras</h3>
-        </div>
-        <ul className="mt-5 grid gap-6 md:grid-cols-3">
-          {CIFRA_CAPTURE_RULES.map((r) => (
-            <li key={r.title}>
-              <p className="font-medium text-primary">{r.title}</p>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{r.text}</p>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-6 border-t border-border/70 pt-4 text-sm leading-relaxed text-muted-foreground">
-          La inteligencia artificial puede equivocarse, sobre todo con tickets borrosos o con varios totales. Por eso la última palabra
-          siempre es tuya: lo revisas antes de guardar.
-        </p>
+      <div data-ui className="mt-12 space-y-1 px-3 sm:px-4">
+        {BOARD.map((row, i) => (
+          <details key={row.name} name="cifra-pagos" open={i === 1} className="cifra-in group rounded-lg bg-[#0d5a40] open:bg-background open:text-primary">
+            <summary className="flex min-h-[4.25rem] cursor-pointer list-none items-center gap-3 px-4 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 sm:gap-6 sm:px-6 [&::-webkit-details-marker]:hidden">
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-xl font-medium sm:text-3xl">{row.name}</span>
+                <span className="block text-base tabular-nums opacity-80 sm:hidden">{row.amount}</span>
+              </span>
+              <span className="hidden text-xl tabular-nums sm:block sm:text-3xl">{row.amount}</span>
+              <span className={cn("shrink-0 rounded-md px-3 py-1.5 text-sm font-semibold sm:text-base", row.tone)}>{row.status}</span>
+            </summary>
+            <div className="rounded-b-lg bg-background px-4 pb-5 pt-1 text-primary sm:px-6">
+              <p className="max-w-xl text-base leading-relaxed">{row.detail}</p>
+              <p className="mt-2 max-w-xl text-base leading-relaxed">
+                Al pagar confirmas monto y fecha reales: Cifra registra el egreso, baja la deuda y pasa al siguiente vencimiento.
+              </p>
+            </div>
+          </details>
+        ))}
       </div>
-
-      <div className="mt-8 flex justify-center">
-        <PrimaryCtaButton href={CIFRA_SIGNUP.href} location="cifra_capture">
-          Probar la captura inteligente
-        </PrimaryCtaButton>
+      <div className={cn(SHELL, "mt-12 grid gap-6 sm:grid-cols-3")}>
+        {[
+          ["Por pagar", "$12,149.00"],
+          ["En tus cuentas", "$14,300.00"],
+          ["Te sobra", "$2,151.00"],
+        ].map(([k, v]) => (
+          <div key={k} className="cifra-in">
+            <p className="text-4xl font-semibold tabular-nums sm:text-5xl">{v}</p>
+            <p className="mt-1 text-base text-white/85">{k}</p>
+          </div>
+        ))}
       </div>
-    </SectionShell>
+      <p className="mx-auto mt-6 w-full max-w-7xl px-4 text-[13px] text-white/70 sm:px-8 lg:px-12">Ejemplo ilustrativo</p>
+    </section>
   );
 }
 
 export function CifraAccounts() {
   return (
-    <SectionShell
-      id="cuentas"
-      title="Todo lo que tienes y todo lo que debes, en un solo lugar"
-      description="Mis cuentas reúne tus saldos, tus deudas y tus gastos fijos, con las fechas que importan."
-    >
-      <ul className="grid gap-4 lg:grid-cols-3">
-        {CIFRA_ACCOUNTS.map((a) => (
-          <li key={a.title} className="flex flex-col rounded-xl border border-border/80 bg-card p-6">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{a.lead}</p>
-            <h3 className="mt-1 text-xl font-semibold tracking-tight text-primary">{a.title}</h3>
-            <ul className="mt-4 space-y-2.5">
-              {a.items.map((i) => (
-                <Check key={i}>{i}</Check>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </SectionShell>
-  );
-}
-
-export function CifraPayments() {
-  return (
-    <SectionShell
-      id="pagos"
-      variant="muted"
-      title="Sabe qué pagar esta semana, no al final del mes"
-      description="El reporte «¿Qué tengo que pagar?» ordena tus vencimientos y los compara con lo que tienes en tus cuentas."
-    >
-      <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14">
-        <ul className="space-y-5">
-          {CIFRA_PAYMENTS_POINTS.map((p) => (
-            <li key={p.title}>
-              <h3 className="text-base font-semibold text-primary">{p.title}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{p.text}</p>
+    <section id="cuentas" aria-labelledby="cuentas-heading" className="scroll-mt-8 bg-background py-20 md:py-32">
+      <div className={cn(SHELL, "grid gap-12 lg:grid-cols-12 lg:gap-8")}>
+        <h2 id="cuentas-heading" className={cn("cifra-in", H2, "text-primary lg:sticky lg:top-12 lg:col-span-5 lg:self-start")}>
+          Lo que tienes y lo que debes
+        </h2>
+        <ul className="space-y-10 lg:col-span-6 lg:col-start-7">
+          {CIFRA_ACCOUNTS.map((a) => (
+            <li key={a.title} className="cifra-in">
+              <p className="text-4xl font-semibold tracking-tight text-primary sm:text-5xl">{a.title}</p>
+              <p className="mt-2 max-w-md text-lg leading-relaxed text-foreground">{a.text}</p>
             </li>
           ))}
-          <li className="rounded-xl border border-border/80 bg-card p-5">
-            <h3 className="text-base font-semibold text-primary">«Editar y pagar» en un toque</h3>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              Cuando pagas, confirmas el monto y la fecha reales. Cifra registra el egreso, baja el saldo de la deuda y pasa al siguiente
-              vencimiento. Nada se genera solo, y si te equivocas, al borrar el pago todo vuelve a como estaba.
-            </p>
-          </li>
         </ul>
-        <PaymentsMock />
       </div>
-    </SectionShell>
+    </section>
   );
 }
 
 export function CifraSummary() {
   return (
-    <SectionShell
-      id="resumen"
-      title="Cuánto entra, cuánto sale y a dónde se va"
-      description="Un resumen del mes y tus movimientos, sin armar tablas."
-    >
-      <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
-        <div>
-          <ul className="space-y-3">
+    <section id="resumen" aria-labelledby="resumen-heading" className="scroll-mt-8 bg-accent py-20 md:py-32">
+      <div className={cn(SHELL, "grid items-center gap-12 lg:grid-cols-12 lg:gap-8")}>
+        <div data-ui className="lg:col-span-6">
+          <BreakdownMock />
+        </div>
+        <div className="space-y-6 lg:col-span-5 lg:col-start-8">
+          <h2 id="resumen-heading" className={cn("cifra-in", H2, "text-primary")}>
+            A dónde se va tu dinero
+          </h2>
+          <ul className="space-y-2 text-lg leading-relaxed text-foreground">
             {CIFRA_SUMMARY_POINTS.map((p) => (
-              <Check key={p}>{p}</Check>
+              <li key={p}>{p}</li>
             ))}
           </ul>
-          <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-            Registras ingresos y egresos con su categoría, monto, fecha y una nota, a mano o con la captura inteligente. Cada categoría
-            tiene su color fijo para que escanees la lista de un vistazo.
-          </p>
         </div>
-        <BreakdownMock />
       </div>
-    </SectionShell>
+    </section>
   );
 }
 
 export function CifraPrivacy() {
   return (
-    <SectionShell
-      id="privacidad-cifra"
-      variant="muted"
-      title="Tus datos, bajo tu control"
-      description="Cifra maneja información sensible. Estas son las reglas con las que está hecha."
-    >
-      <ul className="grid gap-4 sm:grid-cols-2">
-        {CIFRA_PRIVACY_POINTS.map((p) => (
-          <li key={p.title} className="rounded-xl border border-border/80 bg-card p-6">
-            <h3 className="text-base font-semibold text-primary">{p.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.text}</p>
-          </li>
-        ))}
-      </ul>
-    </SectionShell>
+    <section aria-labelledby="privacidad-heading" className="bg-background py-20 md:py-32">
+      <div className={SHELL}>
+        <h2 id="privacidad-heading" className={cn("cifra-in", H2, "max-w-4xl text-primary")}>
+          Tus datos, bajo tu control
+        </h2>
+        <ul className="mt-12 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          {CIFRA_PRIVACY_POINTS.map((p) => (
+            <li key={p.title} className="cifra-in">
+              <p className="text-lg font-semibold text-primary">{p.title}</p>
+              <p className="mt-1 text-base leading-relaxed text-foreground">{p.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
 
 export function CifraPricing() {
-  const { plan, captures } = CIFRA_PRICING;
   return (
-    <SectionShell
-      id="precio"
-      title="Incluido en tu plan de Decida"
-      description="Cifra y el análisis de ideas comparten el mismo plan y los mismos créditos."
-    >
-      <div className="mx-auto max-w-3xl rounded-xl border border-primary/30 bg-card p-6 sm:p-8">
-        <p className="text-sm font-medium text-muted-foreground">Desde el plan {plan.name}</p>
-        <p className="mt-2 text-5xl font-semibold tracking-tight text-primary">
-          ${plan.priceMxn} <span className="text-2xl font-medium text-muted-foreground">MXN al mes</span>
-        </p>
-        <ul className="mt-6 space-y-3">
-          <Check>Registro a mano ilimitado: saldos, deudas, gastos fijos, ingresos y egresos, sin gastar créditos.</Check>
-          <Check>
-            Captura inteligente: {CREDIT_COST_CIFRA_CAPTURE} créditos por captura. Con los {plan.credits} créditos de{" "}
-            {plan.name} alcanzan para unas {captures} al mes si no los usas en otros análisis.
-          </Check>
-          <Check>Si la lectura falla, los créditos se te devuelven.</Check>
-          <Check>Cancelas cuando quieras y tus datos se conservan.</Check>
-        </ul>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <PrimaryCtaButton href={CIFRA_SIGNUP.href} location="cifra_pricing">
-            {CIFRA_SIGNUP.label}
-          </PrimaryCtaButton>
-          <CtaLink href={CREDITS_PLANS_PATH} location="cifra_pricing_plans" variant="outline">
-            Ver todos los planes
-          </CtaLink>
+    <section id="precio" aria-labelledby="precio-heading" className="scroll-mt-8 bg-muted py-20 md:py-32">
+      <div className={SHELL}>
+        <h2 id="precio-heading" className={cn("cifra-in", H2, "max-w-4xl text-primary")}>
+          Incluido en tu plan de Decida
+        </h2>
+        <div className="mt-12">
+          <PricingSelector rows={CIFRA_PLAN_ROWS} captureCost={CREDIT_COST_CIFRA_CAPTURE} />
         </div>
+        <p className="mt-10">
+          <Link href={CREDITS_PLANS_PATH} className="text-base font-medium text-primary underline-offset-4 hover:underline">
+            Ver el detalle de los planes
+          </Link>
+        </p>
       </div>
-    </SectionShell>
+    </section>
   );
 }
 
 export function CifraFaq() {
   return (
-    <SectionShell id="faq" title="Preguntas frecuentes sobre Cifra" variant="muted">
-      <Accordion className="mx-auto max-w-3xl rounded-xl border border-border/70 bg-card px-4 sm:px-6">
-        {CIFRA_FAQ.map((item, index) => (
-          <AccordionItem key={item.question} value={`cifra-faq-${index}`}>
-            <AccordionTrigger className="text-left text-base font-medium text-primary hover:no-underline">
-              {item.question}
-            </AccordionTrigger>
-            <AccordionContent className="text-muted-foreground">{item.answer}</AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </SectionShell>
+    <section id="faq" aria-labelledby="faq-heading" className="scroll-mt-8 bg-background py-20 md:py-32">
+      <div className={cn(SHELL, "grid gap-10 lg:grid-cols-12 lg:gap-8")}>
+        <h2 id="faq-heading" className={cn("cifra-in", H2, "text-primary lg:sticky lg:top-12 lg:col-span-4 lg:self-start")}>
+          Preguntas
+        </h2>
+        <div className="space-y-2 lg:col-span-8">
+          {CIFRA_FAQ.map((item) => (
+            <details key={item.question} name="cifra-faq" className="cifra-in group rounded-lg bg-muted open:bg-primary open:text-white">
+              <summary className="flex min-h-[4.5rem] cursor-pointer list-none items-center justify-between gap-4 px-5 py-3 text-lg font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-6 sm:text-xl [&::-webkit-details-marker]:hidden">
+                {item.question}
+                <span className="relative size-4 shrink-0" aria-hidden>
+                  <span className="absolute left-0 top-1/2 h-[3px] w-4 -translate-y-1/2 bg-current" />
+                  <span className="absolute left-0 top-1/2 h-[3px] w-4 -translate-y-1/2 rotate-90 bg-current transition-transform group-open:rotate-0" />
+                </span>
+              </summary>
+              <p className="max-w-[52ch] px-5 pb-6 text-base leading-relaxed text-white/90 sm:px-6">{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
 export function CifraFinalCta() {
   return (
-    <section aria-labelledby="cifra-final" className="bg-primary py-16 text-primary-foreground md:py-20">
-      <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
-        <h2 id="cifra-final" className="text-balance text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl">
-          Empieza a ver tu dinero con claridad
-        </h2>
-        <p className="mx-auto mt-4 max-w-xl text-pretty text-base leading-relaxed text-primary-foreground/85 sm:text-lg">
-          Captura lo que tienes y lo que debes, y deja que una foto o tu voz se encarguen del resto.
-        </p>
-        <div className="mt-8 flex justify-center">
-          <PrimaryCtaButton
-            href={CIFRA_SIGNUP.href}
-            location="cifra_final_cta"
-            className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
-          >
-            {CIFRA_SIGNUP.label}
-          </PrimaryCtaButton>
+    <section aria-labelledby="cifra-final" className="overflow-hidden bg-background pb-20 md:pb-28">
+      <div className="flex gap-2 px-2 sm:gap-3 sm:px-3">
+        <div className="hidden w-24 shrink-0 rounded-xl bg-primary sm:block lg:w-[12%]" aria-hidden />
+        <div className="min-w-0 flex-1 rounded-xl bg-secondary p-8 text-white sm:p-12 lg:min-h-[22rem] lg:p-14">
+          <h2 id="cifra-final" className="max-w-2xl text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
+            Tu dinero, con claridad
+          </h2>
+          <p className="mt-4 max-w-md text-lg leading-relaxed text-white/95">Captura lo que tienes y lo que debes. Lo demás lo hace una foto o tu voz.</p>
+          <div className="mt-8">
+            <CtaLink href={CIFRA_SIGNUP.href} location="cifra_final_cta" variant="outline" className="border-transparent bg-white text-primary hover:bg-white/90">
+              {CIFRA_SIGNUP.label}
+            </CtaLink>
+          </div>
         </div>
+        <div className="hidden w-24 shrink-0 rounded-xl bg-accent sm:block lg:w-[12%]" aria-hidden />
       </div>
     </section>
+  );
+}
+
+export function CifraFooter() {
+  return (
+    <footer className="bg-primary px-4 pb-10 pt-16 text-white sm:px-8 lg:px-12">
+      <p className="text-[18vw] font-semibold leading-[0.9] tracking-tight sm:text-[15vw]" aria-hidden>
+        Cifra
+      </p>
+      <div className="mx-auto mt-10 grid max-w-7xl gap-8 lg:grid-cols-2">
+        <div className="space-y-3 text-base leading-relaxed text-white/85">
+          <p>{BETA_FOOTER_TEXT}</p>
+          <p>
+            ¿Dudas? Escríbenos a{" "}
+            <a href="mailto:hello@decida.mx" className="font-medium text-white underline underline-offset-4">
+              hello@decida.mx
+            </a>
+          </p>
+        </div>
+        <nav aria-label="Enlaces del pie de página" className="flex flex-wrap items-start gap-x-6 gap-y-2 text-base text-white/85 lg:justify-end">
+          <Link href="/" className="hover:text-white">Decida</Link>
+          <Link href="/cuenta" className="hover:text-white">Iniciar sesión</Link>
+          {LEGAL_LINKS.map((l) => (
+            <Link key={l.href} href={l.href} className="hover:text-white">
+              {l.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+      <p className="mx-auto mt-10 max-w-7xl text-[13px] leading-relaxed text-white/75">
+        Cifra no reemplaza asesoría financiera, fiscal o legal personalizada. © {new Date().getFullYear()} Decida.
+      </p>
+    </footer>
   );
 }

@@ -175,3 +175,50 @@
 .decida-reveal-delay {
   animation-delay: 0.12s;
 }
+/* Cifra: titular que sube desde detrás de su propia línea (cada línea la escribe el componente). */
+@keyframes cifra-rise {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.cifra-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.cifra-line > span {
+  display: block;
+  animation: cifra-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--cifra-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cifra-line > span {
+    animation: none;
+  }
+}
+
+/* Cifra: entrada al llegar a la vista. Sin soporte del navegador o con movimiento reducido, el contenido ya está visible. */
+@keyframes cifra-in {
+  from {
+    transform: translateY(32px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cifra-in {
+      animation: cifra-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}

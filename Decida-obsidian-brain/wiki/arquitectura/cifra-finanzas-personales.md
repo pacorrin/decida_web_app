@@ -35,6 +35,8 @@ Botón arriba a la derecha de Cifra. Diálogo de dos pasos: (1) fotos (cámara o
 ## Página pública (2026-10-30)
 `/cifra` (`src/app/cifra/page.tsx`, componentes en `src/components/cifra-landing/`, texto en `content.ts`). Arco SCAR: situación y complicación (hero y «Llevar tus finanzas no debería ser un segundo trabajo»), acción (captura inteligente como sección central, Mis cuentas, Pagos, Resumen) y resolución (privacidad, precio, FAQ, CTA). Las maquetas son ilustrativas y se anuncian como tal; el costo de la captura y el precio salen de `costs.ts` y `plans.ts`, no de texto copiado. Entra al sitemap, al menú público (Inicio · Cifra) y al pie. CTA a `/cuenta/registro`. Evento `cifra_landing_viewed`.
 
+**Rediseño (2026-10-30):** para que no se confunda con el inicio de Decida, `/cifra` ya no usa `SiteHeader` ni `SiteFooter`: tiene su propia barra («Decida / Cifra beta»), hero partido en verde profundo con una demo viva (`ticket-demo.tsx`: foto, voz o texto → movimiento propuesto), tablero de pagos con filas desplegables, selector de plan (`pricing-selector.tsx`), FAQ en mosaicos y pie propio con la palabra «Cifra» grande. Entradas de scroll solo con transform (`.cifra-in`, `.cifra-line` en `globals.css`). Sin fotos reales: la imagen de la página es su propia interfaz (`data-ui`). Pendiente: contraste del texto blanco sobre el botón coral (2.7:1, es el estilo de CTA de la marca).
+
 ## Decisiones (2026-10-30, del usuario)
 - Alcance con **saldos incluidos**; **«Editar y pagar»** crea el egreso (nada se genera solo).
 - **Requiere plan activo** (mínimo Explora, `hasFullAccess`). Sin plan se ve la pantalla de planes; los datos se conservan y se pueden borrar.

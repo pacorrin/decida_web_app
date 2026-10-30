@@ -1,19 +1,17 @@
 import { TrackEvent } from "@/components/analytics/track-event";
 import {
   CifraAccounts,
+  CifraBoard,
   CifraCapture,
   CifraFaq,
   CifraFinalCta,
+  CifraFooter,
   CifraHero,
-  CifraPayments,
   CifraPricing,
   CifraPrivacy,
-  CifraProblem,
+  CifraStatement,
   CifraSummary,
 } from "@/components/cifra-landing/sections";
-import { CIFRA_NAV_LINKS } from "@/components/cifra-landing/content";
-import { SiteFooter } from "@/components/landing/site-footer";
-import { SiteHeader } from "@/components/landing/site-header";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { pageMetadata } from "@/lib/seo";
 
@@ -28,20 +26,19 @@ export default function CifraPage() {
   return (
     <>
       <TrackEvent event={ANALYTICS_EVENTS.cifraLandingViewed} />
-      <SiteHeader sectionLinks={CIFRA_NAV_LINKS} />
       <main id="contenido-principal">
         <CifraHero />
-        <CifraProblem />
+        <CifraStatement />
         <CifraCapture />
+        <CifraBoard />
         <CifraAccounts />
-        <CifraPayments />
         <CifraSummary />
         <CifraPrivacy />
         <CifraPricing />
         <CifraFaq />
         <CifraFinalCta />
       </main>
-      <SiteFooter links={CIFRA_NAV_LINKS} />
+      <CifraFooter />
     </>
   );
 }
