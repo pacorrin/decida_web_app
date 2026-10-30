@@ -57,6 +57,7 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | Página | Resumen |
 |---|---|
 | [[wiki/marca/sistema-de-diseno]] | "Diagnóstico en Papel Blanco" — paleta, tipografía, reglas |
+| [[wiki/marca/narrativa-del-orden-decida]] | Cómo contar la plataforma (Cifra, Decida, Planifica, Ejecuta) a usuarios y redes: reencuadre, nombre de la secuencia, arco SCAR, formatos y datos que faltan — 2026-10-30 |
 
 ## Tareas
 | Página | Resumen |

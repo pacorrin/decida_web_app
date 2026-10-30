@@ -603,3 +603,7 @@ El usuario aclaró que Decida es una plataforma con varias herramientas al servi
 ## [2026-10-30] decision | Nombre Cifra y metodología CDPE
 
 La herramienta de finanzas personales se llama **Cifra** (descartado Alcanza). La plataforma se organiza en la secuencia Cifra, Decida, Planifica, Ejecuta (CDPE), todas bajo la marca Decida. Detalle y notas de diseño en `wiki/producto/nuevas-features.md`. Pendiente: dominio e IMPI de Cifra, nombre de Planifica y Ejecuta, reflejarlo en el PRD.
+
+## [2026-10-30] plan | Narrativa «El orden Decida»
+
+Se creó `wiki/marca/narrativa-del-orden-decida.md`: reencuadre de la metodología como camino con cuatro preguntas, opciones de nombre para la secuencia (recomendada «El orden Decida»), arco SCAR, formatos para redes y los cinco datos que faltan para volverla historia. Sirve para pulir el propósito de Decida (de evaluar ideas a recorrer un camino). Pendiente: elegir nombre, reunir evidencia, actualizar visión y PRD.

@@ -43,6 +43,8 @@ Notas de diseño:
 - El orden C-D-P-E no obliga al usuario: puede entrar por cualquier herramienta; la secuencia es la guía.
 - La **sigla CDPE** es difícil de pronunciar; usarla solo como etiqueta interna y comunicar la secuencia con los cuatro nombres.
 
+Cómo contarlo al público: [[../marca/narrativa-del-orden-decida]].
+
 Relación con lo ya escrito: refuerza el insight de [[retencion-y-plan-de-ejecucion]] (retención en la ejecución, no en el diagnóstico). Ojo con el alcance de [[prd]], que hoy describe un producto de diagnóstico de ideas y deja fuera la comunidad: este cambio de enfoque habría que reflejarlo ahí cuando se decida formalmente.
 
 ---
