@@ -7,8 +7,11 @@ import * as Sentry from "@sentry/nextjs";
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
 
-  // 100% de trazas en desarrollo; 10% en producción para no saturar la cuota.
-  tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1,
+  // En desarrollo no se captura nada: las alertas y trazas son solo de producción.
+  enabled: process.env.NODE_ENV !== "development",
+
+  // 10% de trazas para no saturar la cuota.
+  tracesSampleRate: 0.1,
 
   dataCollection: {
     // To disable sending user data and HTTP bodies, uncomment the lines below. For more info visit:

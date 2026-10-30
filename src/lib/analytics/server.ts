@@ -7,11 +7,13 @@ import type { AnalyticsEvent, AnalyticsProps } from "./events";
 
 const KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST;
+// En desarrollo no se manda nada a PostHog (ni eventos, ni trazas de IA, ni flags).
+const DISABLED = process.env.NODE_ENV === "development";
 
 let client: PostHog | null = null;
 
 export function getPostHogClient(): PostHog | null {
-  if (!KEY || !HOST) return null;
+  if (DISABLED || !KEY || !HOST) return null;
   client ??= new PostHog(KEY, {
     host: HOST,
     flushAt: 1,
@@ -52,7 +54,7 @@ export async function trackAnonymous(
   event: AnalyticsEvent,
   props?: AnalyticsProps,
 ): Promise<void> {
-  if (!KEY) return;
+  if (DISABLED || !KEY) return;
   try {
     const raw = (await cookies()).get(`ph_${KEY}_posthog`)?.value;
     if (!raw) return;

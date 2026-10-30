@@ -8,8 +8,11 @@ import posthog from "posthog-js";
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-  // 100% de trazas en desarrollo; 10% en producción para no saturar la cuota.
-  tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1,
+  // En desarrollo no se captura nada: las alertas y trazas son solo de producción.
+  enabled: process.env.NODE_ENV !== "development",
+
+  // 10% de trazas para no saturar la cuota.
+  tracesSampleRate: 0.1,
 
   dataCollection: {
     // To disable sending user data and HTTP bodies, uncomment the lines below. For more info visit:
@@ -25,7 +28,8 @@ const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
 
 // Analytics del embudo (S3-11). Sin clave, PostHog queda apagado y no pasa nada.
-if (posthogKey && posthogHost) {
+// En desarrollo tampoco se cuenta nada, para no mezclarlo con la producción.
+if (posthogKey && posthogHost && process.env.NODE_ENV !== "development") {
   posthog.init(posthogKey, {
     api_host: posthogHost,
     // Solo los eventos del embudo y las vistas de página: sin autocaptura,
