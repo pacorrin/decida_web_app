@@ -17,6 +17,7 @@ import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
 import { cn } from "@/lib/utils";
 import { NativeSelect } from "./form-kit";
 import { MoneyInput } from "./inputs";
+import { newId } from "@/lib/new-id";
 
 type Step = "consent" | "input" | "processing" | "review";
 type Photo = { file: File; url: string };
@@ -149,7 +150,7 @@ export function SmartCapture({
   async function transcribe(blob: Blob, ext: string) {
     setVoice("transcribing");
     setMessage(null);
-    captureId.current ||= crypto.randomUUID();
+    captureId.current ||= newId();
     const data = new FormData();
     data.set("captureId", captureId.current);
     data.set("audio", new File([blob], `voz.${ext}`, { type: blob.type || `audio/${ext}` }));
@@ -220,7 +221,7 @@ export function SmartCapture({
 
   function process() {
     const data = new FormData();
-    captureId.current ||= crypto.randomUUID();
+    captureId.current ||= newId();
     data.set("captureId", captureId.current);
     data.set("text", text);
     photos.forEach((p) => data.append("images", p.file));
