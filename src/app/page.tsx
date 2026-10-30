@@ -22,11 +22,21 @@ import { FaqSection } from "@/components/landing/faq-section";
 import { FinalCtaSection } from "@/components/landing/final-cta-section";
 import { SiteFooter } from "@/components/landing/site-footer";
 import { TrackEvent } from "@/components/analytics/track-event";
+import { SiteJsonLd } from "@/components/seo/json-ld";
+import { pageMetadata } from "@/lib/seo";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+
+export const metadata = pageMetadata({
+  title: "Decida | ¿Tu idea vale el tiempo y el dinero que le vas a poner?",
+  description:
+    "Evalúa tu idea de negocio contra tu tiempo, tu presupuesto y tu riesgo. Tu primera evaluación es gratis: fortalezas, riesgos y qué validar antes de invertir.",
+  path: "",
+});
 
 export default function HomePage() {
   return (
     <>
+      <SiteJsonLd />
       <TrackEvent event={ANALYTICS_EVENTS.landingViewed} />
       <SiteHeader />
       <main id="contenido-principal">

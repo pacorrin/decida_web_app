@@ -6,7 +6,8 @@ import {
 
 export const metadata = createLegalMetadata(
   "Términos de servicio",
-  "Condiciones de uso de la plataforma Decida para evaluar ideas de negocio."
+  "Condiciones de uso de la plataforma Decida para evaluar ideas de negocio.",
+  "/terminos"
 );
 
 export default function TerminosPage() {

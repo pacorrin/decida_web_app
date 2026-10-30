@@ -20,7 +20,10 @@ export const metadata: Metadata = {
   title: "Decida | ¿Tu idea vale el tiempo y el dinero que le vas a poner?",
   description:
     "Evalúa tu idea de negocio contra tu tiempo, tu presupuesto y tu riesgo. Tu primera evaluación es gratis: fortalezas, riesgos y qué validar antes de invertir.",
+  applicationName: "Decida",
+  twitter: { card: "summary_large_image", images: ["/og-image.png"] },
   openGraph: {
+    siteName: "Decida",
     title: "Decida | ¿Tu idea vale el tiempo y el dinero que le vas a poner?",
     description:
       "Diagnóstico de viabilidad para tu idea de negocio: fortalezas, riesgos y qué validar antes de invertir. Tu primera evaluación es gratis.",

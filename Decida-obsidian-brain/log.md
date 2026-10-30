@@ -587,3 +587,7 @@ Se pasó `dev` a `main` (analítica ampliada y documentación) y se desplegó `9
 
 Se conectó GitHub en Railway y se fijó la rama `main`; el merge del PR #20 a `main` disparó solo el despliegue `cf8b38ca`, que terminó bien. Se corrigió `wiki/arquitectura/despliegue-en-railway.md`, que decía que el despliegue automático no estaba activo.
 
+## [2026-10-29] decision | SEO: sitemap, robots y metadatos
+
+Sitemap con `lastModified` real y sin `changeFrequency`/`priority`; robots que bloquea todo fuera del dominio real; canónica, Open Graph y Twitter por página; JSON-LD de Organization y WebSite en la landing. Documentado en `wiki/arquitectura/seo-y-sitemap.md`. Pendiente: Google Search Console.
+

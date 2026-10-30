@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { ReportHeader } from "@/components/report/report-header";
 import { ReportToc } from "@/components/report/report-toc";
 import { ReportSection } from "@/components/report/report-section";
@@ -40,11 +41,12 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Ejemplo de reporte | Decida",
   description:
     "Reporte de ejemplo: servicio de detailing móvil. Diagnóstico completo con semáforos, métricas financieras, riesgos y plan de validación.",
-};
+  path: "/ejemplo",
+});
 
 export default function ExampleReportPage() {
   const report = EXAMPLE_REPORT;

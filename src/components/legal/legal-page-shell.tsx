@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 import { ReportHeader } from "@/components/report/report-header";
 import { SiteFooter } from "@/components/landing/site-footer";
@@ -10,12 +11,10 @@ type LegalPageShellProps = {
 
 export function createLegalMetadata(
   title: string,
-  description: string
+  description: string,
+  path: string
 ): Metadata {
-  return {
-    title: `${title} | Decida`,
-    description,
-  };
+  return pageMetadata({ title: `${title} | Decida`, description, path });
 }
 
 export function LegalPageShell({

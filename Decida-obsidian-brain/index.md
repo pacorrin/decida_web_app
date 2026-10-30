@@ -48,6 +48,7 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | [[wiki/arquitectura/seguridad-y-proteccion-de-costos]] | Verificación de correo con código, captcha Turnstile, guardas del onboarding, tope de intentos y pendientes de costo — 2026-10-29 |
 | [[wiki/arquitectura/vendors-y-costos]] | Los 8 proveedores externos (Railway, OpenAI, Stripe, Resend, PostHog, Sentry, Turnstile, Hostinger): para qué se usa cada uno y su costo aproximado — 2026-10-29 |
 | [[wiki/arquitectura/analitica-y-eventos]] | Eventos de PostHog (alta, pasos del análisis, captcha, botones por ubicación), cómo se envían y embudos sugeridos — 2026-10-29 |
+| [[wiki/arquitectura/seo-y-sitemap]] | Sitemap con fechas reales, robots que solo abre el dominio real, canónicas, Open Graph y datos estructurados — 2026-10-29 |
 | [[wiki/arquitectura/despliegue-en-railway]] | Flujo de ramas dev/main, proyecto y servicios de Railway, migraciones automáticas antes de cada despliegue, variables puestas y pendientes — 2026-10-29 |
 | [[wiki/arquitectura/dashboard-de-cuenta]] | Navbar + sidebar + rutas del panel `/cuenta` (route group, dropdown-menu nuevo) — 2026-08-05 |
 

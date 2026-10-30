@@ -6,7 +6,8 @@ import {
 
 export const metadata = createLegalMetadata(
   "Política de privacidad",
-  "Cómo recopilamos, usamos y protegemos tus datos personales en Decida."
+  "Cómo recopilamos, usamos y protegemos tus datos personales en Decida.",
+  "/privacidad"
 );
 
 export default function PrivacidadPage() {
