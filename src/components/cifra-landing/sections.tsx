@@ -1,7 +1,4 @@
-import Image from "next/image";
 import Link from "next/link";
-import { LEGAL_LINKS } from "@/components/landing/landing-content";
-import { BETA_FOOTER_TEXT } from "@/lib/beta";
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
 import { CREDIT_COST_CIFRA_CAPTURE } from "@/lib/credits/costs";
 import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
@@ -23,38 +20,14 @@ const SHELL = "mx-auto w-full max-w-7xl px-4 sm:px-8 lg:px-12";
 const H2 = "text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl";
 
 /** Barra propia de Cifra: sin bordes, sobre el campo verde del hero. */
-function CifraBar() {
-  return (
-    <div className="flex items-center justify-between gap-4">
-      <Link href="/" className="flex shrink-0 items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60" aria-label="Decida, inicio">
-        <Image src="/logo.svg" alt="" width={36} height={22} aria-hidden className="brightness-0 invert" />
-        <span className="text-lg font-semibold tracking-tight text-white">Decida</span>
-        <span className="whitespace-nowrap text-lg font-semibold tracking-tight text-white/60">/ Cifra beta</span>
-      </Link>
-      <nav aria-label="Navegación principal" className="flex items-center gap-5 whitespace-nowrap text-[15px] font-medium text-white/80">
-        <Link href="/" className="hidden hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 sm:inline">
-          Inicio
-        </Link>
-        <Link href="/cuenta" className="hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
-          Iniciar sesión
-        </Link>
-      </nav>
-    </div>
-  );
-}
-
 export function CifraHero() {
   return (
-    <section aria-labelledby="cifra-hero" className="grid min-h-svh bg-primary text-white lg:grid-cols-2 lg:grid-rows-[auto_1fr]">
-      <div className="px-4 pt-6 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pt-8">
-        <CifraBar />
-      </div>
-
-      <div className="flex items-center justify-center bg-[#0d5a40] px-4 py-10 sm:px-8 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:justify-end lg:px-12">
+    <section aria-labelledby="cifra-hero" className="grid min-h-[calc(100svh-4rem)] bg-primary text-white lg:grid-cols-2">
+      <div className="flex items-center justify-center bg-[#0d5a40] px-4 py-10 sm:px-8 lg:col-start-2 lg:row-start-1 lg:justify-end lg:px-12">
         <TicketDemo />
       </div>
 
-      <div className="flex flex-col justify-end gap-6 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-2 lg:px-12 lg:pb-14">
+      <div className="flex flex-col justify-end gap-6 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pb-14">
         <h1 id="cifra-hero" className="text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
           <span className="cifra-line"><span>Tu dinero y tus pagos,</span></span>
           <span className="cifra-line" style={{ "--cifra-delay": "0.11s" } as React.CSSProperties}><span>en orden.</span></span>
@@ -307,38 +280,5 @@ export function CifraFinalCta() {
         <div className="hidden w-24 shrink-0 rounded-xl bg-accent sm:block lg:w-[12%]" aria-hidden />
       </div>
     </section>
-  );
-}
-
-export function CifraFooter() {
-  return (
-    <footer className="bg-primary px-4 pb-10 pt-16 text-white sm:px-8 lg:px-12">
-      <p className="text-[18vw] font-semibold leading-[0.9] tracking-tight sm:text-[15vw]" aria-hidden>
-        Cifra
-      </p>
-      <div className="mx-auto mt-10 grid max-w-7xl gap-8 lg:grid-cols-2">
-        <div className="space-y-3 text-base leading-relaxed text-white/85">
-          <p>{BETA_FOOTER_TEXT}</p>
-          <p>
-            ¿Dudas? Escríbenos a{" "}
-            <a href="mailto:hello@decida.mx" className="font-medium text-white underline underline-offset-4">
-              hello@decida.mx
-            </a>
-          </p>
-        </div>
-        <nav aria-label="Enlaces del pie de página" className="flex flex-wrap items-start gap-x-6 gap-y-2 text-base text-white/85 lg:justify-end">
-          <Link href="/" className="hover:text-white">Decida</Link>
-          <Link href="/cuenta" className="hover:text-white">Iniciar sesión</Link>
-          {LEGAL_LINKS.map((l) => (
-            <Link key={l.href} href={l.href} className="hover:text-white">
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
-      <p className="mx-auto mt-10 max-w-7xl text-[13px] leading-relaxed text-white/75">
-        Cifra no reemplaza asesoría financiera, fiscal o legal personalizada. © {new Date().getFullYear()} Decida.
-      </p>
-    </footer>
   );
 }

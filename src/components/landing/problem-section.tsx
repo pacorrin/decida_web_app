@@ -1,25 +1,17 @@
-import { SectionShell } from "@/components/landing/section-shell";
-
 export function ProblemSection() {
   return (
-    <SectionShell
-      id="problema"
-      title="Las ideas no fallan en la cabeza. Fallan al chocar con tu realidad."
-      variant="muted"
-    >
-      <div className="mx-auto max-w-2xl space-y-4 text-center text-base leading-relaxed text-muted-foreground sm:text-lg">
-        <p>
-          Una idea puede sonar bien y romperse cuando la miras con tu tiempo
-          disponible, tu dinero, tus clientes posibles y el riesgo que sí puedes
-          asumir.
-        </p>
-        <p>
-          Antes de rentar, comprar equipo o pagar publicidad, conviene saber si
-          esa idea aguanta{" "}
-          <span className="font-medium text-primary">tus</span> condiciones — no
-          las de un caso ideal.
+    <section id="problema" aria-labelledby="problema-heading" className="scroll-mt-20 bg-primary py-20 text-white md:py-32">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <h2
+          id="problema-heading"
+          className="max-w-4xl text-balance text-3xl font-semibold leading-tight tracking-tight sm:text-5xl"
+        >
+          Las ideas no fallan en la cabeza. Fallan al chocar con tu realidad.
+        </h2>
+        <p className="mt-8 max-w-2xl text-pretty text-lg leading-relaxed text-white/85 sm:text-xl">
+          Antes de rentar, comprar equipo o pagar publicidad, conviene saber si tu idea aguanta tu tiempo, tu dinero y el riesgo que sí puedes asumir. No los de un caso ideal.
         </p>
       </div>
-    </SectionShell>
+    </section>
   );
 }

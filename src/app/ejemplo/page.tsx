@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
-import { ReportHeader } from "@/components/report/report-header";
+import { SiteHeader } from "@/components/landing/site-header";
+import { SiteFooter } from "@/components/landing/site-footer";
 import { ReportToc } from "@/components/report/report-toc";
 import { ReportSection } from "@/components/report/report-section";
 import {
@@ -53,7 +54,7 @@ export default function ExampleReportPage() {
 
   return (
     <>
-      <ReportHeader />
+      <SiteHeader />
 
       <main id="reporte-contenido" className="flex-1">
         {/* Cover */}
@@ -768,6 +769,7 @@ export default function ExampleReportPage() {
           <p className="mt-2">{report.cover.disclaimer}</p>
         </div>
       </footer>
+      <SiteFooter />
     </>
   );
 }

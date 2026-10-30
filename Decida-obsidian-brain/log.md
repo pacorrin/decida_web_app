@@ -632,3 +632,6 @@ Landing con arco SCAR, sección completa de captura inteligente y secciones de c
 
 ## [2026-10-30] ingest | Rediseño de la página pública /cifra
 Hero partido con demo viva, barra y pie propios, tablero de pagos, selector de plan y FAQ en mosaicos; distinta del inicio de Decida. Ver [[arquitectura/cifra-finanzas-personales]].
+
+## [2026-10-30] ingest | Rediseño del inicio y navbar/pie únicos
+El inicio se rehízo (hero con diagnóstico vivo `hero-verdict.tsx`, secciones sin tarjetas con borde). `SiteHeader` y `SiteFooter` son ahora los únicos del sitio público (inicio, Cifra, legales, ejemplo, cuenta); se eliminaron `ReportHeader`, la barra y el pie propios de Cifra y la segunda fila de secciones. Ver [[arquitectura/cifra-finanzas-personales]].

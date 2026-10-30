@@ -1,3 +1,5 @@
+import { SiteFooter } from "@/components/landing/site-footer";
+import { SiteHeader } from "@/components/landing/site-header";
 import { TrackEvent } from "@/components/analytics/track-event";
 import {
   CifraAccounts,
@@ -5,7 +7,6 @@ import {
   CifraCapture,
   CifraFaq,
   CifraFinalCta,
-  CifraFooter,
   CifraHero,
   CifraPricing,
   CifraPrivacy,
@@ -26,6 +27,7 @@ export default function CifraPage() {
   return (
     <>
       <TrackEvent event={ANALYTICS_EVENTS.cifraLandingViewed} />
+      <SiteHeader />
       <main id="contenido-principal">
         <CifraHero />
         <CifraStatement />
@@ -38,7 +40,7 @@ export default function CifraPage() {
         <CifraFaq />
         <CifraFinalCta />
       </main>
-      <CifraFooter />
+      <SiteFooter />
     </>
   );
 }

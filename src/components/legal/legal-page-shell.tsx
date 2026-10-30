@@ -1,6 +1,6 @@
 import { pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
-import { ReportHeader } from "@/components/report/report-header";
+import { SiteHeader } from "@/components/landing/site-header";
 import { SiteFooter } from "@/components/landing/site-footer";
 
 type LegalPageShellProps = {
@@ -24,7 +24,7 @@ export function LegalPageShell({
 }: LegalPageShellProps) {
   return (
     <>
-      <ReportHeader />
+      <SiteHeader />
       <main
         id="contenido-legal"
         className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8"

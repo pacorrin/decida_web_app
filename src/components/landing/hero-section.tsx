@@ -1,41 +1,20 @@
-import { Sparkles } from "lucide-react";
-import { BetaBadge } from "@/components/beta/beta-badge";
-import { BETA_HERO_TEXT } from "@/lib/beta";
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
-import { HeroJudgmentCard } from "@/components/landing/hero-judgment-card";
+import { HeroVerdict } from "@/components/landing/hero-verdict";
 
 export function HeroSection() {
   return (
-    <section
-      aria-labelledby="hero-heading"
-      className="border-b border-border/60 bg-background py-16 md:py-24"
-    >
+    <section aria-labelledby="hero-heading" className="bg-background py-12 md:py-20">
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
         <div className="decida-reveal space-y-8">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              data-testid="ai-badge"
-              className="inline-flex items-center gap-1.5 rounded-full border border-[#6baed6]/40 bg-[#e8f4fa] px-2.5 py-1 text-xs font-medium text-primary"
-            >
-              <Sparkles className="size-3.5" aria-hidden />
-              Potenciado con IA
-            </span>
-            <BetaBadge>{BETA_HERO_TEXT}</BetaBadge>
-          </div>
-          <div className="space-y-5">
-            <h1
-              id="hero-heading"
-              className="text-balance text-3xl font-semibold leading-tight tracking-tight text-primary sm:text-4xl md:text-5xl"
-            >
-              ¿Tu idea vale el tiempo y el dinero que le vas a poner?
-            </h1>
-            <p className="max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Decida evalúa tu idea de negocio contra tus condiciones reales:
-              tiempo, presupuesto, perfil, mercado y riesgo — y te deja con una
-              recomendación clara: probar a pequeña escala, validar primero,
-              ajustar o pausar.
-            </p>
-          </div>
+          <h1
+            id="hero-heading"
+            className="text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-primary sm:text-5xl lg:text-6xl"
+          >
+            ¿Tu idea vale tu tiempo y tu dinero?
+          </h1>
+          <p className="max-w-lg text-pretty text-lg leading-relaxed text-foreground">
+            Decida cruza tu idea de negocio con tus límites reales y te dice si conviene probar, validar, ajustar o pausar.
+          </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <PrimaryCtaButton href="/analizar" location="hero">
               Analizar mi idea gratis
@@ -44,14 +23,13 @@ export function HeroSection() {
               Ver ejemplo de reporte
             </CtaLink>
           </div>
-          <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
-            15 a 20 minutos. Tu primera evaluación es gratis y tu idea es
-            privada. Usas estimaciones: no necesitas ser experto en finanzas.
+          <p className="max-w-md text-base text-muted-foreground">
+            15 a 20 minutos. Primera evaluación gratis, sin tarjeta.
           </p>
         </div>
 
-        <div className="decida-reveal decida-reveal-delay mx-auto w-full max-w-md lg:max-w-none">
-          <HeroJudgmentCard />
+        <div className="decida-reveal decida-reveal-delay mx-auto w-full max-w-xl lg:max-w-none">
+          <HeroVerdict />
         </div>
       </div>
     </section>
