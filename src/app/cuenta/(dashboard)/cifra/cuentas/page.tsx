@@ -87,6 +87,11 @@ function Card({ children, className }: { children: React.ReactNode; className?: 
   );
 }
 
+function Notes({ text }: { text: string | null }) {
+  if (!text) return null;
+  return <p className="whitespace-pre-line break-words rounded-xl bg-muted/40 px-3 py-2 text-xs text-muted-foreground">{text}</p>;
+}
+
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
@@ -144,6 +149,7 @@ export default async function CifraCuentasPage() {
                 </div>
                 <p className="text-xl font-semibold tabular-nums">{formatMxn(a.balanceCents)}</p>
               </div>
+              <Notes text={a.notes} />
               <div className="flex justify-end gap-1">
                 <AccountDialog item={a} />
                 <ActionButton action={deleteAccount.bind(null, a.id)} label="Borrar" variant="ghost" confirmText={`¿Borrar «${a.name}»?`} successMessage="Saldo borrado" />
@@ -226,6 +232,7 @@ export default async function CifraCuentasPage() {
                 </div>
               )}
 
+              <Notes text={d.notes} />
               <div className="mt-auto flex justify-end gap-1">
                 <DebtDialog item={d} />
                 <ActionButton action={deleteDebt.bind(null, d.id)} label="Borrar" variant="ghost" confirmText={`¿Borrar «${d.name}»?`} successMessage="Deuda borrada" />
@@ -258,6 +265,7 @@ export default async function CifraCuentasPage() {
                   {f.amountCents != null ? formatMxn(f.amountCents) : "Por confirmar"}
                 </p>
               </div>
+              <Notes text={f.notes} />
               <div className="flex items-center justify-between gap-2">
                 {f.nextDueOn && chip ? (
                   <span className={cn("rounded-full px-3 py-1 text-xs font-medium", chip.tone)}>

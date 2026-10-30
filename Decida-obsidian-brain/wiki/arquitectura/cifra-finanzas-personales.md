@@ -20,6 +20,7 @@ Primera herramienta nueva de la plataforma ([[../producto/nuevas-features#2. Cif
 - Tarjetas capturan **corte y fecha límite de pago**, y límite de crédito (uso del límite en %).
 - **Pago recurrente:** casilla. La fecha es real (`next_due_on`) más un día ancla y la opción «último día del mes»; al avanzar se ajusta a febrero (28/29) y vuelve al ancla (31 → 28 → 31). Un pago del 9 de nov no está vencido el 30 de oct.
 - **Pagos restantes no se piden:** se estiman (`src/lib/cifra/payoff.ts`). Con **vigencia** (fecha de fin, para préstamo, auto y vivienda) se cuentan los pagos hasta esa fecha; si no, se usa el promedio de los últimos 6 pagos hechos, o el pago próximo o mínimo, con la tasa anual. Siempre se muestra como **estimado**; si el pago no cubre los intereses, indica que no se liquidaría.
+- **Observaciones:** saldos, deudas y gastos fijos tienen un campo de texto libre opcional (máx. 500 caracteres; columnas `cacc_notes`, `cdebt_notes`, `cfix_notes`) para anotar por qué existe ese registro. Se muestra en la tarjeta. Es dato personal del usuario: no se envía a analítica.
 - Campos numéricos solo aceptan dígitos; los de dinero se formatean (`$1,234.50`) y la tasa con %.
 - Al marcar pagado (monto y fecha), el egreso guarda el periodo del vencimiento pagado y los valores previos (`ctrx_prev_due_on`, `ctrx_prev_cut_on`, `ctrx_prev_amount_cents`, `ctrx_applied_to_debt_cents`); borrar el pago restaura el saldo y, si fue el último, las fechas.
 

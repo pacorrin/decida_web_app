@@ -339,6 +339,7 @@ model cifra_accounts {
   cacc_name          String
   cacc_kind          cifra_account_kind
   cacc_balance_cents Int                @default(0)
+  cacc_notes         String?
   cacc_created_at    DateTime           @default(now())
   cacc_updated_at    DateTime           @updatedAt
 
@@ -352,6 +353,7 @@ model cifra_debts {
   cdebt_id                 String          @id @default(cuid())
   cdebt_user_id            String
   cdebt_name               String
+  cdebt_notes              String?
   cdebt_kind               cifra_debt_kind
   cdebt_balance_cents      Int
   cdebt_credit_limit_cents Int?
@@ -382,6 +384,7 @@ model cifra_fixed_expenses {
   cfix_id           String    @id @default(cuid())
   cfix_user_id      String
   cfix_name         String
+  cfix_notes        String?
   cfix_category     String
   cfix_amount_cents Int?
   cfix_variable     Boolean   @default(false)

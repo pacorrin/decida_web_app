@@ -123,6 +123,7 @@ export async function getAccountsData(userId: string, today: CalendarDate) {
     accounts: accounts.map((a) => ({
       id: a.cacc_id,
       name: a.cacc_name,
+      notes: a.cacc_notes,
       kind: a.cacc_kind,
       balanceCents: a.cacc_balance_cents,
     })),
@@ -133,6 +134,7 @@ export async function getAccountsData(userId: string, today: CalendarDate) {
       return {
         id: d.cdebt_id,
         name: d.cdebt_name,
+        notes: d.cdebt_notes,
         kind: d.cdebt_kind,
         balanceCents: d.cdebt_balance_cents,
         creditLimitCents: d.cdebt_credit_limit_cents,
@@ -163,6 +165,7 @@ export async function getAccountsData(userId: string, today: CalendarDate) {
     fixedExpenses: fixedExpenses.map((f) => ({
       id: f.cfix_id,
       name: f.cfix_name,
+      notes: f.cfix_notes,
       category: f.cfix_category,
       amountCents: f.cfix_amount_cents,
       variable: f.cfix_variable,

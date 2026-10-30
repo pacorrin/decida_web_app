@@ -144,6 +144,21 @@ describe("validación", () => {
   });
 });
 
+describe("observaciones", () => {
+  it("se guardan con la deuda y vacías se guardan como nulo", async () => {
+    m.prisma.cifra_debts.create.mockResolvedValue({});
+    await saveDebt(form({ ...debtForm, notes: "Solo compras en línea" }));
+    expect(m.prisma.cifra_debts.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ cdebt_notes: "Solo compras en línea" }),
+    });
+    m.prisma.cifra_debts.create.mockClear();
+    await saveDebt(form({ ...debtForm, notes: "  " }));
+    expect(m.prisma.cifra_debts.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ cdebt_notes: null }),
+    });
+  });
+});
+
 describe("guardar una deuda", () => {
   it("guarda la fecha real del próximo pago y el ancla; la tarjeta queda con pago por confirmar", async () => {
     await saveDebt(form(debtForm));

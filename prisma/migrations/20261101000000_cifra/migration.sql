@@ -14,6 +14,7 @@ CREATE TABLE "cifra_accounts" (
     "cacc_name" TEXT NOT NULL,
     "cacc_kind" "cifra_account_kind" NOT NULL,
     "cacc_balance_cents" INTEGER NOT NULL DEFAULT 0,
+    "cacc_notes" TEXT,
     "cacc_created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "cacc_updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -25,6 +26,7 @@ CREATE TABLE "cifra_debts" (
     "cdebt_id" TEXT NOT NULL,
     "cdebt_user_id" TEXT NOT NULL,
     "cdebt_name" TEXT NOT NULL,
+    "cdebt_notes" TEXT,
     "cdebt_kind" "cifra_debt_kind" NOT NULL,
     "cdebt_balance_cents" INTEGER NOT NULL,
     "cdebt_credit_limit_cents" INTEGER,
@@ -52,6 +54,7 @@ CREATE TABLE "cifra_fixed_expenses" (
     "cfix_id" TEXT NOT NULL,
     "cfix_user_id" TEXT NOT NULL,
     "cfix_name" TEXT NOT NULL,
+    "cfix_notes" TEXT,
     "cfix_category" TEXT NOT NULL,
     "cfix_amount_cents" INTEGER,
     "cfix_variable" BOOLEAN NOT NULL DEFAULT false,

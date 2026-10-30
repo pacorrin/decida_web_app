@@ -17,6 +17,9 @@ const name = text.pipe(
   z.string().min(1, "Escribe un nombre").max(80, "Máximo 80 caracteres"),
 );
 
+/** Observación libre del usuario: para qué usa la cuenta, por qué hizo el gasto, etc. */
+const notes = text.pipe(z.string().max(500, "Máximo 500 caracteres"));
+
 const MONEY_ERROR = "Ingresa un importe válido, por ejemplo 1,500.00";
 
 const money = text.transform((v, ctx) => {
@@ -78,6 +81,7 @@ export const accountSchema = z.object({
   name,
   kind: kindOf(ACCOUNT_KINDS),
   balance: money,
+  notes,
 });
 
 export const debtSchema = z
@@ -85,6 +89,7 @@ export const debtSchema = z
     name,
     kind: kindOf(DEBT_KINDS),
     balance: money,
+    notes,
     creditLimit: optionalMoney,
     annualRate: optionalRate,
     nextDue: dateField("Elige la próxima fecha de pago"),
@@ -118,6 +123,7 @@ export const fixedExpenseSchema = z
   .object({
     name,
     category: kindOf(EXPENSE_CATEGORIES),
+    notes,
     amount: optionalMoney,
     variable: checkbox,
     nextDue: dateField("Elige la próxima fecha de pago"),

@@ -615,3 +615,7 @@ Se construyó la primera versión de Cifra en la rama `dev` (no en `main`): sald
 ## [2026-10-30] impl | Rediseño de deudas en Cifra
 
 Las deudas capturan el próximo pago (monto y fecha real), corte y límite en tarjetas, pago recurrente con ajuste a fin de mes y vigencia opcional. Pagos restantes se estiman (nunca se piden). Nuevo reporte «¿Qué tengo que pagar?» por periodo. Campos numéricos y de dinero con formato. Documentado en `wiki/arquitectura/cifra-finanzas-personales.md`.
+
+## [2026-10-30] impl | Observaciones en Cifra
+
+Campo de texto libre opcional en saldos, deudas y gastos fijos. Se editó la migración `20261101000000_cifra` (aún no está en main).

@@ -72,6 +72,7 @@ export async function saveAccount(formData: FormData): Promise<CifraActionState>
 
   const data = {
     cacc_name: d.name,
+    cacc_notes: d.notes || null,
     cacc_kind: d.kind as "cash" | "bank" | "savings" | "other",
     cacc_balance_cents: d.balance,
   };
@@ -103,6 +104,7 @@ export async function saveDebt(formData: FormData): Promise<CifraActionState> {
 
   const data = {
     cdebt_name: d.name,
+    cdebt_notes: d.notes || null,
     cdebt_kind: d.kind as "credit_card" | "loan" | "vehicle" | "housing" | "other",
     cdebt_balance_cents: d.balance,
     cdebt_credit_limit_cents: d.creditLimit,
@@ -146,6 +148,7 @@ export async function saveFixedExpense(formData: FormData): Promise<CifraActionS
   const due = resolveRecurrence(d.nextDue, d.dueLastDay);
   const data = {
     cfix_name: d.name,
+    cfix_notes: d.notes || null,
     cfix_category: d.category,
     cfix_amount_cents: d.amount,
     cfix_variable: d.variable,

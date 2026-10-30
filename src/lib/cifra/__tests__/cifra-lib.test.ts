@@ -25,7 +25,7 @@ import {
   paymentsToPayOff,
   paymentsUntil,
 } from "../payoff";
-import { debtSchema, fixedExpenseSchema, transactionSchema } from "../schemas";
+import { accountSchema, debtSchema, fixedExpenseSchema, transactionSchema } from "../schemas";
 import { amountAppliedToDebt, summarizeTransactions } from "../summary";
 import { type DueItem, totalsOf, upcomingPayments } from "../upcoming";
 
@@ -318,5 +318,14 @@ describe("validación de formularios", () => {
     const base = { amount: "10", date: "2026-10-30", description: "" };
     expect(transactionSchema.safeParse({ ...base, flow: "income", category: "vivienda" }).success).toBe(false);
     expect(transactionSchema.safeParse({ ...base, flow: "expense", category: "vivienda" }).success).toBe(true);
+  });
+});
+
+describe("observaciones", () => {
+  it("son opcionales, se recortan y tienen tope de 500 caracteres", () => {
+    const base = { name: "Nómina", kind: "bank", balance: "100" };
+    expect(accountSchema.parse(base).notes).toBe("");
+    expect(accountSchema.parse({ ...base, notes: "  Solo para el súper  " }).notes).toBe("Solo para el súper");
+    expect(accountSchema.safeParse({ ...base, notes: "a".repeat(501) }).success).toBe(false);
   });
 });

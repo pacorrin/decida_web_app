@@ -19,10 +19,11 @@ import {
 import { FormDialog, FormGrid, FormRow, FullRow, NativeSelect } from "./form-kit";
 import { CheckboxField, MoneyInput, PercentInput } from "./inputs";
 
-type AccountItem = { id: string; name: string; kind: string; balanceCents: number };
+type AccountItem = { id: string; name: string; notes: string | null; kind: string; balanceCents: number };
 export type DebtItem = {
   id: string;
   name: string;
+  notes: string | null;
   kind: string;
   balanceCents: number;
   creditLimitCents: number | null;
@@ -40,6 +41,7 @@ export type DebtItem = {
 export type FixedItem = {
   id: string;
   name: string;
+  notes: string | null;
   category: string;
   amountCents: number | null;
   variable: boolean;
@@ -50,6 +52,23 @@ export type FixedItem = {
 
 const money = (cents: number | null | undefined) =>
   cents == null ? "" : centsToInputValue(cents);
+/** Observación libre, común a saldos, deudas y gastos fijos. */
+function NotesField({ defaultValue }: { defaultValue?: string | null }) {
+  return (
+    <FormRow name="notes" label="Observaciones" hint="Opcional. Para qué la usas, por qué la tienes, lo que quieras recordar.">
+      <textarea
+        id="notes"
+        name="notes"
+        rows={2}
+        maxLength={500}
+        defaultValue={defaultValue ?? ""}
+        placeholder="Ej. La uso solo para compras en línea"
+        className="w-full resize-none rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
+      />
+    </FormRow>
+  );
+}
+
 const dateValue = (d: CalendarDate | null | undefined) => (d ? formatDateInput(d) : "");
 
 export function AccountDialog({ item }: { item?: AccountItem }) {
@@ -73,6 +92,7 @@ export function AccountDialog({ item }: { item?: AccountItem }) {
       <FormRow name="balance" label="Saldo actual">
         <MoneyInput id="balance" name="balance" defaultValue={money(item?.balanceCents)} />
       </FormRow>
+      <NotesField defaultValue={item?.notes} />
     </FormDialog>
   );
 }
@@ -150,6 +170,10 @@ export function DebtDialog({ item }: { item?: DebtItem }) {
           </FormRow>
         )}
 
+        <FullRow>
+          <NotesField defaultValue={item?.notes} />
+        </FullRow>
+
         <FullRow className="flex flex-wrap gap-x-6 gap-y-2">
           <CheckboxField
             key={kind}
@@ -193,6 +217,9 @@ export function FixedExpenseDialog({ item }: { item?: FixedItem }) {
           </FormRow>
           <CheckboxField name="dueLastDay" label="Siempre el último día del mes" defaultChecked={item?.dueLastDay} />
         </div>
+        <FullRow>
+          <NotesField defaultValue={item?.notes} />
+        </FullRow>
         <FullRow className="flex flex-wrap gap-x-6 gap-y-2">
           <CheckboxField name="variable" label="El monto cambia cada mes" defaultChecked={item?.variable} />
           <CheckboxField name="recurring" label="Pago recurrente (cada mes)" defaultChecked={item ? item.recurring : true} />
