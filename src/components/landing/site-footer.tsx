@@ -76,13 +76,7 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <p
-          className="mt-14 text-[22vw] font-semibold leading-[0.85] tracking-tight sm:text-[16vw] lg:text-[12rem]"
-          aria-hidden
-        >
-          Decida
-        </p>
-        <p className="mt-8 text-sm text-white/75">
+        <p className="mt-14 text-sm text-white/75">
           © {new Date().getFullYear()} Decida
         </p>
       </div>
