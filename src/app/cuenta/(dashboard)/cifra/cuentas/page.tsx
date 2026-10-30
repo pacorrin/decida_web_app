@@ -1,8 +1,10 @@
+import { Banknote, Landmark, PiggyBank, Wallet } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { ActionButton } from "@/components/cifra/form-kit";
 import { AccountDialog, DebtDialog, FixedExpenseDialog } from "@/components/cifra/dialogs";
 import { getCifraAccess } from "@/lib/cifra/access";
 import { ACCOUNT_KINDS, categoryLabel, DEBT_KINDS } from "@/lib/cifra/constants";
-import { formatDayMonth, formatMonthYear, todayInMexico } from "@/lib/cifra/dates";
+import { type CalendarDate, formatDayMonth, formatMonthYear, toDateOnly, todayInMexico } from "@/lib/cifra/dates";
 import { formatMxn } from "@/lib/cifra/money";
 import { creditUtilizationPct, type PayoffEstimate } from "@/lib/cifra/payoff";
 import { getAccountsData } from "@/lib/cifra/queries";
@@ -27,132 +29,208 @@ function payoffText(payoff: PayoffEstimate): string | null {
   return `Estimado: ${n === 1 ? "te falta 1 pago" : `te faltan ~${n} pagos`}${when}, ${BASIS[payoff.basis]}.`;
 }
 
+const KIND_ICONS = { cash: Banknote, bank: Landmark, savings: PiggyBank, other: Wallet } as const;
+
+function daysUntil(from: CalendarDate, to: CalendarDate): number {
+  return Math.round((toDateOnly(to).getTime() - toDateOnly(from).getTime()) / 86_400_000);
+}
+
+function dueChip(days: number): { text: string; tone: string } {
+  if (days < 0) return { text: days === -1 ? "Venció ayer" : `Venció hace ${-days} días`, tone: "bg-destructive/10 text-destructive" };
+  if (days === 0) return { text: "Vence hoy", tone: "bg-secondary/15 text-foreground" };
+  if (days === 1) return { text: "Mañana", tone: "bg-secondary/15 text-foreground" };
+  if (days <= 7) return { text: `En ${days} días`, tone: "bg-secondary/15 text-foreground" };
+  return { text: `En ${days} días`, tone: "bg-muted text-muted-foreground" };
+}
+
 function Section({
   title,
   description,
+  total,
   add,
   empty,
   children,
 }: {
   title: string;
   description: string;
+  total?: string;
   add: React.ReactNode;
   empty?: string;
   children?: React.ReactNode;
 }) {
   return (
-    <section className="space-y-3">
+    <section className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
+          <h2 className="text-lg font-semibold tracking-tight">
+            {title}
+            {total && <span className="ml-2 font-normal text-muted-foreground tabular-nums">{total}</span>}
+          </h2>
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>
         {add}
       </div>
       {empty ? (
-        <p className="rounded-xl border border-border/80 px-4 py-4 text-sm text-muted-foreground">{empty}</p>
+        <p className="rounded-2xl bg-muted/40 px-4 py-6 text-center text-sm text-muted-foreground">{empty}</p>
       ) : (
-        <ul className="divide-y divide-border/80 rounded-2xl border border-border/80">{children}</ul>
+        <ul className="grid gap-4 md:grid-cols-2">{children}</ul>
       )}
     </section>
   );
 }
 
-function Row({
-  title,
-  lines,
-  amount,
-  actions,
-}: {
-  title: string;
-  lines: (string | null)[];
-  amount: string;
-  actions: React.ReactNode;
-}) {
+function Card({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <li className="flex flex-wrap items-start justify-between gap-3 px-4 py-3 text-sm">
-      <div className="min-w-0 space-y-0.5">
-        <p className="truncate font-medium">{title}</p>
-        {lines.filter(Boolean).map((line, i) => (
-          <p key={i} className="text-xs text-muted-foreground">
-            {line}
-          </p>
-        ))}
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="font-medium tabular-nums">{amount}</span>
-        {actions}
-      </div>
+    <li className={cn("flex flex-col gap-4 rounded-2xl border border-border/80 bg-card p-5 text-sm", className)}>
+      {children}
     </li>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="text-2xl font-semibold tracking-tight tabular-nums">{value}</p>
+    </div>
+  );
+}
+
+function Chip({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <span className={cn("rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground", className)}>
+      {children}
+    </span>
   );
 }
 
 export default async function CifraCuentasPage() {
   const access = await getCifraAccess();
   if (!access.ok) return null;
-  const { accounts, debts, fixedExpenses } = await getAccountsData(access.userId, todayInMexico());
+  const today = todayInMexico();
+  const { accounts, debts, fixedExpenses } = await getAccountsData(access.userId, today);
+
+  const have = accounts.reduce((sum, a) => sum + a.balanceCents, 0);
+  const owe = debts.filter((d) => !d.paidOff).reduce((sum, d) => sum + d.balanceCents, 0);
+  const fixedMonthly = fixedExpenses
+    .filter((f) => f.active && f.recurring && f.amountCents != null)
+    .reduce((sum, f) => sum + (f.amountCents ?? 0), 0);
 
   return (
     <div className="space-y-10">
+      <div className="grid gap-6 rounded-2xl bg-muted/40 p-5 sm:grid-cols-3">
+        <Stat label="Tienes en cuentas" value={formatMxn(have)} />
+        <Stat label="Debes en total" value={formatMxn(owe)} />
+        <Stat label="Gastos fijos al mes" value={formatMxn(fixedMonthly)} />
+      </div>
+
       <Section
         title="Saldos"
         description="Lo que tienes hoy en cuentas y efectivo."
         add={<AccountDialog />}
         empty={accounts.length === 0 ? "Aún no agregas ningún saldo." : undefined}
       >
-        {accounts.map((a) => (
-          <Row
-            key={a.id}
-            title={a.name}
-            lines={[label(ACCOUNT_KINDS, a.kind)]}
-            amount={formatMxn(a.balanceCents)}
-            actions={
-              <>
+        {accounts.map((a) => {
+          const Icon = KIND_ICONS[a.kind as keyof typeof KIND_ICONS] ?? Wallet;
+          return (
+            <Card key={a.id}>
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-3">
+                  <Icon className="size-5 shrink-0 text-muted-foreground" aria-hidden />
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">{a.name}</p>
+                    <p className="text-xs text-muted-foreground">{label(ACCOUNT_KINDS, a.kind)}</p>
+                  </div>
+                </div>
+                <p className="text-xl font-semibold tabular-nums">{formatMxn(a.balanceCents)}</p>
+              </div>
+              <div className="flex justify-end gap-1">
                 <AccountDialog item={a} />
                 <ActionButton action={deleteAccount.bind(null, a.id)} label="Borrar" variant="ghost" confirmText={`¿Borrar «${a.name}»?`} successMessage="Saldo borrado" />
-              </>
-            }
-          />
-        ))}
+              </div>
+            </Card>
+          );
+        })}
       </Section>
 
       <Section
         title="Deudas"
         description="Lo que debes, con tu próximo pago y sus fechas."
+        total={debts.length > 0 ? formatMxn(owe) : undefined}
         add={<DebtDialog />}
         empty={debts.length === 0 ? "Aún no agregas ninguna deuda." : undefined}
       >
         {debts.map((d) => {
           const usage = creditUtilizationPct(d.balanceCents, d.creditLimitCents);
-          const payment =
-            d.nextPaymentCents != null ? formatMxn(d.nextPaymentCents) : "por confirmar";
+          const chip = d.nextDueOn ? dueChip(daysUntil(today, d.nextDueOn)) : null;
+          const payoff = payoffText(d.payoff);
           return (
-            <Row
-              key={d.id}
-              title={d.paidOff ? `${d.name} (liquidada)` : d.name}
-              lines={[
-                label(DEBT_KINDS, d.kind) +
-                  (d.annualRatePct != null ? ` · ${d.annualRatePct}% anual` : "") +
-                  (d.recurring ? "" : " · pago único"),
-                d.nextDueOn
-                  ? `Próximo pago: ${formatDayMonth(d.nextDueOn)} · ${payment}${d.minPaymentCents != null ? ` (mínimo ${formatMxn(d.minPaymentCents)})` : ""}`
-                  : d.paidOff
-                    ? null
-                    : "Sin pago pendiente",
-                d.nextCutOn ? `Próximo corte: ${formatDayMonth(d.nextCutOn)}` : null,
-                usage != null && d.creditLimitCents != null
-                  ? `Usas ${usage}% de tu límite (te quedan ${formatMxn(Math.max(0, d.creditLimitCents - d.balanceCents))} disponibles)`
-                  : null,
-                payoffText(d.payoff),
-              ]}
-              amount={formatMxn(d.balanceCents)}
-              actions={
-                <>
-                  <DebtDialog item={d} />
-                  <ActionButton action={deleteDebt.bind(null, d.id)} label="Borrar" variant="ghost" confirmText={`¿Borrar «${d.name}»?`} successMessage="Deuda borrada" />
-                </>
-              }
-            />
+            <Card key={d.id} className={cn(d.paidOff && "opacity-70")}>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium">{d.paidOff ? `${d.name} (liquidada)` : d.name}</p>
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    <Chip>{label(DEBT_KINDS, d.kind)}</Chip>
+                    {d.annualRatePct != null && <Chip>{d.annualRatePct}% anual</Chip>}
+                    {!d.recurring && <Chip>Pago único</Chip>}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-muted-foreground">Saldo</p>
+                  <p className="text-xl font-semibold tabular-nums">{formatMxn(d.balanceCents)}</p>
+                </div>
+              </div>
+
+              {d.nextDueOn ? (
+                <div className="flex items-center justify-between gap-3 rounded-xl bg-muted/40 px-4 py-3">
+                  <div>
+                    <p className="text-xs text-muted-foreground">Próximo pago · {formatDayMonth(d.nextDueOn)}</p>
+                    <p className="text-lg font-semibold tabular-nums">
+                      {d.nextPaymentCents != null ? formatMxn(d.nextPaymentCents) : "Por confirmar"}
+                    </p>
+                    {d.minPaymentCents != null && (
+                      <p className="text-xs text-muted-foreground">Mínimo {formatMxn(d.minPaymentCents)}</p>
+                    )}
+                  </div>
+                  {chip && (
+                    <span className={cn("shrink-0 rounded-full px-3 py-1 text-xs font-medium", chip.tone)}>
+                      {chip.text}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                !d.paidOff && <p className="rounded-xl bg-muted/40 px-4 py-3 text-muted-foreground">Sin pago pendiente</p>
+              )}
+
+              {usage != null && d.creditLimitCents != null && (
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Usas {usage}% de tu límite</span>
+                    <span className="tabular-nums">
+                      {formatMxn(Math.max(0, d.creditLimitCents - d.balanceCents))} disponibles
+                    </span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-muted" role="img" aria-label={`Uso del límite: ${usage}%`}>
+                    <div
+                      className={cn("h-full rounded-full", usage >= 70 ? "bg-destructive" : usage >= 30 ? "bg-secondary" : "bg-primary")}
+                      style={{ width: `${Math.min(100, usage)}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {(d.nextCutOn || payoff) && (
+                <div className="space-y-1 text-xs text-muted-foreground">
+                  {d.nextCutOn && <p>Próximo corte: {formatDayMonth(d.nextCutOn)}</p>}
+                  {payoff && <p>{payoff}</p>}
+                </div>
+              )}
+
+              <div className="mt-auto flex justify-end gap-1">
+                <DebtDialog item={d} />
+                <ActionButton action={deleteDebt.bind(null, d.id)} label="Borrar" variant="ghost" confirmText={`¿Borrar «${d.name}»?`} successMessage="Deuda borrada" />
+              </div>
+            </Card>
           );
         })}
       </Section>
@@ -160,26 +238,42 @@ export default async function CifraCuentasPage() {
       <Section
         title="Gastos fijos"
         description="Lo que pagas con regularidad, como renta, servicios, salarios o suscripciones."
+        total={fixedExpenses.length > 0 ? `${formatMxn(fixedMonthly)} al mes` : undefined}
         add={<FixedExpenseDialog />}
         empty={fixedExpenses.length === 0 ? "Aún no agregas ningún gasto fijo." : undefined}
       >
-        {fixedExpenses.map((f) => (
-          <Row
-            key={f.id}
-            title={f.active ? f.name : `${f.name} (pagado)`}
-            lines={[
-              categoryLabel("expense", f.category) + (f.recurring ? " · cada mes" : " · pago único"),
-              f.nextDueOn ? `Próximo pago: ${formatDayMonth(f.nextDueOn)}` : null,
-            ]}
-            amount={f.amountCents != null ? formatMxn(f.amountCents) : "Por confirmar"}
-            actions={
-              <>
-                <FixedExpenseDialog item={f} />
-                <ActionButton action={deleteFixedExpense.bind(null, f.id)} label="Borrar" variant="ghost" confirmText={`¿Borrar «${f.name}»?`} successMessage="Gasto borrado" />
-              </>
-            }
-          />
-        ))}
+        {fixedExpenses.map((f) => {
+          const chip = f.nextDueOn ? dueChip(daysUntil(today, f.nextDueOn)) : null;
+          return (
+            <Card key={f.id} className={cn(!f.active && "opacity-70")}>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium">{f.active ? f.name : `${f.name} (pagado)`}</p>
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    <Chip>{categoryLabel("expense", f.category)}</Chip>
+                    <Chip>{f.recurring ? "Cada mes" : "Pago único"}</Chip>
+                  </div>
+                </div>
+                <p className="text-xl font-semibold tabular-nums">
+                  {f.amountCents != null ? formatMxn(f.amountCents) : "Por confirmar"}
+                </p>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                {f.nextDueOn && chip ? (
+                  <span className={cn("rounded-full px-3 py-1 text-xs font-medium", chip.tone)}>
+                    {formatDayMonth(f.nextDueOn)} · {chip.text.toLowerCase()}
+                  </span>
+                ) : (
+                  <span />
+                )}
+                <div className="flex gap-1">
+                  <FixedExpenseDialog item={f} />
+                  <ActionButton action={deleteFixedExpense.bind(null, f.id)} label="Borrar" variant="ghost" confirmText={`¿Borrar «${f.name}»?`} successMessage="Gasto borrado" />
+                </div>
+              </div>
+            </Card>
+          );
+        })}
       </Section>
     </div>
   );
