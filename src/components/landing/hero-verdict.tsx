@@ -91,7 +91,6 @@ export function HeroVerdict() {
         <p className="mt-1 text-2xl font-semibold tracking-tight text-primary">{verdict.title}</p>
         <p className="mt-2 text-base leading-relaxed text-foreground">{verdict.next}</p>
       </div>
-      <p className="text-sm text-muted-foreground">Ejemplo ilustrativo. Tu diagnóstico usa tus respuestas.</p>
     </aside>
   );
 }
