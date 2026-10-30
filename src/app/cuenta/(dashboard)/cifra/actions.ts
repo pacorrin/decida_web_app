@@ -153,7 +153,6 @@ export async function saveDebt(formData: FormData): Promise<CifraActionState> {
     cdebt_paid_off: d.balance === 0,
   };
   const isCard = d.kind === "credit_card";
-  const last4 = d.last4 || null;
 
   if (id) {
     const existing = await prisma.cifra_debts.findFirst({
@@ -172,11 +171,11 @@ export async function saveDebt(formData: FormData): Promise<CifraActionState> {
       if (keepsCard) {
         await tx.cifra_cards.updateMany({
           where: { ccard_id: cardId!, ccard_user_id: access.userId },
-          data: { ccard_name: d.name, ccard_last4: last4 },
+          data: { ccard_name: d.name },
         });
       } else if (isCard) {
         const card = await tx.cifra_cards.create({
-          data: { ccard_user_id: access.userId, ccard_name: d.name, ccard_last4: last4 },
+          data: { ccard_user_id: access.userId, ccard_name: d.name },
         });
         cardId = card.ccard_id;
       }
@@ -199,7 +198,7 @@ export async function saveDebt(formData: FormData): Promise<CifraActionState> {
   } else if (isCard) {
     await prisma.$transaction(async (tx) => {
       const card = await tx.cifra_cards.create({
-        data: { ccard_user_id: access.userId, ccard_name: d.name, ccard_last4: last4 },
+        data: { ccard_user_id: access.userId, ccard_name: d.name },
       });
       await tx.cifra_debts.create({
         data: { ...data, cdebt_user_id: access.userId, cdebt_card_id: card.ccard_id },
@@ -228,7 +227,7 @@ export async function saveCard(formData: FormData): Promise<CifraActionState> {
 
   const cardId = await prisma.$transaction(async (tx) => {
     const card = await tx.cifra_cards.create({
-      data: { ccard_user_id: access.userId, ccard_name: d.name, ccard_last4: d.last4 || null },
+      data: { ccard_user_id: access.userId, ccard_name: d.name },
     });
     await tx.cifra_debts.create({
       data: {

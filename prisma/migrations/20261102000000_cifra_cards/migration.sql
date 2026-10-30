@@ -11,7 +11,6 @@ CREATE TABLE "cifra_cards" (
     "ccard_id" TEXT NOT NULL,
     "ccard_user_id" TEXT NOT NULL,
     "ccard_name" TEXT NOT NULL,
-    "ccard_last4" TEXT,
     "ccard_created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "ccard_updated_at" TIMESTAMP(3) NOT NULL,
 

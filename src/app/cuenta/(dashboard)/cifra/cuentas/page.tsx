@@ -192,7 +192,6 @@ export default async function CifraCuentasPage() {
               <div className="flex items-start justify-between gap-3">
                 <p className="min-w-0 truncate font-medium">
                   {d.paidOff ? `${d.name} (liquidada)` : d.name}
-                  {d.last4 && <span className="ml-1.5 font-normal text-muted-foreground">·· {d.last4}</span>}
                 </p>
                 <CardActions>
                   <DebtDialog item={d} />

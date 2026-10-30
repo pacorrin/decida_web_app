@@ -15,7 +15,7 @@ import { type DueItem, totalsOf, upcomingPayments } from "./upcoming";
 const dateOrNull = (d: Date | null) => (d ? fromDateOnly(d) : null);
 
 const withCard = {
-  card: { select: { ccard_name: true, ccard_last4: true } },
+  card: { select: { ccard_name: true } },
 } as const;
 
 type TransactionRow = Awaited<
@@ -33,7 +33,7 @@ function toRow(t: TransactionRow) {
     fromPayment: t.ctrx_period !== null,
     isTransfer: t.ctrx_is_transfer,
     paymentId: t.ctrx_payment_id,
-    cardName: t.card ? (t.card.ccard_last4 ? `${t.card.ccard_name} ·· ${t.card.ccard_last4}` : t.card.ccard_name) : null,
+    cardName: t.card?.ccard_name ?? null,
   };
 }
 
@@ -133,7 +133,6 @@ export async function getAccountsData(userId: string, today: CalendarDate) {
     prisma.cifra_debts.findMany({
       where: { cdebt_user_id: userId },
       orderBy: [{ cdebt_paid_off: "asc" }, { cdebt_next_due_on: "asc" }],
-      include: { card: { select: { ccard_last4: true } } },
     }),
     prisma.cifra_fixed_expenses.findMany({
       where: { cfix_user_id: userId },
@@ -171,7 +170,6 @@ export async function getAccountsData(userId: string, today: CalendarDate) {
         id: d.cdebt_id,
         name: d.cdebt_name,
         cardId: d.cdebt_card_id,
-        last4: d.card?.ccard_last4 ?? null,
         /** Tarjeta dada de alta al vuelo: falta capturar su fecha de pago y demás datos. */
         incomplete: d.cdebt_card_id !== null && d.cdebt_next_due_on === null,
         notes: d.cdebt_notes,
@@ -239,7 +237,7 @@ export async function getCardOptions(userId: string) {
     }),
   ]);
   return {
-    cards: cards.map((c) => ({ id: c.ccard_id, name: c.ccard_name, last4: c.ccard_last4 })),
+    cards: cards.map((c) => ({ id: c.ccard_id, name: c.ccard_name })),
     lastCardId: last?.ctrx_card_id ?? null,
   };
 }

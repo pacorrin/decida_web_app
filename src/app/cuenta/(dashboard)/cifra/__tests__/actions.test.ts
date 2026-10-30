@@ -407,21 +407,15 @@ describe("tarjetas", () => {
   };
 
   it("alta rápida: crea la tarjeta con su deuda en cero «por completar»", async () => {
-    const r = await saveCard(form({ name: "Tarjeta Azul", last4: "4321" }));
+    const r = await saveCard(form({ name: "Tarjeta Azul" }));
     expect(r).toEqual({ success: true, id: "c1" });
     expect(m.tx.cifra_cards.create).toHaveBeenCalledWith({
-      data: { ccard_user_id: "u1", ccard_name: "Tarjeta Azul", ccard_last4: "4321" },
+      data: { ccard_user_id: "u1", ccard_name: "Tarjeta Azul" },
     });
     expect(m.tx.cifra_debts.create).toHaveBeenCalledWith({
       data: expect.objectContaining({ cdebt_card_id: "c1", cdebt_kind: "credit_card", cdebt_balance_cents: 0 }),
     });
     expect(m.tx.cifra_debts.create.mock.calls[0][0].data).not.toHaveProperty("cdebt_next_due_on");
-  });
-
-  it("los últimos 4 dígitos solo aceptan 4 números", async () => {
-    const r = await saveCard(form({ name: "Azul", last4: "12" }));
-    expect(r.success).toBe(false);
-    expect(r.fieldErrors).toHaveProperty("last4");
   });
 
   it("una compra con tarjeta suma al saldo de su deuda", async () => {

@@ -8,13 +8,11 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { saveCard } from "@/app/cuenta/(dashboard)/cifra/actions";
 import { NativeSelect } from "./form-kit";
 
-export type CardOption = { id: string; name: string; last4: string | null };
+export type CardOption = { id: string; name: string };
 export type CardOptions = { cards: CardOption[]; lastCardId: string | null };
 
 const NONE = "";
 const NEW = "__new__";
-
-const cardLabel = (c: CardOption) => (c.last4 ? `${c.name} ·· ${c.last4}` : c.name);
 
 /**
  * «¿Con qué tarjeta?» de un egreso: opcional, sugiere la última usada y deja dar de alta una
@@ -31,7 +29,7 @@ export function CardSelect({ cards, lastCardId }: CardOptions) {
   const all = [...cards, ...extra.filter((e) => !cards.some((c) => c.id === e.id))];
   const options = [
     { code: NONE, label: "Sin tarjeta" },
-    ...all.map((c) => ({ code: c.id, label: cardLabel(c) })),
+    ...all.map((c) => ({ code: c.id, label: c.name })),
     { code: NEW, label: "Agregar tarjeta…" },
   ];
 
@@ -56,7 +54,7 @@ export function CardSelect({ cards, lastCardId }: CardOptions) {
       try {
         const r = await saveCard(data);
         if (r.success && r.id) {
-          setExtra((list) => [...list, { id: r.id!, name: trimmed, last4: null }]);
+          setExtra((list) => [...list, { id: r.id!, name: trimmed }]);
           setValue(r.id);
           setAdding(false);
           setName("");

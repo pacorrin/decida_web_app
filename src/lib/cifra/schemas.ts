@@ -17,9 +17,6 @@ const name = text.pipe(
   z.string().min(1, "Escribe un nombre").max(80, "Máximo 80 caracteres"),
 );
 
-/** Últimos 4 dígitos de una tarjeta: opcionales, solo números. */
-const last4 = text.pipe(z.string().regex(/^(\d{4})?$/, "Escribe los últimos 4 dígitos"));
-
 /** Observación libre del usuario: para qué usa la cuenta, por qué hizo el gasto, etc. */
 const notes = text.pipe(z.string().max(500, "Máximo 500 caracteres"));
 
@@ -91,7 +88,6 @@ export const debtSchema = z
   .object({
     name,
     kind: kindOf(DEBT_KINDS),
-    last4,
     balance: money,
     notes,
     creditLimit: optionalMoney,
@@ -169,8 +165,8 @@ export const paySchema = z
     }
   });
 
-/** Alta rápida de una tarjeta desde un movimiento: solo nombre y últimos 4. */
-export const cardSchema = z.object({ name, last4 });
+/** Alta rápida de una tarjeta desde un movimiento: solo el nombre. */
+export const cardSchema = z.object({ name });
 
 export const transactionSchema = z
   .object({

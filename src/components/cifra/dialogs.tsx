@@ -25,7 +25,6 @@ type AccountItem = { id: string; name: string; notes: string | null; kind: strin
 export type DebtItem = {
   id: string;
   name: string;
-  last4?: string | null;
   incomplete?: boolean;
   notes: string | null;
   kind: string;
@@ -129,11 +128,6 @@ export function DebtDialog({ item }: { item?: DebtItem }) {
         <FormRow name="balance" label="Saldo actual" hint="Lo que debes hoy.">
           <MoneyInput id="balance" name="balance" defaultValue={money(item?.balanceCents)} />
         </FormRow>
-        {isCard && (
-          <FormRow name="last4" label="Últimos 4 dígitos" hint="Opcional. Para distinguir tus tarjetas.">
-            <Input id="last4" name="last4" inputMode="numeric" maxLength={4} defaultValue={item?.last4 ?? ""} placeholder="1234" />
-          </FormRow>
-        )}
         {isCard ? (
           <FormRow name="creditLimit" label="Límite de crédito" hint="Opcional. Calcula cuánto usas.">
             <MoneyInput id="creditLimit" name="creditLimit" defaultValue={money(item?.creditLimitCents)} />

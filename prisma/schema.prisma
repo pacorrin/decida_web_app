@@ -354,7 +354,6 @@ model cifra_cards {
   ccard_id         String   @id @default(cuid())
   ccard_user_id    String
   ccard_name       String
-  ccard_last4      String?
   ccard_created_at DateTime @default(now())
   ccard_updated_at DateTime @updatedAt
 
