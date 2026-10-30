@@ -22,7 +22,7 @@ const H2 = "text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm
 /** Barra propia de Cifra: sin bordes, sobre el campo verde del hero. */
 export function CifraHero() {
   return (
-    <section aria-labelledby="cifra-hero" className="grid min-h-[calc(100svh-4.75rem)] bg-primary text-white lg:grid-cols-2">
+    <section aria-labelledby="cifra-hero" className="mx-3 mb-3 grid min-h-[calc(100svh-5.5rem)] overflow-hidden rounded-3xl bg-primary text-white sm:mx-6 lg:grid-cols-2">
       <div className="flex items-center justify-center bg-[#0d5a40] px-4 py-10 sm:px-8 lg:col-start-2 lg:row-start-1 lg:justify-end lg:px-12">
         <TicketDemo />
       </div>
