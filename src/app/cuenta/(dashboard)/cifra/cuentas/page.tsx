@@ -1,4 +1,4 @@
-import { Banknote, Landmark, PiggyBank, StickyNote, Wallet } from "lucide-react";
+import { Banknote, Landmark, PiggyBank, NotebookPen, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ActionButton } from "@/components/cifra/form-kit";
 import { AccountDialog, DebtDialog, FixedExpenseDialog } from "@/components/cifra/dialogs";
@@ -91,7 +91,7 @@ function Notes({ text }: { text: string | null }) {
   if (!text) return null;
   return (
     <div className="flex items-start gap-2 rounded-xl bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
-      <StickyNote className="mt-0.5 size-3.5 shrink-0" aria-label="Observación" />
+      <NotebookPen className="mt-0.5 size-3.5 shrink-0 text-secondary" aria-label="Observación" />
       <p className="whitespace-pre-line break-words">{text}</p>
     </div>
   );
