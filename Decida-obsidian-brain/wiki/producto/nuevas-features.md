@@ -12,7 +12,7 @@ Registro de funcionalidades nuevas **planeadas** (no implementadas). Cada una se
 | # | Feature | Estado | Fecha |
 |---|---|---|---|
 | 1 | Generador de brief de marca | Plan, sin alcance cerrado; en el mapa, no es prioridad ahora | 2026-10-30 |
-| 2 | Finanzas personales (nombre por definir) | Plan inicial, en el mapa; la prioridad actual sigue siendo el análisis de ideas | 2026-10-30 |
+| 2 | **Cifra** (finanzas personales) | Plan inicial, en el mapa; la prioridad actual sigue siendo el análisis de ideas | 2026-10-30 |
 
 ## Visión de plataforma (2026-10-30)
 
@@ -22,7 +22,26 @@ Decisión del usuario que da contexto a todo lo de esta página:
 - **El propósito es construir una comunidad** de desarrollo personal acompañado de finanzas y planeación, para emprendedores y para quien quiere ingresos extra. Cada persona decide su rumbo: dejar su empleo, crecer un proyecto dentro de su marca, hacer crecer su marca, o solo generar un ingreso adicional.
 - **Las herramientas son el complemento, no el uso principal.** Pueden ser una fuente fuerte de ingreso, pero no es lo que más le importa al usuario; sirven para dar a la comunidad la mayor cantidad posible de ayuda útil.
 - **Por eso se rehízo el navbar público** (commit `25d187e`): el navbar principal queda con «Inicio» y las acciones de cuenta, y la franja de abajo muestra las secciones de la landing. Más adelante el navbar principal sumará las herramientas nuevas (brief de marca, finanzas personales u otras), cada una como entrada propia.
-- **Pendiente de nombre:** falta decidir cómo se llama cada herramienta y la identidad del conjunto. Hasta entonces los nombres de esta página son provisionales.
+- **Nombres:** la herramienta de finanzas se llama **Cifra** (ver abajo). Las demás herramientas tienen nombre de trabajo en la metodología.
+
+### Metodología CDPE: Cifra, Decida, Planifica, Ejecuta (2026-10-30)
+
+Propuesta del usuario: darle a la plataforma una filosofía propia y simple (no se reinventa nada): **hay un orden para llegar a un objetivo preciso**. Cuatro herramientas en secuencia, todas bajo la marca Decida:
+
+| Etapa | Herramienta | Qué hace | Estado |
+|---|---|---|---|
+| **C**ifra | Finanzas | Estatus financiero y antecedentes de la persona o del negocio: visibilidad actual y proyección para saldar deudas, ahorrar para una inversión u otros objetivos | Planeada ([[#2. Cifra (finanzas personales)]]) |
+| **D**ecida | Análisis de ideas | Lo que ya existe: análisis de la idea y cierto análisis de mercado | **Construida** (beta) |
+| **P**lanifica | Planes | Arma planes de corto y mediano plazo con toda la información recabada del usuario | Por definir (relacionada con [[retencion-y-plan-de-ejecucion]]) |
+| **E**jecuta | Arranque del proyecto | Herramientas pequeñas para empezar: brief de marca ([[#1. Generador de brief de marca]]), identidad, y más adelante generar videos cortos publicitarios e imágenes para redes | Largo plazo |
+
+Idea a largo plazo dentro de Ejecuta (sin compromiso): ser **intermediario entre usuarios y profesionales** (finanzas, marketing, contabilidad, administración) para acompañar la realización de la idea. Si se explora, revisar responsabilidad sobre el trabajo del profesional, asesoría regulada y comisiones.
+
+Notas de diseño:
+- Cifra es el único nombre sin forma de acción; el usuario lo prefiere así («cifra son números»). Los otros tres son verbos.
+- «Decida» es a la vez la marca y una etapa; al comunicarlo conviene distinguir «Decida, la plataforma» de «Decida, el análisis de ideas» (por ejemplo, llamar a la etapa «Análisis Decida» en la interfaz).
+- El orden C-D-P-E no obliga al usuario: puede entrar por cualquier herramienta; la secuencia es la guía.
+- La **sigla CDPE** es difícil de pronunciar; usarla solo como etiqueta interna y comunicar la secuencia con los cuatro nombres.
 
 Relación con lo ya escrito: refuerza el insight de [[retencion-y-plan-de-ejecucion]] (retención en la ejecución, no en el diagnóstico). Ojo con el alcance de [[prd]], que hoy describe un producto de diagnóstico de ideas y deja fuera la comunidad: este cambio de enfoque habría que reflejarlo ahí cuando se decida formalmente.
 
@@ -85,7 +104,9 @@ Fuente de los puntos: lista de secciones esenciales de un brief de marca que pas
 
 ---
 
-## 2. Finanzas personales (nombre por definir)
+## 2. Cifra (finanzas personales)
+
+> Nombre elegido el 2026-10-30: **Cifra**, por el usuario, entre varias propuestas (descartó *Alcanza* porque suena a ejecución, no a finanzas). Es un subproducto de la plataforma Decida, no una submarca; la marca principal sigue siendo Decida. Falta revisar dominio y marca en el IMPI.
 
 ### Qué es
 Una herramienta para que cualquier usuario **ponga al día y capture con facilidad toda su situación financiera**: gastos, deudas, ingresos y lo que tenga que ver con su dinero. No es solo para quien analiza una idea; sirve a la comunidad en general.

@@ -599,3 +599,7 @@ Se creó `wiki/producto/nuevas-features.md` como registro de funcionalidades por
 ## [2026-10-30] decision | Visión de plataforma y nueva feature planeada: finanzas personales
 
 El usuario aclaró que Decida es una plataforma con varias herramientas al servicio de una comunidad de desarrollo personal con finanzas y planeación; el análisis de ideas es el foco actual y las herramientas son complemento. Por eso se rehízo el navbar público. En `wiki/producto/nuevas-features.md` se documentó la visión y la herramienta de finanzas personales (captura de gastos, deudas e ingresos; uso en análisis solo con consentimiento). Ambas, junto al brief de marca, quedan solo en el mapa. Pendiente: nombres y revisión legal. Ojo: el PRD aún no refleja el cambio de enfoque.
+
+## [2026-10-30] decision | Nombre Cifra y metodología CDPE
+
+La herramienta de finanzas personales se llama **Cifra** (descartado Alcanza). La plataforma se organiza en la secuencia Cifra, Decida, Planifica, Ejecuta (CDPE), todas bajo la marca Decida. Detalle y notas de diseño en `wiki/producto/nuevas-features.md`. Pendiente: dominio e IMPI de Cifra, nombre de Planifica y Ejecuta, reflejarlo en el PRD.
