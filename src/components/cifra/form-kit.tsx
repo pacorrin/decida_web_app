@@ -32,6 +32,7 @@ export function FormDialog({
   action,
   submitLabel = "Guardar",
   testId,
+  wide,
   children,
 }: {
   triggerLabel: string;
@@ -42,6 +43,8 @@ export function FormDialog({
   action: (formData: FormData) => Promise<CifraActionResult>;
   submitLabel?: string;
   testId?: string;
+  /** Formulario largo: diálogo más ancho para repartir los campos en dos columnas. */
+  wide?: boolean;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -86,7 +89,12 @@ export function FormDialog({
       >
         {triggerLabel}
       </DialogTrigger>
-      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
+      <DialogContent
+        className={cn(
+          "max-h-[calc(100dvh-2rem)] overflow-y-auto",
+          wide && "sm:max-w-2xl",
+        )}
+      >
         <DialogTitle>{title}</DialogTitle>
         {description && <DialogDescription>{description}</DialogDescription>}
         <form onSubmit={onSubmit} className="space-y-3" noValidate>
@@ -114,6 +122,16 @@ export function FormDialog({
       </DialogContent>
     </Dialog>
   );
+}
+
+/** Rejilla de dos columnas (una en móvil) para repartir los campos de un formulario largo. */
+export function FormGrid({ children }: { children: React.ReactNode }) {
+  return <div className="grid gap-x-4 gap-y-3 sm:grid-cols-2">{children}</div>;
+}
+
+/** Ocupa las dos columnas de la rejilla (casillas, textos largos). */
+export function FullRow({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={cn("sm:col-span-2", className)}>{children}</div>;
 }
 
 /** Etiqueta + campo + error del campo (el error viene del contexto del formulario). */
