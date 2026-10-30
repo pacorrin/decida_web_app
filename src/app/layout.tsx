@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ScrollToTop } from "@/components/navigation/scroll-to-top";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -53,6 +54,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.className} min-h-full flex flex-col antialiased`}
       >
+        <ScrollToTop />
         {children}
         <Toaster position="top-center" richColors closeButton />
       </body>
