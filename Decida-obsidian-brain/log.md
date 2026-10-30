@@ -611,3 +611,7 @@ Se creó `wiki/marca/narrativa-del-orden-decida.md`: reencuadre de la metodolog�
 ## [2026-10-30] impl | Cifra v1 en dev
 
 Se construyó la primera versión de Cifra en la rama `dev` (no en `main`): saldos, deudas, gastos fijos con fechas, registro de ingresos y egresos, resumen del mes y «Marcar como pagado». Requiere plan activo; sin plan se conservan y se pueden borrar los datos. Nuevas tablas `cifra_*` (migración `20261101000000_cifra`), eventos de analítica sin montos y aviso en la política de privacidad. Documentado en `wiki/arquitectura/cifra-finanzas-personales.md`. Pendiente: revisión legal, uso en el análisis de ideas, exportar y borrado de cuenta.
+
+## [2026-10-30] impl | Rediseño de deudas en Cifra
+
+Las deudas capturan el próximo pago (monto y fecha real), corte y límite en tarjetas, pago recurrente con ajuste a fin de mes y vigencia opcional. Pagos restantes se estiman (nunca se piden). Nuevo reporte «¿Qué tengo que pagar?» por periodo. Campos numéricos y de dinero con formato. Documentado en `wiki/arquitectura/cifra-finanzas-personales.md`.

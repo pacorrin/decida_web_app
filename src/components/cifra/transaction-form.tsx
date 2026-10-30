@@ -9,6 +9,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { categoriesFor, type CifraFlow } from "@/lib/cifra/constants";
 import { addTransaction } from "@/app/cuenta/(dashboard)/cifra/actions";
 import { NativeSelect } from "./form-kit";
+import { MoneyInput } from "./inputs";
 import { cn } from "@/lib/utils";
 
 const FLOWS: { code: CifraFlow; label: string }[] = [
@@ -22,6 +23,7 @@ export function TransactionForm({ today }: { today: string }) {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [message, setMessage] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [resetKey, setResetKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -36,6 +38,7 @@ export function TransactionForm({ today }: { today: string }) {
           setErrors({});
           setMessage(null);
           formRef.current?.reset();
+          setResetKey((k) => k + 1);
         } else {
           setErrors(result.fieldErrors ?? {});
           setMessage(result.message ?? "No pudimos guardar el movimiento.");
@@ -76,8 +79,8 @@ export function TransactionForm({ today }: { today: string }) {
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Field data-invalid={err("amount") ? true : undefined}>
-          <FieldLabel htmlFor="amount">Monto (MXN)</FieldLabel>
-          <Input id="amount" name="amount" inputMode="decimal" placeholder="0.00" aria-invalid={!!err("amount")} />
+          <FieldLabel htmlFor="amount">Monto</FieldLabel>
+          <MoneyInput key={resetKey} id="amount" name="amount" invalid={!!err("amount")} />
           {err("amount") && <FieldError>{err("amount")}</FieldError>}
         </Field>
         <Field data-invalid={err("category") ? true : undefined}>

@@ -349,19 +349,27 @@ model cifra_accounts {
 }
 
 model cifra_debts {
-  cdebt_id                    String          @id @default(cuid())
-  cdebt_user_id               String
-  cdebt_name                  String
-  cdebt_kind                  cifra_debt_kind
-  cdebt_balance_cents         Int
-  cdebt_monthly_payment_cents Int
-  cdebt_annual_rate_pct       Decimal?        @db.Decimal(5, 2)
-  cdebt_credit_limit_cents    Int?
-  cdebt_cut_day               Int?
-  cdebt_due_day               Int
-  cdebt_paid_off              Boolean         @default(false)
-  cdebt_created_at            DateTime        @default(now())
-  cdebt_updated_at            DateTime        @updatedAt
+  cdebt_id                 String          @id @default(cuid())
+  cdebt_user_id            String
+  cdebt_name               String
+  cdebt_kind               cifra_debt_kind
+  cdebt_balance_cents      Int
+  cdebt_credit_limit_cents Int?
+  cdebt_annual_rate_pct    Decimal?        @db.Decimal(5, 2)
+  cdebt_next_due_on        DateTime?       @db.Date
+  cdebt_due_day            Int
+  cdebt_due_last_day       Boolean         @default(false)
+  cdebt_next_cut_on        DateTime?       @db.Date
+  cdebt_cut_day            Int?
+  cdebt_cut_last_day       Boolean         @default(false)
+  cdebt_next_payment_cents Int?
+  cdebt_min_payment_cents  Int?
+  cdebt_variable_payment   Boolean         @default(false)
+  cdebt_recurring          Boolean         @default(true)
+  cdebt_ends_on            DateTime?       @db.Date
+  cdebt_paid_off           Boolean         @default(false)
+  cdebt_created_at         DateTime        @default(now())
+  cdebt_updated_at         DateTime        @updatedAt
 
   user         users                @relation(fields: [cdebt_user_id], references: [user_id], onDelete: Cascade)
   transactions cifra_transactions[]
@@ -371,15 +379,19 @@ model cifra_debts {
 }
 
 model cifra_fixed_expenses {
-  cfix_id           String   @id @default(cuid())
+  cfix_id           String    @id @default(cuid())
   cfix_user_id      String
   cfix_name         String
   cfix_category     String
-  cfix_amount_cents Int
+  cfix_amount_cents Int?
+  cfix_variable     Boolean   @default(false)
+  cfix_next_due_on  DateTime? @db.Date
   cfix_due_day      Int
-  cfix_active       Boolean  @default(true)
-  cfix_created_at   DateTime @default(now())
-  cfix_updated_at   DateTime @updatedAt
+  cfix_due_last_day Boolean   @default(false)
+  cfix_recurring    Boolean   @default(true)
+  cfix_active       Boolean   @default(true)
+  cfix_created_at   DateTime  @default(now())
+  cfix_updated_at   DateTime  @updatedAt
 
   user         users                @relation(fields: [cfix_user_id], references: [user_id], onDelete: Cascade)
   transactions cifra_transactions[]
@@ -400,6 +412,10 @@ model cifra_transactions {
   ctrx_fixed_expense_id      String?
   ctrx_period                String?
   ctrx_applied_to_debt_cents Int        @default(0)
+  // Estado previo al pago, para poder deshacerlo al borrar el movimiento
+  ctrx_prev_due_on           DateTime?  @db.Date
+  ctrx_prev_cut_on           DateTime?  @db.Date
+  ctrx_prev_amount_cents     Int?
   ctrx_created_at            DateTime   @default(now())
 
   user          users                 @relation(fields: [ctrx_user_id], references: [user_id], onDelete: Cascade)

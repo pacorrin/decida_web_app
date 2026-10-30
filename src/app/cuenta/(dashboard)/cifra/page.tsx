@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { ActionButton } from "@/components/cifra/form-kit";
+import { PaymentList } from "@/components/cifra/payment-list";
 import { getCifraAccess } from "@/lib/cifra/access";
-import { formatDayMonth, todayInMexico } from "@/lib/cifra/dates";
+import { todayInMexico } from "@/lib/cifra/dates";
 import { formatMxn } from "@/lib/cifra/money";
 import { getOverview } from "@/lib/cifra/queries";
 import { cn } from "@/lib/utils";
-import { markPaid } from "./actions";
 
 const monthName = new Intl.DateTimeFormat("es-MX", { month: "long", year: "numeric", timeZone: "UTC" });
 
@@ -32,7 +31,7 @@ export default async function CifraResumenPage() {
   const today = todayInMexico();
   const o = await getOverview(access.userId, today);
   const monthLabel = monthName.format(new Date(Date.UTC(today.year, today.month - 1, 1)));
-  const empty = o.pending.length === 0;
+  const empty = o.upcoming.length === 0;
 
   return (
     <div className="space-y-8">
@@ -57,41 +56,24 @@ export default async function CifraResumenPage() {
       </section>
 
       <section aria-labelledby="proximos" className="space-y-3">
-        <h2 id="proximos" className="text-lg font-semibold tracking-tight">
-          Pagos de este mes
-        </h2>
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <h2 id="proximos" className="text-lg font-semibold tracking-tight">
+            Próximos pagos (30 días)
+          </h2>
+          <Link href="/cuenta/cifra/pagos" className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+            Ver reporte de pagos
+          </Link>
+        </div>
         {empty ? (
           <p className="rounded-xl border border-border/80 px-4 py-4 text-sm text-muted-foreground" data-testid="cifra-pending-empty">
-            No tienes pagos pendientes este mes. Si aún no registras tus deudas y gastos fijos,{" "}
+            No tienes pagos en los próximos 30 días. Si aún no registras tus deudas y gastos fijos,{" "}
             <Link href="/cuenta/cifra/cuentas" className="font-medium text-primary underline-offset-4 hover:underline">
               agrégalos en Mis cuentas
             </Link>
             .
           </p>
         ) : (
-          <ul className="divide-y divide-border/80 rounded-2xl border border-border/80" data-testid="cifra-pending-list">
-            {o.pending.map((p) => (
-              <li key={`${p.kind}-${p.id}`} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
-                <div className="min-w-0">
-                  <p className="truncate font-medium">{p.name}</p>
-                  <p className={cn("text-xs", p.overdue ? "text-destructive" : "text-muted-foreground")}>
-                    {p.overdue ? "Venció el " : "Vence el "}
-                    {formatDayMonth(p.dueOn)}
-                    {p.kind === "debt" ? " · deuda" : " · gasto fijo"}
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="font-medium tabular-nums">{formatMxn(p.amountCents)}</span>
-                  <ActionButton
-                    action={markPaid.bind(null, p.kind, p.id)}
-                    label="Marcar como pagado"
-                    successMessage="Pago registrado"
-                    testId={`cifra-pay-${p.id}`}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
+          <PaymentList payments={o.upcoming} today={today} />
         )}
       </section>
     </div>

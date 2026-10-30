@@ -5,95 +5,155 @@ import {
   EXPENSE_CATEGORIES,
   INCOME_CATEGORIES,
 } from "./constants";
-import { parseDateInput } from "./dates";
+import { compareDates, parseDateInput } from "./dates";
 import { parseMoneyToCents } from "./money";
 
-const name = z.string().trim().min(1, "Escribe un nombre").max(80, "Máximo 80 caracteres");
-
-const money = z
+const text = z
   .string()
-  .refine((v) => parseMoneyToCents(v) !== null, "Ingresa un importe válido, por ejemplo 1500 o 1,500.50")
-  .transform((v) => parseMoneyToCents(v) as number);
+  .optional()
+  .transform((v) => (v ?? "").trim());
 
-const optionalMoney = z
-  .string()
-  .trim()
-  .transform((v, ctx) => {
-    if (v === "") return null;
-    const cents = parseMoneyToCents(v);
-    if (cents === null) {
-      ctx.issues.push({ code: "custom", message: "Ingresa un importe válido", input: v });
+const name = text.pipe(
+  z.string().min(1, "Escribe un nombre").max(80, "Máximo 80 caracteres"),
+);
+
+const MONEY_ERROR = "Ingresa un importe válido, por ejemplo 1,500.00";
+
+const money = text.transform((v, ctx) => {
+  const cents = parseMoneyToCents(v);
+  if (cents === null) {
+    ctx.issues.push({ code: "custom", message: MONEY_ERROR, input: v });
+    return z.NEVER;
+  }
+  return cents;
+});
+
+const optionalMoney = text.transform((v, ctx) => {
+  if (v === "") return null;
+  const cents = parseMoneyToCents(v);
+  if (cents === null) {
+    ctx.issues.push({ code: "custom", message: MONEY_ERROR, input: v });
+    return z.NEVER;
+  }
+  return cents;
+});
+
+const dateField = (message = "Elige una fecha válida") =>
+  text.transform((v, ctx) => {
+    const date = parseDateInput(v);
+    if (!date) {
+      ctx.issues.push({ code: "custom", message, input: v });
       return z.NEVER;
     }
-    return cents;
+    return date;
   });
 
-const day = z
-  .string()
-  .regex(/^\d{1,2}$/, "Indica un día del 1 al 31")
-  .transform(Number)
-  .refine((n) => n >= 1 && n <= 31, "Indica un día del 1 al 31");
+const optionalDate = text.transform((v, ctx) => {
+  if (v === "") return null;
+  const date = parseDateInput(v);
+  if (!date) {
+    ctx.issues.push({ code: "custom", message: "Elige una fecha válida", input: v });
+    return z.NEVER;
+  }
+  return date;
+});
 
-const optionalDay = z
-  .string()
-  .trim()
-  .transform((v, ctx) => {
-    if (v === "") return null;
-    const n = Number(v);
-    if (!/^\d{1,2}$/.test(v) || n < 1 || n > 31) {
-      ctx.issues.push({ code: "custom", message: "Indica un día del 1 al 31", input: v });
-      return z.NEVER;
-    }
-    return n;
-  });
+/** Casilla: el navegador manda «on» solo si está marcada. */
+const checkbox = text.transform((v) => v === "on");
 
-const optionalRate = z
-  .string()
-  .trim()
-  .transform((v, ctx) => {
-    if (v === "") return null;
-    const n = Number(v.replace(",", "."));
-    if (!Number.isFinite(n) || n < 0 || n > 999) {
-      ctx.issues.push({ code: "custom", message: "Ingresa una tasa entre 0 y 999", input: v });
-      return z.NEVER;
-    }
-    return Math.round(n * 100) / 100;
-  });
+const optionalRate = text.transform((v, ctx) => {
+  if (v === "") return null;
+  const n = Number(v.replace(/[%\s]/g, ""));
+  if (!/^\d{1,3}(\.\d{1,2})?$/.test(v.replace(/[%\s]/g, "")) || n > 999) {
+    ctx.issues.push({ code: "custom", message: "Ingresa una tasa entre 0 y 999", input: v });
+    return z.NEVER;
+  }
+  return n;
+});
+
+const kindOf = <T extends readonly { code: string }[]>(list: T) =>
+  text.pipe(z.enum(list.map((k) => k.code) as [string, ...string[]], { error: "Elige una opción" }));
 
 export const accountSchema = z.object({
   name,
-  kind: z.enum(ACCOUNT_KINDS.map((k) => k.code) as [string, ...string[]]),
+  kind: kindOf(ACCOUNT_KINDS),
   balance: money,
 });
 
-export const debtSchema = z.object({
-  name,
-  kind: z.enum(DEBT_KINDS.map((k) => k.code) as [string, ...string[]]),
-  balance: money,
-  monthlyPayment: money,
-  dueDay: day,
-  cutDay: optionalDay,
-  annualRate: optionalRate,
-  creditLimit: optionalMoney,
-});
+export const debtSchema = z
+  .object({
+    name,
+    kind: kindOf(DEBT_KINDS),
+    balance: money,
+    creditLimit: optionalMoney,
+    annualRate: optionalRate,
+    nextDue: dateField("Elige la próxima fecha de pago"),
+    dueLastDay: checkbox,
+    nextCut: optionalDate,
+    cutLastDay: checkbox,
+    nextPayment: optionalMoney,
+    minPayment: optionalMoney,
+    variablePayment: checkbox,
+    recurring: checkbox,
+    endsOn: optionalDate,
+  })
+  .superRefine((v, ctx) => {
+    if (!v.variablePayment && v.nextPayment == null) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["nextPayment"],
+        message: "Escribe el monto de tu pago, o marca que cambia cada mes",
+      });
+    }
+    if (v.endsOn && compareDates(v.endsOn, v.nextDue) < 0) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["endsOn"],
+        message: "La vigencia debe ser posterior al próximo pago",
+      });
+    }
+  });
 
-export const fixedExpenseSchema = z.object({
-  name,
-  category: z.enum(EXPENSE_CATEGORIES.map((c) => c.code) as [string, ...string[]]),
+export const fixedExpenseSchema = z
+  .object({
+    name,
+    category: kindOf(EXPENSE_CATEGORIES),
+    amount: optionalMoney,
+    variable: checkbox,
+    nextDue: dateField("Elige la próxima fecha de pago"),
+    dueLastDay: checkbox,
+    recurring: checkbox,
+  })
+  .superRefine((v, ctx) => {
+    if (!v.variable && v.amount == null) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["amount"],
+        message: "Escribe el monto, o marca que cambia cada mes",
+      });
+    }
+  });
+
+/** Capturar el monto del siguiente pago (estado de cuenta, recibo). */
+export const pendingAmountSchema = z.object({
   amount: money,
-  dueDay: day,
+  balance: optionalMoney,
+  minPayment: optionalMoney,
+});
+
+/** Marcar un pago como pagado: cuánto se pagó y cuándo. */
+export const paySchema = z.object({
+  amount: money,
+  date: dateField(),
 });
 
 export const transactionSchema = z
   .object({
-    flow: z.enum(["income", "expense"]),
-    category: z.string(),
+    flow: text.pipe(z.enum(["income", "expense"])),
+    category: text,
     amount: money,
-    date: z
-      .string()
-      .refine((v) => parseDateInput(v) !== null, "Elige una fecha válida")
-      .transform((v) => parseDateInput(v)!),
-    description: z.string().trim().max(120, "Máximo 120 caracteres"),
+    date: dateField(),
+    description: text.pipe(z.string().max(120, "Máximo 120 caracteres")),
   })
   .superRefine((v, ctx) => {
     const list = v.flow === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
