@@ -626,3 +626,6 @@ Fotos y/o texto leídos con IA proponen un ingreso o egreso que la persona confi
 
 ## [2026-10-30] ingest | Cifra: nota de voz en la captura inteligente
 Botón «Grabar voz» con transcripción (`gpt-4o-mini-transcribe`) al campo de texto; mismo cobro único por captura, reembolso si falla; consentimiento y privacidad mencionan la voz. Ver [[arquitectura/cifra-finanzas-personales]].
+
+## [2026-10-30] ingest | Página pública de Cifra (/cifra)
+Landing con arco SCAR, sección completa de captura inteligente y secciones de cuentas, pagos, resumen, privacidad, precio y FAQ. Ver [[arquitectura/cifra-finanzas-personales]].

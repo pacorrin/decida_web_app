@@ -11,6 +11,7 @@ describe("sitemap", () => {
     const entries = sitemap();
     expect(entries.map((e) => e.url)).toEqual([
       "https://decida.mx",
+      "https://decida.mx/cifra",
       "https://decida.mx/ejemplo",
       "https://decida.mx/privacidad",
       "https://decida.mx/terminos",

@@ -2,7 +2,7 @@
 type: arquitectura
 tags: [decida, cifra, finanzas, prisma, cuenta]
 updated: 2026-10-30
-status: implementada en dev (v1, rediseño de deudas); sin pasar a main
+status: implementada en dev (v1, captura inteligente con voz, página pública); sin pasar a main
 ---
 
 # Cifra v1 — finanzas personales
@@ -31,6 +31,9 @@ Botón arriba a la derecha de Cifra. Diálogo de dos pasos: (1) fotos (cámara o
 - **Privacidad:** las fotos no se guardan, solo viajan en memoria a OpenAI. Consentimiento explícito la primera vez (`user_cifra_ai_consent_at`), texto en el aviso de privacidad, analítica sin montos, textos ni imágenes.
 - **Nota de voz:** botón «Grabar voz» en el diálogo (MediaRecorder, máx. 60 s, con cronómetro). El audio se envía a `transcribeCapture`, se transcribe con `OPENAI_MODEL_TRANSCRIBE` (`gpt-4o-mini-transcribe`) y el texto se agrega al campo de observaciones (máx. 500), donde se puede corregir antes de procesar. Voz, fotos y texto de una misma captura comparten la clave `cifra-capture:<usuario>:<captureId>`: se cobran 3 créditos una sola vez; si la transcripción sale vacía o falla se devuelven, y una captura ya devuelta no se puede reutilizar gratis. El audio no se guarda.
 - **Pendiente:** botón flotante en móvil, aviso de posible duplicado, piloto con 30 tickets reales de tiendas mexicanas para medir exactitud y costo real (el costo se ve en PostHog LLM Analytics), una captura que genere varios movimientos, y definir si se agrega un tope por usuario además del saldo de créditos.
+
+## Página pública (2026-10-30)
+`/cifra` (`src/app/cifra/page.tsx`, componentes en `src/components/cifra-landing/`, texto en `content.ts`). Arco SCAR: situación y complicación (hero y «Llevar tus finanzas no debería ser un segundo trabajo»), acción (captura inteligente como sección central, Mis cuentas, Pagos, Resumen) y resolución (privacidad, precio, FAQ, CTA). Las maquetas son ilustrativas y se anuncian como tal; el costo de la captura y el precio salen de `costs.ts` y `plans.ts`, no de texto copiado. Entra al sitemap, al menú público (Inicio · Cifra) y al pie. CTA a `/cuenta/registro`. Evento `cifra_landing_viewed`.
 
 ## Decisiones (2026-10-30, del usuario)
 - Alcance con **saldos incluidos**; **«Editar y pagar»** crea el egreso (nada se genera solo).

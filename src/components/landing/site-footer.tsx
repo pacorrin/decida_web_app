@@ -6,7 +6,9 @@ import { BETA_FOOTER_TEXT, BETA_LABEL } from "@/lib/beta";
 import { LegalFooterLinks } from "@/components/legal/legal-footer-links";
 import { Separator } from "@/components/ui/separator";
 
-export function SiteFooter() {
+type FooterLink = { href: string; label: string };
+
+export function SiteFooter({ links = NAV_LINKS }: { links?: readonly FooterLink[] }) {
   return (
     <footer className="border-t border-border/80 bg-background">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
@@ -40,7 +42,7 @@ export function SiteFooter() {
           <nav aria-label="Enlaces del pie de página">
             <p className="mb-3 text-sm font-medium text-primary">Secciones</p>
             <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {[...NAV_LINKS, LOGIN_LINK].map((link) => (
+              {[...links, { href: "/cifra", label: "Cifra" }, LOGIN_LINK].map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

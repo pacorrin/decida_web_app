@@ -5,6 +5,7 @@
  */
 export const ANALYTICS_EVENTS = {
   landingViewed: "landing_viewed",
+  cifraLandingViewed: "cifra_landing_viewed",
   ctaClicked: "cta_clicked",
   accountCreated: "account_created",
   userLoggedIn: "user_logged_in",

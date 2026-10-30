@@ -14,7 +14,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export function SiteHeader() {
+type SectionLink = { href: string; label: string };
+
+/** Páginas del sitio que aparecen en el menú principal. */
+const PAGE_LINKS = [
+  { href: "/", label: "Inicio" },
+  { href: "/cifra", label: "Cifra" },
+] as const;
+
+export function SiteHeader({ sectionLinks = NAV_LINKS }: { sectionLinks?: readonly SectionLink[] }) {
   return (
     <header className="sticky top-0 z-50 bg-background">
       <div className="border-b border-border/80">
@@ -34,12 +42,15 @@ export function SiteHeader() {
             className="hidden items-center gap-6 md:flex"
             aria-label="Navegación principal"
           >
-            <Link
-              href="/"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              Inicio
-            </Link>
+            {PAGE_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
@@ -95,12 +106,15 @@ export function SiteHeader() {
                 >
                   Explorar
                 </p>
-                <Link
-                  href="/"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  Inicio
-                </Link>
+                {PAGE_LINKS.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
               </nav>
             </SheetContent>
           </Sheet>
@@ -112,7 +126,7 @@ export function SiteHeader() {
         aria-label="Secciones de la página de inicio"
       >
         <ul className="mx-auto flex h-10 max-w-6xl items-center gap-1 overflow-x-auto px-4 sm:px-6 lg:px-8 md:justify-center [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {NAV_LINKS.map((link) => (
+          {sectionLinks.map((link) => (
             <li key={link.href} className="shrink-0">
               <Link
                 href={link.href}
