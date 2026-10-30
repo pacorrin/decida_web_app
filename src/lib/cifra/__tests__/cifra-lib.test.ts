@@ -155,6 +155,15 @@ describe("pagos próximos", () => {
     expect(r.map((p) => [p.id, p.overdue])).toEqual([["a", true], ["b", false]]);
   });
 
+  it("marca los pagos de monto variable para ofrecer «Editar y pagar»", () => {
+    const r = upcomingPayments(
+      [item({ id: "tc", variable: true, amountCents: 500 }), item({ id: "fijo" })],
+      { today, from: today, to: addDays(today, 30) },
+    );
+    expect(r.find((p) => p.id === "tc")?.variable).toBe(true);
+    expect(r.find((p) => p.id === "fijo")?.variable).toBe(false);
+  });
+
   it("proyecta los meses siguientes; los de monto variable quedan por confirmar", () => {
     const r = upcomingPayments(
       [

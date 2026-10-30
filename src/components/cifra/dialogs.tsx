@@ -208,17 +208,20 @@ export function PayDialog({
   id,
   name,
   suggestedCents,
+  editable = false,
   today,
 }: {
   kind: "debt" | "fixed";
   id: string;
   name: string;
   suggestedCents: number | null;
+  /** El monto cambia cada mes: el botón invita a revisarlo antes de pagar. */
+  editable?: boolean;
   today: string;
 }) {
   return (
     <FormDialog
-      triggerLabel="Marcar como pagado"
+      triggerLabel={editable ? "Editar y pagar" : "Marcar como pagado"}
       triggerSize="xs"
       title={`Pagar ${name}`}
       wide
