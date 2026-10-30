@@ -24,6 +24,8 @@ export type CifraFlow = "income" | "expense";
 export const DEBT_KINDS = [
   { code: "credit_card", label: "Tarjeta de crédito" },
   { code: "loan", label: "Préstamo" },
+  { code: "vehicle", label: "Automóvil" },
+  { code: "housing", label: "Vivienda (hipoteca)" },
   { code: "other", label: "Otra deuda" },
 ] as const;
 

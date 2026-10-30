@@ -5,7 +5,7 @@ CREATE TYPE "cifra_flow" AS ENUM ('income', 'expense');
 CREATE TYPE "cifra_account_kind" AS ENUM ('cash', 'bank', 'savings', 'other');
 
 -- CreateEnum
-CREATE TYPE "cifra_debt_kind" AS ENUM ('credit_card', 'loan', 'other');
+CREATE TYPE "cifra_debt_kind" AS ENUM ('credit_card', 'loan', 'vehicle', 'housing', 'other');
 
 -- CreateTable
 CREATE TABLE "cifra_accounts" (

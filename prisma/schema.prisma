@@ -78,6 +78,8 @@ enum cifra_account_kind {
 enum cifra_debt_kind {
   credit_card
   loan
+  vehicle
+  housing
   other
 }
 

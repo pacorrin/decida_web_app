@@ -10,7 +10,7 @@ status: implementada en dev (v1); sin pasar a main
 Primera herramienta nueva de la plataforma ([[../producto/nuevas-features#2. Cifra (finanzas personales)]], metodología en [[../marca/narrativa-del-orden-decida]]). Esta versión es mínima y **no usa IA**. Código: `src/lib/cifra/`, `src/app/cuenta/(dashboard)/cifra/`, `src/components/cifra/`.
 
 ## Qué hace
-1. **Mis cuentas** (`/cuenta/cifra/cuentas`): saldos (efectivo, banco, ahorro), deudas (tarjeta, préstamo; saldo, pago mensual, día de pago y de corte, tasa y límite opcionales) y gastos fijos (nombre, categoría, monto, día de pago).
+1. **Mis cuentas** (`/cuenta/cifra/cuentas`): saldos (efectivo, banco, ahorro), deudas (tarjeta, préstamo, automóvil, vivienda u otra; saldo, pago mensual, día de pago y de corte, tasa y límite opcionales) y gastos fijos (nombre, categoría, monto, día de pago).
 2. **Movimientos** (`/cuenta/cifra/movimientos`): registro de ingresos y egresos con categoría, monto, fecha y nota; navegación por mes y borrado.
 3. **Resumen** (`/cuenta/cifra`): ingresos, egresos y balance del mes, deuda total, saldo en cuentas y los **pagos pendientes de este mes** con el botón «Marcar como pagado».
 

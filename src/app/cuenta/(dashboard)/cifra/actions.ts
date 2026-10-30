@@ -89,7 +89,7 @@ export async function saveDebt(formData: FormData): Promise<CifraActionState> {
 
   const data = {
     cdebt_name: d.name,
-    cdebt_kind: d.kind as "credit_card" | "loan" | "other",
+    cdebt_kind: d.kind as "credit_card" | "loan" | "vehicle" | "housing" | "other",
     cdebt_balance_cents: d.balance,
     cdebt_monthly_payment_cents: d.monthlyPayment,
     cdebt_annual_rate_pct: d.annualRate,
