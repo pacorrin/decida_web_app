@@ -4,7 +4,6 @@
  */
 const TONES = {
   slate: "bg-slate-500/15 text-slate-900 dark:text-slate-200",
-  red: "bg-red-500/15 text-red-900 dark:text-red-200",
   orange: "bg-orange-500/15 text-orange-900 dark:text-orange-200",
   amber: "bg-amber-500/15 text-amber-900 dark:text-amber-200",
   lime: "bg-lime-500/15 text-lime-900 dark:text-lime-200",
@@ -27,7 +26,7 @@ const ACCOUNT_KIND_TONE: Record<string, Tone> = {
 };
 
 const DEBT_KIND_TONE: Record<string, Tone> = {
-  credit_card: "red",
+  credit_card: "blue",
   loan: "orange",
   vehicle: "amber",
   housing: "teal",
