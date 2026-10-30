@@ -1,3 +1,6 @@
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN "user_cifra_ai_consent_at" TIMESTAMP(3);
+
 -- CreateEnum
 CREATE TYPE "cifra_flow" AS ENUM ('income', 'expense');
 

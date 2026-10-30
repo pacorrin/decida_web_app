@@ -24,6 +24,13 @@ Primera herramienta nueva de la plataforma ([[../producto/nuevas-features#2. Cif
 - Campos numéricos solo aceptan dígitos; los de dinero se formatean (`$1,234.50`) y la tasa con %.
 - Al marcar pagado (monto y fecha), el egreso guarda el periodo del vencimiento pagado y los valores previos (`ctrx_prev_due_on`, `ctrx_prev_cut_on`, `ctrx_prev_amount_cents`, `ctrx_applied_to_debt_cents`); borrar el pago restaura el saldo y, si fue el último, las fechas.
 
+## Captura inteligente (IA, 2026-10-30)
+Botón arriba a la derecha de Cifra. Diálogo de dos pasos: (1) fotos (cámara o galería, hasta 3, reducidas en el teléfono a 1280 px) y un texto opcional que también puede dictarse con el teclado; (2) la IA devuelve una **propuesta** de un solo movimiento (tipo, monto, categoría de la lista fija, fecha, nota) que se precarga en un formulario y **solo se guarda al confirmar**, con el guardado de siempre.
+- **Cobro:** `CREDIT_COST_CIFRA_CAPTURE = 3` créditos por captura (`src/lib/credits/costs.ts`), igual con texto, dictado, una foto o varias, para cubrir siempre el costo de IA. Se cobra al procesar (el costo ya se generó) y se **devuelve si la lectura falla**. Registrar a mano es gratis. Costo estimado de IA ~US$0.002 a 0.01 por captura (≈ MX$0.04 a 0.19) frente a ~MX$0.57 a 0.81 netos por 3 créditos según el plan.
+- **Modelo:** `OPENAI_MODEL_CAPTURE` (por defecto `gpt-4.1-mini`, con visión). La salida se valida (`src/lib/cifra/capture/result.ts`): categoría solo de la lista, fecha no futura, monto positivo; lo dudoso se avisa y no se inventa. El contenido de fotos y texto se trata como datos, no como instrucciones.
+- **Privacidad:** las fotos no se guardan, solo viajan en memoria a OpenAI. Consentimiento explícito la primera vez (`user_cifra_ai_consent_at`), texto en el aviso de privacidad, analítica sin montos, textos ni imágenes.
+- **Pendiente:** nota de voz grabada y transcrita (mismo precio), botón flotante en móvil, aviso de posible duplicado, piloto con 30 tickets reales de tiendas mexicanas para medir exactitud y costo real (el costo se ve en PostHog LLM Analytics), una captura que genere varios movimientos, y definir si se agrega un tope por usuario además del saldo de créditos.
+
 ## Decisiones (2026-10-30, del usuario)
 - Alcance con **saldos incluidos**; **«Editar y pagar»** crea el egreso (nada se genera solo).
 - **Requiere plan activo** (mínimo Explora, `hasFullAccess`). Sin plan se ve la pantalla de planes; los datos se conservan y se pueden borrar.

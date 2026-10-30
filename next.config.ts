@@ -2,7 +2,10 @@ import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    // La captura inteligente de Cifra sube hasta 3 fotos ya reducidas en el navegador.
+    serverActions: { bodySizeLimit: "5mb" },
+  },
 };
 
 export default withSentryConfig(nextConfig, {

@@ -3,7 +3,11 @@ import { redirect } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { ActionButton } from "@/components/cifra/form-kit";
 import { CifraTabs } from "@/components/cifra/cifra-tabs";
+import { SmartCapture } from "@/components/cifra/smart-capture";
 import { getCifraAccess } from "@/lib/cifra/access";
+import { todayInMexico, formatDateInput } from "@/lib/cifra/dates";
+import { spendableBalance } from "@/lib/credits/access";
+import { CREDIT_COST_CIFRA_CAPTURE } from "@/lib/credits/costs";
 import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
 import { getCurrentUser } from "@/lib/auth/session-server";
 import { prisma } from "@/lib/prisma";
@@ -72,13 +76,25 @@ export default async function CifraLayout({ children }: { children: React.ReactN
     );
   }
 
+  const user = await getCurrentUser();
+
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-primary">Cifra</h1>
-        <p className="text-sm text-muted-foreground">
-          Tu punto de partida: lo que tienes, lo que debes y lo que entra y sale cada mes.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-primary">Cifra</h1>
+          <p className="text-sm text-muted-foreground">
+            Tu punto de partida: lo que tienes, lo que debes y lo que entra y sale cada mes.
+          </p>
+        </div>
+        {user && (
+          <SmartCapture
+            consented={user.user_cifra_ai_consent_at != null}
+            credits={spendableBalance(user)}
+            cost={CREDIT_COST_CIFRA_CAPTURE}
+            today={formatDateInput(todayInMexico())}
+          />
+        )}
       </div>
       <CifraTabs />
       {children}

@@ -84,6 +84,11 @@ export function getNarrativeModel(): string {
   return process.env.OPENAI_MODEL_NARRATIVE ?? "gpt-4o-mini";
 }
 
+/** Lectura de fotos y texto para la captura inteligente de Cifra: visión barata y rápida. */
+export function getCaptureModel(): string {
+  return process.env.OPENAI_MODEL_CAPTURE ?? "gpt-4.1-mini";
+}
+
 export function getReasoningModel(): string {
   // o4-mini fue dado de baja por OpenAI (404): con él la revisión y la interpretación fallaban.
   return process.env.OPENAI_MODEL_REASONING ?? "gpt-5-mini";
@@ -135,6 +140,43 @@ export async function generateJson<T>(
     ],
     response_format: { type: "json_object" },
     temperature: 0.3,
+    ...getObservabilityParams(observability),
+  } as NativeOpenAI.Chat.ChatCompletionCreateParamsNonStreaming);
+  recordUsage(model, {
+    inputTokens: response.usage?.prompt_tokens,
+    outputTokens: response.usage?.completion_tokens,
+  });
+  const content = response.choices[0]?.message?.content;
+  if (!content) throw new Error("Empty response from OpenAI");
+  return JSON.parse(content) as T;
+}
+
+/** Igual que `generateJson`, pero con imágenes (data URLs) junto al texto. */
+export async function generateVisionJson<T>(
+  systemPrompt: string,
+  userText: string,
+  images: string[],
+  model = getCaptureModel(),
+  observability?: AiObservabilityContext
+): Promise<T> {
+  const client = getOpenAIClient();
+  const response = await client.chat.completions.create({
+    model,
+    messages: [
+      { role: "system", content: systemPrompt },
+      {
+        role: "user",
+        content: [
+          { type: "text", text: userText },
+          ...images.map((url) => ({
+            type: "image_url" as const,
+            image_url: { url, detail: "high" as const },
+          })),
+        ],
+      },
+    ],
+    response_format: { type: "json_object" },
+    temperature: 0.1,
     ...getObservabilityParams(observability),
   } as NativeOpenAI.Chat.ChatCompletionCreateParamsNonStreaming);
   recordUsage(model, {

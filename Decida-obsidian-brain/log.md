@@ -619,3 +619,7 @@ Las deudas capturan el próximo pago (monto y fecha real), corte y límite en ta
 ## [2026-10-30] impl | Observaciones en Cifra
 
 Campo de texto libre opcional en saldos, deudas y gastos fijos. Se editó la migración `20261101000000_cifra` (aún no está en main).
+
+## [2026-10-30] impl | Captura inteligente de Cifra
+
+Fotos y/o texto leídos con IA proponen un ingreso o egreso que la persona confirma. 3 créditos por captura (reembolso si falla), consentimiento previo, fotos sin guardar, aviso de privacidad actualizado. Probado con OpenAI real: texto y ticket sintético. Detalle en `wiki/arquitectura/cifra-finanzas-personales.md`.

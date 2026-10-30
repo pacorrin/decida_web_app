@@ -34,6 +34,8 @@ export const ANALYTICS_EVENTS = {
   cifraTransactionLogged: "cifra_transaction_logged",
   cifraPaymentMarked: "cifra_payment_marked",
   cifraDataDeleted: "cifra_data_deleted",
+  cifraAiConsentGiven: "cifra_ai_consent_given",
+  cifraSmartCapture: "cifra_smart_capture",
 } as const;
 
 export type AnalyticsEvent =
