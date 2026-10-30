@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { BetaBadge } from "@/components/beta/beta-badge";
+import { BETA_HERO_TEXT } from "@/lib/beta";
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
 import { CREDIT_COST_CIFRA_CAPTURE } from "@/lib/credits/costs";
 import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
@@ -30,7 +32,10 @@ export function CifraHero() {
 
       <div className="flex flex-col justify-end gap-6 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pb-14">
         <div className="flex flex-1 flex-col gap-6 lg:pb-6">
-          <p className="text-4xl font-semibold tracking-tight sm:text-5xl">Cifra</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-4xl font-semibold tracking-tight sm:text-5xl">Cifra</p>
+            <BetaBadge className="border-white/30 bg-white/10 text-white">{BETA_HERO_TEXT}</BetaBadge>
+          </div>
           <div className="hidden min-h-40 flex-1 items-end lg:flex">
             <HeroChart />
           </div>

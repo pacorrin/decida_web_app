@@ -1,3 +1,5 @@
+import { BetaBadge } from "@/components/beta/beta-badge";
+import { BETA_HERO_TEXT } from "@/lib/beta";
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
 import { HeroVerdict } from "@/components/landing/hero-verdict";
 
@@ -6,6 +8,7 @@ export function HeroSection() {
     <section aria-labelledby="hero-heading" className="bg-background py-12 md:py-20">
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
         <div className="decida-reveal space-y-8">
+          <BetaBadge>{BETA_HERO_TEXT}</BetaBadge>
           <h1
             id="hero-heading"
             className="text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-primary sm:text-5xl lg:text-6xl"
