@@ -17,6 +17,9 @@ const name = text.pipe(
   z.string().min(1, "Escribe un nombre").max(80, "Máximo 80 caracteres"),
 );
 
+/** Últimos 4 dígitos de una tarjeta: opcionales, solo números. */
+const last4 = text.pipe(z.string().regex(/^(\d{4})?$/, "Escribe los últimos 4 dígitos"));
+
 /** Observación libre del usuario: para qué usa la cuenta, por qué hizo el gasto, etc. */
 const notes = text.pipe(z.string().max(500, "Máximo 500 caracteres"));
 
@@ -88,6 +91,7 @@ export const debtSchema = z
   .object({
     name,
     kind: kindOf(DEBT_KINDS),
+    last4,
     balance: money,
     notes,
     creditLimit: optionalMoney,
@@ -148,10 +152,25 @@ export const pendingAmountSchema = z.object({
 });
 
 /** Marcar un pago como pagado: cuánto se pagó y cuándo. */
-export const paySchema = z.object({
-  amount: money,
-  date: dateField(),
-});
+export const paySchema = z
+  .object({
+    amount: money,
+    date: dateField(),
+    /** Solo en pagos de tarjeta: parte del pago que son intereses y comisiones. */
+    interest: optionalMoney,
+  })
+  .superRefine((v, ctx) => {
+    if (v.interest !== null && v.interest > v.amount) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["interest"],
+        message: "Los intereses no pueden ser más que el pago",
+      });
+    }
+  });
+
+/** Alta rápida de una tarjeta desde un movimiento: solo nombre y últimos 4. */
+export const cardSchema = z.object({ name, last4 });
 
 export const transactionSchema = z
   .object({
@@ -160,8 +179,13 @@ export const transactionSchema = z
     amount: money,
     date: dateField(),
     description: text.pipe(z.string().max(120, "Máximo 120 caracteres")),
+    /** Tarjeta con la que se pagó (solo egresos); vacío si no fue con tarjeta. */
+    cardId: text,
   })
   .superRefine((v, ctx) => {
+    if (v.cardId && v.flow !== "expense") {
+      ctx.addIssue({ code: "custom", path: ["cardId"], message: "Solo los egresos pueden ir con tarjeta" });
+    }
     const list = v.flow === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
     if (!list.some((c) => c.code === v.category)) {
       ctx.addIssue({ code: "custom", path: ["category"], message: "Elige una categoría" });

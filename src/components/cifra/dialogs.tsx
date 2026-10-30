@@ -9,7 +9,8 @@ import {
   EXPENSE_CATEGORIES,
 } from "@/lib/cifra/constants";
 import { type CalendarDate, formatDateInput } from "@/lib/cifra/dates";
-import { centsToInputValue } from "@/lib/cifra/money";
+import { splitCardPayment } from "@/lib/cifra/card-payment";
+import { centsToInputValue, formatMxn, parseMoneyToCents } from "@/lib/cifra/money";
 import {
   markPaid,
   saveAccount,
@@ -24,6 +25,8 @@ type AccountItem = { id: string; name: string; notes: string | null; kind: strin
 export type DebtItem = {
   id: string;
   name: string;
+  last4?: string | null;
+  incomplete?: boolean;
   notes: string | null;
   kind: string;
   balanceCents: number;
@@ -105,7 +108,7 @@ export function DebtDialog({ item }: { item?: DebtItem }) {
 
   return (
     <FormDialog
-      triggerLabel={item ? "Editar" : "Agregar deuda"}
+      triggerLabel={item ? (item.incomplete ? "Completar" : "Editar") : "Agregar deuda"}
       triggerVariant="outline"
       triggerSize="xs"
       triggerIcon={item ? <Pencil aria-hidden /> : undefined}
@@ -126,6 +129,11 @@ export function DebtDialog({ item }: { item?: DebtItem }) {
         <FormRow name="balance" label="Saldo actual" hint="Lo que debes hoy.">
           <MoneyInput id="balance" name="balance" defaultValue={money(item?.balanceCents)} />
         </FormRow>
+        {isCard && (
+          <FormRow name="last4" label="Últimos 4 dígitos" hint="Opcional. Para distinguir tus tarjetas.">
+            <Input id="last4" name="last4" inputMode="numeric" maxLength={4} defaultValue={item?.last4 ?? ""} placeholder="1234" />
+          </FormRow>
+        )}
         {isCard ? (
           <FormRow name="creditLimit" label="Límite de crédito" hint="Opcional. Calcula cuánto usas.">
             <MoneyInput id="creditLimit" name="creditLimit" defaultValue={money(item?.creditLimitCents)} />
@@ -233,20 +241,28 @@ export function FixedExpenseDialog({ item }: { item?: FixedItem }) {
   );
 }
 
-/** Marcar un pago como pagado, con el monto y la fecha reales. */
+/** Marcar un pago como pagado, con el monto y la fecha reales. En tarjetas pide los intereses. */
 export function PayDialog({
   kind,
   id,
   name,
   suggestedCents,
+  cardBalanceCents = null,
   today,
 }: {
   kind: "debt" | "fixed";
   id: string;
   name: string;
   suggestedCents: number | null;
+  cardBalanceCents?: number | null;
   today: string;
 }) {
+  const isCard = cardBalanceCents != null;
+  const [amount, setAmount] = useState(money(suggestedCents));
+  const [interest, setInterest] = useState("");
+  const paid = parseMoneyToCents(amount) ?? 0;
+  const split = isCard ? splitCardPayment(cardBalanceCents, paid, parseMoneyToCents(interest) ?? 0) : null;
+
   return (
     <FormDialog
       triggerLabel="Editar y pagar"
@@ -260,11 +276,32 @@ export function PayDialog({
     >
       <FormGrid>
         <FormRow name="amount" label="Monto pagado">
-          <MoneyInput id="amount" name="amount" defaultValue={money(suggestedCents)} />
+          <MoneyInput id="amount" name="amount" defaultValue={money(suggestedCents)} onValueChange={setAmount} />
         </FormRow>
         <FormRow name="date" label="Fecha de pago">
           <Input id="date" name="date" type="date" defaultValue={today} />
         </FormRow>
+        {isCard && (
+          <FormRow name="interest" label="De los cuales, intereses y comisiones" hint="Opcional. Lo ves en tu estado de cuenta.">
+            <MoneyInput id="interest" name="interest" onValueChange={setInterest} />
+          </FormRow>
+        )}
+        {split && paid > 0 && (
+          <FullRow>
+            <div className="space-y-1 rounded-xl bg-muted/40 px-4 py-3 text-sm" data-testid="cifra-pay-preview">
+              <p>
+                Baja tu saldo <strong className="tabular-nums">{formatMxn(split.appliedCents)}</strong>
+                {split.interestCents > 0 && <> · Intereses {formatMxn(split.interestCents)}</>}
+              </p>
+              {split.untrackedCents > 0 && (
+                <p className="text-xs text-muted-foreground">
+                  Pagaste {formatMxn(split.untrackedCents)} más de lo que tenías registrado en esta tarjeta; lo
+                  guardamos como gasto en «Compras sin detalle».
+                </p>
+              )}
+            </div>
+          </FullRow>
+        )}
       </FormGrid>
     </FormDialog>
   );

@@ -9,10 +9,33 @@ import {
   periodOf,
 } from "./dates";
 import { estimatePayoff } from "./payoff";
-import { breakdownByCategory, summarizeTransactions } from "./summary";
+import { breakdownByCategory, groupPaymentParts, summarizeTransactions } from "./summary";
 import { type DueItem, totalsOf, upcomingPayments } from "./upcoming";
 
 const dateOrNull = (d: Date | null) => (d ? fromDateOnly(d) : null);
+
+const withCard = {
+  card: { select: { ccard_name: true, ccard_last4: true } },
+} as const;
+
+type TransactionRow = Awaited<
+  ReturnType<typeof prisma.cifra_transactions.findMany<{ include: typeof withCard }>>
+>[number];
+
+function toRow(t: TransactionRow) {
+  return {
+    id: t.ctrx_id,
+    flow: t.ctrx_flow,
+    category: t.ctrx_category,
+    amountCents: t.ctrx_amount_cents,
+    date: fromDateOnly(t.ctrx_occurred_on),
+    description: t.ctrx_description,
+    fromPayment: t.ctrx_period !== null,
+    isTransfer: t.ctrx_is_transfer,
+    paymentId: t.ctrx_payment_id,
+    cardName: t.card ? (t.card.ccard_last4 ? `${t.card.ccard_name} ·· ${t.card.ccard_last4}` : t.card.ccard_name) : null,
+  };
+}
 
 async function loadDueItems(userId: string): Promise<DueItem[]> {
   const [debts, fixed] = await Promise.all([
@@ -31,6 +54,7 @@ async function loadDueItems(userId: string): Promise<DueItem[]> {
       variable: d.cdebt_variable_payment,
       dueDay: d.cdebt_due_day,
       dueLastDay: d.cdebt_due_last_day,
+      cardBalanceCents: d.cdebt_card_id ? d.cdebt_balance_cents : null,
     })),
     ...fixed.map((f) => ({
       kind: "fixed" as const,
@@ -57,37 +81,35 @@ async function accountsTotal(userId: string): Promise<number> {
 
 export async function getOverview(userId: string, today: CalendarDate) {
   const range = monthRange(periodOf(today))!;
-  const [transactions, debtSum, items, accounts] = await Promise.all([
+  const [transactions, debtSum, cardsSum, items, accounts] = await Promise.all([
     prisma.cifra_transactions.findMany({
       where: { ctrx_user_id: userId, ctrx_occurred_on: { gte: range.from, lte: range.to } },
       orderBy: [{ ctrx_occurred_on: "desc" }, { ctrx_created_at: "desc" }],
+      include: withCard,
     }),
     prisma.cifra_debts.aggregate({
       where: { cdebt_user_id: userId, cdebt_paid_off: false },
+      _sum: { cdebt_balance_cents: true },
+    }),
+    prisma.cifra_debts.aggregate({
+      where: { cdebt_user_id: userId, cdebt_card_id: { not: null } },
       _sum: { cdebt_balance_cents: true },
     }),
     loadDueItems(userId),
     accountsTotal(userId),
   ]);
 
-  const rows = transactions.map((t) => ({
-    id: t.ctrx_id,
-    flow: t.ctrx_flow,
-    category: t.ctrx_category,
-    amountCents: t.ctrx_amount_cents,
-    date: fromDateOnly(t.ctrx_occurred_on),
-    description: t.ctrx_description,
-    fromPayment: t.ctrx_period !== null,
-  }));
+  const rows = transactions.map(toRow);
   const month = summarizeTransactions(rows);
   const upcoming = upcomingPayments(items, { today, from: today, to: addDays(today, 30) });
   return {
     ...month,
     incomeByCategory: breakdownByCategory(rows, "income"),
     expenseByCategory: breakdownByCategory(rows, "expense"),
-    recentTransactions: rows.slice(0, 6),
+    recentTransactions: groupPaymentParts(rows).slice(0, 6),
     transactionCount: rows.length,
     debtTotalCents: debtSum._sum.cdebt_balance_cents ?? 0,
+    cardsPendingCents: cardsSum._sum.cdebt_balance_cents ?? 0,
     accountsTotalCents: accounts,
     upcoming,
   };
@@ -111,6 +133,7 @@ export async function getAccountsData(userId: string, today: CalendarDate) {
     prisma.cifra_debts.findMany({
       where: { cdebt_user_id: userId },
       orderBy: [{ cdebt_paid_off: "asc" }, { cdebt_next_due_on: "asc" }],
+      include: { card: { select: { ccard_last4: true } } },
     }),
     prisma.cifra_fixed_expenses.findMany({
       where: { cfix_user_id: userId },
@@ -147,6 +170,10 @@ export async function getAccountsData(userId: string, today: CalendarDate) {
       return {
         id: d.cdebt_id,
         name: d.cdebt_name,
+        cardId: d.cdebt_card_id,
+        last4: d.card?.ccard_last4 ?? null,
+        /** Tarjeta dada de alta al vuelo: falta capturar su fecha de pago y demás datos. */
+        incomplete: d.cdebt_card_id !== null && d.cdebt_next_due_on === null,
         notes: d.cdebt_notes,
         kind: d.cdebt_kind,
         balanceCents: d.cdebt_balance_cents,
@@ -196,14 +223,23 @@ export async function getMonthTransactions(userId: string, period: string) {
   const rows = await prisma.cifra_transactions.findMany({
     where: { ctrx_user_id: userId, ctrx_occurred_on: { gte: range.from, lte: range.to } },
     orderBy: [{ ctrx_occurred_on: "desc" }, { ctrx_created_at: "desc" }],
+    include: withCard,
   });
-  return rows.map((t) => ({
-    id: t.ctrx_id,
-    flow: t.ctrx_flow,
-    category: t.ctrx_category,
-    amountCents: t.ctrx_amount_cents,
-    date: fromDateOnly(t.ctrx_occurred_on),
-    description: t.ctrx_description,
-    fromPayment: t.ctrx_period !== null,
-  }));
+  return groupPaymentParts(rows.map(toRow));
+}
+
+/** Tarjetas para el selector «¿Con qué tarjeta?»; la última usada va primero como sugerida. */
+export async function getCardOptions(userId: string) {
+  const [cards, last] = await Promise.all([
+    prisma.cifra_cards.findMany({ where: { ccard_user_id: userId }, orderBy: { ccard_created_at: "asc" } }),
+    prisma.cifra_transactions.findFirst({
+      where: { ctrx_user_id: userId, ctrx_card_id: { not: null }, ctrx_is_transfer: false, ctrx_payment_id: null },
+      orderBy: { ctrx_created_at: "desc" },
+      select: { ctrx_card_id: true },
+    }),
+  ]);
+  return {
+    cards: cards.map((c) => ({ id: c.ccard_id, name: c.ccard_name, last4: c.ccard_last4 })),
+    lastCardId: last?.ctrx_card_id ?? null,
+  };
 }

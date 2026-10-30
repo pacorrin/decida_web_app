@@ -7,7 +7,13 @@ import { prisma } from "@/lib/prisma";
 import { trackServer } from "@/lib/analytics/server";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { CIFRA_ACCESS_MESSAGES, getCifraAccess } from "@/lib/cifra/access";
-import { CIFRA_PATH, DEBT_PAYMENT_CATEGORY } from "@/lib/cifra/constants";
+import { splitCardPayment } from "@/lib/cifra/card-payment";
+import {
+  CIFRA_PATH,
+  DEBT_PAYMENT_CATEGORY,
+  INTEREST_CATEGORY,
+  UNDETAILED_CATEGORY,
+} from "@/lib/cifra/constants";
 import {
   firstOccurrenceAfter,
   fromDateOnly,
@@ -20,6 +26,7 @@ import {
 } from "@/lib/cifra/dates";
 import {
   accountSchema,
+  cardSchema,
   debtSchema,
   fixedExpenseSchema,
   idSchema,
@@ -34,6 +41,8 @@ export type CifraActionState = {
   success: boolean;
   message?: string;
   fieldErrors?: Record<string, string[]>;
+  /** Id del registro creado (por ejemplo, la tarjeta dada de alta al vuelo). */
+  id?: string;
 };
 
 const SESSION_EXPIRED = CIFRA_ACCESS_MESSAGES.no_session;
@@ -58,6 +67,27 @@ function optionalId(formData: FormData): string | null {
 
 function isUniqueViolation(error: unknown): boolean {
   return (error as { code?: string } | null)?.code === "P2002";
+}
+
+/** Gasto «Compras sin detalle» de una tarjeta: lo que subió el saldo o excedió el pago sin compras capturadas. */
+function undetailedExpense(
+  userId: string,
+  cardId: string,
+  amountCents: number,
+  occurredOn: Date,
+  description: string,
+  paymentId?: string,
+) {
+  return {
+    ctrx_user_id: userId,
+    ctrx_flow: "expense" as const,
+    ctrx_category: UNDETAILED_CATEGORY,
+    ctrx_amount_cents: amountCents,
+    ctrx_occurred_on: occurredOn,
+    ctrx_description: description,
+    ctrx_card_id: cardId,
+    ctrx_payment_id: paymentId ?? null,
+  };
 }
 
 /** Alta o edición; «id» vacío crea, con valor edita (solo si es del usuario). */
@@ -122,18 +152,101 @@ export async function saveDebt(formData: FormData): Promise<CifraActionState> {
     cdebt_ends_on: d.endsOn ? toDateOnly(d.endsOn) : null,
     cdebt_paid_off: d.balance === 0,
   };
+  const isCard = d.kind === "credit_card";
+  const last4 = d.last4 || null;
+
   if (id) {
-    const res = await prisma.cifra_debts.updateMany({
+    const existing = await prisma.cifra_debts.findFirst({
       where: { cdebt_id: id, cdebt_user_id: access.userId },
-      data,
     });
-    if (res.count === 0) return { success: false, message: GENERIC_ERROR };
+    if (!existing) return { success: false, message: GENERIC_ERROR };
+    // Una deuda ligada a una tarjeta sigue siendo tarjeta.
+    const keepsCard = Boolean(existing.cdebt_card_id);
+    const kind = keepsCard ? "credit_card" : data.cdebt_kind;
+    const raised =
+      keepsCard && d.balance > existing.cdebt_balance_cents
+        ? d.balance - existing.cdebt_balance_cents
+        : 0;
+    await prisma.$transaction(async (tx) => {
+      let cardId = existing.cdebt_card_id;
+      if (keepsCard) {
+        await tx.cifra_cards.updateMany({
+          where: { ccard_id: cardId!, ccard_user_id: access.userId },
+          data: { ccard_name: d.name, ccard_last4: last4 },
+        });
+      } else if (isCard) {
+        const card = await tx.cifra_cards.create({
+          data: { ccard_user_id: access.userId, ccard_name: d.name, ccard_last4: last4 },
+        });
+        cardId = card.ccard_id;
+      }
+      await tx.cifra_debts.updateMany({
+        where: { cdebt_id: id, cdebt_user_id: access.userId },
+        data: { ...data, cdebt_kind: kind, cdebt_card_id: cardId },
+      });
+      if (raised > 0 && cardId) {
+        await tx.cifra_transactions.create({
+          data: undetailedExpense(
+            access.userId,
+            cardId,
+            raised,
+            toDateOnly(todayInMexico()),
+            `Ajuste del saldo de ${d.name}`,
+          ),
+        });
+      }
+    });
+  } else if (isCard) {
+    await prisma.$transaction(async (tx) => {
+      const card = await tx.cifra_cards.create({
+        data: { ccard_user_id: access.userId, ccard_name: d.name, ccard_last4: last4 },
+      });
+      await tx.cifra_debts.create({
+        data: { ...data, cdebt_user_id: access.userId, cdebt_card_id: card.ccard_id },
+      });
+    });
+    await trackServer(access.userId, ANALYTICS_EVENTS.cifraItemCreated, { type: "card", kind: d.kind });
   } else {
     await prisma.cifra_debts.create({ data: { ...data, cdebt_user_id: access.userId } });
     await trackServer(access.userId, ANALYTICS_EVENTS.cifraItemCreated, { type: "debt", kind: d.kind });
   }
   refresh();
   return { success: true };
+}
+
+/**
+ * Alta rápida de una tarjeta desde un movimiento: la tarjeta nace con su deuda en cero «por
+ * completar» (sin fecha de pago), para que las compras tengan dónde sumar.
+ */
+export async function saveCard(formData: FormData): Promise<CifraActionState> {
+  const access = await getCifraAccess();
+  if (!access.ok) return { success: false, message: CIFRA_ACCESS_MESSAGES[access.reason] };
+
+  const parsed = cardSchema.safeParse(formDataToValues(formData));
+  if (!parsed.success) return invalid(parsed.error);
+  const d = parsed.data;
+
+  const cardId = await prisma.$transaction(async (tx) => {
+    const card = await tx.cifra_cards.create({
+      data: { ccard_user_id: access.userId, ccard_name: d.name, ccard_last4: d.last4 || null },
+    });
+    await tx.cifra_debts.create({
+      data: {
+        cdebt_user_id: access.userId,
+        cdebt_card_id: card.ccard_id,
+        cdebt_name: d.name,
+        cdebt_kind: "credit_card",
+        cdebt_balance_cents: 0,
+        cdebt_due_day: 1,
+        cdebt_variable_payment: true,
+        cdebt_recurring: true,
+      },
+    });
+    return card.ccard_id;
+  });
+  await trackServer(access.userId, ANALYTICS_EVENTS.cifraItemCreated, { type: "card", kind: "credit_card" });
+  refresh();
+  return { success: true, id: cardId };
 }
 
 export async function saveFixedExpense(formData: FormData): Promise<CifraActionState> {
@@ -180,19 +293,42 @@ export async function addTransaction(formData: FormData): Promise<CifraActionSta
   if (!parsed.success) return invalid(parsed.error);
   const d = parsed.data;
 
-  await prisma.cifra_transactions.create({
-    data: {
-      ctrx_user_id: access.userId,
-      ctrx_flow: d.flow,
-      ctrx_category: d.category,
-      ctrx_amount_cents: d.amount,
-      ctrx_occurred_on: toDateOnly(d.date),
-      ctrx_description: d.description || null,
-    },
-  });
+  const base = {
+    ctrx_user_id: access.userId,
+    ctrx_flow: d.flow,
+    ctrx_category: d.category,
+    ctrx_amount_cents: d.amount,
+    ctrx_occurred_on: toDateOnly(d.date),
+    ctrx_description: d.description || null,
+  };
+  if (d.cardId) {
+    // Compra con tarjeta: el movimiento sube el saldo de la tarjeta.
+    const ok = await prisma.$transaction(async (tx) => {
+      const card = await tx.cifra_cards.findFirst({
+        where: { ccard_id: d.cardId, ccard_user_id: access.userId },
+      });
+      if (!card) return false;
+      await tx.cifra_transactions.create({ data: { ...base, ctrx_card_id: card.ccard_id } });
+      await tx.cifra_debts.updateMany({
+        where: { cdebt_card_id: card.ccard_id, cdebt_user_id: access.userId },
+        data: { cdebt_balance_cents: { increment: d.amount }, cdebt_paid_off: false },
+      });
+      return true;
+    });
+    if (!ok) {
+      return {
+        success: false,
+        message: "No encontramos esa tarjeta.",
+        fieldErrors: { cardId: ["Elige una tarjeta de la lista"] },
+      };
+    }
+  } else {
+    await prisma.cifra_transactions.create({ data: base });
+  }
   await trackServer(access.userId, ANALYTICS_EVENTS.cifraTransactionLogged, {
     flow: d.flow,
     category: d.category,
+    withCard: Boolean(d.cardId),
   });
   refresh();
   return { success: true };
@@ -216,6 +352,20 @@ export async function deleteTransaction(id: string): Promise<CifraActionState> {
     await tx.cifra_transactions.delete({ where: { ctrx_id: id } });
 
     const prevDue = row.ctrx_prev_due_on ? fromDateOnly(row.ctrx_prev_due_on) : null;
+
+    if (row.ctrx_card_id && !row.ctrx_is_transfer && !row.ctrx_payment_id) {
+      // Compra con tarjeta: el saldo vuelve a lo que era (sin bajar de cero).
+      const card = await tx.cifra_debts.findFirst({
+        where: { cdebt_card_id: row.ctrx_card_id, cdebt_user_id: user.user_id },
+      });
+      if (card) {
+        await tx.cifra_debts.updateMany({
+          where: { cdebt_id: card.cdebt_id, cdebt_user_id: user.user_id },
+          data: { cdebt_balance_cents: Math.max(0, card.cdebt_balance_cents - row.ctrx_amount_cents) },
+        });
+      }
+      return;
+    }
 
     if (row.ctrx_debt_id) {
       const debt = await tx.cifra_debts.findFirst({
@@ -273,10 +423,20 @@ export async function deleteAccount(id: string): Promise<CifraActionState> {
   );
 }
 
+/** Borrar una deuda de tarjeta borra también la tarjeta; sus movimientos se quedan sin tarjeta. */
 export async function deleteDebt(id: string): Promise<CifraActionState> {
-  return deleteOwned(id, (userId) =>
-    prisma.cifra_debts.deleteMany({ where: { cdebt_id: id, cdebt_user_id: userId } }),
-  );
+  return deleteOwned(id, async (userId) => {
+    const debt = await prisma.cifra_debts.findFirst({
+      where: { cdebt_id: id, cdebt_user_id: userId },
+      select: { cdebt_card_id: true },
+    });
+    await prisma.cifra_debts.deleteMany({ where: { cdebt_id: id, cdebt_user_id: userId } });
+    if (debt?.cdebt_card_id) {
+      await prisma.cifra_cards.deleteMany({
+        where: { ccard_id: debt.cdebt_card_id, ccard_user_id: userId },
+      });
+    }
+  });
 }
 
 export async function deleteFixedExpense(id: string): Promise<CifraActionState> {
@@ -315,7 +475,7 @@ export async function markPaid(
   }
   const parsed = paySchema.safeParse(formDataToValues(formData));
   if (!parsed.success) return invalid(parsed.error);
-  const { amount, date } = parsed.data;
+  const { amount, date, interest } = parsed.data;
   const occurredOn = toDateOnly(date);
 
   try {
@@ -326,8 +486,13 @@ export async function markPaid(
         });
         if (!debt || !debt.cdebt_next_due_on) return false;
         const dueDate = fromDateOnly(debt.cdebt_next_due_on);
-        const applied = amountAppliedToDebt(debt.cdebt_balance_cents, amount);
-        await tx.cifra_transactions.create({
+        const cardId = debt.cdebt_card_id ?? null;
+        // Pago de tarjeta: transferencia; solo intereses y lo que excede el saldo conocido son gasto.
+        const split = cardId
+          ? splitCardPayment(debt.cdebt_balance_cents, amount, interest ?? 0)
+          : null;
+        const applied = split ? split.appliedCents : amountAppliedToDebt(debt.cdebt_balance_cents, amount);
+        const payment = await tx.cifra_transactions.create({
           data: {
             ctrx_user_id: access.userId,
             ctrx_flow: "expense",
@@ -336,6 +501,8 @@ export async function markPaid(
             ctrx_occurred_on: occurredOn,
             ctrx_description: debt.cdebt_name,
             ctrx_debt_id: debt.cdebt_id,
+            ctrx_card_id: cardId,
+            ctrx_is_transfer: Boolean(cardId),
             ctrx_period: periodOf(dueDate),
             ctrx_applied_to_debt_cents: applied,
             ctrx_prev_due_on: debt.cdebt_next_due_on,
@@ -343,13 +510,42 @@ export async function markPaid(
             ctrx_prev_amount_cents: debt.cdebt_next_payment_cents,
           },
         });
+        if (cardId && split) {
+          if (split.interestCents > 0) {
+            await tx.cifra_transactions.create({
+              data: {
+                ctrx_user_id: access.userId,
+                ctrx_flow: "expense",
+                ctrx_category: INTEREST_CATEGORY,
+                ctrx_amount_cents: split.interestCents,
+                ctrx_occurred_on: occurredOn,
+                ctrx_description: `Intereses y comisiones de ${debt.cdebt_name}`,
+                ctrx_card_id: cardId,
+                ctrx_payment_id: payment.ctrx_id,
+              },
+            });
+          }
+          if (split.untrackedCents > 0) {
+            await tx.cifra_transactions.create({
+              data: undetailedExpense(
+                access.userId,
+                cardId,
+                split.untrackedCents,
+                occurredOn,
+                `Compras sin detalle de ${debt.cdebt_name}`,
+                payment.ctrx_id,
+              ),
+            });
+          }
+        }
         const remaining = debt.cdebt_balance_cents - applied;
-        const goesOn = debt.cdebt_recurring && remaining > 0;
+        // Una tarjeta sigue su ciclo aunque quede en cero; las demás deudas terminan al liquidarse.
+        const goesOn = debt.cdebt_recurring && (Boolean(cardId) || remaining > 0);
         await tx.cifra_debts.update({
           where: { cdebt_id: debt.cdebt_id },
           data: {
             cdebt_balance_cents: remaining,
-            cdebt_paid_off: remaining === 0,
+            cdebt_paid_off: remaining === 0 && !goesOn,
             cdebt_next_due_on: goesOn
               ? toDateOnly(nextOccurrence(dueDate, debt.cdebt_due_day, debt.cdebt_due_last_day))
               : null,
@@ -445,7 +641,7 @@ export async function setPendingAmount(
       debt.cdebt_next_cut_on !== null &&
       debt.cdebt_cut_day !== null &&
       toDateOnly(today).getTime() >= debt.cdebt_next_cut_on.getTime();
-    await prisma.cifra_debts.updateMany({
+    const update = prisma.cifra_debts.updateMany({
       where: { cdebt_id: id, cdebt_user_id: access.userId },
       data: {
         cdebt_next_payment_cents: d.amount,
@@ -460,6 +656,27 @@ export async function setPendingAmount(
           : {}),
       },
     });
+    // Si el estado de cuenta trae más saldo del que Cifra conocía, la diferencia son compras sin detalle.
+    const raised =
+      debt.cdebt_card_id && d.balance !== null && d.balance > debt.cdebt_balance_cents
+        ? d.balance - debt.cdebt_balance_cents
+        : 0;
+    if (raised > 0 && debt.cdebt_card_id) {
+      await prisma.$transaction([
+        update,
+        prisma.cifra_transactions.create({
+          data: undetailedExpense(
+            access.userId,
+            debt.cdebt_card_id,
+            raised,
+            toDateOnly(today),
+            `Ajuste del saldo de ${debt.cdebt_name}`,
+          ),
+        }),
+      ]);
+    } else {
+      await update;
+    }
   }
   refresh();
   return { success: true };
@@ -472,6 +689,7 @@ export async function deleteAllCifraData(): Promise<CifraActionState> {
 
   await prisma.$transaction([
     prisma.cifra_transactions.deleteMany({ where: { ctrx_user_id: user.user_id } }),
+    prisma.cifra_cards.deleteMany({ where: { ccard_user_id: user.user_id } }),
     prisma.cifra_debts.deleteMany({ where: { cdebt_user_id: user.user_id } }),
     prisma.cifra_fixed_expenses.deleteMany({ where: { cfix_user_id: user.user_id } }),
     prisma.cifra_accounts.deleteMany({ where: { cacc_user_id: user.user_id } }),

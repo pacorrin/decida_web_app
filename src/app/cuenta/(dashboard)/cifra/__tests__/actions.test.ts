@@ -2,7 +2,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const m = vi.hoisted(() => {
   const tx = {
-    cifra_debts: { findFirst: vi.fn(), update: vi.fn(), updateMany: vi.fn() },
+    cifra_cards: { create: vi.fn(), findFirst: vi.fn(), updateMany: vi.fn() },
+    cifra_debts: { create: vi.fn(), findFirst: vi.fn(), update: vi.fn(), updateMany: vi.fn() },
     cifra_fixed_expenses: { findFirst: vi.fn(), update: vi.fn(), updateMany: vi.fn() },
     cifra_transactions: { create: vi.fn(), findFirst: vi.fn(), delete: vi.fn() },
   };
@@ -14,6 +15,7 @@ const m = vi.hoisted(() => {
     prisma: {
       $transaction: vi.fn(),
       cifra_accounts: { create: vi.fn(), updateMany: vi.fn(), deleteMany: vi.fn() },
+      cifra_cards: { deleteMany: vi.fn() },
       cifra_debts: { create: vi.fn(), updateMany: vi.fn(), deleteMany: vi.fn(), findFirst: vi.fn() },
       cifra_fixed_expenses: { create: vi.fn(), updateMany: vi.fn(), deleteMany: vi.fn() },
       cifra_transactions: { create: vi.fn(), deleteMany: vi.fn() },
@@ -37,6 +39,7 @@ import {
   deleteAllCifraData,
   deleteTransaction,
   markPaid,
+  saveCard,
   saveDebt,
   setPendingAmount,
 } from "../actions";
@@ -70,6 +73,7 @@ beforeEach(() => {
   vi.resetAllMocks();
   m.getCifraAccess.mockResolvedValue(ok);
   m.getCurrentUser.mockResolvedValue({ user_id: "u1" });
+  m.tx.cifra_cards.create.mockResolvedValue({ ccard_id: "c1" });
   m.prisma.$transaction.mockImplementation(async (arg: unknown) =>
     typeof arg === "function" ? (arg as (tx: typeof m.tx) => unknown)(m.tx) : Promise.all(arg as unknown[]),
   );
@@ -86,7 +90,7 @@ describe("acceso", () => {
       expect(r.success).toBe(false);
       expect(r.message).toMatch(/plan/i);
     }
-    expect(m.prisma.cifra_debts.create).not.toHaveBeenCalled();
+    expect(m.tx.cifra_debts.create).not.toHaveBeenCalled();
     expect(m.prisma.cifra_transactions.create).not.toHaveBeenCalled();
   });
 
@@ -107,9 +111,11 @@ describe("acceso", () => {
 
 describe("aislamiento por usuario", () => {
   it("editar y borrar siempre filtran por el usuario", async () => {
-    m.prisma.cifra_debts.updateMany.mockResolvedValue({ count: 1 });
+    m.prisma.cifra_debts.findFirst.mockResolvedValue({ cdebt_id: "d1", cdebt_card_id: "c1", cdebt_balance_cents: 0 });
+    m.tx.cifra_debts.updateMany.mockResolvedValue({ count: 1 });
     await saveDebt(form({ ...debtForm, id: "d1" }));
-    expect(m.prisma.cifra_debts.updateMany).toHaveBeenCalledWith(
+    expect(m.prisma.cifra_debts.findFirst).toHaveBeenCalledWith({ where: { cdebt_id: "d1", cdebt_user_id: "u1" } });
+    expect(m.tx.cifra_debts.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: { cdebt_id: "d1", cdebt_user_id: "u1" } }),
     );
     await deleteAccount("a1");
@@ -119,10 +125,11 @@ describe("aislamiento por usuario", () => {
   });
 
   it("editar algo ajeno falla sin crear nada", async () => {
-    m.prisma.cifra_debts.updateMany.mockResolvedValue({ count: 0 });
+    m.prisma.cifra_debts.findFirst.mockResolvedValue(null);
     const r = await saveDebt(form({ ...debtForm, id: "ajena" }));
     expect(r.success).toBe(false);
-    expect(m.prisma.cifra_debts.create).not.toHaveBeenCalled();
+    expect(m.tx.cifra_debts.create).not.toHaveBeenCalled();
+    expect(m.tx.cifra_debts.updateMany).not.toHaveBeenCalled();
   });
 });
 
@@ -131,7 +138,7 @@ describe("validación", () => {
     const r = await saveDebt(form({ ...debtForm, nextDue: "2026-02-30", balance: "-3" }));
     expect(r.success).toBe(false);
     expect(Object.keys(r.fieldErrors ?? {})).toEqual(expect.arrayContaining(["nextDue", "balance"]));
-    expect(m.prisma.cifra_debts.create).not.toHaveBeenCalled();
+    expect(m.tx.cifra_debts.create).not.toHaveBeenCalled();
   });
 
   it("guarda el movimiento en centavos y manda analítica sin importes", async () => {
@@ -146,14 +153,13 @@ describe("validación", () => {
 
 describe("observaciones", () => {
   it("se guardan con la deuda y vacías se guardan como nulo", async () => {
-    m.prisma.cifra_debts.create.mockResolvedValue({});
     await saveDebt(form({ ...debtForm, notes: "Solo compras en línea" }));
-    expect(m.prisma.cifra_debts.create).toHaveBeenCalledWith({
+    expect(m.tx.cifra_debts.create).toHaveBeenCalledWith({
       data: expect.objectContaining({ cdebt_notes: "Solo compras en línea" }),
     });
-    m.prisma.cifra_debts.create.mockClear();
+    m.tx.cifra_debts.create.mockClear();
     await saveDebt(form({ ...debtForm, notes: "  " }));
-    expect(m.prisma.cifra_debts.create).toHaveBeenCalledWith({
+    expect(m.tx.cifra_debts.create).toHaveBeenCalledWith({
       data: expect.objectContaining({ cdebt_notes: null }),
     });
   });
@@ -162,9 +168,10 @@ describe("observaciones", () => {
 describe("guardar una deuda", () => {
   it("guarda la fecha real del próximo pago y el ancla; la tarjeta queda con pago por confirmar", async () => {
     await saveDebt(form(debtForm));
-    expect(m.prisma.cifra_debts.create).toHaveBeenCalledWith({
+    expect(m.tx.cifra_debts.create).toHaveBeenCalledWith({
       data: expect.objectContaining({
         cdebt_user_id: "u1",
+        cdebt_card_id: "c1",
         cdebt_balance_cents: 500000,
         cdebt_credit_limit_cents: 2000000,
         cdebt_next_due_on: utc(2026, 11, 9),
@@ -181,7 +188,7 @@ describe("guardar una deuda", () => {
 
   it("«último día del mes» fija la fecha al fin de ese mes", async () => {
     await saveDebt(form({ ...debtForm, nextDue: "2026-02-10", dueLastDay: "on", nextCut: "" }));
-    expect(m.prisma.cifra_debts.create).toHaveBeenCalledWith({
+    expect(m.tx.cifra_debts.create).toHaveBeenCalledWith({
       data: expect.objectContaining({ cdebt_next_due_on: utc(2026, 2, 28), cdebt_due_day: 31, cdebt_due_last_day: true, cdebt_next_cut_on: null }),
     });
   });
@@ -381,5 +388,196 @@ describe("borrar un pago", () => {
     m.tx.cifra_transactions.findFirst.mockResolvedValue(null);
     await deleteTransaction("ajeno");
     expect(m.tx.cifra_transactions.delete).not.toHaveBeenCalled();
+  });
+});
+
+describe("tarjetas", () => {
+  const expenseForm = {
+    flow: "expense",
+    category: "alimentos",
+    amount: "$1,200.00",
+    date: "2026-11-03",
+    description: "Súper",
+  };
+  const cardDebt = {
+    ...dueDebt,
+    cdebt_card_id: "c1",
+    cdebt_balance_cents: 365000,
+    cdebt_next_payment_cents: null,
+  };
+
+  it("alta rápida: crea la tarjeta con su deuda en cero «por completar»", async () => {
+    const r = await saveCard(form({ name: "Tarjeta Azul", last4: "4321" }));
+    expect(r).toEqual({ success: true, id: "c1" });
+    expect(m.tx.cifra_cards.create).toHaveBeenCalledWith({
+      data: { ccard_user_id: "u1", ccard_name: "Tarjeta Azul", ccard_last4: "4321" },
+    });
+    expect(m.tx.cifra_debts.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ cdebt_card_id: "c1", cdebt_kind: "credit_card", cdebt_balance_cents: 0 }),
+    });
+    expect(m.tx.cifra_debts.create.mock.calls[0][0].data).not.toHaveProperty("cdebt_next_due_on");
+  });
+
+  it("los últimos 4 dígitos solo aceptan 4 números", async () => {
+    const r = await saveCard(form({ name: "Azul", last4: "12" }));
+    expect(r.success).toBe(false);
+    expect(r.fieldErrors).toHaveProperty("last4");
+  });
+
+  it("una compra con tarjeta suma al saldo de su deuda", async () => {
+    m.tx.cifra_cards.findFirst.mockResolvedValue({ ccard_id: "c1" });
+    const r = await addTransaction(form({ ...expenseForm, cardId: "c1" }));
+    expect(r.success).toBe(true);
+    expect(m.tx.cifra_cards.findFirst).toHaveBeenCalledWith({ where: { ccard_id: "c1", ccard_user_id: "u1" } });
+    expect(m.tx.cifra_transactions.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ ctrx_card_id: "c1", ctrx_amount_cents: 120000 }),
+    });
+    expect(m.tx.cifra_debts.updateMany).toHaveBeenCalledWith({
+      where: { cdebt_card_id: "c1", cdebt_user_id: "u1" },
+      data: { cdebt_balance_cents: { increment: 120000 }, cdebt_paid_off: false },
+    });
+    expect(m.trackServer.mock.calls[0][2]).toMatchObject({ withCard: true });
+  });
+
+  it("una tarjeta ajena no existe para el usuario", async () => {
+    m.tx.cifra_cards.findFirst.mockResolvedValue(null);
+    const r = await addTransaction(form({ ...expenseForm, cardId: "ajena" }));
+    expect(r.success).toBe(false);
+    expect(m.tx.cifra_transactions.create).not.toHaveBeenCalled();
+    expect(m.tx.cifra_debts.updateMany).not.toHaveBeenCalled();
+  });
+
+  it("un ingreso no puede ir con tarjeta", async () => {
+    const r = await addTransaction(form({ flow: "income", category: "sueldo", amount: "10", date: "2026-11-03", description: "", cardId: "c1" }));
+    expect(r.success).toBe(false);
+    expect(r.fieldErrors).toHaveProperty("cardId");
+  });
+
+  it("pagar la tarjeta: transferencia + intereses como gasto, saldo baja solo el capital", async () => {
+    m.tx.cifra_debts.findFirst.mockResolvedValue(cardDebt);
+    m.tx.cifra_transactions.create.mockResolvedValueOnce({ ctrx_id: "p1" });
+    const r = await markPaid("debt", "d1", form({ amount: "$1,950.00", date: "2026-11-09", interest: "$100.00" }));
+    expect(r.success).toBe(true);
+    const calls = m.tx.cifra_transactions.create.mock.calls.map((c) => c[0].data);
+    expect(calls).toHaveLength(2);
+    expect(calls[0]).toMatchObject({
+      ctrx_amount_cents: 195000,
+      ctrx_is_transfer: true,
+      ctrx_card_id: "c1",
+      ctrx_applied_to_debt_cents: 185000,
+    });
+    expect(calls[1]).toMatchObject({
+      ctrx_category: "intereses",
+      ctrx_amount_cents: 10000,
+      ctrx_payment_id: "p1",
+    });
+    expect(m.tx.cifra_debts.update).toHaveBeenCalledWith({
+      where: { cdebt_id: "d1" },
+      data: expect.objectContaining({ cdebt_balance_cents: 180000, cdebt_paid_off: false }),
+    });
+  });
+
+  it("pagar más que el saldo conocido: lo que sobra es «Compras sin detalle»", async () => {
+    m.tx.cifra_debts.findFirst.mockResolvedValue({ ...cardDebt, cdebt_balance_cents: 50000 });
+    m.tx.cifra_transactions.create.mockResolvedValueOnce({ ctrx_id: "p1" });
+    await markPaid("debt", "d1", form({ amount: "$5,000.00", date: "2026-11-09" }));
+    const calls = m.tx.cifra_transactions.create.mock.calls.map((c) => c[0].data);
+    expect(calls).toHaveLength(2);
+    expect(calls[1]).toMatchObject({
+      ctrx_category: "sin_detalle",
+      ctrx_amount_cents: 450000,
+      ctrx_payment_id: "p1",
+      ctrx_card_id: "c1",
+    });
+    expect(m.tx.cifra_debts.update).toHaveBeenCalledWith({
+      where: { cdebt_id: "d1" },
+      data: expect.objectContaining({ cdebt_balance_cents: 0 }),
+    });
+  });
+
+  it("la tarjeta liquidada sigue su ciclo con la siguiente fecha", async () => {
+    m.tx.cifra_debts.findFirst.mockResolvedValue({ ...cardDebt, cdebt_balance_cents: 50000 });
+    m.tx.cifra_transactions.create.mockResolvedValueOnce({ ctrx_id: "p1" });
+    await markPaid("debt", "d1", form({ amount: "$500.00", date: "2026-11-09" }));
+    expect(m.tx.cifra_debts.update).toHaveBeenCalledWith({
+      where: { cdebt_id: "d1" },
+      data: expect.objectContaining({ cdebt_paid_off: false, cdebt_next_due_on: utc(2026, 12, 9) }),
+    });
+  });
+
+  it("los intereses no pueden pasar del pago", async () => {
+    const r = await markPaid("debt", "d1", form({ amount: "$100.00", date: "2026-11-09", interest: "$500.00" }));
+    expect(r.success).toBe(false);
+    expect(r.fieldErrors).toHaveProperty("interest");
+  });
+
+  it("una deuda sin tarjeta se paga como siempre: un solo egreso que cuenta como gasto", async () => {
+    m.tx.cifra_debts.findFirst.mockResolvedValue(dueDebt);
+    await markPaid("debt", "d1", form(payForm));
+    expect(m.tx.cifra_transactions.create).toHaveBeenCalledTimes(1);
+    expect(m.tx.cifra_transactions.create.mock.calls[0][0].data).toMatchObject({ ctrx_is_transfer: false, ctrx_card_id: null });
+  });
+
+  it("borrar una compra con tarjeta devuelve el saldo, sin bajar de cero", async () => {
+    m.tx.cifra_transactions.findFirst.mockResolvedValue({
+      ctrx_id: "t9",
+      ctrx_card_id: "c1",
+      ctrx_is_transfer: false,
+      ctrx_payment_id: null,
+      ctrx_amount_cents: 120000,
+    });
+    m.tx.cifra_debts.findFirst.mockResolvedValue({ cdebt_id: "d1", cdebt_card_id: "c1", cdebt_balance_cents: 50000 });
+    await deleteTransaction("t9");
+    expect(m.tx.cifra_debts.updateMany).toHaveBeenCalledWith({
+      where: { cdebt_id: "d1", cdebt_user_id: "u1" },
+      data: { cdebt_balance_cents: 0 },
+    });
+  });
+
+  it("borrar un pago de tarjeta restaura el saldo (las filas derivadas caen en cascada en la base)", async () => {
+    m.tx.cifra_transactions.findFirst.mockResolvedValue({
+      ctrx_id: "p1",
+      ctrx_debt_id: "d1",
+      ctrx_card_id: "c1",
+      ctrx_is_transfer: true,
+      ctrx_payment_id: null,
+      ctrx_applied_to_debt_cents: 185000,
+      ctrx_prev_due_on: utc(2026, 11, 9),
+      ctrx_prev_cut_on: null,
+      ctrx_prev_amount_cents: null,
+      ctrx_amount_cents: 195000,
+    });
+    m.tx.cifra_debts.findFirst.mockResolvedValue({ ...cardDebt, cdebt_next_due_on: utc(2026, 12, 9) });
+    await deleteTransaction("p1");
+    expect(m.tx.cifra_debts.updateMany).toHaveBeenCalledWith({
+      where: { cdebt_id: "d1", cdebt_user_id: "u1" },
+      data: expect.objectContaining({ cdebt_balance_cents: { increment: 185000 } }),
+    });
+  });
+
+  it("capturar el estado de cuenta con más saldo registra la diferencia como compras sin detalle", async () => {
+    m.prisma.cifra_debts.findFirst.mockResolvedValue({ ...cardDebt, cdebt_balance_cents: 100000, cdebt_next_cut_on: null, cdebt_cut_day: null });
+    await setPendingAmount("debt", "d1", form({ amount: "1,800", balance: "2,800" }));
+    expect(m.prisma.cifra_transactions.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        ctrx_category: "sin_detalle",
+        ctrx_amount_cents: 180000,
+        ctrx_card_id: "c1",
+        ctrx_user_id: "u1",
+      }),
+    });
+  });
+
+  it("si el saldo capturado baja, solo cambia el saldo", async () => {
+    m.prisma.cifra_debts.findFirst.mockResolvedValue({ ...cardDebt, cdebt_balance_cents: 500000, cdebt_next_cut_on: null, cdebt_cut_day: null });
+    await setPendingAmount("debt", "d1", form({ amount: "1,800", balance: "2,800" }));
+    expect(m.prisma.cifra_transactions.create).not.toHaveBeenCalled();
+  });
+
+  it("borrar la deuda de una tarjeta borra también la tarjeta", async () => {
+    m.prisma.cifra_debts.findFirst.mockResolvedValue({ cdebt_card_id: "c1" });
+    const { deleteDebt } = await import("../actions");
+    await deleteDebt("d1");
+    expect(m.prisma.cifra_cards.deleteMany).toHaveBeenCalledWith({ where: { ccard_id: "c1", ccard_user_id: "u1" } });
   });
 });

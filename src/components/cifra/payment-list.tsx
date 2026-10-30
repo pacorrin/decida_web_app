@@ -71,6 +71,7 @@ export function PaymentList({
                   id={p.id}
                   name={p.name}
                   suggestedCents={p.amountCents}
+                  cardBalanceCents={p.cardBalanceCents}
                   today={todayValue}
                 />
               </>

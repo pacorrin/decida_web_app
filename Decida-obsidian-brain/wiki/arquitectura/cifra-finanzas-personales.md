@@ -37,13 +37,23 @@ Botón arriba a la derecha de Cifra. Diálogo de dos pasos: (1) fotos (cámara o
 
 **Rediseño (2026-10-30):** para que no se confunda con el inicio de Decida, `/cifra` ya no usa `SiteHeader` ni `SiteFooter`: tiene su propia barra («Decida / Cifra beta»), hero partido en verde profundo con una demo viva (`ticket-demo.tsx`: foto, voz o texto → movimiento propuesto), tablero de pagos con filas desplegables, selector de plan (`pricing-selector.tsx`), FAQ en mosaicos y pie propio con la palabra «Cifra» grande. Entradas de scroll solo con transform (`.cifra-in`, `.cifra-line` en `globals.css`). Sin fotos reales: la imagen de la página es su propia interfaz (`data-ui`). Pendiente: contraste del texto blanco sobre el botón coral (2.7:1, es el estilo de CTA de la marca).
 
+## Tarjetas de crédito (2026-10-30)
+Una tarjeta es una entidad (`cifra_cards`: nombre y últimos 4) que **solo guarda identidad**; saldo, límite, corte y fecha de pago siguen en su deuda (`cifra_debts.cdebt_card_id`, única). Toda tarjeta tiene su deuda `credit_card`; se crea al capturar la deuda o al vuelo desde un egreso (deuda en cero «Por completar», sin fecha de pago, que se completa con «Completar»).
+- **Compra con tarjeta** (`ctrx_card_id`): es un gasto en su fecha y categoría y **sube el saldo** de la tarjeta; borrarla lo baja.
+- **Pago de tarjeta = transferencia** (`ctrx_is_transfer`): no cuenta como egreso. `splitCardPayment` (`src/lib/cifra/card-payment.ts`) reparte el pago: lo que baja el saldo (nunca más que el saldo conocido), los intereses que capturó la persona (campo opcional, gasto «Intereses y comisiones») y lo que excede el saldo (gasto «Compras sin detalle»). Las filas derivadas llevan `ctrx_payment_id` y se borran en cascada con el pago; en Movimientos se anidan bajo él.
+- **Ajustar el saldo al alza** (editar deuda o «Capturar monto») registra la diferencia como «Compras sin detalle»; a la baja solo cambia el saldo. El desvío del saldo es responsabilidad de la persona.
+- Las tarjetas siguen su ciclo al llegar a cero. El Resumen muestra «Pendiente en tarjetas».
+- Las categorías `intereses` y `sin_detalle` son del sistema: la IA de captura no las propone (`SYSTEM_EXPENSE_CATEGORIES`).
+- Migración `20261102000000_cifra_cards` (convierte cada deuda de tarjeta existente en tarjeta con el mismo id). **Debe aplicarse en producción antes de pasar a `main`.**
+- Verificado en navegador con el ejemplo 1,850 + 1,200 + 600 → pago 1,950 con 100 de intereses: saldo 1,800, egresos 1,900, borrar el pago restaura saldo y fecha, alta de tarjeta al vuelo. El caso parcial (saldo 500, pago 5,000) y la vista móvil se cubren con pruebas unitarias.
+
 ## Decisiones (2026-10-30, del usuario)
 - Alcance con **saldos incluidos**; **«Editar y pagar»** crea el egreso (nada se genera solo).
 - **Requiere plan activo** (mínimo Explora, `hasFullAccess`). Sin plan se ve la pantalla de planes; los datos se conservan y se pueden borrar.
 - **Categorías fijas** (`src/lib/cifra/constants.ts`); **sin límites** por usuario (no hay costo de IA).
 
 ## Datos
-Tablas `cifra_accounts`, `cifra_debts`, `cifra_fixed_expenses`, `cifra_transactions`; enums `cifra_flow`, `cifra_account_kind`, `cifra_debt_kind`. Migración `20261101000000_cifra` (editada, aún no está en `main`).
+Tablas `cifra_accounts`, `cifra_cards`, `cifra_debts`, `cifra_fixed_expenses`, `cifra_transactions`; enums `cifra_flow`, `cifra_account_kind`, `cifra_debt_kind`. Migración `20261101000000_cifra` (editada, aún no está en `main`).
 - **Importes en centavos** (`Int`, MXN), tope de 20 millones. Fechas `@db.Date`; «hoy» en hora de Ciudad de México (`todayInMexico`).
 - Única `(debt_id, period)` y `(fixed_expense_id, period)`: un vencimiento no se marca pagado dos veces.
 - Tablas cuelgan de `users` con cascada; deudas y gastos borrados dejan sus movimientos (`SetNull`).

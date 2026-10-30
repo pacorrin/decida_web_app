@@ -635,3 +635,6 @@ Hero partido con demo viva, barra y pie propios, tablero de pagos, selector de p
 
 ## [2026-10-30] ingest | Rediseño del inicio y navbar/pie únicos
 El inicio se rehízo (hero con diagnóstico vivo `hero-verdict.tsx`, secciones sin tarjetas con borde). `SiteHeader` y `SiteFooter` son ahora los únicos del sitio público (inicio, Cifra, legales, ejemplo, cuenta); se eliminaron `ReportHeader`, la barra y el pie propios de Cifra y la segunda fila de secciones. Ver [[arquitectura/cifra-finanzas-personales]].
+
+## [2026-10-30] ingest | Tarjetas de crédito en Cifra
+Tarjeta como entidad ligada a su deuda; compras con tarjeta suben el saldo, el pago es transferencia y solo intereses y «Compras sin detalle» cuentan como gasto. Migración nueva pendiente en producción. Ver [[arquitectura/cifra-finanzas-personales]].

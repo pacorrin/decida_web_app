@@ -14,6 +14,8 @@ const TONES = {
   blue: "bg-blue-500/15 text-blue-900 dark:text-blue-200",
   fuchsia: "bg-fuchsia-500/15 text-fuchsia-900 dark:text-fuchsia-200",
   pink: "bg-pink-500/15 text-pink-900 dark:text-pink-200",
+  violet: "bg-violet-500/15 text-violet-900 dark:text-violet-200",
+  stone: "bg-stone-500/15 text-stone-900 dark:text-stone-200",
 } as const;
 
 export type Tone = keyof typeof TONES;
@@ -44,6 +46,8 @@ const EXPENSE_CATEGORY_TONE: Record<string, Tone> = {
   deudas: "orange",
   suscripciones: "fuchsia",
   ocio: "cyan",
+  intereses: "violet",
+  sin_detalle: "stone",
   otros: "slate",
 };
 

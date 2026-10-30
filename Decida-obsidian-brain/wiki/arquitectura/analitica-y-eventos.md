@@ -32,7 +32,7 @@ Cada cambio de página manda `$pageview` con la URL, así que las visitas a cada
 | `onboarding_completed` | Terminó el último paso (`evaluacion`) | — |
 | `report_viewed` | Vio el reporte | — |
 | `report_generation_failed` | Falló la generación | `stage` (`evaluation` / `retry`) |
-| `cifra_item_created` | Agregó un saldo, deuda o gasto fijo | `type`, `kind` o `category` (**nunca montos ni nombres**) |
+| `cifra_item_created` | Agregó un saldo, deuda o gasto fijo | `type` (incluye `card`), `kind` o `category` (**nunca montos ni nombres**) |
 | `cifra_transaction_logged` | Registró un ingreso o egreso | `flow`, `category` |
 | `cifra_payment_marked` | Marcó un pago como pagado | `type` (`debt` / `fixed`) |
 | `cifra_data_deleted` | Borró todos sus datos de Cifra | — |

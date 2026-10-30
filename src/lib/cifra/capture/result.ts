@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { categoriesFor, type CifraFlow } from "../constants";
+import { categoriesFor, SYSTEM_EXPENSE_CATEGORIES, type CifraFlow } from "../constants";
 import { type CalendarDate, compareDates, formatDateInput, parseDateInput } from "../dates";
 import { parseMoneyToCents } from "../money";
 
@@ -51,7 +51,11 @@ export function normalizeCapture(raw: unknown, today: CalendarDate): CaptureProp
   }
   if (!amount) warnings.push("No pudimos leer el monto. Escríbelo para continuar.");
 
-  const category = categoriesFor(flow).some((c) => c.code === r.category) ? r.category! : "otros";
+  // Intereses y «compras sin detalle» las genera Cifra al pagar una tarjeta; la IA nunca las elige.
+  const category =
+    categoriesFor(flow).some((c) => c.code === r.category) && !SYSTEM_EXPENSE_CATEGORIES.includes(r.category!)
+      ? r.category!
+      : "otros";
 
   let date = formatDateInput(today);
   const parsedDate = r.date ? parseDateInput(r.date) : null;

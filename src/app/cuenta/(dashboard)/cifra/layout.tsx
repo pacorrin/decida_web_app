@@ -11,6 +11,7 @@ import { CREDIT_COST_CIFRA_CAPTURE } from "@/lib/credits/costs";
 import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
 import { getCurrentUser } from "@/lib/auth/session-server";
 import { prisma } from "@/lib/prisma";
+import { getCardOptions } from "@/lib/cifra/queries";
 import { deleteAllCifraData } from "./actions";
 
 export const metadata = {
@@ -93,6 +94,7 @@ export default async function CifraLayout({ children }: { children: React.ReactN
             credits={spendableBalance(user)}
             cost={CREDIT_COST_CIFRA_CAPTURE}
             today={formatDateInput(todayInMexico())}
+            cardOptions={await getCardOptions(user.user_id)}
           />
         )}
       </div>

@@ -20,6 +20,8 @@ export type DueItem = {
   variable: boolean;
   dueDay: number;
   dueLastDay: boolean;
+  /** Saldo de la deuda cuando es una tarjeta; null en lo demás. Sirve para repartir el pago. */
+  cardBalanceCents?: number | null;
 };
 
 export type UpcomingPayment = {
@@ -32,6 +34,7 @@ export type UpcomingPayment = {
   overdue: boolean;
   /** Es el pago que se puede marcar ahora; los siguientes son una proyección. */
   actionable: boolean;
+  cardBalanceCents: number | null;
 };
 
 const MAX_OCCURRENCES = 60;
@@ -67,6 +70,7 @@ export function upcomingPayments(
           amountCents: first ? item.amountCents : item.variable ? null : item.amountCents,
           overdue,
           actionable: first,
+          cardBalanceCents: item.cardBalanceCents ?? null,
         });
       }
       if (!item.recurring) break;

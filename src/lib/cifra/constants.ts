@@ -10,8 +10,17 @@ export const EXPENSE_CATEGORIES = [
   { code: "deudas", label: "Pago de deudas" },
   { code: "suscripciones", label: "Suscripciones" },
   { code: "ocio", label: "Ocio y compras" },
+  { code: "intereses", label: "Intereses y comisiones" },
+  { code: "sin_detalle", label: "Compras sin detalle" },
   { code: "otros", label: "Otros" },
 ] as const;
+
+/** Categorías que Cifra asigna sola: la captura inteligente nunca las propone. */
+export const SYSTEM_EXPENSE_CATEGORIES: readonly string[] = ["intereses", "sin_detalle"];
+
+/** Categoría del gasto que no se capturó, derivado de un pago o ajuste de tarjeta. */
+export const UNDETAILED_CATEGORY = "sin_detalle";
+export const INTEREST_CATEGORY = "intereses";
 
 export const INCOME_CATEGORIES = [
   { code: "sueldo", label: "Sueldo" },

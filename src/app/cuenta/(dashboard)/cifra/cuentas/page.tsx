@@ -190,7 +190,10 @@ export default async function CifraCuentasPage() {
           return (
             <Card key={d.id} className={cn(d.paidOff && "opacity-70")}>
               <div className="flex items-start justify-between gap-3">
-                <p className="min-w-0 truncate font-medium">{d.paidOff ? `${d.name} (liquidada)` : d.name}</p>
+                <p className="min-w-0 truncate font-medium">
+                  {d.paidOff ? `${d.name} (liquidada)` : d.name}
+                  {d.last4 && <span className="ml-1.5 font-normal text-muted-foreground">·· {d.last4}</span>}
+                </p>
                 <CardActions>
                   <DebtDialog item={d} />
                   <ActionButton action={deleteDebt.bind(null, d.id)} label="Borrar" {...deleteButton} confirmText={`¿Borrar «${d.name}»?`} successMessage="Deuda borrada" />
@@ -201,6 +204,7 @@ export default async function CifraCuentasPage() {
                   <Chip className={debtKindColor(d.kind)}>{label(DEBT_KINDS, d.kind)}</Chip>
                   {d.annualRatePct != null && <Chip>{d.annualRatePct}% anual</Chip>}
                   {!d.recurring && <Chip>Pago único</Chip>}
+                  {d.incomplete && <Chip className="bg-secondary/15 text-foreground">Por completar</Chip>}
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-muted-foreground">Saldo</p>
@@ -226,7 +230,13 @@ export default async function CifraCuentasPage() {
                   )}
                 </div>
               ) : (
-                !d.paidOff && <p className="rounded-xl bg-muted/40 px-4 py-3 text-muted-foreground">Sin pago pendiente</p>
+                !d.paidOff && (
+                  <p className="rounded-xl bg-muted/40 px-4 py-3 text-muted-foreground">
+                    {d.incomplete
+                      ? "Agrega su fecha de pago y límite con «Completar» para ver sus vencimientos."
+                      : "Sin pago pendiente"}
+                  </p>
+                )
               )}
 
               {usage != null && d.creditLimitCents != null && (

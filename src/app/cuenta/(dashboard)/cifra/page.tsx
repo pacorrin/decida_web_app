@@ -98,8 +98,11 @@ export default async function CifraResumenPage() {
             testId="cifra-balance"
           />
         </div>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className={cn("grid gap-3 sm:grid-cols-2", o.cardsPendingCents > 0 && "lg:grid-cols-3")}>
           <Stat label="Lo que debes" value={formatMxn(o.debtTotalCents)} testId="cifra-debt-total" />
+          {o.cardsPendingCents > 0 && (
+            <Stat label="Pendiente en tarjetas" value={formatMxn(o.cardsPendingCents)} testId="cifra-cards-pending" />
+          )}
           <Stat label="Saldo en tus cuentas" value={formatMxn(o.accountsTotalCents)} testId="cifra-accounts-total" />
         </div>
       </section>

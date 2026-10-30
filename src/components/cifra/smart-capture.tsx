@@ -15,6 +15,7 @@ import type { CaptureProposal } from "@/lib/cifra/capture/result";
 import { categoriesFor, type CifraFlow } from "@/lib/cifra/constants";
 import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
 import { cn } from "@/lib/utils";
+import { CardSelect, type CardOptions } from "./card-select";
 import { NativeSelect } from "./form-kit";
 import { MoneyInput } from "./inputs";
 import { newId } from "@/lib/new-id";
@@ -61,11 +62,13 @@ export function SmartCapture({
   credits,
   cost,
   today,
+  cardOptions,
 }: {
   consented: boolean;
   credits: number;
   cost: number;
   today: string;
+  cardOptions: CardOptions;
 }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>(consented ? "input" : "consent");
@@ -482,6 +485,8 @@ export function SmartCapture({
                 {err("description") && <FieldError>{err("description")}</FieldError>}
               </Field>
             </div>
+
+            {flow === "expense" && <CardSelect {...cardOptions} />}
 
             {message && (
               <p role="alert" className="text-sm text-destructive">

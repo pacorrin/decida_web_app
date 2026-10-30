@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { categoriesFor, type CifraFlow } from "@/lib/cifra/constants";
 import { addTransaction } from "@/app/cuenta/(dashboard)/cifra/actions";
+import { CardSelect, type CardOptions } from "./card-select";
 import { NativeSelect } from "./form-kit";
 import { MoneyInput } from "./inputs";
 import { cn } from "@/lib/utils";
@@ -18,7 +19,7 @@ const FLOWS: { code: CifraFlow; label: string }[] = [
 ];
 
 /** Alta rápida de un ingreso o egreso; al guardar se limpia y queda listo para el siguiente. */
-export function TransactionForm({ today }: { today: string }) {
+export function TransactionForm({ today, cardOptions }: { today: string; cardOptions: CardOptions }) {
   const [flow, setFlow] = useState<CifraFlow>("expense");
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [message, setMessage] = useState<string | null>(null);
@@ -100,6 +101,12 @@ export function TransactionForm({ today }: { today: string }) {
           {err("description") && <FieldError>{err("description")}</FieldError>}
         </Field>
       </div>
+
+      {flow === "expense" && (
+        <div className="max-w-sm">
+          <CardSelect key={`${resetKey}-${cardOptions.lastCardId}`} {...cardOptions} />
+        </div>
+      )}
 
       {message && (
         <p role="alert" className="text-sm text-destructive">

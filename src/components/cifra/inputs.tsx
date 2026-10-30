@@ -28,12 +28,14 @@ function FormattedInput({
   format,
   prefix,
   suffix,
+  onValueChange,
 }: {
   id: string;
   name: string;
   defaultValue?: string;
   placeholder?: string;
   invalid?: boolean;
+  onValueChange?: (value: string) => void;
   format: (raw: string) => string;
   prefix?: string;
   suffix?: string;
@@ -71,6 +73,7 @@ function FormattedInput({
           const before = significantBefore(raw, e.target.selectionStart ?? raw.length);
           const next = format(raw);
           setValue(next);
+          onValueChange?.(next);
           caret.current = positionAfter(next, before);
         }}
       />
@@ -90,6 +93,7 @@ export function MoneyInput(props: {
   defaultValue?: string;
   placeholder?: string;
   invalid?: boolean;
+  onValueChange?: (value: string) => void;
 }) {
   return <FormattedInput {...props} format={formatMoneyInput} prefix="$" placeholder={props.placeholder ?? "0.00"} />;
 }

@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createAiObservabilityContext, generateVisionJson } from "@/lib/ai/openai";
-import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "../constants";
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, SYSTEM_EXPENSE_CATEGORIES } from "../constants";
 import { type CalendarDate, formatDateInput } from "../dates";
 import { type CaptureProposal, normalizeCapture } from "./result";
 
@@ -36,7 +36,7 @@ Reglas:
 - amount: el TOTAL pagado o recibido, en pesos, como número positivo (sin signo ni símbolo). En un ticket, el total final, no un subtotal ni el pago en efectivo ni el cambio. Si no se lee con certeza, usa null.
 - category: exactamente uno de los códigos del catálogo de su tipo, con los ejemplos de lo que incluye cada uno.
   Catálogo de egresos (flow "expense"):
-${list(EXPENSE_CATEGORIES)}
+${list(EXPENSE_CATEGORIES.filter((c) => !SYSTEM_EXPENSE_CATEGORIES.includes(c.code)))}
   Catálogo de ingresos (flow "income"):
 ${list(INCOME_CATEGORIES)}
   Elige la categoría MÁS ESPECÍFICA para lo que se compró o pagó, según el comercio y los conceptos del ticket (por ejemplo, un ticket de gas es "servicios", no "vivienda"). Si el ticket mezcla conceptos, usa el de mayor importe. Usa "otros" solo si ninguna categoría encaja.

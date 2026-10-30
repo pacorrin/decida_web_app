@@ -10,7 +10,7 @@ import {
   todayInMexico,
 } from "@/lib/cifra/dates";
 import { formatMxn } from "@/lib/cifra/money";
-import { getMonthTransactions } from "@/lib/cifra/queries";
+import { getCardOptions, getMonthTransactions } from "@/lib/cifra/queries";
 import { summarizeTransactions } from "@/lib/cifra/summary";
 
 const monthName = new Intl.DateTimeFormat("es-MX", { month: "long", year: "numeric", timeZone: "UTC" });
@@ -32,14 +32,19 @@ export default async function CifraMovimientosPage({
   const today = todayInMexico();
   const { mes } = await searchParams;
   const period = mes && monthRange(mes) ? mes : periodOf(today);
-  const rows = await getMonthTransactions(access.userId, period);
-  const summary = summarizeTransactions(rows.map((r) => ({ flow: r.flow, amountCents: r.amountCents })));
+  const [rows, cardOptions] = await Promise.all([
+    getMonthTransactions(access.userId, period),
+    getCardOptions(access.userId),
+  ]);
+  const summary = summarizeTransactions(
+    rows.flatMap((r) => [r, ...r.parts]).map((r) => ({ flow: r.flow, amountCents: r.amountCents, isTransfer: r.isTransfer })),
+  );
   const [y, m] = period.split("-").map(Number);
   const title = monthName.format(new Date(Date.UTC(y, m - 1, 1)));
 
   return (
     <div className="space-y-8">
-      <TransactionForm today={formatDateInput(today)} />
+      <TransactionForm today={formatDateInput(today)} cardOptions={cardOptions} />
 
       <section aria-labelledby="movs" className="space-y-3">
         <div className="flex items-center justify-between gap-3">

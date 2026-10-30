@@ -3,14 +3,17 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/ai/openai", () => ({ generateVisionJson: vi.fn(), createAiObservabilityContext: vi.fn() }));
 
-import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "../../constants";
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, SYSTEM_EXPENSE_CATEGORIES } from "../../constants";
 import { buildCaptureSystemPrompt } from "../extract";
 
 const prompt = buildCaptureSystemPrompt({ year: 2026, month: 10, day: 30 });
 
 describe("prompt de captura", () => {
   it("incluye todo el catálogo de egresos e ingresos con su código", () => {
-    for (const c of [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES]) expect(prompt).toContain(`- ${c.code} (`);
+    for (const c of [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES]) {
+      if (SYSTEM_EXPENSE_CATEGORIES.includes(c.code)) expect(prompt).not.toContain(`- ${c.code} (`);
+      else expect(prompt).toContain(`- ${c.code} (`);
+    }
   });
 
   it("explica qué incluye cada categoría: el gas es servicios, no vivienda", () => {
