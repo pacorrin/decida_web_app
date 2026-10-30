@@ -222,3 +222,43 @@
     }
   }
 }
+
+/* Cifra: gráfica decorativa del hero. Con movimiento reducido se ve ya dibujada. */
+.cifra-bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+}
+
+@keyframes cifra-bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes cifra-line-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.cifra-chart-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cifra-bar {
+    animation: cifra-bar-grow 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--cifra-bar-delay, 0s);
+  }
+
+  .cifra-chart-line {
+    animation: cifra-line-draw 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.5s both;
+  }
+}

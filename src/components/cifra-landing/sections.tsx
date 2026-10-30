@@ -4,6 +4,7 @@ import { CREDIT_COST_CIFRA_CAPTURE } from "@/lib/credits/costs";
 import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
 import { BreakdownMock } from "./mocks";
 import { PricingSelector } from "./pricing-selector";
+import { HeroChart } from "./hero-chart";
 import { TicketDemo } from "./ticket-demo";
 import {
   CIFRA_ACCOUNTS,
@@ -28,6 +29,9 @@ export function CifraHero() {
       </div>
 
       <div className="flex flex-col justify-end gap-6 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pb-14">
+        <div className="hidden min-h-40 flex-1 items-end pb-6 lg:flex">
+          <HeroChart />
+        </div>
         <h1 id="cifra-hero" className="text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
           <span className="cifra-line"><span>Tu dinero y tus pagos,</span></span>
           <span className="cifra-line" style={{ "--cifra-delay": "0.11s" } as React.CSSProperties}><span>en orden.</span></span>
