@@ -1,8 +1,34 @@
 import { formatDateInput, formatDayMonth, type CalendarDate } from "@/lib/cifra/dates";
 import { formatMxn } from "@/lib/cifra/money";
 import type { UpcomingPayment } from "@/lib/cifra/upcoming";
+import { categoryLabel, DEBT_KINDS } from "@/lib/cifra/constants";
+import { debtKindColor, expenseCategoryColor } from "@/lib/cifra/colors";
 import { cn } from "@/lib/utils";
 import { AmountDialog, PayDialog } from "./dialogs";
+
+const badge = "rounded-full px-2.5 py-0.5 text-xs font-medium";
+
+/** El tipo de pago (deuda o gasto fijo) resaltado, y el tipo de deuda o la categoría con su color. */
+function PaymentBadges({ payment }: { payment: UpcomingPayment }) {
+  const isDebt = payment.kind === "debt";
+  return (
+    <>
+      <span
+        className={cn(
+          badge,
+          isDebt ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground",
+        )}
+      >
+        {isDebt ? "Deuda" : "Gasto fijo"}
+      </span>
+      <span className={cn(badge, isDebt ? debtKindColor(payment.subtype) : expenseCategoryColor(payment.subtype))}>
+        {isDebt
+          ? (DEBT_KINDS.find((k) => k.code === payment.subtype)?.label ?? payment.subtype)
+          : categoryLabel("expense", payment.subtype)}
+      </span>
+    </>
+  );
+}
 
 /** Lista de pagos por fecha, con las acciones de capturar monto y marcar como pagado. */
 export function PaymentList({
@@ -22,10 +48,12 @@ export function PaymentList({
         >
           <div className="min-w-0">
             <p className="truncate font-medium">{p.name}</p>
-            <p className={cn("text-xs", p.overdue ? "text-destructive" : "text-muted-foreground")}>
+            <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+              <PaymentBadges payment={p} />
+            </div>
+            <p className={cn("mt-1.5 text-xs", p.overdue ? "text-destructive" : "text-muted-foreground")}>
               {p.overdue ? "Venció el " : "Vence el "}
               {formatDayMonth(p.dueOn)}
-              {p.kind === "debt" ? " · deuda" : " · gasto fijo"}
               {p.actionable ? "" : " · proyectado"}
             </p>
           </div>

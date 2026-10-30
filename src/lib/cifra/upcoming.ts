@@ -8,6 +8,8 @@ export type DueItem = {
   kind: "debt" | "fixed";
   id: string;
   name: string;
+  /** Tipo de deuda o categoría del gasto fijo (código), para mostrarlo con su color. */
+  subtype: string;
   /** Próxima fecha de pago; null si no tiene un pago pendiente. */
   nextDueOn: CalendarDate | null;
   /** Monto del próximo pago; null = por confirmar. */
@@ -24,6 +26,7 @@ export type UpcomingPayment = {
   kind: "debt" | "fixed";
   id: string;
   name: string;
+  subtype: string;
   dueOn: CalendarDate;
   amountCents: number | null;
   overdue: boolean;
@@ -59,6 +62,7 @@ export function upcomingPayments(
           kind: item.kind,
           id: item.id,
           name: item.name,
+          subtype: item.subtype,
           dueOn: due,
           amountCents: first ? item.amountCents : item.variable ? null : item.amountCents,
           overdue,

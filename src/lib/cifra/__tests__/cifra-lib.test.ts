@@ -129,6 +129,7 @@ const item = (over: Partial<DueItem>): DueItem => ({
   kind: "debt",
   id: "x",
   name: "x",
+  subtype: "credit_card",
   nextDueOn: d(2026, 11, 9),
   amountCents: 1000,
   recurring: true,
