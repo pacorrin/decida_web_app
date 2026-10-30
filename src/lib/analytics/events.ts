@@ -36,6 +36,7 @@ export const ANALYTICS_EVENTS = {
   cifraDataDeleted: "cifra_data_deleted",
   cifraAiConsentGiven: "cifra_ai_consent_given",
   cifraSmartCapture: "cifra_smart_capture",
+  cifraVoiceTranscribed: "cifra_voice_transcribed",
 } as const;
 
 export type AnalyticsEvent =

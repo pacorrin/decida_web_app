@@ -6,8 +6,9 @@ const m = vi.hoisted(() => ({
   spendCredits: vi.fn(),
   refundCreditsByKey: vi.fn(),
   extractCapture: vi.fn(),
+  transcribeAudio: vi.fn(),
   captureException: vi.fn(),
-  prisma: { users: { update: vi.fn() } },
+  prisma: { users: { update: vi.fn() }, credit_ledger: { findUnique: vi.fn() } },
 }));
 
 vi.mock("server-only", () => ({}));
@@ -16,6 +17,10 @@ vi.mock("@/lib/analytics/server", () => ({ trackServer: m.trackServer }));
 vi.mock("@/lib/prisma", () => ({ prisma: m.prisma }));
 vi.mock("@sentry/nextjs", () => ({ captureException: m.captureException }));
 vi.mock("@/lib/cifra/capture/extract", () => ({ extractCapture: m.extractCapture }));
+vi.mock("@/lib/ai/openai", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/ai/openai")>()),
+  transcribeAudio: m.transcribeAudio,
+}));
 vi.mock("@/lib/credits/ledger", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/credits/ledger")>()),
   spendCredits: m.spendCredits,
@@ -23,7 +28,7 @@ vi.mock("@/lib/credits/ledger", async (importOriginal) => ({
 }));
 
 import { InsufficientCreditsError } from "@/lib/credits/ledger";
-import { grantCifraAiConsent, smartCapture } from "../capture-actions";
+import { grantCifraAiConsent, smartCapture, transcribeCapture } from "../capture-actions";
 
 const ID = "11111111-1111-4111-8111-111111111111";
 const future = new Date(Date.now() + 86_400_000);
@@ -49,7 +54,8 @@ const proposal = { flow: "expense", amount: "250.00", category: "alimentos", dat
 beforeEach(() => {
   vi.resetAllMocks();
   m.getCurrentUser.mockResolvedValue(user());
-  m.spendCredits.mockResolvedValue({ created: true });
+  m.spendCredits.mockResolvedValue({ created: true, entry: { cled_balance_after: 197 } });
+  m.prisma.credit_ledger.findUnique.mockResolvedValue(null);
   m.extractCapture.mockResolvedValue(proposal);
 });
 
@@ -128,6 +134,68 @@ describe("captura inteligente", () => {
     const r = await smartCapture(form({ text: "gasto" }));
     expect(r.success).toBe(false);
     expect(m.refundCreditsByKey).toHaveBeenCalledTimes(1);
+  });
+});
+
+function audioForm(over: { type?: string; size?: number } = {}): FormData {
+  const f = new FormData();
+  f.set("captureId", ID);
+  f.set("audio", new File([new Uint8Array(over.size ?? 10)], "voz.webm", { type: over.type ?? "audio/webm" }));
+  return f;
+}
+
+describe("nota de voz", () => {
+  it("transcribe, cobra 3 créditos con la clave de la captura y devuelve el texto", async () => {
+    m.transcribeAudio.mockResolvedValue("  súper walmart ochocientos  ");
+    const r = await transcribeCapture(audioForm());
+    expect(r).toEqual({ success: true, text: "súper walmart ochocientos" });
+    expect(m.spendCredits).toHaveBeenCalledWith(
+      expect.objectContaining({ amount: 3, idempotencyKey: `cifra-capture:u1:${ID}` }),
+    );
+  });
+
+  it("si la captura ya se cobró (voz y luego fotos) no vuelve a cobrar", async () => {
+    m.prisma.credit_ledger.findUnique.mockImplementation(async ({ where }: { where: { cled_idempotency_key: string } }) =>
+      where.cled_idempotency_key.startsWith("refund:") ? null : { cled_balance_after: 197 },
+    );
+    m.transcribeAudio.mockResolvedValue("hola");
+    expect((await transcribeCapture(audioForm())).success).toBe(true);
+    expect((await smartCapture(form({ text: "hola" }))).success).toBe(true);
+    expect(m.spendCredits).not.toHaveBeenCalled();
+  });
+
+  it("si no se entiende nada o falla devuelve los créditos", async () => {
+    m.transcribeAudio.mockResolvedValue("   ");
+    expect((await transcribeCapture(audioForm())).success).toBe(false);
+    expect(m.refundCreditsByKey).toHaveBeenCalledTimes(1);
+
+    m.transcribeAudio.mockRejectedValue(new Error("caído"));
+    expect((await transcribeCapture(audioForm())).success).toBe(false);
+    expect(m.refundCreditsByKey).toHaveBeenCalledTimes(2);
+  });
+
+  it("una captura ya devuelta no se puede reutilizar gratis", async () => {
+    m.prisma.credit_ledger.findUnique.mockResolvedValue({ cled_balance_after: 197 });
+    const r = await transcribeCapture(audioForm());
+    expect(r.success).toBe(false);
+    expect(m.transcribeAudio).not.toHaveBeenCalled();
+    const s2 = await smartCapture(form({ text: "gasto" }));
+    expect(s2.success).toBe(false);
+    expect(m.extractCapture).not.toHaveBeenCalled();
+  });
+
+  it("rechaza audio inválido o grande sin cobrar", async () => {
+    expect((await transcribeCapture(audioForm({ type: "image/png" }))).success).toBe(false);
+    expect((await transcribeCapture(audioForm({ size: 0 }))).success).toBe(false);
+    expect((await transcribeCapture(audioForm({ size: 50_000_000 }))).success).toBe(false);
+    expect(m.spendCredits).not.toHaveBeenCalled();
+  });
+
+  it("sin consentimiento no cobra ni transcribe", async () => {
+    m.getCurrentUser.mockResolvedValue(user({ user_cifra_ai_consent_at: null }));
+    expect(await transcribeCapture(audioForm())).toMatchObject({ success: false, needsConsent: true });
+    expect(m.spendCredits).not.toHaveBeenCalled();
+    expect(m.transcribeAudio).not.toHaveBeenCalled();
   });
 });
 

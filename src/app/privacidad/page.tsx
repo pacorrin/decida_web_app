@@ -66,10 +66,10 @@ export default function PrivacidadPage() {
           </li>
           <li>
             <strong className="text-foreground">Captura inteligente de Cifra:</strong>{" "}
-            si decides usarla, las fotos (por ejemplo, de un ticket) y el texto
-            que escribes o dictas se envían a OpenAI para proponerte un ingreso o
+            si decides usarla, las fotos (por ejemplo, de un ticket), las notas de
+            voz y el texto que escribes o dictas se envían a OpenAI para proponerte un ingreso o
             egreso. Antes de la primera vez te pedimos tu autorización y la
-            guardamos con su fecha. Las fotos no se guardan en Decida: se
+            guardamos con su fecha. Las fotos y las notas de voz no se guardan en Decida: se
             procesan y se descartan; solo se conserva el movimiento que tú
             confirmas. Un ticket puede incluir datos personales (como tu nombre o
             los últimos dígitos de tu tarjeta): tápalos si prefieres. Es
@@ -116,8 +116,8 @@ export default function PrivacidadPage() {
             <strong className="text-foreground">OpenAI</strong> (inteligencia
             artificial): procesa el texto de tu idea y tus respuestas para
             interpretar tus resultados y redactar tu reporte. Si usas la captura
-            inteligente de Cifra, también procesa las fotos y el texto que
-            envías en ella.
+            inteligente de Cifra, también procesa las fotos, las notas de voz y el texto
+            que envías en ella.
           </li>
           <li>
             <strong className="text-foreground">Stripe</strong>: procesa los

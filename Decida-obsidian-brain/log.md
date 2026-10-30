@@ -623,3 +623,6 @@ Campo de texto libre opcional en saldos, deudas y gastos fijos. Se editó la mig
 ## [2026-10-30] impl | Captura inteligente de Cifra
 
 Fotos y/o texto leídos con IA proponen un ingreso o egreso que la persona confirma. 3 créditos por captura (reembolso si falla), consentimiento previo, fotos sin guardar, aviso de privacidad actualizado. Probado con OpenAI real: texto y ticket sintético. Detalle en `wiki/arquitectura/cifra-finanzas-personales.md`.
+
+## [2026-10-30] ingest | Cifra: nota de voz en la captura inteligente
+Botón «Grabar voz» con transcripción (`gpt-4o-mini-transcribe`) al campo de texto; mismo cobro único por captura, reembolso si falla; consentimiento y privacidad mencionan la voz. Ver [[arquitectura/cifra-finanzas-personales]].

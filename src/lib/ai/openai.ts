@@ -89,6 +89,11 @@ export function getCaptureModel(): string {
   return process.env.OPENAI_MODEL_CAPTURE ?? "gpt-4.1-mini";
 }
 
+/** Transcripción de la nota de voz de la captura inteligente. */
+export function getTranscriptionModel(): string {
+  return process.env.OPENAI_MODEL_TRANSCRIBE ?? "gpt-4o-mini-transcribe";
+}
+
 export function getReasoningModel(): string {
   // o4-mini fue dado de baja por OpenAI (404): con él la revisión y la interpretación fallaban.
   return process.env.OPENAI_MODEL_REASONING ?? "gpt-5-mini";
@@ -149,6 +154,19 @@ export async function generateJson<T>(
   const content = response.choices[0]?.message?.content;
   if (!content) throw new Error("Empty response from OpenAI");
   return JSON.parse(content) as T;
+}
+
+/** Convierte un audio en texto (español de México). */
+export async function transcribeAudio(file: File, model = getTranscriptionModel()): Promise<string> {
+  const client = getOpenAIClient();
+  const response = await client.audio.transcriptions.create({
+    model,
+    file,
+    language: "es",
+    prompt: "Una persona cuenta un gasto o un ingreso personal, con montos en pesos mexicanos.",
+    response_format: "json",
+  });
+  return response.text ?? "";
 }
 
 /** Igual que `generateJson`, pero con imágenes (data URLs) junto al texto. */

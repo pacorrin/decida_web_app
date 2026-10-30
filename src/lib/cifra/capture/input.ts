@@ -3,6 +3,9 @@ export const CAPTURE_LIMITS = {
   /** Cada foto llega ya reducida desde el navegador; esto es solo un tope de seguridad. */
   maxImageBytes: 1_800_000,
   maxTextLength: 500,
+  /** La nota de voz se corta sola al llegar a este tiempo (en el navegador). */
+  maxAudioSeconds: 60,
+  maxAudioBytes: 2_500_000,
 } as const;
 
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
@@ -42,4 +45,21 @@ export async function validateCaptureInput(formData: FormData): Promise<CaptureI
     images.push(`data:${file.type};base64,${base64}`);
   }
   return { ok: true, captureId, text, images };
+}
+
+export type AudioInput =
+  | { ok: true; captureId: string; audio: File }
+  | { ok: false; message: string };
+
+/** Valida la nota de voz que llega del navegador. */
+export function validateAudioInput(formData: FormData): AudioInput {
+  const captureId = String(formData.get("captureId") ?? "");
+  if (!CAPTURE_ID.test(captureId)) return { ok: false, message: "No pudimos procesar la nota de voz. Intenta de nuevo." };
+  const audio = formData.get("audio");
+  if (!(audio instanceof File) || audio.size === 0) return { ok: false, message: "No recibimos el audio. Intenta grabar de nuevo." };
+  if (!audio.type.startsWith("audio/")) return { ok: false, message: "El audio no tiene un formato válido." };
+  if (audio.size > CAPTURE_LIMITS.maxAudioBytes) {
+    return { ok: false, message: "La nota de voz es muy larga. Graba algo más corto." };
+  }
+  return { ok: true, captureId, audio };
 }

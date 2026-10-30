@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import { Camera, ImagePlus, Loader2, Sparkles, X } from "lucide-react";
+import { Camera, ImagePlus, Loader2, Mic, Sparkles, Square, X } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { addTransaction } from "@/app/cuenta/(dashboard)/cifra/actions";
-import { grantCifraAiConsent, smartCapture } from "@/app/cuenta/(dashboard)/cifra/capture-actions";
+import { grantCifraAiConsent, smartCapture, transcribeCapture } from "@/app/cuenta/(dashboard)/cifra/capture-actions";
 import { CAPTURE_LIMITS } from "@/lib/cifra/capture/input";
 import type { CaptureProposal } from "@/lib/cifra/capture/result";
 import { categoriesFor, type CifraFlow } from "@/lib/cifra/constants";
@@ -20,8 +20,22 @@ import { MoneyInput } from "./inputs";
 
 type Step = "consent" | "input" | "processing" | "review";
 type Photo = { file: File; url: string };
+type Voice = "idle" | "recording" | "transcribing";
 
 const MAX_SIDE = 1280;
+
+/** Formato de audio que este navegador sabe grabar (Chrome/Firefox: webm; Safari: mp4). */
+function pickAudioType(): { mime: string; ext: string } {
+  const options = [
+    { mime: "audio/webm;codecs=opus", ext: "webm" },
+    { mime: "audio/webm", ext: "webm" },
+    { mime: "audio/mp4", ext: "mp4" },
+    { mime: "audio/ogg;codecs=opus", ext: "ogg" },
+  ];
+  return options.find((o) => MediaRecorder.isTypeSupported(o.mime)) ?? { mime: "", ext: "webm" };
+}
+
+const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
 /** Reduce la foto en el teléfono antes de subirla: sube más rápido y cuesta menos leerla. */
 async function shrink(file: File): Promise<File> {
@@ -64,6 +78,13 @@ export function SmartCapture({
   const [noCredits, setNoCredits] = useState(credits < cost);
   const [left, setLeft] = useState(credits);
   const [pending, startTransition] = useTransition();
+  const [voice, setVoice] = useState<Voice>("idle");
+  const [seconds, setSeconds] = useState(0);
+  // La primera llamada de IA (voz o lectura) ya descontó los créditos de esta captura.
+  const [charged, setCharged] = useState(false);
+  const recorder = useRef<MediaRecorder | null>(null);
+  const stream = useRef<MediaStream | null>(null);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
   // Una clave por intento: si la petición se repite, el cobro no se duplica.
   const captureId = useRef("");
   const photosRef = useRef<Photo[]>([]);
@@ -73,7 +94,24 @@ export function SmartCapture({
   }, [photos]);
   useEffect(() => () => photosRef.current.forEach((p) => URL.revokeObjectURL(p.url)), []);
 
+  function releaseMic() {
+    if (timer.current) clearInterval(timer.current);
+    timer.current = null;
+    stream.current?.getTracks().forEach((t) => t.stop());
+    stream.current = null;
+  }
+  useEffect(() => releaseMic, []);
+
   function reset() {
+    if (recorder.current?.state === "recording") {
+      recorder.current.onstop = null;
+      recorder.current.stop();
+    }
+    recorder.current = null;
+    releaseMic();
+    setVoice("idle");
+    setSeconds(0);
+    setCharged(false);
     photosRef.current.forEach((p) => URL.revokeObjectURL(p.url));
     setPhotos([]);
     setText("");
@@ -107,6 +145,69 @@ export function SmartCapture({
     });
   }
 
+  /** Pasa la nota de voz a texto y la agrega al campo de observaciones. */
+  async function transcribe(blob: Blob, ext: string) {
+    setVoice("transcribing");
+    setMessage(null);
+    captureId.current ||= crypto.randomUUID();
+    const data = new FormData();
+    data.set("captureId", captureId.current);
+    data.set("audio", new File([blob], `voz.${ext}`, { type: blob.type || `audio/${ext}` }));
+    try {
+      const r = await transcribeCapture(data);
+      if (r.success) {
+        setText((t) => `${t.trim()} ${r.text}`.trim().slice(0, CAPTURE_LIMITS.maxTextLength));
+        if (!charged) setLeft((l) => Math.max(0, l - cost));
+        setCharged(true);
+      } else {
+        if (r.insufficientCredits) setNoCredits(true);
+        if (r.needsConsent) setStep("consent");
+        setMessage(r.message);
+        captureId.current = "";
+      }
+    } catch {
+      setMessage("Algo salió mal con la nota de voz. Intenta de nuevo o escribe lo que pasó.");
+      captureId.current = "";
+    } finally {
+      setVoice("idle");
+    }
+  }
+
+  async function startRecording() {
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      toast.error("Tu navegador no permite grabar voz. Puedes dictar con el micrófono de tu teclado.");
+      return;
+    }
+    try {
+      const media = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const { mime, ext } = pickAudioType();
+      const rec = new MediaRecorder(media, mime ? { mimeType: mime } : undefined);
+      const chunks: Blob[] = [];
+      rec.ondataavailable = (e) => e.data.size > 0 && chunks.push(e.data);
+      rec.onstop = () => {
+        releaseMic();
+        void transcribe(new Blob(chunks, { type: rec.mimeType || mime }), ext);
+      };
+      stream.current = media;
+      recorder.current = rec;
+      rec.start();
+      setSeconds(0);
+      setVoice("recording");
+      timer.current = setInterval(() => {
+        setSeconds((n) => {
+          if (n + 1 >= CAPTURE_LIMITS.maxAudioSeconds && rec.state === "recording") rec.stop();
+          return n + 1;
+        });
+      }, 1000);
+    } catch {
+      toast.error("No pudimos usar el micrófono. Revisa el permiso del navegador o escribe lo que pasó.");
+    }
+  }
+
+  function stopRecording() {
+    if (recorder.current?.state === "recording") recorder.current.stop();
+  }
+
   function accept() {
     startTransition(async () => {
       const r = await grantCifraAiConsent();
@@ -129,6 +230,7 @@ export function SmartCapture({
       try {
         const r = await smartCapture(data);
         if (r.success) {
+          setCharged(true);
           setProposal(r.proposal);
           setFlow(r.proposal.flow);
           setLeft(r.creditsLeft);
@@ -140,11 +242,13 @@ export function SmartCapture({
           setStep(r.needsConsent ? "consent" : "input");
           // Una captura nueva de verdad (otra clave) por si el fallo ya se reembolsó.
           captureId.current = "";
+          setCharged(false);
         }
       } catch {
         setMessage("Algo salió mal. Intenta de nuevo; si se cobró, se te devolverá.");
         setStep("input");
         captureId.current = "";
+        setCharged(false);
       }
     });
   }
@@ -171,7 +275,8 @@ export function SmartCapture({
   }
 
   const err = (name: string) => errors[name]?.[0];
-  const canProcess = (photos.length > 0 || text.trim().length > 0) && !noCredits && !pending;
+  const busyVoice = voice !== "idle";
+  const canProcess = (photos.length > 0 || text.trim().length > 0) && (!noCredits || charged) && !pending && !busyVoice;
 
   return (
     <Dialog
@@ -193,11 +298,11 @@ export function SmartCapture({
         {step === "consent" && (
           <div className="space-y-4" data-testid="cifra-capture-consent">
             <DialogDescription>
-              Para leer tus fotos y tu texto los enviamos a nuestros proveedores de herramientas de IA. Lo hacemos solo
+              Para leer tus fotos, tu texto y tu voz los enviamos a nuestros proveedores de herramientas de IA. Lo hacemos solo
               para esta captura:
             </DialogDescription>
             <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
-              <li>Las fotos no se guardan: se procesan y se descartan.</li>
+              <li>Las fotos y las notas de voz no se guardan: se procesan y se descartan.</li>
               <li>Un ticket puede traer datos personales (nombre, últimos dígitos de tu tarjeta). Tápalos si prefieres.</li>
               <li>Nada se registra hasta que tú lo confirmes.</li>
             </ul>
@@ -234,6 +339,17 @@ export function SmartCapture({
                   <ImagePlus className="size-4" aria-hidden /> Elegir de la galería
                 </span>
               </label>
+              {voice === "recording" ? (
+                <Button type="button" onClick={stopRecording} className="bg-secondary text-secondary-foreground hover:bg-secondary/90" data-testid="cifra-capture-stop">
+                  <span className="size-2 animate-pulse rounded-full bg-current" aria-hidden />
+                  <Square className="size-3.5" aria-hidden /> Detener · {clock(seconds)}
+                </Button>
+              ) : (
+                <Button type="button" variant="outline" onClick={() => void startRecording()} disabled={voice === "transcribing" || (noCredits && !charged)} data-testid="cifra-capture-record">
+                  {voice === "transcribing" ? <Loader2 className="animate-spin" aria-hidden /> : <Mic aria-hidden />}
+                  {voice === "transcribing" ? "Transcribiendo…" : "Grabar voz"}
+                </Button>
+              )}
             </div>
 
             {photos.length > 0 && (
@@ -267,7 +383,7 @@ export function SmartCapture({
                 className="w-full resize-none rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
                 data-testid="cifra-capture-text"
               />
-              <FieldDescription>Puedes dictarlo con el micrófono de tu teclado.</FieldDescription>
+              <FieldDescription>Escríbelo, dicta con el micrófono de tu teclado o toca «Grabar voz» y lo pasamos a texto. Puedes corregirlo antes de procesar.</FieldDescription>
             </Field>
 
             {message && (
@@ -276,7 +392,7 @@ export function SmartCapture({
               </p>
             )}
 
-            {noCredits ? (
+            {noCredits && !charged ? (
               <p className="rounded-xl bg-muted/40 px-3 py-2 text-sm" data-testid="cifra-capture-no-credits">
                 Necesitas {cost} créditos para una captura inteligente y te quedan {left}.{" "}
                 <Link href={CREDITS_PLANS_PATH} className="font-medium text-primary underline underline-offset-4">
@@ -285,8 +401,10 @@ export function SmartCapture({
               </p>
             ) : (
               <p className="text-xs text-muted-foreground">
-                Cuesta {cost} créditos por captura, sin importar si usas fotos, texto o ambos. Te quedan {left}. Registrar a mano no
-                cuesta nada.
+                {charged
+                  ? `Ya se descontaron los ${cost} créditos de esta captura. Te quedan ${left}.`
+                  : `Cuesta ${cost} créditos por captura, sin importar si usas fotos, voz, texto o todo junto. Te quedan ${left}.`}{" "}
+                Registrar a mano no cuesta nada.
               </p>
             )}
 
@@ -369,7 +487,7 @@ export function SmartCapture({
             )}
 
             <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
-              <Button type="button" variant="outline" onClick={() => { setStep("input"); setMessage(null); captureId.current = ""; }}>
+              <Button type="button" variant="outline" onClick={() => { setStep("input"); setMessage(null); captureId.current = ""; setCharged(false); }}>
                 Volver
               </Button>
               <Button type="submit" disabled={pending} className="bg-secondary text-secondary-foreground hover:bg-secondary/90" data-testid="cifra-capture-save">
