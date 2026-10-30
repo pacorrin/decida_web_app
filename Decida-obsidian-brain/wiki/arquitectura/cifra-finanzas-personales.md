@@ -13,7 +13,7 @@ Primera herramienta nueva de la plataforma ([[../producto/nuevas-features#2. Cif
 1. **Mis cuentas** (`/cuenta/cifra/cuentas`): saldos (efectivo, banco, ahorro), deudas (tarjeta, préstamo, automóvil, vivienda u otra) y gastos fijos.
 2. **Pagos** (`/cuenta/cifra/pagos`): reporte «¿Qué tengo que pagar?» de un periodo que elige la persona (7, 15, 30, 60, 90 días o desde/hasta, máximo 366 días). Vencidos primero; muestra total por pagar, saldo en cuentas y cuánto sobra o falta. Los pagos recurrentes se proyectan; los de monto variable salen «por confirmar».
 3. **Movimientos** (`/cuenta/cifra/movimientos`): ingresos y egresos con categoría, monto, fecha y nota; por mes.
-4. **Resumen** (`/cuenta/cifra`): ingresos, egresos, balance, deuda total, saldo en cuentas y próximos pagos de 30 días con «Marcar como pagado».
+4. **Resumen** (`/cuenta/cifra`): ingresos, egresos, balance, deuda total, saldo en cuentas y próximos pagos de 30 días con «Editar y pagar».
 
 ## Modelo de pagos (rediseño de deudas)
 - Se captura el **próximo pago** (monto y fecha real), no «saldo y pago mensual»: en tarjetas el monto cambia cada mes. Casilla «El monto cambia cada mes»: tras pagar, el siguiente queda por confirmar hasta que se captura el estado de cuenta («Capturar monto»).
@@ -24,7 +24,7 @@ Primera herramienta nueva de la plataforma ([[../producto/nuevas-features#2. Cif
 - Al marcar pagado (monto y fecha), el egreso guarda el periodo del vencimiento pagado y los valores previos (`ctrx_prev_due_on`, `ctrx_prev_cut_on`, `ctrx_prev_amount_cents`, `ctrx_applied_to_debt_cents`); borrar el pago restaura el saldo y, si fue el último, las fechas.
 
 ## Decisiones (2026-10-30, del usuario)
-- Alcance con **saldos incluidos**; **«Marcar como pagado»** crea el egreso (nada se genera solo).
+- Alcance con **saldos incluidos**; **«Editar y pagar»** crea el egreso (nada se genera solo).
 - **Requiere plan activo** (mínimo Explora, `hasFullAccess`). Sin plan se ve la pantalla de planes; los datos se conservan y se pueden borrar.
 - **Categorías fijas** (`src/lib/cifra/constants.ts`); **sin límites** por usuario (no hay costo de IA).
 

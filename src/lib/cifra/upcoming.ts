@@ -27,8 +27,6 @@ export type UpcomingPayment = {
   dueOn: CalendarDate;
   amountCents: number | null;
   overdue: boolean;
-  /** El monto cambia cada mes: antes de pagar conviene revisarlo. */
-  variable: boolean;
   /** Es el pago que se puede marcar ahora; los siguientes son una proyección. */
   actionable: boolean;
 };
@@ -64,7 +62,6 @@ export function upcomingPayments(
           dueOn: due,
           amountCents: first ? item.amountCents : item.variable ? null : item.amountCents,
           overdue,
-          variable: item.variable,
           actionable: first,
         });
       }
