@@ -6,6 +6,7 @@ export const EXPENSE_CATEGORIES = [
   { code: "transporte", label: "Transporte" },
   { code: "salud", label: "Salud" },
   { code: "educacion", label: "Educación" },
+  { code: "salarios", label: "Salarios" },
   { code: "deudas", label: "Pago de deudas" },
   { code: "suscripciones", label: "Suscripciones" },
   { code: "ocio", label: "Ocio y compras" },
