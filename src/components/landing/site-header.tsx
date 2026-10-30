@@ -1,11 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { LOGIN_LINK } from "@/components/landing/landing-content";
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   Sheet,
   SheetContent,
@@ -28,9 +30,25 @@ const LINK_CLASS =
  * inicio de sesión y llamada a la acción a la derecha. No cambia de una página a otra.
  */
 export function SiteHeader() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 px-3 pt-3 sm:px-6">
+      <div
+        className={cn(
+          "mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 rounded-2xl px-4 backdrop-blur-md transition-[background-color,box-shadow] duration-300 sm:px-6",
+          scrolled
+            ? "bg-background/95 shadow-lg shadow-primary/10"
+            : "bg-background/30 shadow-none",
+        )}
+      >
         <Link
           href="/"
           className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
