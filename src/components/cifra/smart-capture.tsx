@@ -193,8 +193,8 @@ export function SmartCapture({
         {step === "consent" && (
           <div className="space-y-4" data-testid="cifra-capture-consent">
             <DialogDescription>
-              Para leer tus fotos y tu texto los enviamos a un servicio de inteligencia artificial (OpenAI). Lo hacemos
-              solo para esta captura:
+              Para leer tus fotos y tu texto los enviamos a nuestros proveedores de herramientas de IA. Lo hacemos solo
+              para esta captura:
             </DialogDescription>
             <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
               <li>Las fotos no se guardan: se procesan y se descartan.</li>
