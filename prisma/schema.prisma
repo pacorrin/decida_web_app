@@ -63,6 +63,24 @@ enum credit_ledger_type {
   expire
 }
 
+enum cifra_flow {
+  income
+  expense
+}
+
+enum cifra_account_kind {
+  cash
+  bank
+  savings
+  other
+}
+
+enum cifra_debt_kind {
+  credit_card
+  loan
+  other
+}
+
 model verification_codes {
   vc_id          String               @id @default(cuid())
   vc_identifier  String
@@ -312,6 +330,86 @@ model credit_ledger {
   @@map("credit_ledger")
 }
 
+// Cifra: finanzas personales. Importes en centavos (MXN); corte y pago son día del mes.
+model cifra_accounts {
+  cacc_id            String             @id @default(cuid())
+  cacc_user_id       String
+  cacc_name          String
+  cacc_kind          cifra_account_kind
+  cacc_balance_cents Int                @default(0)
+  cacc_created_at    DateTime           @default(now())
+  cacc_updated_at    DateTime           @updatedAt
+
+  user users @relation(fields: [cacc_user_id], references: [user_id], onDelete: Cascade)
+
+  @@index([cacc_user_id])
+  @@map("cifra_accounts")
+}
+
+model cifra_debts {
+  cdebt_id                    String          @id @default(cuid())
+  cdebt_user_id               String
+  cdebt_name                  String
+  cdebt_kind                  cifra_debt_kind
+  cdebt_balance_cents         Int
+  cdebt_monthly_payment_cents Int
+  cdebt_annual_rate_pct       Decimal?        @db.Decimal(5, 2)
+  cdebt_credit_limit_cents    Int?
+  cdebt_cut_day               Int?
+  cdebt_due_day               Int
+  cdebt_paid_off              Boolean         @default(false)
+  cdebt_created_at            DateTime        @default(now())
+  cdebt_updated_at            DateTime        @updatedAt
+
+  user         users                @relation(fields: [cdebt_user_id], references: [user_id], onDelete: Cascade)
+  transactions cifra_transactions[]
+
+  @@index([cdebt_user_id])
+  @@map("cifra_debts")
+}
+
+model cifra_fixed_expenses {
+  cfix_id           String   @id @default(cuid())
+  cfix_user_id      String
+  cfix_name         String
+  cfix_category     String
+  cfix_amount_cents Int
+  cfix_due_day      Int
+  cfix_active       Boolean  @default(true)
+  cfix_created_at   DateTime @default(now())
+  cfix_updated_at   DateTime @updatedAt
+
+  user         users                @relation(fields: [cfix_user_id], references: [user_id], onDelete: Cascade)
+  transactions cifra_transactions[]
+
+  @@index([cfix_user_id])
+  @@map("cifra_fixed_expenses")
+}
+
+model cifra_transactions {
+  ctrx_id                    String     @id @default(cuid())
+  ctrx_user_id               String
+  ctrx_flow                  cifra_flow
+  ctrx_category              String
+  ctrx_amount_cents          Int
+  ctrx_occurred_on           DateTime   @db.Date
+  ctrx_description           String?
+  ctrx_debt_id               String?
+  ctrx_fixed_expense_id      String?
+  ctrx_period                String?
+  ctrx_applied_to_debt_cents Int        @default(0)
+  ctrx_created_at            DateTime   @default(now())
+
+  user          users                 @relation(fields: [ctrx_user_id], references: [user_id], onDelete: Cascade)
+  debt          cifra_debts?          @relation(fields: [ctrx_debt_id], references: [cdebt_id], onDelete: SetNull)
+  fixed_expense cifra_fixed_expenses? @relation(fields: [ctrx_fixed_expense_id], references: [cfix_id], onDelete: SetNull)
+
+  @@unique([ctrx_debt_id, ctrx_period])
+  @@unique([ctrx_fixed_expense_id, ctrx_period])
+  @@index([ctrx_user_id, ctrx_occurred_on])
+  @@map("cifra_transactions")
+}
+
 model users {
   user_id                           String              @id @default(cuid())
   user_email                        String              @unique
@@ -335,6 +433,11 @@ model users {
   payments      payments[]
   credit_ledger credit_ledger[]
   suggestions   suggestions[]
+
+  cifra_accounts       cifra_accounts[]
+  cifra_debts          cifra_debts[]
+  cifra_fixed_expenses cifra_fixed_expenses[]
+  cifra_transactions   cifra_transactions[]
 
   @@map("users")
 }

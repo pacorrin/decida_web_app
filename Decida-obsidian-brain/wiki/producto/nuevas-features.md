@@ -12,7 +12,7 @@ Registro de funcionalidades nuevas **planeadas** (no implementadas). Cada una se
 | # | Feature | Estado | Fecha |
 |---|---|---|---|
 | 1 | Generador de brief de marca | Plan, sin alcance cerrado; en el mapa, no es prioridad ahora | 2026-10-30 |
-| 2 | **Cifra** (finanzas personales) | Plan inicial, en el mapa; la prioridad actual sigue siendo el análisis de ideas | 2026-10-30 |
+| 2 | **Cifra** (finanzas personales) | **v1 construida en `dev`** (saldos, deudas, gastos fijos, ingresos y egresos); sin pasar a `main`; ver [[../arquitectura/cifra-finanzas-personales]] | 2026-10-30 |
 
 ## Visión de plataforma (2026-10-30)
 
@@ -107,6 +107,8 @@ Fuente de los puntos: lista de secciones esenciales de un brief de marca que pas
 ---
 
 ## 2. Cifra (finanzas personales)
+
+> **Estado (2026-10-30): v1 implementada en `dev`.** Lo que se construyó, las decisiones (saldos incluidos, «marcar como pagado», requiere plan Explora, categorías fijas) y lo que falta están en [[../arquitectura/cifra-finanzas-personales]]. En la v1 los datos **no** alimentan todavía el análisis de ideas; el consentimiento de abajo se diseñará cuando eso se construya. Lo que sigue en esta sección es el plan original.
 
 > Nombre elegido el 2026-10-30: **Cifra**, por el usuario, entre varias propuestas (descartó *Alcanza* porque suena a ejecución, no a finanzas). Es un subproducto de la plataforma Decida, no una submarca; la marca principal sigue siendo Decida. Falta revisar dominio y marca en el IMPI.
 

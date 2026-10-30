@@ -1,7 +1,7 @@
 ---
 type: arquitectura
 tags: [decida, datos, prisma]
-updated: 2026-10-27
+updated: 2026-10-30
 ---
 
 # Modelo de datos
@@ -33,6 +33,8 @@ Todas las tablas usan **prefijos de 4 letras** por entidad en snake_case (`asmt_
 | `users` | `user_` | 1:N con `assessments` (`asmt_user_id`) | Cuenta con email + contraseña. Agregada 2026-08-05, Sprint 1 — ver [[modulo-de-usuarios-y-autenticacion]] |
 | `user_sessions` | `usess_` | — | Sesión de cuenta autenticada (cookie httpOnly + token), agregada junto con `users` |
 | `credit_ledger` | `cled_` | N:1 opcional con `assessments` (`cled_asmt_id`) y `payments` (`cled_payment_id`) | Libro mayor inmutable de créditos (en centésimos: `100` = 1 crédito). Agregada el 2026-10-22 (`20261023000000_credit_ledger`) — ver [[../decisiones/modelo-de-creditos-hibrido]] |
+
+> **Cifra (2026-10-30):** `cifra_accounts` (`cacc_`), `cifra_debts` (`cdebt_`), `cifra_fixed_expenses` (`cfix_`) y `cifra_transactions` (`ctrx_`), todas con FK a `users` en cascada; importes en centavos (`Int`). Detalle en [[cifra-finanzas-personales]].
 
 > **Sistema de créditos (2026-10-22, commits `02fc586`..`dba140f`):**
 > - `credit_ledger`: fuente de verdad append-only (`cled_type` enum `credit_ledger_type`: `purchase`, `welcome_bonus`, `subscription_grant`, `spend`, `refund`, `adjustment`; `cled_amount` con signo en centésimos; `cled_balance_after` ≥ 0; `cled_idempotency_key` UNIQUE).

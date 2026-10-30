@@ -51,6 +51,7 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | [[wiki/arquitectura/analitica-y-eventos]] | Eventos de PostHog (alta, pasos del análisis, captcha, botones por ubicación), cómo se envían y embudos sugeridos — 2026-10-29 |
 | [[wiki/arquitectura/seo-y-sitemap]] | Sitemap con fechas reales, robots que solo abre el dominio real, canónicas, Open Graph y datos estructurados — 2026-10-29 |
 | [[wiki/arquitectura/despliegue-en-railway]] | Flujo de ramas dev/main, proyecto y servicios de Railway, migraciones automáticas antes de cada despliegue, variables puestas y pendientes — 2026-10-29 |
+| [[wiki/arquitectura/cifra-finanzas-personales]] | Cifra v1: saldos, deudas, gastos fijos, ingresos y egresos; tablas, acceso por plan, privacidad y pendientes — 2026-10-30 |
 | [[wiki/arquitectura/dashboard-de-cuenta]] | Navbar + sidebar + rutas del panel `/cuenta` (route group, dropdown-menu nuevo) — 2026-08-05 |
 
 ## Marca

@@ -2,13 +2,30 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Coins, FileText } from "lucide-react";
+import { Calculator, Coins, FileText } from "lucide-react";
 import { BetaAccountNotice } from "@/components/beta/beta-account-notice";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/cuenta", label: "Análisis realizados", icon: FileText, match: "analisis" as const },
-  { href: "/cuenta/creditos", label: "Créditos", icon: Coins, match: "creditos" as const },
+  {
+    href: "/cuenta",
+    label: "Análisis realizados",
+    icon: FileText,
+    isActive: (pathname: string) =>
+      pathname === "/cuenta" || pathname.startsWith("/cuenta/evaluaciones"),
+  },
+  {
+    href: "/cuenta/cifra",
+    label: "Cifra",
+    icon: Calculator,
+    isActive: (pathname: string) => pathname.startsWith("/cuenta/cifra"),
+  },
+  {
+    href: "/cuenta/creditos",
+    label: "Créditos",
+    icon: Coins,
+    isActive: (pathname: string) => pathname.startsWith("/cuenta/creditos"),
+  },
 ];
 
 export function DashboardSidebar() {
@@ -21,11 +38,7 @@ export function DashboardSidebar() {
       <div className="sticky top-16 flex h-[calc(100dvh-4rem)] flex-col justify-between gap-6 py-8 pr-4">
         <nav aria-label="Navegación de la cuenta" className="space-y-1">
           {NAV_ITEMS.map((item) => {
-            const active =
-              item.match === "analisis"
-                ? pathname === "/cuenta" ||
-                  pathname.startsWith("/cuenta/evaluaciones")
-                : pathname.startsWith("/cuenta/creditos");
+            const active = item.isActive(pathname);
             const Icon = item.icon;
             return (
               <Link

@@ -34,7 +34,7 @@ export function isIndexableSite(): boolean {
 export const PUBLIC_PAGES = [
   { path: "", lastModified: "2026-10-28" },
   { path: "/ejemplo", lastModified: "2026-10-15" },
-  { path: "/privacidad", lastModified: "2026-10-29" },
+  { path: "/privacidad", lastModified: "2026-10-30" },
   { path: "/terminos", lastModified: "2026-10-28" },
 ] as const;
 

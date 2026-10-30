@@ -57,6 +57,14 @@ export default function PrivacidadPage() {
             formulario.
           </li>
           <li>
+            <strong className="text-foreground">Datos de Cifra:</strong> si
+            usas Cifra, los saldos, deudas, gastos fijos, ingresos y egresos que
+            tú registras manualmente, con sus fechas y categorías. No nos
+            conectamos a tus bancos. Estos datos solo los ves tú, no se usan en
+            tus análisis de ideas ni se comparten con terceros, y puedes borrarlos
+            en cualquier momento desde Cifra.
+          </li>
+          <li>
             <strong className="text-foreground">Datos técnicos:</strong>{" "}
             dirección IP, tipo de navegador y registros de uso necesarios para
             operar el servicio de forma segura.

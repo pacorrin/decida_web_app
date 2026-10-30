@@ -607,3 +607,7 @@ La herramienta de finanzas personales se llama **Cifra** (descartado Alcanza). L
 ## [2026-10-30] plan | Narrativa «El orden Decida»
 
 Se creó `wiki/marca/narrativa-del-orden-decida.md`: reencuadre de la metodología como camino con cuatro preguntas, opciones de nombre para la secuencia (recomendada «El orden Decida»), arco SCAR, formatos para redes y los cinco datos que faltan para volverla historia. Sirve para pulir el propósito de Decida (de evaluar ideas a recorrer un camino). Pendiente: elegir nombre, reunir evidencia, actualizar visión y PRD.
+
+## [2026-10-30] impl | Cifra v1 en dev
+
+Se construyó la primera versión de Cifra en la rama `dev` (no en `main`): saldos, deudas, gastos fijos con fechas, registro de ingresos y egresos, resumen del mes y «Marcar como pagado». Requiere plan activo; sin plan se conservan y se pueden borrar los datos. Nuevas tablas `cifra_*` (migración `20261101000000_cifra`), eventos de analítica sin montos y aviso en la política de privacidad. Documentado en `wiki/arquitectura/cifra-finanzas-personales.md`. Pendiente: revisión legal, uso en el análisis de ideas, exportar y borrado de cuenta.

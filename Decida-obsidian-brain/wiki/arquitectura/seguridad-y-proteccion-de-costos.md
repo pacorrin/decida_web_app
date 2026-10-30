@@ -63,6 +63,9 @@ Si un modelo de OpenAI falla, el reporte **sigue con un respaldo** (interpretaci
 - **Cómo se comporta:** como las incidencias se agrupan por función y tipo de error, llega **un correo por cada tipo de problema nuevo**, no uno por reporte. Si un modelo se da de baja, el aviso llega con el primer reporte afectado y no se repite por cada uno de los siguientes.
 - **Sin DSN no hay aviso:** `SENTRY_DSN` debe estar configurado en Railway; en local sin DSN Sentry no envía nada. El envío real a Sentry no se probó en local, solo con pruebas automáticas.
 
+## Datos financieros de Cifra (2026-10-30)
+Son los datos más sensibles de la plataforma. Cada consulta filtra por el usuario de la sesión, no se mandan montos ni nombres a PostHog, no se registran en logs, se pueden borrar en cualquier momento y están declarados en la política de privacidad. Falta cifrado adicional en reposo, borrado de cuenta, exportación y revisión legal. Detalle en [[cifra-finanzas-personales]].
+
 ## Qué sigue protegiendo poco (pendiente)
 | Riesgo | Estado |
 |---|---|

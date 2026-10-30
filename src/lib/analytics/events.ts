@@ -29,6 +29,11 @@ export const ANALYTICS_EVENTS = {
   // Pasos del análisis completados (no solo vistos) y reportes que fallan
   onboardingStepCompleted: "onboarding_step_completed",
   reportGenerationFailed: "report_generation_failed",
+  // Cifra (finanzas personales): solo tipos y categorías, nunca montos ni nombres
+  cifraItemCreated: "cifra_item_created",
+  cifraTransactionLogged: "cifra_transaction_logged",
+  cifraPaymentMarked: "cifra_payment_marked",
+  cifraDataDeleted: "cifra_data_deleted",
 } as const;
 
 export type AnalyticsEvent =
