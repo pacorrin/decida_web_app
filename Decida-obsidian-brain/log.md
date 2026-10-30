@@ -591,3 +591,7 @@ Se conectó GitHub en Railway y se fijó la rama `main`; el merge del PR #20 a `
 
 Sitemap con `lastModified` real y sin `changeFrequency`/`priority`; robots que bloquea todo fuera del dominio real; canónica, Open Graph y Twitter por página; JSON-LD de Organization y WebSite en la landing. Documentado en `wiki/arquitectura/seo-y-sitemap.md`. Pendiente: Google Search Console.
 
+
+## [2026-10-30] plan | Nueva feature planeada: brief de marca
+
+Se creó `wiki/producto/nuevas-features.md` como registro de funcionalidades por construir, con el plan del generador de brief de marca (7 secciones, datos que se reutilizan, flujo, propuesta técnica, preguntas abiertas). No se escribió código. Pendiente: que el usuario cierre el alcance.
