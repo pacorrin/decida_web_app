@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AiBadge } from "@/components/beta/ai-badge";
 import { BetaBadge } from "@/components/beta/beta-badge";
 import { BETA_HERO_TEXT } from "@/lib/beta";
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
@@ -34,6 +35,7 @@ export function CifraHero() {
         <div className="flex flex-1 flex-col gap-6 lg:pb-6">
           <div className="flex flex-wrap items-center gap-3">
             <p className="text-4xl font-semibold tracking-tight sm:text-5xl">Cifra</p>
+            <AiBadge className="border-white/30 bg-white/10 text-white" />
             <BetaBadge className="border-white/30 bg-white/10 text-white">{BETA_HERO_TEXT}</BetaBadge>
           </div>
           <div className="hidden min-h-40 flex-1 items-end lg:flex">
