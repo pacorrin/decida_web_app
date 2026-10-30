@@ -26,7 +26,7 @@ const LINK_CLASS =
   "rounded-md px-1 text-base font-medium text-foreground/75 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 /**
- * Navbar único de todas las páginas públicas: logo a la izquierda; Inicio, Cifra,
+ * Navbar único de todas las páginas públicas: logo y enlaces (Inicio, Cifra) a la izquierda;
  * inicio de sesión y llamada a la acción a la derecha. No cambia de una página a otra.
  */
 export function SiteHeader() {
@@ -49,25 +49,27 @@ export function SiteHeader() {
             : "bg-background/30 shadow-none",
         )}
       >
-        <Link
-          href="/"
-          className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label="Decida, inicio"
-        >
-          <Image src="/logo.svg" alt="" width={44} height={27} aria-hidden />
-          <span className="text-lg font-semibold tracking-tight text-primary">
-            Decida
-          </span>
-        </Link>
-
-        <div className="hidden items-center gap-6 md:flex">
-          <nav className="flex items-center gap-6" aria-label="Navegación principal">
+        <div className="flex items-center gap-8">
+          <Link
+            href="/"
+            className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label="Decida, inicio"
+          >
+            <Image src="/logo.svg" alt="" width={44} height={27} aria-hidden />
+            <span className="text-lg font-semibold tracking-tight text-primary">
+              Decida
+            </span>
+          </Link>
+          <nav className="hidden items-center gap-6 md:flex" aria-label="Navegación principal">
             {PAGE_LINKS.map((link) => (
               <Link key={link.href} href={link.href} className={LINK_CLASS}>
                 {link.label}
               </Link>
             ))}
           </nav>
+        </div>
+
+        <div className="hidden items-center gap-3 md:flex">
           <CtaLink href={LOGIN_LINK.href} location="header_login" variant="outline">
             {LOGIN_LINK.label}
           </CtaLink>
