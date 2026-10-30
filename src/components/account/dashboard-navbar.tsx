@@ -33,7 +33,7 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-border/80 bg-background">
       <div className="mx-auto flex h-16 w-full max-w-[2560px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Link
             href="/cuenta"
             className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -44,21 +44,22 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
               Decida
             </span>
           </Link>
-          <BetaBadge className="px-2 py-0.5 text-[11px]">Beta</BetaBadge>
+          <BetaBadge className="shrink-0 px-2 py-0.5 text-[11px]">Beta</BetaBadge>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex min-w-0 items-center gap-1 sm:gap-3">
           <PlanBadge user={user} />
           <DropdownMenu>
             <DropdownMenuTrigger
-              className="flex items-center gap-2 rounded-lg border border-transparent px-2 py-1.5 text-sm font-medium text-foreground outline-none hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              aria-label={`Menú de ${label}`}
+              className="flex items-center gap-2 rounded-lg border border-transparent px-1 py-1.5 sm:px-2 text-sm font-medium text-foreground outline-none hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               data-testid="dashboard-user-menu"
             >
               <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <UserIcon className="size-4" aria-hidden />
               </span>
-              <span className="max-w-40 truncate">{label}</span>
-              <ChevronDown className="size-4 text-muted-foreground" aria-hidden />
+              <span className="hidden max-w-40 truncate sm:inline">{label}</span>
+              <ChevronDown className="hidden size-4 text-muted-foreground sm:block" aria-hidden />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem render={<Link href="/cuenta/perfil" />}>
