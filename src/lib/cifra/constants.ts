@@ -1,7 +1,7 @@
 /** Categorías fijas de Cifra: el código se guarda en la base y la etiqueta se muestra. */
 export const EXPENSE_CATEGORIES = [
   { code: "vivienda", label: "Vivienda" },
-  { code: "servicios", label: "Servicios (luz, agua, internet)" },
+  { code: "servicios", label: "Servicios (luz, agua, gas, internet)" },
   { code: "alimentos", label: "Alimentos" },
   { code: "transporte", label: "Transporte" },
   { code: "salud", label: "Salud" },
