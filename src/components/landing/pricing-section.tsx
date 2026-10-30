@@ -3,14 +3,16 @@ import { CtaLink } from "@/components/landing/cta-link";
 import { planFeatures } from "@/components/account/plan-card";
 import { PLANS } from "@/lib/credits/plans";
 import { CREDITS_PLANS_PATH } from "@/lib/credits/paths";
+import { CircleCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 function IncludeList({ items, dark }: { items: readonly string[]; dark?: boolean }) {
   return (
     <ul className="mt-6 space-y-3 text-left">
       {items.map((item) => (
-        <li key={item} className={cn("text-base leading-snug", dark ? "text-white/90" : "text-foreground")}>
-          {item}
+        <li key={item} className={cn("flex items-start gap-2.5 text-base leading-snug", dark ? "text-white/90" : "text-foreground")}>
+          <CircleCheck className={cn("mt-0.5 size-5 shrink-0", dark ? "text-secondary" : "text-primary")} aria-hidden />
+          <span>{item}</span>
         </li>
       ))}
     </ul>
