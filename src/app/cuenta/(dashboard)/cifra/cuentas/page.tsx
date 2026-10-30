@@ -1,5 +1,6 @@
 import { Banknote, Trash2, Landmark, PiggyBank, NotebookPen, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { accountKindColor, debtKindColor, expenseCategoryColor } from "@/lib/cifra/colors";
 import { ActionButton } from "@/components/cifra/form-kit";
 import { AccountDialog, DebtDialog, FixedExpenseDialog } from "@/components/cifra/dialogs";
 import { getCifraAccess } from "@/lib/cifra/access";
@@ -119,7 +120,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 function Chip({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <span className={cn("rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground", className)}>
+    <span className={cn("rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground", className)}>
       {children}
     </span>
   );
@@ -160,7 +161,7 @@ export default async function CifraCuentasPage() {
                   <Icon className="size-5 shrink-0 text-muted-foreground" aria-hidden />
                   <div className="min-w-0">
                     <p className="truncate font-medium">{a.name}</p>
-                    <p className="text-xs text-muted-foreground">{label(ACCOUNT_KINDS, a.kind)}</p>
+                    <Chip className={cn("mt-1 inline-block", accountKindColor(a.kind))}>{label(ACCOUNT_KINDS, a.kind)}</Chip>
                   </div>
                 </div>
                 <CardActions>
@@ -197,7 +198,7 @@ export default async function CifraCuentasPage() {
               </div>
               <div className="flex items-end justify-between gap-3">
                 <div className="flex flex-wrap gap-1.5">
-                  <Chip>{label(DEBT_KINDS, d.kind)}</Chip>
+                  <Chip className={debtKindColor(d.kind)}>{label(DEBT_KINDS, d.kind)}</Chip>
                   {d.annualRatePct != null && <Chip>{d.annualRatePct}% anual</Chip>}
                   {!d.recurring && <Chip>Pago único</Chip>}
                 </div>
@@ -278,7 +279,7 @@ export default async function CifraCuentasPage() {
               </div>
               <div className="flex items-end justify-between gap-3">
                 <div className="flex flex-wrap gap-1.5">
-                  <Chip>{categoryLabel("expense", f.category)}</Chip>
+                  <Chip className={expenseCategoryColor(f.category)}>{categoryLabel("expense", f.category)}</Chip>
                   <Chip>{f.recurring ? "Cada mes" : "Pago único"}</Chip>
                 </div>
                 <p className="text-xl font-semibold tabular-nums">
