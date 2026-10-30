@@ -31,6 +31,9 @@ if (posthogKey && posthogHost) {
     // Solo los eventos del embudo y las vistas de página: sin autocaptura,
     // sin grabación de pantalla (los formularios contienen la idea del
     // usuario) y sin captura de excepciones (de eso se encarga Sentry).
+    // Sus scripts auxiliares van al <head>: por defecto los inserta antes del primer <script> del
+    // <body> (el JSON-LD de la página) y eso rompe la hidratación de React.
+    external_scripts_inject_target: "head",
     autocapture: false,
     disable_session_recording: true,
     capture_exceptions: false,
