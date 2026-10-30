@@ -19,7 +19,7 @@ Catálogo de todas las páginas. Empieza en [[wiki/overview]] si es tu primera v
 | [[wiki/producto/roadmap-y-backlog]] | Plan de 30-45 días vs línea de tiempo real (git) |
 | [[wiki/producto/gaps-onboarding-vs-framework]] | Mapeo campo por campo: rubric/criterios de Notion vs. lo que el onboarding captura hoy — incluye bug crítico del score de riesgo |
 | [[wiki/producto/retencion-y-plan-de-ejecucion]] | Insight de retención (la ejecución, no el diagnóstico), visión de plataforma y brecha técnica hacia un plan de ejecución con seguimiento |
-| [[wiki/producto/nuevas-features]] | Registro de funcionalidades planeadas sin construir; primera: generador de brief de marca (secciones, flujo, créditos y preguntas abiertas) — 2026-10-30 |
+| [[wiki/producto/nuevas-features]] | Visión de plataforma (comunidad + herramientas) y funcionalidades planeadas sin construir: brief de marca y finanzas personales, con consentimiento, preguntas abiertas y fases — 2026-10-30 |
 
 ## Framework (IP central)
 | Página | Resumen |

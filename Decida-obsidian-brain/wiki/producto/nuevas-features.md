@@ -2,7 +2,7 @@
 type: product
 tags: [decida, features, roadmap, brief-de-marca, ia, creditos]
 updated: 2026-10-30
-status: planeado, sin implementar
+status: planeado, sin implementar (brief de marca y finanzas personales)
 ---
 
 # Nuevas features — planes por construir
@@ -11,7 +11,20 @@ Registro de funcionalidades nuevas **planeadas** (no implementadas). Cada una se
 
 | # | Feature | Estado | Fecha |
 |---|---|---|---|
-| 1 | Generador de brief de marca | Plan, sin alcance cerrado | 2026-10-30 |
+| 1 | Generador de brief de marca | Plan, sin alcance cerrado; en el mapa, no es prioridad ahora | 2026-10-30 |
+| 2 | Finanzas personales (nombre por definir) | Plan inicial, en el mapa; la prioridad actual sigue siendo el análisis de ideas | 2026-10-30 |
+
+## Visión de plataforma (2026-10-30)
+
+Decisión del usuario que da contexto a todo lo de esta página:
+
+- **Decida es una plataforma con varias herramientas, no un solo sitio.** El análisis de ideas es el enfoque principal **por ahora**; las demás herramientas llegan después.
+- **El propósito es construir una comunidad** de desarrollo personal acompañado de finanzas y planeación, para emprendedores y para quien quiere ingresos extra. Cada persona decide su rumbo: dejar su empleo, crecer un proyecto dentro de su marca, hacer crecer su marca, o solo generar un ingreso adicional.
+- **Las herramientas son el complemento, no el uso principal.** Pueden ser una fuente fuerte de ingreso, pero no es lo que más le importa al usuario; sirven para dar a la comunidad la mayor cantidad posible de ayuda útil.
+- **Por eso se rehízo el navbar público** (commit `25d187e`): el navbar principal queda con «Inicio» y las acciones de cuenta, y la franja de abajo muestra las secciones de la landing. Más adelante el navbar principal sumará las herramientas nuevas (brief de marca, finanzas personales u otras), cada una como entrada propia.
+- **Pendiente de nombre:** falta decidir cómo se llama cada herramienta y la identidad del conjunto. Hasta entonces los nombres de esta página son provisionales.
+
+Relación con lo ya escrito: refuerza el insight de [[retencion-y-plan-de-ejecucion]] (retención en la ejecución, no en el diagnóstico). Ojo con el alcance de [[prd]], que hoy describe un producto de diagnóstico de ideas y deja fuera la comunidad: este cambio de enfoque habría que reflejarlo ahí cuando se decida formalmente.
 
 ---
 
@@ -70,5 +83,68 @@ Fuente de los puntos: lista de secciones esenciales de un brief de marca que pas
 3. **Experiencia:** pantalla de confirmación, vista editable y descarga.
 4. **Medición:** eventos, embudo de uso y revisión de calidad con briefs reales.
 
+---
+
+## 2. Finanzas personales (nombre por definir)
+
+### Qué es
+Una herramienta para que cualquier usuario **ponga al día y capture con facilidad toda su situación financiera**: gastos, deudas, ingresos y lo que tenga que ver con su dinero. No es solo para quien analiza una idea; sirve a la comunidad en general.
+
+### Para qué
+1. **Orden propio:** que la persona vea dónde está parada (cuánto entra, cuánto sale, qué debe) y planee a partir de ahí.
+2. **Más contexto para ayudar mejor:** con su situación real, Decida puede decir si una idea cabe en su vida (colchón, deudas, tiempo de recuperación) en vez de depender de estimaciones sueltas.
+3. **Complemento del análisis de ideas:** hoy el análisis pide presupuesto y datos financieros dentro del onboarding de cada idea ([[../experiencia/flujo-de-onboarding]]). Con esta herramienta esos datos podrían venir ya capturados y actualizados.
+
+### Condición central: consentimiento
+Los datos financieros **solo se usan en los análisis si el usuario lo autoriza**. Principios propuestos:
+- Opt-in explícito, por separado de los términos generales, y revocable en cualquier momento (con efecto: dejan de usarse y se pueden borrar).
+- La herramienta funciona sola aunque la persona no autorice el cruce con el análisis de ideas.
+- Se explica en lenguaje claro qué dato se usa, para qué análisis y con qué fin.
+- Nunca se usan para publicidad ni se comparten con terceros; coherente con [[principios-de-producto]].
+
+### Qué se captura (borrador, por afinar)
+| Bloque | Ejemplos |
+|---|---|
+| Ingresos | Sueldo, ingresos extra, frecuencia |
+| Gastos | Fijos, variables, suscripciones |
+| Deudas | Tarjetas, préstamos, saldo, tasa, pago mínimo y fecha |
+| Ahorro y colchón | Fondo de emergencia, meses de gasto cubiertos |
+| Metas | Ahorrar para arrancar un proyecto, salir de deudas, dejar el empleo |
+
+### Cómo se conecta con el análisis de ideas
+- Prellenar presupuesto y capacidad de inversión en el onboarding.
+- Ajustar el semáforo financiero con la situación real (por ejemplo, deudas altas o poco colchón pesan más ante una idea con riesgo).
+- Añadir al reporte un punto de «cabe en tu vida financiera» solo si hay autorización.
+- Cuidar que ninguna salida suene a asesoría de inversión o fiscal personalizada.
+
+### Propuesta técnica (a validar contra el código)
+- **Captura manual primero.** Sin conexión a bancos en la primera versión: cuesta, exige cumplimiento y genera riesgo. Importar CSV o conectar cuentas queda como fase posterior.
+- **Datos:** modelos nuevos ligados a la cuenta del usuario (no al análisis), con un campo de autorización de uso en análisis y su fecha. Prefijo snake_case como en [[../arquitectura/modelo-de-datos]].
+- **Seguridad:** son los datos más sensibles de la plataforma; revisar cifrado en reposo, acceso solo del dueño, borrado completo al cerrar la cuenta y registro de quién los lee. Actualizar [[../arquitectura/seguridad-y-proteccion-de-costos]].
+- **Legal:** aviso de privacidad específico (datos financieros personales en México) y revisión con asesor antes de lanzar; reglas de [[../decisiones/facturacion-y-cfdi-despues-de-la-beta]] aplican si algo se cobra.
+- **Cobro:** por definir si va gratis (ancla de comunidad y fuente de contexto) o dentro de los créditos de [[../decisiones/modelo-de-creditos-hibrido]]. Sin IA, el costo variable es casi nulo.
+- **Analítica:** eventos de uso sin enviar montos ni datos financieros a PostHog.
+
+### Tensiones y riesgos
+- **Confianza:** pedir datos financieros a un producto en beta exige mucha claridad; un mal manejo daña toda la marca.
+- **Alcance:** es un producto grande (cercano a una app de finanzas personales) y compite con apps existentes; conviene un primer corte pequeño.
+- **Asesoría regulada:** evitar recomendaciones personalizadas de inversión (ver reglas del producto).
+- **Foco:** el análisis de ideas sigue siendo la prioridad; esto va en el mapa sin comprometer fecha.
+
+### Preguntas abiertas
+1. ¿Nombre de la herramienta y de la plataforma?
+2. ¿Gratis o con créditos? ¿Requiere cuenta verificada (sí, casi seguro)?
+3. ¿Primer corte: solo gastos y deudas, o también ingresos, ahorro y metas?
+4. ¿Cómo se pide y guarda el consentimiento, y qué pasa al revocarlo?
+5. ¿Quién la usa primero: usuarios del análisis o la comunidad abierta?
+6. ¿Cuándo se hace la revisión legal de datos financieros?
+7. ¿Hay seguimiento (recordatorios, avance de metas) como parte de la comunidad?
+
+### Fases sugeridas
+1. **Spec y legal:** responder preguntas, definir consentimiento y aviso de privacidad.
+2. **Captura manual** de gastos y deudas, con vista de resumen.
+3. **Consentimiento y cruce** con el onboarding y el reporte.
+4. **Seguimiento y comunidad:** metas, recordatorios y, más adelante, importación de movimientos.
+
 ## Ver también
-[[prd]] · [[roadmap-y-backlog]] · [[retencion-y-plan-de-ejecucion]] · [[pricing-y-gtm]] · [[../decisiones/modelo-de-creditos-hibrido]] · [[../framework/prompts-de-ia]]
+[[prd]] · [[roadmap-y-backlog]] · [[retencion-y-plan-de-ejecucion]] · [[pricing-y-gtm]] · [[principios-de-producto]] · [[../decisiones/modelo-de-creditos-hibrido]] · [[../framework/prompts-de-ia]]
