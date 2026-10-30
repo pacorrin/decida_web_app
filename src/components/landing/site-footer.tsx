@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { LEGAL_LINKS, LOGIN_LINK } from "@/components/landing/landing-content";
 import { BETA_FOOTER_TEXT } from "@/lib/beta";
@@ -16,6 +17,15 @@ export function SiteFooter() {
   return (
     <footer className="bg-primary text-white">
       <div className="mx-auto max-w-6xl px-4 pb-10 pt-16 sm:px-6 lg:px-8">
+        <Link
+          href="/"
+          aria-label="Decida, inicio"
+          className="mb-8 inline-flex items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+        >
+          <Image src="/logo.svg" alt="" width={56} height={34} aria-hidden className="brightness-0 invert" />
+          <span className="text-2xl font-semibold tracking-tight">Decida</span>
+        </Link>
+
         <p
           data-testid="beta-footer-notice"
           className="max-w-xl text-lg font-medium leading-snug"
