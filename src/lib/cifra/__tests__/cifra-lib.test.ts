@@ -26,7 +26,7 @@ import {
   paymentsUntil,
 } from "../payoff";
 import { accountSchema, debtSchema, fixedExpenseSchema, transactionSchema } from "../schemas";
-import { amountAppliedToDebt, summarizeTransactions } from "../summary";
+import { amountAppliedToDebt, breakdownByCategory, summarizeTransactions } from "../summary";
 import { type DueItem, totalsOf, upcomingPayments } from "../upcoming";
 
 const d = (year: number, month: number, day: number) => ({ year, month, day });
@@ -328,5 +328,24 @@ describe("observaciones", () => {
     expect(accountSchema.parse(base).notes).toBe("");
     expect(accountSchema.parse({ ...base, notes: "  Solo para el súper  " }).notes).toBe("Solo para el súper");
     expect(accountSchema.safeParse({ ...base, notes: "a".repeat(501) }).success).toBe(false);
+  });
+});
+
+describe("desglose por categoría", () => {
+  const rows = [
+    { flow: "expense" as const, category: "vivienda", amountCents: 12000 },
+    { flow: "expense" as const, category: "alimentos", amountCents: 3000 },
+    { flow: "expense" as const, category: "vivienda", amountCents: 5000 },
+    { flow: "income" as const, category: "sueldo", amountCents: 40000 },
+  ];
+  it("suma por categoría, de mayor a menor, con su porcentaje", () => {
+    expect(breakdownByCategory(rows, "expense")).toEqual([
+      { category: "vivienda", amountCents: 17000, pct: 85 },
+      { category: "alimentos", amountCents: 3000, pct: 15 },
+    ]);
+  });
+  it("solo cuenta el tipo pedido y no falla sin movimientos", () => {
+    expect(breakdownByCategory(rows, "income")).toHaveLength(1);
+    expect(breakdownByCategory([], "income")).toEqual([]);
   });
 });

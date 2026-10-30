@@ -52,3 +52,16 @@ const toneClass = (map: Record<string, Tone>, code: string) => TONES[map[code] ?
 export const accountKindColor = (code: string) => toneClass(ACCOUNT_KIND_TONE, code);
 export const debtKindColor = (code: string) => toneClass(DEBT_KIND_TONE, code);
 export const expenseCategoryColor = (code: string) => toneClass(EXPENSE_CATEGORY_TONE, code);
+
+const INCOME_CATEGORY_TONE: Record<string, Tone> = {
+  sueldo: "emerald",
+  negocio: "blue",
+  extra: "lime",
+  otros: "slate",
+};
+
+export const incomeCategoryColor = (code: string) => toneClass(INCOME_CATEGORY_TONE, code);
+
+/** Color de la categoría de un movimiento, según sea ingreso o egreso. */
+export const categoryColor = (flow: "income" | "expense", code: string) =>
+  flow === "income" ? incomeCategoryColor(code) : expenseCategoryColor(code);

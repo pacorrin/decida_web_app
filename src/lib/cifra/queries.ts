@@ -9,7 +9,7 @@ import {
   periodOf,
 } from "./dates";
 import { estimatePayoff } from "./payoff";
-import { summarizeTransactions } from "./summary";
+import { breakdownByCategory, summarizeTransactions } from "./summary";
 import { type DueItem, totalsOf, upcomingPayments } from "./upcoming";
 
 const dateOrNull = (d: Date | null) => (d ? fromDateOnly(d) : null);
@@ -60,7 +60,7 @@ export async function getOverview(userId: string, today: CalendarDate) {
   const [transactions, debtSum, items, accounts] = await Promise.all([
     prisma.cifra_transactions.findMany({
       where: { ctrx_user_id: userId, ctrx_occurred_on: { gte: range.from, lte: range.to } },
-      select: { ctrx_flow: true, ctrx_amount_cents: true },
+      orderBy: [{ ctrx_occurred_on: "desc" }, { ctrx_created_at: "desc" }],
     }),
     prisma.cifra_debts.aggregate({
       where: { cdebt_user_id: userId, cdebt_paid_off: false },
@@ -70,12 +70,23 @@ export async function getOverview(userId: string, today: CalendarDate) {
     accountsTotal(userId),
   ]);
 
-  const month = summarizeTransactions(
-    transactions.map((t) => ({ flow: t.ctrx_flow, amountCents: t.ctrx_amount_cents })),
-  );
+  const rows = transactions.map((t) => ({
+    id: t.ctrx_id,
+    flow: t.ctrx_flow,
+    category: t.ctrx_category,
+    amountCents: t.ctrx_amount_cents,
+    date: fromDateOnly(t.ctrx_occurred_on),
+    description: t.ctrx_description,
+    fromPayment: t.ctrx_period !== null,
+  }));
+  const month = summarizeTransactions(rows);
   const upcoming = upcomingPayments(items, { today, from: today, to: addDays(today, 30) });
   return {
     ...month,
+    incomeByCategory: breakdownByCategory(rows, "income"),
+    expenseByCategory: breakdownByCategory(rows, "expense"),
+    recentTransactions: rows.slice(0, 6),
+    transactionCount: rows.length,
     debtTotalCents: debtSum._sum.cdebt_balance_cents ?? 0,
     accountsTotalCents: accounts,
     upcoming,

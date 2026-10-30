@@ -17,3 +17,25 @@ export function amountAppliedToDebt(
 ): number {
   return Math.max(0, Math.min(balanceCents, paymentCents));
 }
+
+export type CategoryShare = { category: string; amountCents: number; pct: number };
+
+/** Total por categoría de un tipo de movimiento, de mayor a menor, con su porcentaje del total. */
+export function breakdownByCategory(
+  rows: { flow: "income" | "expense"; category: string; amountCents: number }[],
+  flow: "income" | "expense",
+): CategoryShare[] {
+  const totals = new Map<string, number>();
+  for (const r of rows) {
+    if (r.flow !== flow) continue;
+    totals.set(r.category, (totals.get(r.category) ?? 0) + r.amountCents);
+  }
+  const sum = [...totals.values()].reduce((a, b) => a + b, 0);
+  return [...totals.entries()]
+    .map(([category, amountCents]) => ({
+      category,
+      amountCents,
+      pct: sum > 0 ? Math.round((amountCents / sum) * 100) : 0,
+    }))
+    .sort((a, b) => b.amountCents - a.amountCents || a.category.localeCompare(b.category));
+}

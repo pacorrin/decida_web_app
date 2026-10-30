@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { PaymentList } from "@/components/cifra/payment-list";
 import { getCifraAccess } from "@/lib/cifra/access";
-import { todayInMexico } from "@/lib/cifra/dates";
+import { categoryColor } from "@/lib/cifra/colors";
+import { categoryLabel } from "@/lib/cifra/constants";
+import { formatDayMonth, todayInMexico } from "@/lib/cifra/dates";
 import { formatMxn } from "@/lib/cifra/money";
 import { getOverview } from "@/lib/cifra/queries";
+import type { CategoryShare } from "@/lib/cifra/summary";
 import { cn } from "@/lib/utils";
 
 const monthName = new Intl.DateTimeFormat("es-MX", { month: "long", year: "numeric", timeZone: "UTC" });
@@ -21,6 +24,51 @@ function Stat({ label, value, tone, testId }: { label: string; value: string; to
       >
         {value}
       </p>
+    </div>
+  );
+}
+
+function Breakdown({
+  title,
+  flow,
+  items,
+  emptyText,
+  testId,
+}: {
+  title: string;
+  flow: "income" | "expense";
+  items: CategoryShare[];
+  emptyText: string;
+  testId: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-border/80 p-5" data-testid={testId}>
+      <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
+      {items.length === 0 ? (
+        <p className="mt-3 text-sm text-muted-foreground">{emptyText}</p>
+      ) : (
+        <ul className="mt-3 space-y-3">
+          {items.map((i) => (
+            <li key={i.category} className="space-y-1.5 text-sm">
+              <div className="flex items-center justify-between gap-3">
+                <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-medium", categoryColor(flow, i.category))}>
+                  {categoryLabel(flow, i.category)}
+                </span>
+                <span className="tabular-nums">
+                  <span className="font-medium">{formatMxn(i.amountCents)}</span>
+                  <span className="ml-2 text-xs text-muted-foreground">{i.pct}%</span>
+                </span>
+              </div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-muted" aria-hidden>
+                <div
+                  className={cn("h-full rounded-full", flow === "income" ? "bg-primary" : "bg-secondary")}
+                  style={{ width: `${i.pct}%` }}
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -55,6 +103,28 @@ export default async function CifraResumenPage() {
         </div>
       </section>
 
+      <section aria-labelledby="origen" className="space-y-3">
+        <h2 id="origen" className="text-lg font-semibold tracking-tight">
+          De dónde viene
+        </h2>
+        <div className="grid gap-3 md:grid-cols-2">
+          <Breakdown
+            title="Ingresos por categoría"
+            flow="income"
+            items={o.incomeByCategory}
+            emptyText="Aún no registras ingresos este mes."
+            testId="cifra-income-breakdown"
+          />
+          <Breakdown
+            title="Egresos por categoría"
+            flow="expense"
+            items={o.expenseByCategory}
+            emptyText="Aún no registras egresos este mes."
+            testId="cifra-expense-breakdown"
+          />
+        </div>
+      </section>
+
       <section aria-labelledby="proximos" className="space-y-3">
         <div className="flex flex-wrap items-end justify-between gap-2">
           <h2 id="proximos" className="text-lg font-semibold tracking-tight">
@@ -74,6 +144,51 @@ export default async function CifraResumenPage() {
           </p>
         ) : (
           <PaymentList payments={o.upcoming} today={today} />
+        )}
+      </section>
+
+      <section aria-labelledby="recientes" className="space-y-3">
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <h2 id="recientes" className="text-lg font-semibold tracking-tight">
+            Últimos movimientos
+          </h2>
+          <Link href="/cuenta/cifra/movimientos" className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+            {o.transactionCount > o.recentTransactions.length
+              ? `Ver los ${o.transactionCount} del mes`
+              : "Ver movimientos"}
+          </Link>
+        </div>
+        {o.recentTransactions.length === 0 ? (
+          <p className="rounded-xl border border-border/80 px-4 py-4 text-sm text-muted-foreground" data-testid="cifra-recent-empty">
+            Aún no hay movimientos este mes.{" "}
+            <Link href="/cuenta/cifra/movimientos" className="font-medium text-primary underline-offset-4 hover:underline">
+              Registra tu primer ingreso o egreso
+            </Link>
+            .
+          </p>
+        ) : (
+          <ul className="divide-y divide-border/80 rounded-2xl border border-border/80" data-testid="cifra-recent-list">
+            {o.recentTransactions.map((t) => (
+              <li key={t.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-medium", categoryColor(t.flow, t.category))}>
+                      {categoryLabel(t.flow, t.category)}
+                    </span>
+                    {t.fromPayment && (
+                      <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">Pago</span>
+                    )}
+                  </div>
+                  {t.description && <p className="mt-1 truncate">{t.description}</p>}
+                  <p className="mt-1 text-xs text-muted-foreground">{formatDayMonth(t.date)}</p>
+                </div>
+                <span className={cn("font-medium tabular-nums", t.flow === "income" && "text-secondary")}>
+                  {t.flow === "income" ? "+" : "−"}
+                  {formatMxn(t.amountCents)}
+                </span>
+              </li>
+            ))}
+          </ul>
         )}
       </section>
     </div>

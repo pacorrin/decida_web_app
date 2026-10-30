@@ -13,7 +13,7 @@ Primera herramienta nueva de la plataforma ([[../producto/nuevas-features#2. Cif
 1. **Mis cuentas** (`/cuenta/cifra/cuentas`): saldos (efectivo, banco, ahorro), deudas (tarjeta, préstamo, automóvil, vivienda u otra) y gastos fijos.
 2. **Pagos** (`/cuenta/cifra/pagos`): reporte «¿Qué tengo que pagar?» de un periodo que elige la persona (7, 15, 30, 60, 90 días o desde/hasta, máximo 366 días). Vencidos primero; muestra total por pagar, saldo en cuentas y cuánto sobra o falta. Los pagos recurrentes se proyectan; los de monto variable salen «por confirmar».
 3. **Movimientos** (`/cuenta/cifra/movimientos`): ingresos y egresos con categoría, monto, fecha y nota; por mes.
-4. **Resumen** (`/cuenta/cifra`): ingresos, egresos, balance, deuda total, saldo en cuentas y próximos pagos de 30 días con «Editar y pagar».
+4. **Resumen** (`/cuenta/cifra`): ingresos, egresos, balance, deuda total y saldo en cuentas; «De dónde viene» (ingresos y egresos del mes por categoría, con porcentaje); próximos pagos de 30 días con «Editar y pagar»; y los últimos 6 movimientos del mes.
 
 ## Modelo de pagos (rediseño de deudas)
 - Se captura el **próximo pago** (monto y fecha real), no «saldo y pago mensual»: en tarjetas el monto cambia cada mes. Casilla «El monto cambia cada mes»: tras pagar, el siguiente queda por confirmar hasta que se captura el estado de cuenta («Capturar monto»).
