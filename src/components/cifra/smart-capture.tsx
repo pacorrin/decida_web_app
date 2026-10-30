@@ -339,17 +339,6 @@ export function SmartCapture({
                   <ImagePlus className="size-4" aria-hidden /> Elegir de la galería
                 </span>
               </label>
-              {voice === "recording" ? (
-                <Button type="button" onClick={stopRecording} className="bg-secondary text-secondary-foreground hover:bg-secondary/90" data-testid="cifra-capture-stop">
-                  <span className="size-2 animate-pulse rounded-full bg-current" aria-hidden />
-                  <Square className="size-3.5" aria-hidden /> Detener · {clock(seconds)}
-                </Button>
-              ) : (
-                <Button type="button" variant="outline" onClick={() => void startRecording()} disabled={voice === "transcribing" || (noCredits && !charged)} data-testid="cifra-capture-record">
-                  {voice === "transcribing" ? <Loader2 className="animate-spin" aria-hidden /> : <Mic aria-hidden />}
-                  {voice === "transcribing" ? "Transcribiendo…" : "Grabar voz"}
-                </Button>
-              )}
             </div>
 
             {photos.length > 0 && (
@@ -372,7 +361,20 @@ export function SmartCapture({
             )}
 
             <Field>
-              <FieldLabel htmlFor="capture-text">Observaciones (opcional)</FieldLabel>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <FieldLabel htmlFor="capture-text">Observaciones (opcional)</FieldLabel>
+                {voice === "recording" ? (
+                  <Button type="button" size="sm" onClick={stopRecording} className="bg-secondary text-secondary-foreground hover:bg-secondary/90" data-testid="cifra-capture-stop">
+                    <span className="size-2 animate-pulse rounded-full bg-current" aria-hidden />
+                    <Square className="size-3.5" aria-hidden /> Detener · {clock(seconds)}
+                  </Button>
+                ) : (
+                  <Button type="button" size="sm" variant="outline" onClick={() => void startRecording()} disabled={voice === "transcribing" || (noCredits && !charged)} data-testid="cifra-capture-record">
+                    {voice === "transcribing" ? <Loader2 className="animate-spin" aria-hidden /> : <Mic aria-hidden />}
+                    {voice === "transcribing" ? "Transcribiendo…" : "Grabar voz"}
+                  </Button>
+                )}
+              </div>
               <textarea
                 id="capture-text"
                 value={text}
