@@ -73,7 +73,7 @@ export function SiteHeader() {
                 <SheetTitle>Menú</SheetTitle>
               </SheetHeader>
               <nav
-                className="mt-6 flex flex-col gap-2"
+                className="mt-6 flex flex-col gap-2 px-4"
                 aria-label="Navegación móvil"
               >
                 <Link
