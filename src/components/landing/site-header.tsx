@@ -72,29 +72,35 @@ export function SiteHeader() {
               <SheetHeader>
                 <SheetTitle>Menú</SheetTitle>
               </SheetHeader>
+              <div className="mt-6 flex flex-col gap-3 px-4">
+                <CtaLink
+                  href={LOGIN_LINK.href}
+                  location="header_mobile_login"
+                  variant="outline"
+                  className="w-full sm:w-full"
+                >
+                  {LOGIN_LINK.label}
+                </CtaLink>
+                <PrimaryCtaButton href="/analizar" location="header_mobile">
+                  Analizar mi idea gratis
+                </PrimaryCtaButton>
+              </div>
               <nav
-                className="mt-6 flex flex-col gap-2 px-4"
-                aria-label="Navegación móvil"
+                className="mt-4 flex flex-col gap-2 border-t border-border/80 px-4 pt-6"
+                aria-labelledby="menu-navegacion"
               >
+                <p
+                  id="menu-navegacion"
+                  className="px-3 text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                >
+                  Navegación
+                </p>
                 <Link
                   href="/"
                   className="rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   Inicio
                 </Link>
-                <div className="flex flex-col gap-3 pt-4">
-                  <CtaLink
-                    href={LOGIN_LINK.href}
-                    location="header_mobile_login"
-                    variant="outline"
-                    className="w-full sm:w-full"
-                  >
-                    {LOGIN_LINK.label}
-                  </CtaLink>
-                  <PrimaryCtaButton href="/analizar" location="header_mobile">
-                    Analizar mi idea gratis
-                  </PrimaryCtaButton>
-                </div>
               </nav>
             </SheetContent>
           </Sheet>
