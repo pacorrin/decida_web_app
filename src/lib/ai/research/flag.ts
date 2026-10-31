@@ -1,30 +1,15 @@
-import { getPostHogClient } from "@/lib/analytics/server";
-
-export const RESEARCH_FLAG_KEY = "report-research";
-
 /**
- * ¿Se hace la etapa de investigación para esta cuenta?
+ * ¿Está disponible la etapa de investigación de mercado?
  *
- * `REPORT_RESEARCH_ENABLED`:
- * - `true`  → siempre (también la usan los evals);
- * - `false` → nunca (apagado de emergencia);
- * - `posthog` (por defecto) → la decide el flag `report-research` de PostHog
- *   para esa cuenta, lo que permite activarla por usuario o porcentaje y
- *   comparar con quienes no la tienen. Sin PostHog configurado, queda apagada.
+ * Es decisión de la persona: si activa «Investigación de mercado» en su evaluación, se hace
+ * (y se cobra). El servidor no la apaga por su cuenta; solo existe un apagado de emergencia:
+ * `REPORT_RESEARCH_ENABLED=false` (también `off` o `0`). Con cualquier otro valor, o sin
+ * definirla, queda disponible.
  */
 export async function isResearchEnabled(
-  distinctId: string | null | undefined,
+  _distinctId?: string | null,
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<boolean> {
-  const mode = (env.REPORT_RESEARCH_ENABLED ?? "posthog").trim().toLowerCase();
-  if (mode === "true" || mode === "on" || mode === "1") return true;
-  if (mode === "false" || mode === "off" || mode === "0") return false;
-
-  const ph = getPostHogClient();
-  if (!ph || !distinctId) return false;
-  try {
-    return (await ph.isFeatureEnabled(RESEARCH_FLAG_KEY, distinctId)) === true;
-  } catch {
-    return false;
-  }
+  const mode = (env.REPORT_RESEARCH_ENABLED ?? "").trim().toLowerCase();
+  return !(mode === "false" || mode === "off" || mode === "0");
 }

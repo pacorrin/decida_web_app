@@ -45,7 +45,7 @@ Estas **no estaban** en `.env.example` hasta el 2026-10-29 y tienen un valor por
 | `REPORT_REVIEW_ENABLED` | `true` |
 | `REPORT_REVIEW_MAX_ISSUES` | `6` |
 | `REPORT_REVIEW_MAX_REWRITES` | `4` |
-| `REPORT_RESEARCH_ENABLED` | `posthog` (`true` / `false` / flag `report-research`) |
+| `REPORT_RESEARCH_ENABLED` | `true` por defecto; solo `false` como apagado de emergencia. La investigación la decide el usuario en cada evaluación (ya no depende del flag `report-research` de PostHog) |
 
 ## Stripe, correo y monitoreo
 - **Stripe:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_EXPLORA`, `STRIPE_PRICE_VALIDA`, `STRIPE_PRICE_ESCALA`. Todo es **por organización y por modo**. Detalle de los planes: [[../decisiones/modelo-de-creditos-hibrido]] y [[pagos-con-stripe]].

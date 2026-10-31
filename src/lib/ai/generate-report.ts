@@ -380,8 +380,8 @@ export type BuildReportOptions = {
  * Genera las 9 secciones y devuelve los datos del reporte, sin tocar la base
  * de datos. Lo usan `generateReport` (que además persiste) y los evals.
  *
- * Investigación = `REPORT_RESEARCH_ENABLED` (maestro) AND `asmt_research_enabled`
- * (por evaluación), salvo `forceNoResearch`.
+ * Investigación = `asmt_research_enabled` (la elige la persona en cada evaluación) salvo
+ * `forceNoResearch` o el apagado de emergencia `REPORT_RESEARCH_ENABLED=false`.
  */
 export async function buildReportData(
   assessment: AssessmentWithRelations,
