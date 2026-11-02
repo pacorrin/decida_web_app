@@ -1,60 +1,55 @@
 /**
- * Fondo del hero: ruido de mercado (barras que respiran y una línea de tendencia con sus puntos)
- * que termina en un punto alto. Todo plano, solo transform y opacity, sin degradados.
+ * Fondo del hero: una idea (un disco blanco) cruza seis filtros (líneas verticales). Cada línea se
+ * ilumina en azul-guía el instante en que el disco la cruza. Bucle de 16 s sin cortes: el disco entra
+ * y sale fuera de pantalla. Solo transform y opacity.
  */
-const BARS = Array.from({ length: 30 }, (_, i) => {
-  const trend = 22 + i * 1.9;
-  const wobble = Math.sin(i * 1.7) * 9 + Math.cos(i * 0.9) * 6;
-  return {
-    h: Math.round(Math.min(92, Math.max(14, trend + wobble))),
-    secs: 5 + (i % 6) * 1,
-    delay: -((i * 1.7) % 10),
-    guide: i === 11 || i === 19 || i === 26,
-  };
-});
+const LOOP_SECONDS = 16;
+const FLASH_PEAK_SECONDS = 0.02 * LOOP_SECONDS; // el pico de «hero-line-flash» está en el 2% del ciclo
+/** El disco recorre de -8% a 108% del ancho (116% de recorrido). */
+const TRAVEL_START = -8;
+const TRAVEL = 116;
 
-/** Línea de tendencia en el cuadro 0-100; los puntos usan las mismas coordenadas en %. */
-const LINE: [number, number][] = [
-  [52, 62], [59, 54], [66, 58], [73, 42], [80, 46], [87, 30], [93, 33], [98, 18],
+const FILTERS = [
+  "Tu tiempo disponible",
+  "Tu dinero e inversión",
+  "Tu perfil de trabajo",
+  "Tu mercado cercano",
+  "Tu nivel de riesgo",
+  "Tu capacidad de escalar",
 ];
 
 export function HeroField() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute inset-x-0 bottom-0 flex h-[78%] items-end gap-[0.6%] px-[0.6%]">
-        {BARS.map((b, i) => (
-          <span
-            key={i}
-            className={`hero-bar flex-1 rounded-t-sm ${b.guide ? "bg-[#6baed6]/45" : "bg-white/[0.06]"}`}
-            style={{ height: `${b.h}%`, animationDuration: `${b.secs}s`, animationDelay: `${b.delay}s` }}
-          />
-        ))}
-      </div>
+      {FILTERS.map((label, i) => {
+        const x = ((i + 1) / (FILTERS.length + 1)) * 100;
+        const crossesAt = ((x - TRAVEL_START) / TRAVEL) * LOOP_SECONDS;
+        return (
+          <div
+            key={label}
+            // En móvil quedan tres (1.ª, 3.ª y 5.ª), que siguen equidistantes.
+            className={`absolute inset-y-0 w-px bg-white/12 ${i % 2 === 1 ? "max-sm:hidden" : ""}`}
+            style={{ left: `${x}%` }}
+          >
+            <span
+              className="hero-line-flash absolute inset-y-0 -left-px w-0.5 bg-[#6baed6]"
+              style={{ animationDuration: `${LOOP_SECONDS}s`, animationDelay: `${(crossesAt - FLASH_PEAK_SECONDS).toFixed(2)}s` }}
+            />
+            <span className="absolute bottom-6 left-0 w-24 -translate-x-1/2 text-center text-xs uppercase leading-snug tracking-[0.18em] text-white/55 sm:w-36">
+              {label}
+            </span>
+          </div>
+        );
+      })}
 
-      <svg className="absolute inset-0 size-full max-lg:hidden" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <polyline
-          points={LINE.map(([x, y]) => `${x},${y}`).join(" ")}
-          fill="none"
-          stroke="#6baed6"
-          strokeWidth="3"
-          strokeLinejoin="round"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-      {LINE.map(([x, y], i) => (
-        <span
-          key={i}
-          className={`hero-node absolute rounded-full bg-[#6baed6] max-lg:hidden ${i === LINE.length - 1 ? "size-5" : "size-3"}`}
-          style={{
-            left: `${x}%`,
-            top: `${y}%`,
-            marginLeft: i === LINE.length - 1 ? "-0.625rem" : "-0.375rem",
-            marginTop: i === LINE.length - 1 ? "-0.625rem" : "-0.375rem",
-            animationDelay: `${-i * 0.7}s`,
-          }}
-        />
-      ))}
+      <div
+        className="hero-idea-travel absolute top-12 h-0 lg:top-16"
+        style={{ left: `${TRAVEL_START}%`, width: `${TRAVEL}%`, animationDuration: `${LOOP_SECONDS}s` }}
+      >
+        <div className="hero-idea-bob">
+          <span className="-ml-7 -mt-7 block size-14 rounded-full bg-white sm:-ml-9 sm:-mt-9 sm:size-[4.5rem]" />
+        </div>
+      </div>
     </div>
   );
 }

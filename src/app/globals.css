@@ -263,37 +263,60 @@
   }
 }
 
-/* Fondo del hero: las barras respiran en bucle (alternate, sin corte) y los nodos laten. */
-@keyframes hero-bar-breathe {
+/* Fondo del hero: el disco cruza de izquierda a derecha y las líneas destellan al paso. */
+@keyframes hero-idea-travel {
   from {
-    transform: scaleY(0.55);
+    transform: translateX(0);
   }
   to {
-    transform: scaleY(1);
+    transform: translateX(100%);
   }
 }
 
-@keyframes hero-node-pulse {
+@keyframes hero-idea-bob {
   from {
-    transform: scale(0.8);
+    transform: translateY(-0.75rem);
   }
   to {
-    transform: scale(1.35);
+    transform: translateY(0.75rem);
   }
 }
 
-.hero-bar {
-  transform-origin: bottom;
-  animation: hero-bar-breathe 6s ease-in-out infinite alternate;
+@keyframes hero-line-flash {
+  0% {
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  5%,
+  100% {
+    opacity: 0;
+  }
 }
 
-.hero-node {
-  animation: hero-node-pulse 2.6s ease-in-out infinite alternate;
+.hero-idea-travel {
+  animation: hero-idea-travel 16s linear infinite;
+}
+
+.hero-idea-bob {
+  animation: hero-idea-bob 4s ease-in-out infinite alternate;
+}
+
+.hero-line-flash {
+  opacity: 0;
+  animation: hero-line-flash 16s ease-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-bar,
-  .hero-node {
+  /* El disco queda quieto en el centro (50% del ancho) y las líneas sin destello. */
+  .hero-idea-travel {
+    animation: none;
+    transform: translateX(50%);
+  }
+
+  .hero-idea-bob,
+  .hero-line-flash {
     animation: none;
   }
 }
