@@ -12,6 +12,7 @@ const m = vi.hoisted(() => ({
     users: { update: vi.fn() },
     credit_ledger: { findUnique: vi.fn() },
     cifra_cards: { findMany: vi.fn() },
+    cifra_accounts: { findMany: vi.fn() },
   },
 }));
 
@@ -61,6 +62,7 @@ beforeEach(() => {
   m.spendCredits.mockResolvedValue({ created: true, entry: { cled_balance_after: 197 } });
   m.prisma.credit_ledger.findUnique.mockResolvedValue(null);
   m.prisma.cifra_cards.findMany.mockResolvedValue([]);
+  m.prisma.cifra_accounts.findMany.mockResolvedValue([]);
   m.extractCapture.mockResolvedValue(proposal);
 });
 

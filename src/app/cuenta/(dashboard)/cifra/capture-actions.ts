@@ -173,8 +173,16 @@ export async function smartCapture(formData: FormData): Promise<SmartCaptureResu
         select: { ccard_id: true, ccard_name: true },
       })
     ).map((c) => ({ id: c.ccard_id, name: c.ccard_name }));
+    const accounts = (
+      await prisma.cifra_accounts.findMany({
+        where: { cacc_user_id: user.user_id },
+        orderBy: { cacc_created_at: "asc" },
+        select: { cacc_id: true, cacc_name: true },
+      })
+    ).map((a) => ({ id: a.cacc_id, name: a.cacc_name }));
     const proposal = await extractCapture({
       cards,
+      accounts,
       images: input.images,
       text: input.text,
       today: todayInMexico(),

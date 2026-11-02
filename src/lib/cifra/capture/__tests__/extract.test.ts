@@ -45,4 +45,11 @@ describe("prompt de captura", () => {
   it("iCloud cae en suscripciones", () => {
     expect(prompt).toMatch(/suscripciones[^\n]*iCloud/);
   });
+
+  it("con cuentas le pasa nombre e id y pide accountId", () => {
+    const withAccounts = buildCaptureSystemPrompt({ year: 2026, month: 10, day: 30 }, [], [{ id: "acc_1", name: "BBVA débito" }]);
+    expect(withAccounts).toContain('"BBVA débito" → acc_1');
+    expect(withAccounts).toContain("accountId");
+    expect(withAccounts).not.toContain("- cardId:");
+  });
 });

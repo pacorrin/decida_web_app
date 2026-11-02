@@ -13,6 +13,7 @@ const rawSchema = z.object({
   confidence: z.string().optional(),
   note: z.string().nullable().optional(),
   cardId: z.string().nullable().optional(),
+  accountId: z.string().nullable().optional(),
 });
 
 export type CaptureProposal = {
@@ -22,6 +23,8 @@ export type CaptureProposal = {
   category: string;
   /** Tarjeta con la que se pagó, solo si la IA la reconoció entre las de la persona; null si no. */
   cardId: string | null;
+  /** Cuenta de donde salió o a donde entró el dinero, solo si la IA la reconoció entre las de la persona. */
+  accountId: string | null;
   /** AAAA-MM-DD */
   date: string;
   description: string;
@@ -41,7 +44,7 @@ const MAX_NOTE = 160;
 export function normalizeCapture(
   raw: unknown,
   today: CalendarDate,
-  cards: readonly { id: string }[] = [],
+  methods: { cards?: readonly { id: string }[]; accounts?: readonly { id: string }[] } = {},
 ): CaptureProposal | null {
   const parsed = rawSchema.safeParse(raw);
   if (!parsed.success) return null;
@@ -64,8 +67,10 @@ export function normalizeCapture(
       ? r.category!
       : "otros";
 
-  // Solo egresos, y solo un id que de verdad sea de una tarjeta de la persona.
-  const cardId = flow === "expense" && cards.some((c) => c.id === r.cardId) ? r.cardId! : null;
+  // Solo un id que de verdad sea de la persona; la tarjeta solo aplica a egresos.
+  const cardId = flow === "expense" && (methods.cards ?? []).some((c) => c.id === r.cardId) ? r.cardId! : null;
+  // Tarjeta y cuenta son excluyentes: si trae las dos, manda la tarjeta.
+  const accountId = !cardId && (methods.accounts ?? []).some((a) => a.id === r.accountId) ? r.accountId! : null;
 
   let date = formatDateInput(today);
   const parsedDate = r.date ? parseDateInput(r.date) : null;
@@ -78,5 +83,5 @@ export function normalizeCapture(
 
   const confidence = r.confidence === "high" || r.confidence === "low" ? r.confidence : "medium";
 
-  return { flow, amount, category, cardId, date, description, confidence, warnings };
+  return { flow, amount, category, cardId, accountId, date, description, confidence, warnings };
 }

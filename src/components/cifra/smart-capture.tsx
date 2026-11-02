@@ -487,10 +487,11 @@ export function SmartCapture({
             </div>
 
             <CardSelect
-              key={`${flow}-${proposal.cardId ?? "none"}`}
+              key={`${flow}-${proposal.cardId ?? proposal.accountId ?? "none"}`}
               flow={flow}
               {...cardOptions}
               lastCardId={proposal.cardId}
+              initialAccountId={proposal.accountId}
             />
 
             {message && (

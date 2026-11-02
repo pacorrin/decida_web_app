@@ -30,10 +30,17 @@ export function CardSelect({
   cards,
   accounts,
   lastCardId,
-}: CardOptions & { flow?: "income" | "expense" }) {
+  initialAccountId = null,
+}: CardOptions & { flow?: "income" | "expense"; initialAccountId?: string | null }) {
   const isExpense = flow === "expense";
   const [extra, setExtra] = useState<CardOption[]>([]);
-  const [value, setValue] = useState(isExpense && lastCardId ? `${CARD}${lastCardId}` : NONE);
+  const [value, setValue] = useState(
+    initialAccountId && accounts.some((a) => a.id === initialAccountId)
+      ? `${ACCOUNT}${initialAccountId}`
+      : isExpense && lastCardId
+        ? `${CARD}${lastCardId}`
+        : NONE,
+  );
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);

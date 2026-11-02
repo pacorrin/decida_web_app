@@ -641,3 +641,6 @@ Tarjeta como entidad ligada a su deuda; compras con tarjeta suben el saldo, el p
 
 ## [2026-11-02] ingest | Cuentas ligadas a movimientos en Cifra
 Selector único «¿Con qué pagaste?» (cuentas y tarjetas de crédito); la tarjeta de débito es una cuenta (tipo `debit`). Egreso baja el saldo de la cuenta, ingreso lo sube, borrar revierte; «Editar y pagar» puede salir de una cuenta. Migración `20261103000000_cifra_account_payments` pendiente en producción. Pendiente: captura inteligente con cuentas.
+
+## [2026-11-02] ingest | Captura inteligente con cuentas
+El prompt de captura recibe nombre e id de las cuentas además de las tarjetas; `accountId` se valida contra las cuentas de la persona y precarga el selector «¿Con qué pagaste?» / «¿A qué cuenta entró?».

@@ -55,7 +55,7 @@ El selector del formulario es uno solo: **«¿Con qué pagaste?»** (egreso) o *
 - **Pagar desde una cuenta:** «Editar y pagar» (deudas, tarjetas y gastos fijos) tiene «¿De qué cuenta sale?»; el pago completo baja la cuenta. El pago de tarjeta sigue siendo transferencia (no cuenta como gasto); las filas derivadas no llevan cuenta.
 - Los saldos ya capturados y los movimientos viejos no se recalculan. Los movimientos muestran la etiqueta de la cuenta junto a la de tarjeta.
 - Migración `20261103000000_cifra_account_payments` (enum `debit`, columna, índice, FK). **Debe aplicarse en producción antes de pasar a `main`**, junto con `20261102000000_cifra_cards`.
-- Pendiente: captura inteligente con cuentas (pasar nombre+id de cuentas al prompt, como ya se hace con tarjetas).
+- **Captura inteligente con cuentas:** al prompt viajan también nombre+id de las cuentas; la IA devuelve `accountId` (egreso o ingreso) y `normalizeCapture` lo descarta si no es de la persona; si trae tarjeta y cuenta manda la tarjeta. La revisión precarga el selector; sin coincidencia queda en «Sin especificar».
 
 ## Decisiones (2026-10-30, del usuario)
 - Alcance con **saldos incluidos**; **«Editar y pagar»** crea el egreso (nada se genera solo).

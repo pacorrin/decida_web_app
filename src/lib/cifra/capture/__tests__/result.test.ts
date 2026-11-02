@@ -57,16 +57,41 @@ describe("normalizeCapture", () => {
     const base = { flow: "expense", amount: 100, category: "ocio" };
 
     it("acepta el id de una tarjeta de la persona", () => {
-      expect(normalizeCapture({ ...base, cardId: "card_1" }, today, cards)?.cardId).toBe("card_1");
+      expect(normalizeCapture({ ...base, cardId: "card_1" }, today, { cards })?.cardId).toBe("card_1");
     });
 
     it("descarta un id inventado, o sin tarjetas disponibles", () => {
-      expect(normalizeCapture({ ...base, cardId: "otra" }, today, cards)?.cardId).toBeNull();
+      expect(normalizeCapture({ ...base, cardId: "otra" }, today, { cards })?.cardId).toBeNull();
       expect(normalizeCapture({ ...base, cardId: "card_1" }, today)?.cardId).toBeNull();
     });
 
     it("no asigna tarjeta a un ingreso", () => {
-      expect(normalizeCapture({ ...base, flow: "income", category: "sueldo", cardId: "card_1" }, today, cards)?.cardId).toBeNull();
+      expect(normalizeCapture({ ...base, flow: "income", category: "sueldo", cardId: "card_1" }, today, { cards })?.cardId).toBeNull();
+    });
+  });
+
+  describe("accountId", () => {
+    const today = { year: 2026, month: 10, day: 30 };
+    const accounts = [{ id: "acc_1" }];
+    const cards = [{ id: "card_1" }];
+    const base = { flow: "expense", amount: 100, category: "ocio" };
+
+    it("acepta una cuenta de la persona, en egreso o ingreso", () => {
+      expect(normalizeCapture({ ...base, accountId: "acc_1" }, today, { accounts })?.accountId).toBe("acc_1");
+      expect(
+        normalizeCapture({ flow: "income", amount: 100, category: "sueldo", accountId: "acc_1" }, today, { accounts })?.accountId,
+      ).toBe("acc_1");
+    });
+
+    it("descarta un id inventado", () => {
+      expect(normalizeCapture({ ...base, accountId: "otra" }, today, { accounts })?.accountId).toBeNull();
+      expect(normalizeCapture({ ...base, accountId: "acc_1" }, today)?.accountId).toBeNull();
+    });
+
+    it("si trae tarjeta y cuenta a la vez, manda la tarjeta", () => {
+      const r = normalizeCapture({ ...base, cardId: "card_1", accountId: "acc_1" }, today, { cards, accounts });
+      expect(r?.cardId).toBe("card_1");
+      expect(r?.accountId).toBeNull();
     });
   });
 });
