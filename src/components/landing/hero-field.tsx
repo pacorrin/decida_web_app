@@ -1,14 +1,14 @@
 /**
- * Fondo del hero con aire de mercado: barras de volumen que suben y bajan en bucle y una línea de
- * tendencia con sus puntos. Todo plano, solo transform, sin degradados.
+ * Fondo del hero: ruido de mercado (barras que respiran y una línea de tendencia con sus puntos)
+ * que termina en un punto alto. Todo plano, solo transform y opacity, sin degradados.
  */
 const BARS = Array.from({ length: 30 }, (_, i) => {
   const trend = 22 + i * 1.9;
   const wobble = Math.sin(i * 1.7) * 9 + Math.cos(i * 0.9) * 6;
   return {
     h: Math.round(Math.min(92, Math.max(14, trend + wobble))),
-    secs: 5 + (i % 7) * 0.9,
-    delay: -((i * 1.3) % 9),
+    secs: 5 + (i % 6) * 1,
+    delay: -((i * 1.7) % 10),
     guide: i === 11 || i === 19 || i === 26,
   };
 });
@@ -45,8 +45,14 @@ export function HeroField() {
       {LINE.map(([x, y], i) => (
         <span
           key={i}
-          className="hero-node absolute size-3 rounded-full bg-[#6baed6] max-lg:hidden"
-          style={{ left: `${x}%`, top: `${y}%`, marginLeft: "-0.375rem", marginTop: "-0.375rem", animationDelay: `${-i * 0.7}s` }}
+          className={`hero-node absolute rounded-full bg-[#6baed6] max-lg:hidden ${i === LINE.length - 1 ? "size-5" : "size-3"}`}
+          style={{
+            left: `${x}%`,
+            top: `${y}%`,
+            marginLeft: i === LINE.length - 1 ? "-0.625rem" : "-0.375rem",
+            marginTop: i === LINE.length - 1 ? "-0.625rem" : "-0.375rem",
+            animationDelay: `${-i * 0.7}s`,
+          }}
         />
       ))}
     </div>
