@@ -1,58 +1,52 @@
 /**
- * Fondo del hero: ideas como discos planos que se mueven despacio en un bucle sin cortes.
- * Cuatro se quedan en azul-guía, uno por cada veredicto posible. Solo transform, sin degradados.
+ * Fondo del hero con aire de mercado: barras de volumen que suben y bajan en bucle y una línea de
+ * tendencia con sus puntos. Todo plano, solo transform, sin degradados.
  */
-type Disc = {
-  x: number; // % desde la izquierda del centro del disco
-  y: number; // % desde arriba
-  size: number; // rem
-  tone: "soft" | "mid" | "guide";
-  dx: number; // rem de recorrido
-  dy: number;
-  secs: number;
-  delay: number;
-};
+const BARS = Array.from({ length: 30 }, (_, i) => {
+  const trend = 22 + i * 1.9;
+  const wobble = Math.sin(i * 1.7) * 9 + Math.cos(i * 0.9) * 6;
+  return {
+    h: Math.round(Math.min(92, Math.max(14, trend + wobble))),
+    secs: 5 + (i % 7) * 0.9,
+    delay: -((i * 1.3) % 9),
+    guide: i === 11 || i === 19 || i === 26,
+  };
+});
 
-const DISCS: Disc[] = [
-  { x: 82, y: 22, size: 26, tone: "soft", dx: -2.5, dy: 2, secs: 19, delay: 0 },
-  { x: 94, y: 78, size: 20, tone: "mid", dx: 2, dy: -3, secs: 23, delay: -6 },
-  { x: 66, y: 62, size: 14, tone: "soft", dx: 3, dy: 2.5, secs: 17, delay: -3 },
-  { x: 58, y: 14, size: 9, tone: "mid", dx: -2, dy: 3, secs: 21, delay: -9 },
-  { x: 40, y: 88, size: 11, tone: "soft", dx: 2.5, dy: -2, secs: 25, delay: -12 },
-  { x: 10, y: 8, size: 12, tone: "mid", dx: 2, dy: 2.5, secs: 22, delay: -5 },
-  { x: 74, y: 40, size: 2.2, tone: "guide", dx: -1.5, dy: 2, secs: 14, delay: -2 },
-  { x: 88, y: 56, size: 1.6, tone: "guide", dx: 1.5, dy: -2, secs: 16, delay: -7 },
-  { x: 62, y: 80, size: 1.9, tone: "guide", dx: 2, dy: 1.5, secs: 18, delay: -10 },
-  { x: 92, y: 10, size: 1.4, tone: "guide", dx: -1.5, dy: 2, secs: 15, delay: -4 },
+/** Línea de tendencia en el cuadro 0-100; los puntos usan las mismas coordenadas en %. */
+const LINE: [number, number][] = [
+  [52, 62], [59, 54], [66, 58], [73, 42], [80, 46], [87, 30], [93, 33], [98, 18],
 ];
-
-const TONES = {
-  soft: "bg-white/[0.045]",
-  mid: "bg-white/[0.08]",
-  guide: "bg-[#6baed6] max-lg:hidden",
-} as const;
 
 export function HeroField() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      {DISCS.map((d, i) => (
+      <div className="absolute inset-x-0 bottom-0 flex h-[78%] items-end gap-[0.6%] px-[0.6%]">
+        {BARS.map((b, i) => (
+          <span
+            key={i}
+            className={`hero-bar flex-1 rounded-t-sm ${b.guide ? "bg-[#6baed6]/45" : "bg-white/[0.06]"}`}
+            style={{ height: `${b.h}%`, animationDuration: `${b.secs}s`, animationDelay: `${b.delay}s` }}
+          />
+        ))}
+      </div>
+
+      <svg className="absolute inset-0 size-full max-lg:hidden" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <polyline
+          points={LINE.map(([x, y]) => `${x},${y}`).join(" ")}
+          fill="none"
+          stroke="#6baed6"
+          strokeWidth="3"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      {LINE.map(([x, y], i) => (
         <span
           key={i}
-          className={`hero-disc absolute rounded-full ${TONES[d.tone]}`}
-          style={
-            {
-              left: `${d.x}%`,
-              top: `${d.y}%`,
-              width: `${d.size}rem`,
-              height: `${d.size}rem`,
-              marginLeft: `${-d.size / 2}rem`,
-              marginTop: `${-d.size / 2}rem`,
-              "--dx": `${d.dx}rem`,
-              "--dy": `${d.dy}rem`,
-              animationDuration: `${d.secs}s`,
-              animationDelay: `${d.delay}s`,
-            } as React.CSSProperties
-          }
+          className="hero-node absolute size-3 rounded-full bg-[#6baed6] max-lg:hidden"
+          style={{ left: `${x}%`, top: `${y}%`, marginLeft: "-0.375rem", marginTop: "-0.375rem", animationDelay: `${-i * 0.7}s` }}
         />
       ))}
     </div>

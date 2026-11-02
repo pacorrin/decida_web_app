@@ -263,23 +263,37 @@
   }
 }
 
-/* Fondo del hero: los discos van y vienen entre dos puntos, así el bucle no tiene corte. */
-@keyframes hero-disc-drift {
+/* Fondo del hero: las barras respiran en bucle (alternate, sin corte) y los nodos laten. */
+@keyframes hero-bar-breathe {
   from {
-    transform: translate3d(0, 0, 0);
+    transform: scaleY(0.55);
   }
   to {
-    transform: translate3d(var(--dx), var(--dy), 0);
+    transform: scaleY(1);
   }
 }
 
-.hero-disc {
-  animation: hero-disc-drift 20s ease-in-out infinite alternate;
-  will-change: transform;
+@keyframes hero-node-pulse {
+  from {
+    transform: scale(0.8);
+  }
+  to {
+    transform: scale(1.35);
+  }
+}
+
+.hero-bar {
+  transform-origin: bottom;
+  animation: hero-bar-breathe 6s ease-in-out infinite alternate;
+}
+
+.hero-node {
+  animation: hero-node-pulse 2.6s ease-in-out infinite alternate;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-disc {
+  .hero-bar,
+  .hero-node {
     animation: none;
   }
 }
