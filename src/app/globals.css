@@ -262,3 +262,24 @@
     animation: cifra-line-draw 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.5s both;
   }
 }
+
+/* Fondo del hero: los discos van y vienen entre dos puntos, así el bucle no tiene corte. */
+@keyframes hero-disc-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--dx), var(--dy), 0);
+  }
+}
+
+.hero-disc {
+  animation: hero-disc-drift 20s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-disc {
+    animation: none;
+  }
+}

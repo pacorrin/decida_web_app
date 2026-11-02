@@ -2,20 +2,20 @@ import { AiBadge } from "@/components/beta/ai-badge";
 import { BetaBadge } from "@/components/beta/beta-badge";
 import { BETA_HERO_TEXT } from "@/lib/beta";
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
-import { HeroVerdict } from "@/components/landing/hero-verdict";
+import { HeroField } from "@/components/landing/hero-field";
 
 /**
- * Hero del inicio: un campo verde profundo y, en él, lo único iluminado: las piezas de la propia
- * herramienta (tus límites, lo que pesan, el veredicto) en perspectiva.
+ * Hero del inicio: campo verde profundo con ideas (discos planos) que se mueven en un bucle lento.
  */
 export function HeroSection() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="flex min-h-[calc(100svh-4.75rem)] items-center bg-primary"
+      className="relative flex min-h-[calc(100svh-4.75rem)] items-center overflow-hidden bg-primary"
     >
-      <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-[1.08fr_1fr] lg:gap-6 lg:px-8 lg:py-20">
-        <div className="decida-reveal space-y-8">
+      <HeroField />
+      <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8 lg:py-28">
+        <div className="decida-reveal max-w-2xl space-y-8 lg:max-w-[46rem]">
           <div className="flex flex-wrap items-center gap-2">
             <AiBadge className="border-white/25 bg-white/10 text-white" />
             <BetaBadge className="border-white/25 bg-white/10 text-white">{BETA_HERO_TEXT}</BetaBadge>
@@ -44,8 +44,6 @@ export function HeroSection() {
           </div>
           <p className="max-w-md text-base text-white/80">15 a 20 minutos. Primera evaluación gratis, sin tarjeta.</p>
         </div>
-
-        <HeroVerdict />
       </div>
     </section>
   );
