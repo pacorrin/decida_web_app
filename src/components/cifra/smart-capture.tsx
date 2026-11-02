@@ -486,7 +486,12 @@ export function SmartCapture({
               </Field>
             </div>
 
-            {flow === "expense" && <CardSelect {...cardOptions} />}
+            <CardSelect
+              key={`${flow}-${proposal.cardId ?? "none"}`}
+              flow={flow}
+              {...cardOptions}
+              lastCardId={proposal.cardId}
+            />
 
             {message && (
               <p role="alert" className="text-sm text-destructive">

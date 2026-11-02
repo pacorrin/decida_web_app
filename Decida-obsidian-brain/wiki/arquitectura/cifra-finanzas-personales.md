@@ -44,8 +44,18 @@ Una tarjeta es una entidad (`cifra_cards`: solo el nombre, sin dígitos de la ta
 - **Ajustar el saldo al alza** (editar deuda o «Capturar monto») registra la diferencia como «Compras sin detalle»; a la baja solo cambia el saldo. El desvío del saldo es responsabilidad de la persona.
 - Las tarjetas siguen su ciclo al llegar a cero. El Resumen muestra «Pendiente en tarjetas».
 - Las categorías `intereses` y `sin_detalle` son del sistema: la IA de captura no las propone (`SYSTEM_EXPENSE_CATEGORIES`).
+- **Captura inteligente con tarjeta:** al prompt solo viajan el nombre y el id de cada tarjeta de la persona (nada más). La IA devuelve `cardId` solo en egresos y `normalizeCapture` lo descarta si no es un id de la lista; la revisión precarga el selector «¿Con qué tarjeta?» con él (si no hay, queda en «Sin tarjeta»; la sugerencia de la última usada solo aplica al formulario manual).
 - Migración `20261102000000_cifra_cards` (convierte cada deuda de tarjeta existente en tarjeta con el mismo id). **Debe aplicarse en producción antes de pasar a `main`.**
 - Verificado en navegador con el ejemplo 1,850 + 1,200 + 600 → pago 1,950 con 100 de intereses: saldo 1,800, egresos 1,900, borrar el pago restaura saldo y fecha, alta de tarjeta al vuelo. El caso parcial (saldo 500, pago 5,000) y la vista móvil se cubren con pruebas unitarias.
+
+## Cuentas ligadas a movimientos (2026-11-02)
+El selector del formulario es uno solo: **«¿Con qué pagaste?»** (egreso) o **«¿A qué cuenta entró?»** (ingreso), con dos grupos: *Cuentas* y *Tarjetas de crédito*. Una tarjeta de débito es una **cuenta** (tipo nuevo `debit`, «Cuenta de débito»), no una entidad aparte.
+- `ctrx_account_id` (FK a `cifra_accounts`, SetNull): el **egreso baja** el saldo de la cuenta y el **ingreso lo sube**; puede quedar en negativo (el desvío es de la persona). Borrar el movimiento lo revierte en la misma transacción.
+- Tarjeta y cuenta son excluyentes en un movimiento (el esquema lo valida; la cuenta debe ser del usuario).
+- **Pagar desde una cuenta:** «Editar y pagar» (deudas, tarjetas y gastos fijos) tiene «¿De qué cuenta sale?»; el pago completo baja la cuenta. El pago de tarjeta sigue siendo transferencia (no cuenta como gasto); las filas derivadas no llevan cuenta.
+- Los saldos ya capturados y los movimientos viejos no se recalculan. Los movimientos muestran la etiqueta de la cuenta junto a la de tarjeta.
+- Migración `20261103000000_cifra_account_payments` (enum `debit`, columna, índice, FK). **Debe aplicarse en producción antes de pasar a `main`**, junto con `20261102000000_cifra_cards`.
+- Pendiente: captura inteligente con cuentas (pasar nombre+id de cuentas al prompt, como ya se hace con tarjetas).
 
 ## Decisiones (2026-10-30, del usuario)
 - Alcance con **saldos incluidos**; **«Editar y pagar»** crea el egreso (nada se genera solo).

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { MonthSelect } from "@/components/cifra/month-select";
 import { TransactionList } from "@/components/cifra/transaction-list";
 import { TransactionForm } from "@/components/cifra/transaction-form";
 import { getCifraAccess } from "@/lib/cifra/access";
@@ -12,8 +13,6 @@ import {
 import { formatMxn } from "@/lib/cifra/money";
 import { getCardOptions, getMonthTransactions } from "@/lib/cifra/queries";
 import { summarizeTransactions } from "@/lib/cifra/summary";
-
-const monthName = new Intl.DateTimeFormat("es-MX", { month: "long", year: "numeric", timeZone: "UTC" });
 
 function shiftPeriod(period: string, delta: number): string {
   const [y, m] = period.split("-").map(Number);
@@ -39,8 +38,6 @@ export default async function CifraMovimientosPage({
   const summary = summarizeTransactions(
     rows.flatMap((r) => [r, ...r.parts]).map((r) => ({ flow: r.flow, amountCents: r.amountCents, isTransfer: r.isTransfer })),
   );
-  const [y, m] = period.split("-").map(Number);
-  const title = monthName.format(new Date(Date.UTC(y, m - 1, 1)));
 
   return (
     <div className="space-y-8">
@@ -48,9 +45,7 @@ export default async function CifraMovimientosPage({
 
       <section aria-labelledby="movs" className="space-y-3">
         <div className="flex items-center justify-between gap-3">
-          <h2 id="movs" className="text-lg font-semibold tracking-tight first-letter:uppercase">
-            {title}
-          </h2>
+          <MonthSelect period={period} />
           <div className="flex items-center gap-1">
             <Link href={`/cuenta/cifra/movimientos?mes=${shiftPeriod(period, -1)}`} aria-label="Mes anterior" className="rounded-md p-1.5 text-muted-foreground hover:bg-muted">
               <ChevronLeft className="size-4" aria-hidden />

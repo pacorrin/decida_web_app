@@ -34,9 +34,11 @@ function PaymentBadges({ payment }: { payment: UpcomingPayment }) {
 export function PaymentList({
   payments,
   today,
+  accounts = [],
 }: {
   payments: UpcomingPayment[];
   today: CalendarDate;
+  accounts?: { id: string; name: string }[];
 }) {
   const todayValue = formatDateInput(today);
   return (
@@ -51,7 +53,7 @@ export function PaymentList({
             <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
               <PaymentBadges payment={p} />
             </div>
-            <p className={cn("mt-1.5 text-xs", p.overdue ? "text-destructive" : "text-muted-foreground")}>
+            <p className={cn("mt-1.5 text-xs", p.overdue ? "font-medium text-amber-800 dark:text-amber-300" : "text-muted-foreground")}>
               {p.overdue ? "Venció el " : "Vence el "}
               {formatDayMonth(p.dueOn)}
               {p.actionable ? "" : " · proyectado"}
@@ -72,6 +74,7 @@ export function PaymentList({
                   name={p.name}
                   suggestedCents={p.amountCents}
                   cardBalanceCents={p.cardBalanceCents}
+                  accounts={accounts}
                   today={todayValue}
                 />
               </>

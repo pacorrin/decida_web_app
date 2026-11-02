@@ -11,6 +11,7 @@ const TONES = {
   teal: "bg-teal-500/15 text-teal-900 dark:text-teal-200",
   cyan: "bg-cyan-500/15 text-cyan-900 dark:text-cyan-200",
   sky: "bg-sky-500/15 text-sky-900 dark:text-sky-200",
+  green: "bg-green-500/15 text-green-900 dark:text-green-200",
   blue: "bg-blue-500/15 text-blue-900 dark:text-blue-200",
   fuchsia: "bg-fuchsia-500/15 text-fuchsia-900 dark:text-fuchsia-200",
   pink: "bg-pink-500/15 text-pink-900 dark:text-pink-200",
@@ -23,13 +24,14 @@ export type Tone = keyof typeof TONES;
 const ACCOUNT_KIND_TONE: Record<string, Tone> = {
   cash: "lime",
   bank: "blue",
+  debit: "cyan",
   savings: "emerald",
   other: "slate",
 };
 
 const DEBT_KIND_TONE: Record<string, Tone> = {
   credit_card: "blue",
-  loan: "orange",
+  loan: "green",
   vehicle: "amber",
   housing: "teal",
   other: "slate",
@@ -43,7 +45,7 @@ const EXPENSE_CATEGORY_TONE: Record<string, Tone> = {
   salud: "pink",
   educacion: "blue",
   salarios: "emerald",
-  deudas: "orange",
+  deudas: "green",
   suscripciones: "fuchsia",
   ocio: "cyan",
   intereses: "violet",

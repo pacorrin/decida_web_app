@@ -8,7 +8,11 @@ const m = vi.hoisted(() => ({
   extractCapture: vi.fn(),
   transcribeAudio: vi.fn(),
   captureException: vi.fn(),
-  prisma: { users: { update: vi.fn() }, credit_ledger: { findUnique: vi.fn() } },
+  prisma: {
+    users: { update: vi.fn() },
+    credit_ledger: { findUnique: vi.fn() },
+    cifra_cards: { findMany: vi.fn() },
+  },
 }));
 
 vi.mock("server-only", () => ({}));
@@ -56,6 +60,7 @@ beforeEach(() => {
   m.getCurrentUser.mockResolvedValue(user());
   m.spendCredits.mockResolvedValue({ created: true, entry: { cled_balance_after: 197 } });
   m.prisma.credit_ledger.findUnique.mockResolvedValue(null);
+  m.prisma.cifra_cards.findMany.mockResolvedValue([]);
   m.extractCapture.mockResolvedValue(proposal);
 });
 

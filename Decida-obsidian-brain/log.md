@@ -638,3 +638,6 @@ El inicio se rehízo (hero con diagnóstico vivo `hero-verdict.tsx`, secciones s
 
 ## [2026-10-30] ingest | Tarjetas de crédito en Cifra
 Tarjeta como entidad ligada a su deuda; compras con tarjeta suben el saldo, el pago es transferencia y solo intereses y «Compras sin detalle» cuentan como gasto. Migración nueva pendiente en producción. Ver [[arquitectura/cifra-finanzas-personales]].
+
+## [2026-11-02] ingest | Cuentas ligadas a movimientos en Cifra
+Selector único «¿Con qué pagaste?» (cuentas y tarjetas de crédito); la tarjeta de débito es una cuenta (tipo `debit`). Egreso baja el saldo de la cuenta, ingreso lo sube, borrar revierte; «Editar y pagar» puede salir de una cuenta. Migración `20261103000000_cifra_account_payments` pendiente en producción. Pendiente: captura inteligente con cuentas.

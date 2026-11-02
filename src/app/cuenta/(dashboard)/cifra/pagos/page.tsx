@@ -41,7 +41,7 @@ export default async function CifraPagosPage({
   const from = custom ? customFrom! : today;
   const to = custom ? customTo! : addDays(today, presetDays);
 
-  const { payments, totals } = await getPaymentsReport(access.userId, { today, from, to });
+  const { payments, totals, accountOptions } = await getPaymentsReport(access.userId, { today, from, to });
   const short = totals.differenceCents < 0;
 
   return (
@@ -115,7 +115,7 @@ export default async function CifraPagosPage({
           No hay pagos en este periodo.
         </p>
       ) : (
-        <PaymentList payments={payments} today={today} />
+        <PaymentList payments={payments} today={today} accounts={accountOptions} />
       )}
       <p className="text-xs text-muted-foreground">
         Los pagos «proyectados» son los siguientes meses de un pago recurrente. Si el monto cambia cada mes,

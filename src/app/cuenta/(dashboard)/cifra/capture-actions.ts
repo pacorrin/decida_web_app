@@ -166,7 +166,15 @@ export async function smartCapture(formData: FormData): Promise<SmartCaptureResu
     });
 
   try {
+    const cards = (
+      await prisma.cifra_cards.findMany({
+        where: { ccard_user_id: user.user_id },
+        orderBy: { ccard_created_at: "asc" },
+        select: { ccard_id: true, ccard_name: true },
+      })
+    ).map((c) => ({ id: c.ccard_id, name: c.ccard_name }));
     const proposal = await extractCapture({
+      cards,
       images: input.images,
       text: input.text,
       today: todayInMexico(),

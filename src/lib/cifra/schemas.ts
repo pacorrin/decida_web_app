@@ -154,6 +154,8 @@ export const paySchema = z
     date: dateField(),
     /** Solo en pagos de tarjeta: parte del pago que son intereses y comisiones. */
     interest: optionalMoney,
+    /** Cuenta de la que salió el pago; vacío si no se indica. */
+    accountId: text,
   })
   .superRefine((v, ctx) => {
     if (v.interest !== null && v.interest > v.amount) {
@@ -177,10 +179,15 @@ export const transactionSchema = z
     description: text.pipe(z.string().max(120, "Máximo 120 caracteres")),
     /** Tarjeta con la que se pagó (solo egresos); vacío si no fue con tarjeta. */
     cardId: text,
+    /** Cuenta que paga (egreso) o recibe (ingreso); vacío si no se ligó a ninguna. */
+    accountId: text,
   })
   .superRefine((v, ctx) => {
     if (v.cardId && v.flow !== "expense") {
       ctx.addIssue({ code: "custom", path: ["cardId"], message: "Solo los egresos pueden ir con tarjeta" });
+    }
+    if (v.cardId && v.accountId) {
+      ctx.addIssue({ code: "custom", path: ["accountId"], message: "Elige una tarjeta o una cuenta, no las dos" });
     }
     const list = v.flow === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
     if (!list.some((c) => c.code === v.category)) {

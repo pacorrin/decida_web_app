@@ -1,7 +1,8 @@
-import { Banknote, Trash2, Landmark, PiggyBank, NotebookPen, Wallet } from "lucide-react";
+import { Banknote, CreditCard, Trash2, Landmark, PiggyBank, NotebookPen, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { accountKindColor, debtKindColor, expenseCategoryColor } from "@/lib/cifra/colors";
 import { ActionButton } from "@/components/cifra/form-kit";
+import { DebtPaymentsDialog } from "@/components/cifra/debt-payments-dialog";
 import { AccountDialog, DebtDialog, FixedExpenseDialog } from "@/components/cifra/dialogs";
 import { getCifraAccess } from "@/lib/cifra/access";
 import { ACCOUNT_KINDS, categoryLabel, DEBT_KINDS } from "@/lib/cifra/constants";
@@ -30,14 +31,14 @@ function payoffText(payoff: PayoffEstimate): string | null {
   return `Estimado: ${n === 1 ? "te falta 1 pago" : `te faltan ~${n} pagos`}${when}, ${BASIS[payoff.basis]}.`;
 }
 
-const KIND_ICONS = { cash: Banknote, bank: Landmark, savings: PiggyBank, other: Wallet } as const;
+const KIND_ICONS = { cash: Banknote, bank: Landmark, debit: CreditCard, savings: PiggyBank, other: Wallet } as const;
 
 function daysUntil(from: CalendarDate, to: CalendarDate): number {
   return Math.round((toDateOnly(to).getTime() - toDateOnly(from).getTime()) / 86_400_000);
 }
 
 function dueChip(days: number): { text: string; tone: string } {
-  if (days < 0) return { text: days === -1 ? "Venció ayer" : `Venció hace ${-days} días`, tone: "bg-destructive/10 text-destructive" };
+  if (days < 0) return { text: days === -1 ? "Venció ayer" : `Venció hace ${-days} días`, tone: "bg-amber-500/15 text-amber-900 dark:text-amber-200" };
   if (days === 0) return { text: "Vence hoy", tone: "bg-secondary/15 text-foreground" };
   if (days === 1) return { text: "Mañana", tone: "bg-secondary/15 text-foreground" };
   if (days <= 7) return { text: `En ${days} días`, tone: "bg-secondary/15 text-foreground" };
@@ -194,6 +195,7 @@ export default async function CifraCuentasPage() {
                   {d.paidOff ? `${d.name} (liquidada)` : d.name}
                 </p>
                 <CardActions>
+                  <DebtPaymentsDialog id={d.id} name={d.name} payments={d.payments} />
                   <DebtDialog item={d} />
                   <ActionButton action={deleteDebt.bind(null, d.id)} label="Borrar" {...deleteButton} confirmText={`¿Borrar «${d.name}»?`} successMessage="Deuda borrada" />
                 </CardActions>
@@ -248,7 +250,7 @@ export default async function CifraCuentasPage() {
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-muted" role="img" aria-label={`Uso del límite: ${usage}%`}>
                     <div
-                      className={cn("h-full rounded-full", usage >= 70 ? "bg-destructive" : usage >= 30 ? "bg-secondary" : "bg-primary")}
+                      className={cn("h-full rounded-full", usage >= 70 ? "bg-amber-500" : usage >= 30 ? "bg-secondary" : "bg-primary")}
                       style={{ width: `${Math.min(100, usage)}%` }}
                     />
                   </div>

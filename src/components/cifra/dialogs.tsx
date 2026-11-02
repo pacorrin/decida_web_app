@@ -242,6 +242,7 @@ export function PayDialog({
   name,
   suggestedCents,
   cardBalanceCents = null,
+  accounts = [],
   today,
 }: {
   kind: "debt" | "fixed";
@@ -249,6 +250,8 @@ export function PayDialog({
   name: string;
   suggestedCents: number | null;
   cardBalanceCents?: number | null;
+  /** Cuentas de las que puede salir el pago; con alguna elegida, su saldo baja. */
+  accounts?: { id: string; name: string }[];
   today: string;
 }) {
   const isCard = cardBalanceCents != null;
@@ -275,6 +278,14 @@ export function PayDialog({
         <FormRow name="date" label="Fecha de pago">
           <Input id="date" name="date" type="date" defaultValue={today} />
         </FormRow>
+        {accounts.length > 0 && (
+          <FormRow name="accountId" label="¿De qué cuenta sale? (opcional)" hint="Baja el saldo de esa cuenta.">
+            <NativeSelect
+              name="accountId"
+              options={[{ code: "", label: "Sin especificar" }, ...accounts.map((a) => ({ code: a.id, label: a.name }))]}
+            />
+          </FormRow>
+        )}
         {isCard && (
           <FormRow name="interest" label="De los cuales, intereses y comisiones" hint="Opcional. Lo ves en tu estado de cuenta.">
             <MoneyInput id="interest" name="interest" onValueChange={setInterest} />

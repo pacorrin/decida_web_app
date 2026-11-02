@@ -71,6 +71,7 @@ enum cifra_flow {
 enum cifra_account_kind {
   cash
   bank
+  debit
   savings
   other
 }
@@ -343,7 +344,8 @@ model cifra_accounts {
   cacc_created_at    DateTime           @default(now())
   cacc_updated_at    DateTime           @updatedAt
 
-  user users @relation(fields: [cacc_user_id], references: [user_id], onDelete: Cascade)
+  user         users                @relation(fields: [cacc_user_id], references: [user_id], onDelete: Cascade)
+  transactions cifra_transactions[]
 
   @@index([cacc_user_id])
   @@map("cifra_accounts")
@@ -435,6 +437,8 @@ model cifra_transactions {
   ctrx_applied_to_debt_cents Int        @default(0)
   // Compra hecha con una tarjeta (suma a su saldo)
   ctrx_card_id               String?
+  // Cuenta (débito, banco, efectivo…) de donde salió o a donde entró el dinero; mueve su saldo
+  ctrx_account_id            String?
   // Pago de tarjeta: transferencia, no cuenta como gasto; sus partes de gasto son filas derivadas
   ctrx_is_transfer           Boolean    @default(false)
   ctrx_payment_id            String?
@@ -448,6 +452,7 @@ model cifra_transactions {
   debt          cifra_debts?          @relation(fields: [ctrx_debt_id], references: [cdebt_id], onDelete: SetNull)
   fixed_expense cifra_fixed_expenses? @relation(fields: [ctrx_fixed_expense_id], references: [cfix_id], onDelete: SetNull)
   card          cifra_cards?          @relation(fields: [ctrx_card_id], references: [ccard_id], onDelete: SetNull)
+  account       cifra_accounts?       @relation(fields: [ctrx_account_id], references: [cacc_id], onDelete: SetNull)
   payment       cifra_transactions?   @relation("cifra_payment_parts", fields: [ctrx_payment_id], references: [ctrx_id], onDelete: Cascade)
   parts         cifra_transactions[]  @relation("cifra_payment_parts")
 
@@ -455,6 +460,7 @@ model cifra_transactions {
   @@unique([ctrx_fixed_expense_id, ctrx_period])
   @@index([ctrx_user_id, ctrx_occurred_on])
   @@index([ctrx_card_id])
+  @@index([ctrx_account_id])
   @@map("cifra_transactions")
 }
 

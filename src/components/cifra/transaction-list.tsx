@@ -17,6 +17,7 @@ export type TransactionRow = {
   fromPayment: boolean;
   isTransfer?: boolean;
   cardName?: string | null;
+  accountName?: string | null;
   parts?: TransactionRow[];
 };
 
@@ -66,6 +67,9 @@ function Row({ t, deletable = false, nested = false }: { t: TransactionRow; dele
           )}
           {t.cardName && (
             <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">{t.cardName}</span>
+          )}
+          {t.accountName && (
+            <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">{t.accountName}</span>
           )}
         </div>
         {t.description && <p className="mt-1 truncate">{t.description}</p>}

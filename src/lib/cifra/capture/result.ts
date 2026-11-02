@@ -12,6 +12,7 @@ const rawSchema = z.object({
   description: z.string().nullable().optional(),
   confidence: z.string().optional(),
   note: z.string().nullable().optional(),
+  cardId: z.string().nullable().optional(),
 });
 
 export type CaptureProposal = {
@@ -19,6 +20,8 @@ export type CaptureProposal = {
   /** Texto con el formato que usa el formulario («1,234.50»); vacío si no se pudo leer el monto. */
   amount: string;
   category: string;
+  /** Tarjeta con la que se pagó, solo si la IA la reconoció entre las de la persona; null si no. */
+  cardId: string | null;
   /** AAAA-MM-DD */
   date: string;
   description: string;
@@ -35,7 +38,11 @@ const MAX_NOTE = 160;
  * categoría solo de la lista fija, fecha válida y no futura, monto positivo. Lo que no se pueda
  * confiar se deja vacío o con un valor por defecto y se avisa, nunca se inventa.
  */
-export function normalizeCapture(raw: unknown, today: CalendarDate): CaptureProposal | null {
+export function normalizeCapture(
+  raw: unknown,
+  today: CalendarDate,
+  cards: readonly { id: string }[] = [],
+): CaptureProposal | null {
   const parsed = rawSchema.safeParse(raw);
   if (!parsed.success) return null;
   const r = parsed.data;
@@ -57,6 +64,9 @@ export function normalizeCapture(raw: unknown, today: CalendarDate): CaptureProp
       ? r.category!
       : "otros";
 
+  // Solo egresos, y solo un id que de verdad sea de una tarjeta de la persona.
+  const cardId = flow === "expense" && cards.some((c) => c.id === r.cardId) ? r.cardId! : null;
+
   let date = formatDateInput(today);
   const parsedDate = r.date ? parseDateInput(r.date) : null;
   if (parsedDate && compareDates(parsedDate, today) <= 0) date = formatDateInput(parsedDate);
@@ -68,5 +78,5 @@ export function normalizeCapture(raw: unknown, today: CalendarDate): CaptureProp
 
   const confidence = r.confidence === "high" || r.confidence === "low" ? r.confidence : "medium";
 
-  return { flow, amount, category, date, description, confidence, warnings };
+  return { flow, amount, category, cardId, date, description, confidence, warnings };
 }

@@ -102,11 +102,9 @@ export function TransactionForm({ today, cardOptions }: { today: string; cardOpt
         </Field>
       </div>
 
-      {flow === "expense" && (
-        <div className="max-w-sm">
-          <CardSelect key={`${resetKey}-${cardOptions.lastCardId}`} {...cardOptions} />
-        </div>
-      )}
+      <div className="max-w-sm">
+        <CardSelect key={`${resetKey}-${flow}-${cardOptions.lastCardId}`} flow={flow} {...cardOptions} />
+      </div>
 
       {message && (
         <p role="alert" className="text-sm text-destructive">

@@ -12,10 +12,23 @@ import { estimatePayoff } from "./payoff";
 import { breakdownByCategory, groupPaymentParts, summarizeTransactions } from "./summary";
 import { type DueItem, totalsOf, upcomingPayments } from "./upcoming";
 
+/** Un pago hecho a una deuda o tarjeta, para su historial. */
+export type DebtPayment = {
+  id: string;
+  date: CalendarDate;
+  amountCents: number;
+  /** Lo que bajó el saldo de la deuda. */
+  appliedCents: number;
+  isTransfer: boolean;
+  interestCents: number;
+  untrackedCents: number;
+};
+
 const dateOrNull = (d: Date | null) => (d ? fromDateOnly(d) : null);
 
 const withCard = {
   card: { select: { ccard_name: true } },
+  account: { select: { cacc_name: true } },
 } as const;
 
 type TransactionRow = Awaited<
@@ -34,6 +47,7 @@ function toRow(t: TransactionRow) {
     isTransfer: t.ctrx_is_transfer,
     paymentId: t.ctrx_payment_id,
     cardName: t.card?.ccard_name ?? null,
+    accountName: t.account?.cacc_name ?? null,
   };
 }
 
@@ -71,6 +85,16 @@ async function loadDueItems(userId: string): Promise<DueItem[]> {
   ];
 }
 
+/** Cuentas de la persona (id y nombre) para elegir de cuál sale un pago. */
+async function accountChoices(userId: string) {
+  const accounts = await prisma.cifra_accounts.findMany({
+    where: { cacc_user_id: userId },
+    orderBy: { cacc_created_at: "asc" },
+    select: { cacc_id: true, cacc_name: true },
+  });
+  return accounts.map((a) => ({ id: a.cacc_id, name: a.cacc_name }));
+}
+
 async function accountsTotal(userId: string): Promise<number> {
   const sum = await prisma.cifra_accounts.aggregate({
     where: { cacc_user_id: userId },
@@ -81,7 +105,7 @@ async function accountsTotal(userId: string): Promise<number> {
 
 export async function getOverview(userId: string, today: CalendarDate) {
   const range = monthRange(periodOf(today))!;
-  const [transactions, debtSum, cardsSum, items, accounts] = await Promise.all([
+  const [transactions, debtSum, cardsSum, items, accounts, accountOptions] = await Promise.all([
     prisma.cifra_transactions.findMany({
       where: { ctrx_user_id: userId, ctrx_occurred_on: { gte: range.from, lte: range.to } },
       orderBy: [{ ctrx_occurred_on: "desc" }, { ctrx_created_at: "desc" }],
@@ -97,6 +121,7 @@ export async function getOverview(userId: string, today: CalendarDate) {
     }),
     loadDueItems(userId),
     accountsTotal(userId),
+    accountChoices(userId),
   ]);
 
   const rows = transactions.map(toRow);
@@ -111,6 +136,7 @@ export async function getOverview(userId: string, today: CalendarDate) {
     debtTotalCents: debtSum._sum.cdebt_balance_cents ?? 0,
     cardsPendingCents: cardsSum._sum.cdebt_balance_cents ?? 0,
     accountsTotalCents: accounts,
+    accountOptions,
     upcoming,
   };
 }
@@ -119,9 +145,13 @@ export async function getPaymentsReport(
   userId: string,
   { today, from, to }: { today: CalendarDate; from: CalendarDate; to: CalendarDate },
 ) {
-  const [items, accounts] = await Promise.all([loadDueItems(userId), accountsTotal(userId)]);
+  const [items, accounts, accountOptions] = await Promise.all([
+    loadDueItems(userId),
+    accountsTotal(userId),
+    accountChoices(userId),
+  ]);
   const payments = upcomingPayments(items, { today, from, to });
-  return { payments, totals: totalsOf(payments, accounts) };
+  return { payments, totals: totalsOf(payments, accounts), accountOptions };
 }
 
 export async function getAccountsData(userId: string, today: CalendarDate) {
@@ -142,15 +172,37 @@ export async function getAccountsData(userId: string, today: CalendarDate) {
       where: { ctrx_user_id: userId, ctrx_debt_id: { not: null } },
       orderBy: { ctrx_occurred_on: "desc" },
       take: 300,
-      select: { ctrx_debt_id: true, ctrx_amount_cents: true },
+      select: {
+        ctrx_id: true,
+        ctrx_debt_id: true,
+        ctrx_amount_cents: true,
+        ctrx_occurred_on: true,
+        ctrx_applied_to_debt_cents: true,
+        ctrx_is_transfer: true,
+        parts: { select: { ctrx_category: true, ctrx_amount_cents: true } },
+      },
     }),
   ]);
 
   const recentByDebt = new Map<string, number[]>();
+  const historyByDebt = new Map<string, DebtPayment[]>();
   for (const p of payments) {
-    const list = recentByDebt.get(p.ctrx_debt_id!) ?? [];
+    const debtId = p.ctrx_debt_id!;
+    const list = recentByDebt.get(debtId) ?? [];
     if (list.length < 6) list.push(p.ctrx_amount_cents);
-    recentByDebt.set(p.ctrx_debt_id!, list);
+    recentByDebt.set(debtId, list);
+    historyByDebt.set(debtId, [
+      ...(historyByDebt.get(debtId) ?? []),
+      {
+        id: p.ctrx_id,
+        date: fromDateOnly(p.ctrx_occurred_on),
+        amountCents: p.ctrx_amount_cents,
+        appliedCents: p.ctrx_applied_to_debt_cents,
+        isTransfer: p.ctrx_is_transfer,
+        interestCents: p.parts.filter((x) => x.ctrx_category === "intereses").reduce((n, x) => n + x.ctrx_amount_cents, 0),
+        untrackedCents: p.parts.filter((x) => x.ctrx_category === "sin_detalle").reduce((n, x) => n + x.ctrx_amount_cents, 0),
+      },
+    ]);
   }
 
   return {
@@ -187,6 +239,7 @@ export async function getAccountsData(userId: string, today: CalendarDate) {
         recurring: d.cdebt_recurring,
         endsOn,
         paidOff: d.cdebt_paid_off,
+        payments: historyByDebt.get(d.cdebt_id) ?? [],
         payoff: estimatePayoff({
           balanceCents: d.cdebt_balance_cents,
           nextDueOn,
@@ -226,10 +279,11 @@ export async function getMonthTransactions(userId: string, period: string) {
   return groupPaymentParts(rows.map(toRow));
 }
 
-/** Tarjetas para el selector «¿Con qué tarjeta?»; la última usada va primero como sugerida. */
+/** Tarjetas y cuentas para el selector «¿Con qué pagaste?»; la última usada va primero como sugerida. */
 export async function getCardOptions(userId: string) {
-  const [cards, last] = await Promise.all([
+  const [cards, accounts, last] = await Promise.all([
     prisma.cifra_cards.findMany({ where: { ccard_user_id: userId }, orderBy: { ccard_created_at: "asc" } }),
+    prisma.cifra_accounts.findMany({ where: { cacc_user_id: userId }, orderBy: { cacc_created_at: "asc" } }),
     prisma.cifra_transactions.findFirst({
       where: { ctrx_user_id: userId, ctrx_card_id: { not: null }, ctrx_is_transfer: false, ctrx_payment_id: null },
       orderBy: { ctrx_created_at: "desc" },
@@ -238,6 +292,7 @@ export async function getCardOptions(userId: string) {
   ]);
   return {
     cards: cards.map((c) => ({ id: c.ccard_id, name: c.ccard_name })),
+    accounts: accounts.map((a) => ({ id: a.cacc_id, name: a.cacc_name })),
     lastCardId: last?.ctrx_card_id ?? null,
   };
 }

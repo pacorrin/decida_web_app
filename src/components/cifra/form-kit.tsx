@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 
@@ -161,6 +162,17 @@ export function FormRow({
 }
 
 /** Select nativo: funciona con FormData y es accesible sin más piezas. */
+/** Agrupa opciones consecutivas con el mismo `group`; las que no tienen quedan sueltas. */
+function groupOptions<T extends { group?: string }>(options: readonly T[]) {
+  const groups: { label?: string; items: T[] }[] = [];
+  for (const o of options) {
+    const last = groups[groups.length - 1];
+    if (last && last.label === o.group) last.items.push(o);
+    else groups.push({ label: o.group, items: [o] });
+  }
+  return groups;
+}
+
 export function NativeSelect({
   name,
   options,
@@ -170,30 +182,52 @@ export function NativeSelect({
   className,
 }: {
   name: string;
-  options: readonly { code: string; label: string }[];
+  options: readonly { code: string; label: string; group?: string }[];
   defaultValue?: string;
   value?: string;
   onChange?: (value: string) => void;
   className?: string;
 }) {
+  const [inner, setInner] = useState(defaultValue ?? options[0]?.code ?? "");
+  const current = value ?? inner;
   return (
-    <select
-      id={name}
-      name={name}
-      defaultValue={value === undefined ? (defaultValue ?? options[0]?.code) : undefined}
-      value={value}
-      onChange={onChange ? (e) => onChange(e.target.value) : undefined}
-      className={cn(
-        "h-8 w-full rounded-lg border border-input bg-transparent px-2 text-base outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30",
-        className,
-      )}
-    >
-      {options.map((o) => (
-        <option key={o.code} value={o.code}>
-          {o.label}
-        </option>
-      ))}
-    </select>
+    <>
+      {/* El valor vacío («Sin tarjeta») no viaja bien por el select, así que el formulario lee este campo. */}
+      <input type="hidden" name={name} value={current} />
+      <Select
+        items={options.map((o) => ({ value: o.code, label: o.label }))}
+        value={current}
+        onValueChange={(next) => {
+          if (next === null) return;
+          setInner(next);
+          onChange?.(next);
+        }}
+      >
+        <SelectTrigger id={name} className={cn("w-full", className)}>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent alignItemWithTrigger={false} align="start">
+          {groupOptions(options).map((g) =>
+            g.label ? (
+              <SelectGroup key={g.label}>
+                <SelectLabel>{g.label}</SelectLabel>
+                {g.items.map((o) => (
+                  <SelectItem key={o.code} value={o.code}>
+                    {o.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            ) : (
+              g.items.map((o) => (
+                <SelectItem key={o.code} value={o.code}>
+                  {o.label}
+                </SelectItem>
+              ))
+            ),
+          )}
+        </SelectContent>
+      </Select>
+    </>
   );
 }
 

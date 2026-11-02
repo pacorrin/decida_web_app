@@ -21,4 +21,28 @@ describe("prompt de captura", () => {
     expect(prompt).not.toMatch(/vivienda[^\n]*\bgas\b/);
     expect(prompt).toContain("MÁS ESPECÍFICA");
   });
+
+  it("sin tarjetas no pide cardId", () => {
+    expect(prompt).not.toContain("cardId");
+  });
+
+  it("con tarjetas le pasa nombre e id y pide devolver solo un id de la lista", () => {
+    const withCards = buildCaptureSystemPrompt({ year: 2026, month: 10, day: 30 }, [
+      { id: "card_1", name: "Nu Bank" },
+      { id: "card_2", name: "Rappi" },
+    ]);
+    expect(withCards).toContain('"Nu Bank" → card_1');
+    expect(withCards).toContain('"Rappi" → card_2');
+    expect(withCards).toContain("Nunca inventes un id");
+  });
+
+  it("un cobro hecho a la persona es egreso, no ingreso", () => {
+    expect(prompt).toContain("QUIÉN PONE EL DINERO");
+    expect(prompt).toMatch(/"me cobraron"/);
+    expect(prompt).toContain("Un cobro hecho a la persona con su tarjeta es siempre un egreso");
+  });
+
+  it("iCloud cae en suscripciones", () => {
+    expect(prompt).toMatch(/suscripciones[^\n]*iCloud/);
+  });
 });

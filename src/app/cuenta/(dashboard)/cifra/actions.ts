@@ -69,6 +69,11 @@ function isUniqueViolation(error: unknown): boolean {
   return (error as { code?: string } | null)?.code === "P2002";
 }
 
+/** Cambio en el saldo de una cuenta: el egreso lo baja y el ingreso lo sube. */
+function accountDelta(flow: "income" | "expense", amountCents: number) {
+  return flow === "income" ? { increment: amountCents } : { decrement: amountCents };
+}
+
 /** Gasto «Compras sin detalle» de una tarjeta: lo que subió el saldo o excedió el pago sin compras capturadas. */
 function undetailedExpense(
   userId: string,
@@ -103,7 +108,7 @@ export async function saveAccount(formData: FormData): Promise<CifraActionState>
   const data = {
     cacc_name: d.name,
     cacc_notes: d.notes || null,
-    cacc_kind: d.kind as "cash" | "bank" | "savings" | "other",
+    cacc_kind: d.kind as "cash" | "bank" | "debit" | "savings" | "other",
     cacc_balance_cents: d.balance,
   };
   if (id) {
@@ -300,25 +305,45 @@ export async function addTransaction(formData: FormData): Promise<CifraActionSta
     ctrx_occurred_on: toDateOnly(d.date),
     ctrx_description: d.description || null,
   };
-  if (d.cardId) {
-    // Compra con tarjeta: el movimiento sube el saldo de la tarjeta.
+  if (d.cardId || d.accountId) {
     const ok = await prisma.$transaction(async (tx) => {
-      const card = await tx.cifra_cards.findFirst({
-        where: { ccard_id: d.cardId, ccard_user_id: access.userId },
+      if (d.cardId) {
+        // Compra con tarjeta: el movimiento sube el saldo de la tarjeta.
+        const card = await tx.cifra_cards.findFirst({
+          where: { ccard_id: d.cardId, ccard_user_id: access.userId },
+        });
+        if (!card) return "card" as const;
+        await tx.cifra_transactions.create({ data: { ...base, ctrx_card_id: card.ccard_id } });
+        await tx.cifra_debts.updateMany({
+          where: { cdebt_card_id: card.ccard_id, cdebt_user_id: access.userId },
+          data: { cdebt_balance_cents: { increment: d.amount }, cdebt_paid_off: false },
+        });
+        return null;
+      }
+      // Con una cuenta: el egreso baja su saldo y el ingreso lo sube (puede quedar en negativo).
+      const account = await tx.cifra_accounts.findFirst({
+        where: { cacc_id: d.accountId, cacc_user_id: access.userId },
       });
-      if (!card) return false;
-      await tx.cifra_transactions.create({ data: { ...base, ctrx_card_id: card.ccard_id } });
-      await tx.cifra_debts.updateMany({
-        where: { cdebt_card_id: card.ccard_id, cdebt_user_id: access.userId },
-        data: { cdebt_balance_cents: { increment: d.amount }, cdebt_paid_off: false },
+      if (!account) return "account" as const;
+      await tx.cifra_transactions.create({ data: { ...base, ctrx_account_id: account.cacc_id } });
+      await tx.cifra_accounts.update({
+        where: { cacc_id: account.cacc_id },
+        data: { cacc_balance_cents: accountDelta(d.flow, d.amount) },
       });
-      return true;
+      return null;
     });
-    if (!ok) {
+    if (ok === "card") {
       return {
         success: false,
         message: "No encontramos esa tarjeta.",
         fieldErrors: { cardId: ["Elige una tarjeta de la lista"] },
+      };
+    }
+    if (ok === "account") {
+      return {
+        success: false,
+        message: "No encontramos esa cuenta.",
+        fieldErrors: { accountId: ["Elige una cuenta de la lista"] },
       };
     }
   } else {
@@ -328,6 +353,7 @@ export async function addTransaction(formData: FormData): Promise<CifraActionSta
     flow: d.flow,
     category: d.category,
     withCard: Boolean(d.cardId),
+    withAccount: Boolean(d.accountId),
   });
   refresh();
   return { success: true };
@@ -351,6 +377,19 @@ export async function deleteTransaction(id: string): Promise<CifraActionState> {
     await tx.cifra_transactions.delete({ where: { ctrx_id: id } });
 
     const prevDue = row.ctrx_prev_due_on ? fromDateOnly(row.ctrx_prev_due_on) : null;
+
+    if (row.ctrx_account_id) {
+      // El saldo de la cuenta vuelve a lo que era: lo gastado regresa y lo recibido se quita.
+      await tx.cifra_accounts.updateMany({
+        where: { cacc_id: row.ctrx_account_id, cacc_user_id: user.user_id },
+        data: {
+          cacc_balance_cents:
+            row.ctrx_flow === "income"
+              ? { decrement: row.ctrx_amount_cents }
+              : { increment: row.ctrx_amount_cents },
+        },
+      });
+    }
 
     if (row.ctrx_card_id && !row.ctrx_is_transfer && !row.ctrx_payment_id) {
       // Compra con tarjeta: el saldo vuelve a lo que era (sin bajar de cero).
@@ -477,6 +516,30 @@ export async function markPaid(
   const { amount, date, interest } = parsed.data;
   const occurredOn = toDateOnly(date);
 
+  // Cuenta de la que salió el pago (opcional): debe ser del usuario.
+  let accountId: string | null = null;
+  if (parsed.data.accountId) {
+    const account = await prisma.cifra_accounts.findFirst({
+      where: { cacc_id: parsed.data.accountId, cacc_user_id: access.userId },
+      select: { cacc_id: true },
+    });
+    if (!account) {
+      return {
+        success: false,
+        message: "No encontramos esa cuenta.",
+        fieldErrors: { accountId: ["Elige una cuenta de la lista"] },
+      };
+    }
+    accountId = account.cacc_id;
+  }
+  const chargeAccount = (tx: Pick<typeof prisma, "cifra_accounts">) =>
+    accountId
+      ? tx.cifra_accounts.update({
+          where: { cacc_id: accountId },
+          data: { cacc_balance_cents: { decrement: amount } },
+        })
+      : null;
+
   try {
     const done = await prisma.$transaction(async (tx) => {
       if (kind === "debt") {
@@ -501,6 +564,7 @@ export async function markPaid(
             ctrx_description: debt.cdebt_name,
             ctrx_debt_id: debt.cdebt_id,
             ctrx_card_id: cardId,
+            ctrx_account_id: accountId,
             ctrx_is_transfer: Boolean(cardId),
             ctrx_period: periodOf(dueDate),
             ctrx_applied_to_debt_cents: applied,
@@ -509,6 +573,7 @@ export async function markPaid(
             ctrx_prev_amount_cents: debt.cdebt_next_payment_cents,
           },
         });
+        await chargeAccount(tx);
         if (cardId && split) {
           if (split.interestCents > 0) {
             await tx.cifra_transactions.create({
@@ -574,11 +639,13 @@ export async function markPaid(
           ctrx_occurred_on: occurredOn,
           ctrx_description: fixed.cfix_name,
           ctrx_fixed_expense_id: fixed.cfix_id,
+          ctrx_account_id: accountId,
           ctrx_period: periodOf(dueDate),
           ctrx_prev_due_on: fixed.cfix_next_due_on,
           ctrx_prev_amount_cents: fixed.cfix_amount_cents,
         },
       });
+      await chargeAccount(tx);
       await tx.cifra_fixed_expenses.update({
         where: { cfix_id: fixed.cfix_id },
         data: fixed.cfix_recurring

@@ -42,6 +42,7 @@ export const DEBT_KINDS = [
 export const ACCOUNT_KINDS = [
   { code: "cash", label: "Efectivo" },
   { code: "bank", label: "Cuenta bancaria" },
+  { code: "debit", label: "Cuenta de débito" },
   { code: "savings", label: "Ahorro" },
   { code: "other", label: "Otra" },
 ] as const;

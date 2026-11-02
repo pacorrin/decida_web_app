@@ -147,7 +147,7 @@ export default async function CifraResumenPage() {
             .
           </p>
         ) : (
-          <PaymentList payments={o.upcoming} today={today} />
+          <PaymentList payments={o.upcoming} today={today} accounts={o.accountOptions} />
         )}
       </section>
 
