@@ -47,9 +47,9 @@ function Group({
   onChange: (i: number) => void;
 }) {
   return (
-    <div role="group" aria-label={label} className="space-y-2">
-      <p className="text-base font-medium text-primary">{label}</p>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+    <div role="group" aria-label={label} className="space-y-1.5">
+      <p className="text-sm font-medium text-primary">{label}</p>
+      <div className="grid grid-cols-3 gap-1.5">
         {options.map((o, i) => (
           <button
             key={o.label}
@@ -57,8 +57,8 @@ function Group({
             aria-pressed={value === i}
             onClick={() => onChange(i)}
             className={cn(
-              "min-h-11 rounded-lg px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              value === i ? "bg-primary text-white" : "bg-white text-primary hover:bg-white/60",
+              "min-h-11 rounded-lg px-2 py-1.5 text-sm font-medium leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              value === i ? "bg-primary text-white" : "bg-muted text-primary hover:bg-[#e3ece8]",
             )}
           >
             {o.label}
@@ -69,7 +69,30 @@ function Group({
   );
 }
 
-/** El mismo negocio, con distintos límites: la recomendación cambia. Ejemplo ilustrativo. */
+/** Qué tanto pesa cada límite en la decisión: se mueve con lo que elige la persona. */
+function Weight({ label, level }: { label: string; level: number }) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between text-sm text-white">
+        <span>{label}</span>
+        <span className="text-white/80">{["Holgado", "Justo", "Al límite"][level]}</span>
+      </div>
+      <div className="mt-1.5 grid grid-cols-3 gap-1" aria-hidden>
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className={cn("h-2 rounded-full transition-colors duration-300", i <= level ? "bg-[#6baed6]" : "bg-white/15")}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * El mismo negocio, con distintos límites: la recomendación cambia. Tres piezas de la propia
+ * herramienta (tus límites, lo que pesan, el veredicto) puestas en perspectiva. Ejemplo ilustrativo.
+ */
 export function HeroVerdict() {
   const [time, setTime] = useState(1);
   const [money, setMoney] = useState(1);
@@ -77,20 +100,38 @@ export function HeroVerdict() {
   const verdict = verdictFor(time + money + risk);
 
   return (
-    <aside
+    <div
       data-ui
+      role="group"
       aria-label="Ejemplo de diagnóstico con distintos límites"
-      className="space-y-6 rounded-2xl bg-[#e8f4fa] p-5 sm:p-8"
+      className="hero-deck relative mx-auto w-full max-w-[34rem] lg:max-w-none"
     >
-      <p className="text-lg font-semibold text-primary">Servicio de detailing móvil</p>
-      <Group label="Tu tiempo" options={TIME} value={time} onChange={setTime} />
-      <Group label="Tu dinero para empezar" options={MONEY} value={money} onChange={setMoney} />
-      <Group label="El riesgo que aguantas" options={RISK} value={risk} onChange={setRisk} />
-      <div key={verdict.title} className="decida-reveal rounded-xl bg-white p-5" aria-live="polite">
+      <div className="hero-deck-card hero-deck-weights hero-deck-in hidden w-[15rem] space-y-4 rounded-2xl bg-[#0d5a3e] py-5 pl-7 pr-5 xl:block">
+        <p className="text-base font-semibold text-white">Lo que más pesa</p>
+        <Weight label="Tu tiempo" level={2 - time} />
+        <Weight label="Tu dinero" level={2 - money} />
+        <Weight label="El riesgo que aguantas" level={risk} />
+      </div>
+
+      <div className="hero-deck-card hero-deck-limits hero-deck-in space-y-4 rounded-2xl bg-white p-5">
+        <div>
+          <p className="text-sm text-muted-foreground">Ejemplo ilustrativo</p>
+          <p className="text-lg font-semibold text-primary">Servicio de detailing móvil</p>
+        </div>
+        <Group label="Tu tiempo" options={TIME} value={time} onChange={setTime} />
+        <Group label="Tu dinero para empezar" options={MONEY} value={money} onChange={setMoney} />
+        <Group label="El riesgo que aguantas" options={RISK} value={risk} onChange={setRisk} />
+      </div>
+
+      <div
+        key={verdict.title}
+        aria-live="polite"
+        className="hero-deck-card hero-deck-verdict hero-deck-in rounded-2xl bg-[#e8f4fa] p-5"
+      >
         <p className="text-sm text-muted-foreground">Decida recomienda</p>
         <p className="mt-1 text-2xl font-semibold tracking-tight text-primary">{verdict.title}</p>
         <p className="mt-2 text-base leading-relaxed text-foreground">{verdict.next}</p>
       </div>
-    </aside>
+    </div>
   );
 }
