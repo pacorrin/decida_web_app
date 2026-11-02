@@ -10,8 +10,11 @@ import { HeroVerdict } from "@/components/landing/hero-verdict";
  */
 export function HeroSection() {
   return (
-    <section aria-labelledby="hero-heading" className="px-3 pb-6 pt-3 sm:px-6 md:pb-10">
-      <div className="mx-auto grid w-full max-w-7xl items-center gap-12 overflow-hidden rounded-[2rem] bg-primary px-6 py-12 sm:px-10 md:py-16 lg:grid-cols-[1.08fr_1fr] lg:gap-6 lg:px-14 lg:py-20">
+    <section
+      aria-labelledby="hero-heading"
+      className="flex min-h-[calc(100svh-4.75rem)] items-center bg-primary"
+    >
+      <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-[1.08fr_1fr] lg:gap-6 lg:px-8 lg:py-20">
         <div className="decida-reveal space-y-8">
           <div className="flex flex-wrap items-center gap-2">
             <AiBadge className="border-white/25 bg-white/10 text-white" />
