@@ -18,14 +18,16 @@ export function HeroTypedAnswer() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setText(ANSWERS[0]);
-      return;
-    }
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let cancelled = false;
     const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
     (async () => {
+      if (reduced) {
+        await wait(0);
+        if (!cancelled) setText(ANSWERS[0]);
+        return;
+      }
       await wait(900);
       for (let n = 0; !cancelled; n = (n + 1) % ANSWERS.length) {
         const answer = ANSWERS[n];
