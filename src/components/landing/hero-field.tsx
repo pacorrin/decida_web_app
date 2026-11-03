@@ -239,6 +239,8 @@ const PIECES: Piece[] = [
 
 /** Máximo de piezas que se ven a la vez en el panel (con los fundidos puede haber una menos). Ajústalo aquí. */
 const MAX_VISIBLE = 5;
+/** Pasadas de ajuste al cargar para que las posiciones iniciales se separen entre sí. */
+const SETTLE_PASSES = 5;
 /** Duración (s) del ciclo de cada pieza; todas comparten ciclo y entran repartidas en partes iguales. */
 const CYCLE_S = 66;
 /** Orden de entrada: se intercalan palabras, gráficos y figuras para que no salgan seguidas las parecidas. */
@@ -258,6 +260,13 @@ const STARTS = PIECES.map((_, i) => {
   const step = CYCLE_S / PIECES.length;
   return slot < 3 ? -slot * step : (slot - 2) * step;
 });
+
+/** Dos piezas coinciden en pantalla solo si sus turnos de entrada están a menos de lo que dura una pieza visible. */
+function coexist(a: number, b: number) {
+  const n = PIECES.length;
+  const gap = Math.abs(ENTRY_ORDER.indexOf(a) - ENTRY_ORDER.indexOf(b));
+  return Math.min(gap, n - gap) < VISIBLE_FRACTION * n + 1;
+}
 
 type Slot = { x: number; y: number; data: Data; tone: number };
 
@@ -292,7 +301,7 @@ export function HeroField() {
     const own = self.getBoundingClientRect();
     const others: Box[] = [];
     pieceRefs.current.forEach((el, k) => {
-      if (k === i || !el || PIECES[k].depth === "far") return;
+      if (k === i || !el || PIECES[k].depth === "far" || !coexist(i, k)) return;
       const b = boxOf(el, area);
       if (b) others.push(b);
     });
@@ -302,7 +311,7 @@ export function HeroField() {
     });
 
     /** Cuántos puntos se prueban: más candidatos dan piezas más separadas. */
-    const TRIES = 30;
+    const TRIES = 40;
     let best = candidate();
     let bestScore = -Infinity;
     for (let n = 0; n < TRIES; n++) {
@@ -316,7 +325,10 @@ export function HeroField() {
       const cx = (box.l + box.r) / 2;
       const cy = (box.t + box.b) / 2;
       const nearest = others.reduce((m, o) => Math.min(m, Math.hypot(cx - (o.l + o.r) / 2, cy - (o.t + o.b) / 2)), Infinity);
-      const score = (Number.isFinite(nearest) ? nearest / area.width : 1) - overlap / (area.width * area.height) * 20 - outside * 0.05;
+      // Aparte, la separación vertical con la pieza que quede más a su altura: evita que varias se apilen en la misma franja.
+      const nearestDy = others.reduce((m, o) => Math.min(m, Math.abs(cy - (o.t + o.b) / 2)), Infinity);
+      const dyScore = Number.isFinite(nearestDy) ? nearestDy / area.height : 1;
+      const score = (Number.isFinite(nearest) ? nearest / area.width : 1) + dyScore * 1.5 - overlap / (area.width * area.height) * 20 - outside * 0.05;
       if (score > bestScore) {
         best = c;
         bestScore = score;
@@ -328,11 +340,14 @@ export function HeroField() {
   useLayoutEffect(() => {
     queueMicrotask(() => {
       setSlots(PIECES.map((p, i) => ({ ...pickSpot(i), data: randomChartData(), tone: Math.floor(Math.random() * TONES.length) })));
-      // Segunda pasada: ya con las posiciones nuevas en el DOM, cada pieza se aleja de las demás antes de mostrarse.
-      requestAnimationFrame(() => {
-        setSlots((prev) => prev.map((s, i) => ({ ...s, ...pickSpot(i) })));
-        setReady(true);
-      });
+      // Pasadas de ajuste: con las posiciones nuevas ya en el DOM, cada pieza se aleja de las demás antes de mostrarse.
+      const refine = (pass: number) =>
+        requestAnimationFrame(() => {
+          setSlots((prev) => prev.map((s, i) => ({ ...s, ...pickSpot(i) })));
+          if (pass < SETTLE_PASSES) refine(pass + 1);
+          else setReady(true);
+        });
+      refine(1);
     });
     // Solo al montar: pickSpot lee refs y no depende de props ni de estado.
   }, []);
