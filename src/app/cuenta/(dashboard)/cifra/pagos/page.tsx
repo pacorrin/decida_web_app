@@ -68,7 +68,13 @@ export default async function CifraPagosPage({
         ))}
       </div>
 
-      <form action="/cuenta/cifra/pagos" className="flex flex-wrap items-end gap-3" data-testid="cifra-range-form">
+      {/* La key rehace los campos al cambiar de periodo: con defaultValue distinto en el mismo input, Base UI avisa de un cambio de valor inicial. */}
+      <form
+        key={`${formatDateInput(from)}_${formatDateInput(to)}`}
+        action="/cuenta/cifra/pagos"
+        className="flex flex-wrap items-end gap-3"
+        data-testid="cifra-range-form"
+      >
         <label className="space-y-1 text-sm">
           <span className="text-muted-foreground">Desde</span>
           <Input type="date" name="desde" defaultValue={formatDateInput(from)} className="w-40" />

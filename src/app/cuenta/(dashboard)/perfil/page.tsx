@@ -81,7 +81,7 @@ export default async function PerfilPage() {
               className: "w-full bg-white text-primary! hover:bg-white/90 sm:w-auto",
             })}
           >
-            Ver créditos y historial
+            Ver créditos e historial
           </Link>
         </div>
       </section>

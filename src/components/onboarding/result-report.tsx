@@ -1,6 +1,15 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ReportSection } from "@/components/report/report-section";
 import { SignalBadge, formatCurrency } from "@/components/report/signal-badge";
+import {
+  BreakEvenChart,
+  PaybackRuler,
+  MarginBars,
+  ScoreBar,
+  SplitBar,
+  SPLIT_COLORS,
+  type SplitSegment,
+} from "@/components/report/report-charts";
 import {
   ReportToc,
   REPORT_TOC_SECTION_IDS,
@@ -77,6 +86,14 @@ const DIMENSION_MAP = [
   },
 ];
 
+/** Color de marca de cada recomendación, el mismo que usa la lista de análisis. */
+const RECOMMENDATION_FILL: Record<RecommendationType, string> = {
+  proceed_small_test: "#81c784",
+  validate_first: "#6baed6",
+  adjust_idea: "#ffb74d",
+  pause_for_now: "#ff7043",
+};
+
 const FULL_REPORT_INCLUDES = [
   "Cómo reducir cada riesgo",
   "Alertas detectadas en tus números",
@@ -122,6 +139,35 @@ export function ResultReport({
     | null
     | undefined;
   const showRiskSection = risks.length > 0 || redFlags.length > 0;
+
+  const monthlySales = Number(financial?.finp_estimated_monthly_sales ?? 0);
+  const breakEvenSales = Number(financial?.finp_break_even_sales ?? 0);
+  const breakEvenChart =
+    financial?.finp_estimated_monthly_sales != null &&
+    financial?.finp_break_even_sales != null &&
+    monthlySales > 0 &&
+    breakEvenSales > 0 ? (
+      <BreakEvenChart sales={monthlySales} breakEven={breakEvenSales} />
+    ) : null;
+  const monthlyRevenue = Number(financial?.finp_price_per_sale ?? 0) * monthlySales;
+  const monthlyVariable = Number(financial?.finp_variable_cost_per_sale ?? 0) * monthlySales;
+  // La utilidad es la que ya muestra el reporte; lo que falta para llegar a ella son los costos fijos.
+  const monthlyProfit =
+    financial?.finp_estimated_monthly_net_profit != null
+      ? Number(financial.finp_estimated_monthly_net_profit)
+      : monthlyRevenue - monthlyVariable - Number(financial?.finp_fixed_monthly_costs_amount ?? 0);
+  const monthlyFixed = Math.max(0, monthlyRevenue - monthlyVariable - monthlyProfit);
+  const splitSegments: SplitSegment[] | null =
+    monthlyRevenue > 0 && monthlyProfit >= 0
+      ? [
+          { label: "Costos variables", value: monthlyVariable, color: SPLIT_COLORS.cost },
+          ...(monthlyFixed > 0
+            ? [{ label: "Costos fijos", value: monthlyFixed, color: SPLIT_COLORS.fixed }]
+            : []),
+          { label: "Utilidad", value: monthlyProfit, color: SPLIT_COLORS.profit },
+        ]
+      : null;
+
   const visibleValidationPlan = isFree
     ? validationPlan.slice(0, 1)
     : validationPlan;
@@ -147,203 +193,41 @@ export function ResultReport({
       ? undefined
       : REPORT_TOC_SECTION_IDS.filter((id) => id !== "fuentes");
 
-  if (assessment.asmt_status === "failed") {
-    return <ReportErrorState assessmentId={assessment.asmt_id} />;
-  }
-
-  if (!report && assessment.asmt_status === "in_progress") {
-    return (
-      <Card className="border-blue-200 bg-blue-50">
-        <CardContent className="py-6">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="mt-0.5 size-5 shrink-0 text-blue-600" />
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-blue-900">
-                Tu diagnóstico se está procesando
-              </p>
-              <p className="text-sm text-blue-700">
-                Esto puede tomar unos momentos. La página se actualizará automáticamente.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  return (
-    <div className="grid gap-10 lg:grid-cols-[1fr_220px] lg:gap-14">
-      <div className="min-w-0 space-y-2">
-        {report && (
-          <TrackEvent
-            event={ANALYTICS_EVENTS.reportViewed}
-            props={{ access: isFree ? "free" : "full" }}
-          />
-        )}
-        {isFree && report && (
-          <p
-            className="mb-6 rounded-xl border border-border/80 bg-muted/40 px-4 py-3 text-sm text-muted-foreground"
-            data-testid="free-preview-legend"
-          >
-            Esta es tu prueba gratuita: incluye una vista previa del diagnóstico{" "}
-            <strong className="font-medium text-foreground">
-              sin investigación de mercado
-            </strong>
-            . Las cifras de mercado son tus supuestos.{" "}
-            {hasPlan
-              ? "Esta evaluación aún no está desbloqueada: usa tus créditos para ver el reporte completo."
-              : "Desbloquea el reporte completo con un plan cuando quieras."}
-          </p>
-        )}
-        {isFree && report && hasPlan && (
-          <FullReportCta
-            assessmentId={assessment.asmt_id}
-            viewer={viewer}
-            className="mb-6 border-0 py-0 md:py-0"
-          />
-        )}
-        {/* Table of Contents - Mobile */}
-        <div className="lg:hidden">
-          <ReportToc className="mb-8" sectionIds={tocSectionIds} />
-        </div>
-
-        {/* Executive Summary */}
-        {report?.arep_executive_summary && (
-          <ReportSection id="resumen" title="Resumen ejecutivo" className="pt-0 md:pt-2">
-            <Markdown 
-              content={report.arep_executive_summary} 
-              className="text-base" 
-            />
-            {recommendation && (
-              <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4">
-                <p className="text-sm font-medium text-primary">Recomendación</p>
-                <p className="mt-1 text-lg font-semibold">
-                  {RECOMMENDATION_LABELS[recommendation]}
-                </p>
+  /** Cuerpo del análisis financiero (gráficas, tablas y texto), compartido por la sección. */
+  const financialRest = financial ? (
+    <>
+            {/* Charts */}
+            {!isFree && (breakEvenChart || splitSegments) && (
+              <div className="mt-8 grid gap-4 lg:grid-cols-2">
+                {breakEvenChart && (
+                  <div className="rounded-2xl rc-tile bg-[var(--rc-tile,#ffffff)] shadow-[0_4px_12px_rgba(5,66,44,0.07)] p-6">{breakEvenChart}</div>
+                )}
+                {splitSegments && (
+                  <div className="rounded-2xl rc-tile bg-[var(--rc-tile,#ffffff)] shadow-[0_4px_12px_rgba(5,66,44,0.07)] p-6">
+                    <SplitBar
+                      title="Cómo se reparten tus ventas mensuales"
+                      segments={splitSegments}
+                      format={(v) => formatCurrency(v, financial.finp_currency ?? "MXN")}
+                    />
+                  </div>
+                )}
               </div>
             )}
-          </ReportSection>
-        )}
-
-        {/* Viability Signals */}
-        {scores && (
-          <ReportSection id="viabilidad" title="Semáforos por dimensión">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {DIMENSION_MAP.map((dim) => {
-                const signal = scores[dim.signalKey] as SignalLevel | null;
-                const score = scores[dim.scoreKey];
-                if (!signal) return null;
-                return (
-                  <Card key={dim.label} className="border-border/60">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <CardTitle className="text-sm font-medium">
-                          {dim.label}
-                        </CardTitle>
-                        <SignalBadge signal={signal} />
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-2xl font-semibold text-primary">
-                        {score ?? "—"}
-                        <span className="text-sm font-normal text-muted-foreground">
-                          {" "}
-                          / 100
-                        </span>
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {SIGNAL_LABELS[signal]}
-                        {dim.scoreKey === "ascs_risk_level_score" &&
-                          " · más puntos = más riesgo"}
-                      </p>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </ReportSection>
-        )}
-
-        {/* Business Understanding */}
-        {report?.arep_business_understanding && (
-          <ReportSection id="negocio" title="Entendimiento del negocio">
-            <Markdown 
-              content={report.arep_business_understanding} 
-              className="text-base leading-relaxed" 
-            />
-          </ReportSection>
-        )}
-
-        {/* Financial Snapshot */}
-        {financial && (
-          <ReportSection id="financiero" title="Análisis financiero">
-            {/* Financial Metrics Cards */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {!isFree && financial.finp_gross_margin_per_sale != null && (
-                <Card className="border-border/70">
-                  <CardContent className="pt-5">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Margen bruto por venta
-                    </p>
-                    <p className="mt-2 text-xl font-semibold tabular-nums text-primary">
-                      {formatCurrency(
-                        Number(financial.finp_gross_margin_per_sale),
-                        financial.finp_currency ?? "MXN"
-                      )}
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-              {financial.finp_gross_margin_percentage != null && (
-                <Card className="border-border/70">
-                  <CardContent className="pt-5">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Margen bruto %
-                    </p>
-                    <p className="mt-2 text-xl font-semibold tabular-nums text-primary">
-                      {Number(financial.finp_gross_margin_percentage).toFixed(1)}%
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-              {financial.finp_estimated_monthly_net_profit != null && (
-                <Card className="border-border/70">
-                  <CardContent className="pt-5">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Utilidad neta mensual est.
-                    </p>
-                    <p className="mt-2 text-xl font-semibold tabular-nums text-primary">
-                      {formatCurrency(
-                        Number(financial.finp_estimated_monthly_net_profit),
-                        financial.finp_currency ?? "MXN"
-                      )}
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-              {financial.finp_payback_months != null && (
-                <Card className="border-border/70">
-                  <CardContent className="pt-5">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Recuperación estimada
-                    </p>
-                    <p className="mt-2 text-xl font-semibold tabular-nums text-primary">
-                      {Number(financial.finp_payback_months).toFixed(1)} meses
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
 
             {/* Products & Services */}
             {!isFree && products.length > 0 && (
-              <Card className="mt-6 border-border/70">
-                <CardHeader>
-                  <CardTitle className="text-base">
-                    Productos y servicios
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+              <div className="mt-4 space-y-6 rounded-2xl rc-tile bg-[var(--rc-tile,#ffffff)] shadow-[0_4px_12px_rgba(5,66,44,0.07)] p-6">
+                <MarginBars
+                  rows={products.map((p) => ({
+                    name: p.name,
+                    kind: p.kind,
+                    price: p.price,
+                    variableCost: p.variableCost,
+                  }))}
+                />
+                <h3 className="text-base font-medium text-foreground">
+                  Productos y servicios
+                </h3>
                   <div className="overflow-x-auto">
                     <Table>
                       <TableBody>
@@ -409,17 +293,13 @@ export function ResultReport({
                       </TableBody>
                     </Table>
                   </div>
-                </CardContent>
-              </Card>
+              </div>
             )}
 
             {/* Financial Details Table */}
             {!isFree && (
-            <Card className="mt-6 border-border/70">
-              <CardHeader>
-                <CardTitle className="text-base">Inputs y cálculos</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <div className="mt-4 rounded-2xl rc-tile bg-[var(--rc-tile,#ffffff)] shadow-[0_4px_12px_rgba(5,66,44,0.07)] p-6">
+              <h3 className="mb-3 text-base font-medium text-foreground">Inputs y cálculos</h3>
                 <div className="overflow-x-auto">
                   <Table>
                     <TableBody>
@@ -502,8 +382,7 @@ export function ResultReport({
                     </TableBody>
                   </Table>
                 </div>
-              </CardContent>
-            </Card>
+            </div>
             )}
 
             {isFree && (
@@ -522,40 +401,220 @@ export function ResultReport({
                 />
               </div>
             )}
+    </>
+  ) : null;
+
+  const financialSection = financial ? (
+          <ReportSection id="financiero" title="Análisis financiero">
+            {/* Financial Metrics */}
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-4">
+              {!isFree && financial.finp_gross_margin_per_sale != null && (
+                <div className="space-y-1">
+                  <dt className="text-sm text-muted-foreground">Margen bruto por venta</dt>
+                  <dd className="text-3xl font-semibold tabular-nums tracking-tight text-primary xl:text-4xl">
+                    {formatCurrency(
+                      Number(financial.finp_gross_margin_per_sale),
+                      financial.finp_currency ?? "MXN"
+                   )}
+                  </dd>
+                </div>
+              )}
+              {financial.finp_gross_margin_percentage != null && (
+                <div className="space-y-1">
+                  <dt className="text-sm text-muted-foreground">Margen bruto %</dt>
+                  <dd className="text-3xl font-semibold tabular-nums tracking-tight text-primary xl:text-4xl">
+                    {Number(financial.finp_gross_margin_percentage).toFixed(1)}%
+                  </dd>
+                </div>
+              )}
+              {financial.finp_estimated_monthly_net_profit != null && (
+                <div className="space-y-1">
+                  <dt className="text-sm text-muted-foreground">Utilidad neta mensual est.</dt>
+                  <dd className="text-3xl font-semibold tabular-nums tracking-tight text-primary xl:text-4xl">
+                    {formatCurrency(
+                      Number(financial.finp_estimated_monthly_net_profit),
+                      financial.finp_currency ?? "MXN"
+                    )}
+                  </dd>
+                </div>
+              )}
+              {financial.finp_payback_months != null && (
+                <div className="space-y-1">
+                  <dt className="text-sm text-muted-foreground">Recuperación estimada</dt>
+                  <dd className="text-3xl font-semibold tabular-nums tracking-tight text-primary xl:text-4xl">
+                    {Number(financial.finp_payback_months).toFixed(1)} meses
+                  </dd>
+                </div>
+              )}
+            </dl>
+
+            {financial.finp_payback_months != null && (
+              <PaybackRuler payback={Number(financial.finp_payback_months)} />
+            )}
+
+            {financialRest}
+          </ReportSection>
+  ) : null;
+
+  if (assessment.asmt_status === "failed") {
+    return <ReportErrorState assessmentId={assessment.asmt_id} />;
+  }
+
+  if (!report && assessment.asmt_status === "in_progress") {
+    return (
+      <Card className="border-blue-200 bg-blue-50">
+        <CardContent className="py-6">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="mt-0.5 size-5 shrink-0 text-blue-600" />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-blue-900">
+                Tu diagnóstico se está procesando
+              </p>
+              <p className="text-sm text-blue-700">
+                Esto puede tomar unos momentos. La página se actualizará automáticamente.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-8">
+      <div className="min-w-0 space-y-4 sm:space-y-6">
+        {report && (
+          <TrackEvent
+            event={ANALYTICS_EVENTS.reportViewed}
+            props={{ access: isFree ? "free" : "full" }}
+          />
+        )}
+        {isFree && report && (
+          <p
+            className="rounded-2xl bg-white shadow-[0_4px_12px_rgba(5,66,44,0.07)] px-5 py-4 text-base text-foreground"
+            data-testid="free-preview-legend"
+          >
+            Esta es tu prueba gratuita: incluye una vista previa del diagnóstico{" "}
+            <strong className="font-medium text-foreground">
+              sin investigación de mercado
+            </strong>
+            . Las cifras de mercado son tus supuestos.{" "}
+            {hasPlan
+              ? "Esta evaluación aún no está desbloqueada: usa tus créditos para ver el reporte completo."
+              : "Desbloquea el reporte completo con un plan cuando quieras."}
+          </p>
+        )}
+        {isFree && report && hasPlan && (
+          <FullReportCta
+            assessmentId={assessment.asmt_id}
+            viewer={viewer}
+          />
+        )}
+        {/* Table of Contents - Mobile */}
+        <div className="lg:hidden">
+          <ReportToc sectionIds={tocSectionIds} />
+        </div>
+
+        {/* Executive Summary */}
+        {report?.arep_executive_summary && (
+          <ReportSection id="resumen" title="Resumen ejecutivo" tone="hero">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-12">
+              <Markdown
+                content={report.arep_executive_summary}
+                className="text-base leading-relaxed text-white [&_*]:text-inherit"
+              />
+              {recommendation && (
+                <div className="space-y-3 rounded-2xl bg-white/10 p-6">
+                  <p className="text-sm text-white/80">Recomendación</p>
+                  <p className="flex items-start gap-3 text-2xl font-semibold leading-tight">
+                    <span
+                      aria-hidden
+                      className="mt-2 size-3 shrink-0 rounded-full"
+                      style={{ backgroundColor: RECOMMENDATION_FILL[recommendation] }}
+                    />
+                    {RECOMMENDATION_LABELS[recommendation]}
+                  </p>
+                </div>
+              )}
+            </div>
           </ReportSection>
         )}
+
+        {/* Viability Signals */}
+        {scores && (
+          <ReportSection id="viabilidad" title="Semáforos por dimensión">
+            <div className="grid gap-3 sm:grid-cols-2">
+              {DIMENSION_MAP.map((dim) => {
+                const signal = scores[dim.signalKey] as SignalLevel | null;
+                const score = scores[dim.scoreKey];
+                if (!signal) return null;
+                return (
+                  <div key={dim.label} className="space-y-3 rounded-2xl bg-white shadow-[0_4px_12px_rgba(5,66,44,0.07)] p-5">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="text-base font-medium text-foreground">
+                        {dim.label}
+                      </h3>
+                      <SignalBadge signal={signal} />
+                    </div>
+                    <p className="text-4xl font-semibold leading-none tracking-tight text-primary tabular-nums">
+                      {score ?? "—"}
+                      <span className="text-base font-normal text-muted-foreground">
+                        {" "}
+                        / 100
+                      </span>
+                    </p>
+                    <ScoreBar score={score} signal={signal} label={dim.label} />
+                    <p className="text-sm text-muted-foreground">
+                      {SIGNAL_LABELS[signal]}
+                      {dim.scoreKey === "ascs_risk_level_score" &&
+                        " · más puntos = más riesgo"}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </ReportSection>
+        )}
+
+        {/* Business Understanding */}
+        {report?.arep_business_understanding && (
+          <ReportSection id="negocio" title="Entendimiento del negocio">
+            <Markdown 
+              content={report.arep_business_understanding} 
+              className="text-base leading-relaxed" 
+            />
+          </ReportSection>
+        )}
+
+        {/* Financial Snapshot */}
+        {financialSection}
 
         {/* Strengths */}
         {report && (
           <ReportSection id="fortalezas" title="Fortalezas">
             {strengths.length > 0 ? (
-              <div className="grid gap-4 sm:grid-cols-2">
+              <ul className="grid gap-3 sm:grid-cols-2">
                 {strengths.map((item, i) => (
-                  <Card
-                    key={i}
-                    className="border-emerald-200/50 bg-emerald-50/20"
-                  >
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-start gap-2 text-base text-emerald-900">
-                        <CheckCircle2
-                          className="mt-0.5 size-4 shrink-0"
-                          aria-hidden
-                        />
+                  <li key={i} className="flex gap-3 rounded-2xl bg-[#81c784]/10 p-5">
+                    <CheckCircle2
+                      className="mt-1 size-5 shrink-0 text-[#4caf50]"
+                      aria-hidden
+                    />
+                    <div className="min-w-0 space-y-2">
+                      <p className="text-base font-semibold leading-snug text-foreground">
                         {item.title}
-                      </CardTitle>
-                    </CardHeader>
-                    {item.whyItMatters && (
-                      <CardContent>
-                        <p className="text-sm leading-relaxed text-emerald-900/80">
+                      </p>
+                      {item.whyItMatters && (
+                        <p className="text-sm leading-relaxed text-muted-foreground">
                           {item.whyItMatters}
                         </p>
-                      </CardContent>
-                    )}
-                  </Card>
+                      )}
+                    </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             ) : (
-              <p className="text-sm leading-relaxed text-muted-foreground">
+              <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
                 Con los datos que nos diste, todavía no encontramos una fortaleza
                 que se sostenga por sí sola. No es un veredicto sobre ti ni sobre
                 la idea: significa que aún no hay evidencia — ni números ni
@@ -571,45 +630,41 @@ export function ResultReport({
         {showRiskSection && (
           <ReportSection id="riesgos" title="Riesgos">
             {risks.length > 0 && (
-              <div className="grid gap-4">
+              <ul className="grid gap-3 lg:grid-cols-2">
                 {risks.map((risk, i) => (
-                  <Card key={i} className="border-amber-200/50">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-start gap-2 text-base text-amber-950">
-                        <AlertTriangle
-                          className="mt-0.5 size-4 shrink-0 text-amber-600"
-                          aria-hidden
-                        />
+                  <li key={i} className="flex gap-3 rounded-2xl bg-[#ffb74d]/12 p-5">
+                    <AlertTriangle
+                      className="mt-1 size-5 shrink-0 text-[#ff7043]"
+                      aria-hidden
+                    />
+                    <div className="min-w-0 space-y-2">
+                      <p className="text-base font-semibold leading-snug text-foreground">
                         {risk.title}
-                      </CardTitle>
+                      </p>
                       {risk.whyItMatters && (
-                        <CardDescription className="text-amber-900/70">
+                        <p className="text-sm leading-relaxed text-muted-foreground">
                           {risk.whyItMatters}
-                        </CardDescription>
+                        </p>
                       )}
-                    </CardHeader>
-                    {!isFree && risk.howToReduce && (
-                      <CardContent>
-                        <p className="text-sm">
+                      {!isFree && risk.howToReduce && (
+                        <p className="rounded-xl bg-white/70 p-3 text-sm">
                           <span className="font-medium text-primary">
                             Cómo reducirlo:{" "}
                           </span>
-                          <span className="text-muted-foreground">
+                          <span className="text-foreground/80">
                             {risk.howToReduce}
                           </span>
                         </p>
-                      </CardContent>
-                    )}
-                    {isFree && risk.howToReduce && (
-                      <CardContent>
-                        <LockedNote className="mt-0">
+                      )}
+                      {isFree && risk.howToReduce && (
+                        <LockedNote className="mt-0 !bg-white/70 !shadow-none">
                           Cómo reducirlo: disponible {hasPlan ? "al desbloquear con tus créditos" : "con un plan"}.
                         </LockedNote>
-                      </CardContent>
-                    )}
-                  </Card>
+                      )}
+                    </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
 
             {isFree && redFlags.length > 0 && (
@@ -622,8 +677,8 @@ export function ResultReport({
             )}
 
             {!isFree && redFlags.length > 0 && (
-              <div className="mt-6">
-                <p className="mb-3 text-sm font-medium text-primary">
+              <div className="mt-6 rounded-2xl bg-[#ff7043]/10 p-5">
+                <p className="mb-3 text-base font-medium text-primary">
                   Alertas detectadas en tus números
                 </p>
                 <ul className="space-y-2">
@@ -633,7 +688,7 @@ export function ResultReport({
                         className="mt-0.5 size-4 shrink-0 text-destructive"
                         aria-hidden
                       />
-                      <span className="text-muted-foreground">{item}</span>
+                      <span className="text-foreground/80">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -699,27 +754,33 @@ export function ResultReport({
         {/* Validation Plan */}
         {visibleValidationPlan.length > 0 && (
           <ReportSection id="validacion" title="Plan de validación">
-            <div className="grid gap-4 sm:grid-cols-2">
+            <ol className="grid gap-3 sm:grid-cols-2">
               {visibleValidationPlan.map((week) => (
-                <Card key={week.week}>
-                  <CardHeader>
-                    <CardTitle className="text-base">
-                      Semana {week.week}
-                    </CardTitle>
-                    {week.title && (
-                      <CardDescription>{week.title}</CardDescription>
-                    )}
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="list-disc space-y-1 pl-4 text-sm text-muted-foreground">
-                      {week.tasks.map((task, i) => (
-                        <li key={i}>{task}</li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+                <li key={week.week} className="rounded-2xl bg-white shadow-[0_4px_12px_rgba(5,66,44,0.07)] p-5">
+                  <div className="flex items-center gap-3">
+                    <span
+                      aria-hidden
+                      className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-base font-semibold tabular-nums text-white"
+                    >
+                      {week.week}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-base font-semibold text-primary">
+                        Semana {week.week}
+                      </p>
+                      {week.title && (
+                        <p className="text-sm text-muted-foreground">{week.title}</p>
+                      )}
+                    </div>
+                  </div>
+                  <ul className="mt-4 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-foreground/80">
+                    {week.tasks.map((task, i) => (
+                      <li key={i}>{task}</li>
+                    ))}
+                  </ul>
+                </li>
               ))}
-            </div>
+            </ol>
             {isFree && lockedWeeks > 0 && (
               <LockedNote>
                 {lockedWeeks === 1
@@ -773,7 +834,7 @@ export function ResultReport({
         )}
 
         {report && showAnalyzeAnother && (
-          <div className="flex flex-col items-center gap-3 border-t border-border/60 pt-8">
+          <div className="flex flex-col items-center gap-3 pt-6">
             <p className="text-center text-sm text-muted-foreground">
               ¿Tienes otra idea que quieras evaluar?
             </p>
@@ -818,25 +879,23 @@ function LockedSection({
 }) {
   return (
     <ReportSection id={id} title={title}>
-      <Card className="border-dashed border-border bg-muted/30">
-        <CardContent className="flex items-start gap-3 py-5">
-          <Lock
-            className="mt-0.5 size-4 shrink-0 text-muted-foreground"
-            aria-hidden
-          />
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">{description}</p>
-            <TrackedLink
-              event={ANALYTICS_EVENTS.subscribeClicked}
-              eventProps={{ location: "report_lock" }}
-              href={hasPlan ? "#desbloquear" : CREDITS_PLANS_PATH}
-              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-            >
-              {hasPlan ? "Desbloquear con tus créditos" : "Elegir un plan para desbloquear"}
-            </TrackedLink>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex items-start gap-3 rounded-2xl bg-white shadow-[0_4px_12px_rgba(5,66,44,0.07)] p-5">
+        <Lock
+          className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+          aria-hidden
+        />
+        <div className="space-y-2">
+          <p className="text-base text-muted-foreground">{description}</p>
+          <TrackedLink
+            event={ANALYTICS_EVENTS.subscribeClicked}
+            eventProps={{ location: "report_lock" }}
+            href={hasPlan ? "#desbloquear" : CREDITS_PLANS_PATH}
+            className="text-base font-medium text-primary underline-offset-4 hover:underline"
+          >
+            {hasPlan ? "Desbloquear con tus créditos" : "Elegir un plan para desbloquear"}
+          </TrackedLink>
+        </div>
+      </div>
     </ReportSection>
   );
 }
@@ -850,7 +909,7 @@ function LockedNote({
 }) {
   return (
     <p
-      className={`mt-4 flex items-start gap-2 rounded-lg border border-dashed border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground ${className ?? ""}`}
+      className={`mt-4 flex items-start gap-2 rounded-2xl bg-white shadow-[0_4px_12px_rgba(5,66,44,0.07)] px-4 py-3 text-sm text-muted-foreground ${className ?? ""}`}
     >
       <Lock className="mt-0.5 size-4 shrink-0" aria-hidden />
       <span>{children}</span>
@@ -868,33 +927,31 @@ function FullReportCta({
   className?: string;
 }) {
   return (
-    <div id="desbloquear" className={cn("scroll-mt-24 border-b border-border/60 py-10 md:py-14", className)}>
-      <Card className="border-[#6baed6]/30 bg-accent/20">
-        <CardHeader>
-          <CardTitle className="text-primary">
-            Desbloquea el diagnóstico completo
-          </CardTitle>
-          <CardDescription>
-            Con {CREDIT_COST_BASIC} créditos ves todo lo ya generado. Con{" "}
-            {CREDIT_COST_RESEARCH} regeneramos el reporte incluyendo
-            investigación de mercado.
-            {viewer?.hasPlan && (
-              <>
-                {" "}
-                Tu saldo: <strong className="font-medium text-foreground">{formatCredits(viewer.creditsBalance)} créditos</strong>.
-              </>
-            )}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <ul className="grid gap-2 sm:grid-cols-2">
+    <div id="desbloquear" className={cn("scroll-mt-24", className)}>
+      <div className="rounded-3xl bg-white shadow-[0_4px_12px_rgba(5,66,44,0.07)] p-6 sm:p-8 lg:p-10">
+        <h2 className="text-2xl font-semibold tracking-tight text-primary sm:text-3xl">
+          Desbloquea el diagnóstico completo
+        </h2>
+        <p className="mt-2 max-w-3xl text-base leading-relaxed text-muted-foreground">
+          Con {CREDIT_COST_BASIC} créditos ves todo lo ya generado. Con{" "}
+          {CREDIT_COST_RESEARCH} regeneramos el reporte incluyendo
+          investigación de mercado.
+          {viewer?.hasPlan && (
+            <>
+              {" "}
+              Tu saldo: <strong className="font-medium text-foreground">{formatCredits(viewer.creditsBalance)} créditos</strong>.
+            </>
+          )}
+        </p>
+        <div className="mt-6 space-y-6">
+          <ul className="grid gap-3 sm:grid-cols-2">
             {FULL_REPORT_INCLUDES.map((title) => (
               <li
                 key={title}
-                className="flex items-start gap-2 text-sm text-muted-foreground"
+                className="flex items-start gap-2 text-base text-foreground"
               >
                 <CheckCircle2
-                  className="mt-0.5 size-4 shrink-0 text-secondary"
+                  className="mt-0.5 size-5 shrink-0 text-primary"
                   aria-hidden
                 />
                 {title}
@@ -902,8 +959,8 @@ function FullReportCta({
             ))}
           </ul>
           <UnlockReportButtons assessmentId={assessmentId} />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

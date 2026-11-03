@@ -65,7 +65,7 @@ export function AvatarUploader({ src, initials }: { src: string | null; initials
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 sm:items-start">
+    <div className="flex flex-col items-center gap-3">
       <button
         type="button"
         onClick={() => input.current?.click()}
