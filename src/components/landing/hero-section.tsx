@@ -40,7 +40,7 @@ export function HeroSection() {
             Decida cruza tu idea de negocio con tus límites reales y te dice si conviene probar, validar, ajustar o pausar.
           </p>
           <div className="hero-step space-y-4" style={{ animationDelay: "700ms" }}>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-start xl:flex-row xl:items-center">
               <PrimaryCtaButton href="/analizar" location="hero">
                 Analizar mi idea gratis
               </PrimaryCtaButton>
@@ -60,6 +60,7 @@ export function HeroSection() {
 
       <div className="relative min-h-72 bg-muted max-lg:order-first lg:col-start-2 lg:row-start-1">
         <HeroField />
+        <span aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-40 bg-gradient-to-r from-background to-transparent lg:block" />
       </div>
     </section>
   );
