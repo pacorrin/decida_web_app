@@ -265,23 +265,11 @@
   }
 }
 
-/* Panel del hero: cada pieza aparece con fundido (--o es su opacidad), reaparece en otro punto (solo opacity). */
-@keyframes hero-roam {
-  0% {
-    opacity: 0;
-  }
-  18%,
-  76% {
-    opacity: var(--o);
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
+/* Panel del hero: cada pieza aparece con fundido (--o es su opacidad) y reaparece en otro punto (solo opacity).
+   Los keyframes `hero-roam` los genera hero-field.tsx a partir de MAX_VISIBLE. */
 .hero-draw {
   opacity: var(--o);
-  animation: hero-roam 28s ease-in-out infinite both;
+  animation: hero-roam 66s ease-in-out infinite both;
 }
 
 @keyframes hero-caret {

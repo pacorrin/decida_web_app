@@ -1,7 +1,7 @@
 "use client";
 
 import { Pause, Play } from "lucide-react";
-import { type AnimationEvent, type CSSProperties, type ReactNode, useRef, useState } from "react";
+import { type AnimationEvent, type CSSProperties, type ReactNode, useLayoutEffect, useRef, useState } from "react";
 import { HeroTypedAnswer } from "@/components/landing/hero-typed-answer";
 
 /**
@@ -237,13 +237,27 @@ const PIECES: Piece[] = [
   },
 ];
 
-/** Duración del ciclo de cada pieza (s): todas distintas, entre 23 y 35. */
-const CYCLES = [26, 31, 28, 24, 33, 29, 25, 32, 27, 30, 23, 35];
+/** Máximo de piezas que se ven a la vez en el panel (con los fundidos puede haber una menos). Ajústalo aquí. */
+const MAX_VISIBLE = 5;
+/** Duración (s) del ciclo de cada pieza; todas comparten ciclo y entran repartidas en partes iguales. */
+const CYCLE_S = 66;
+/** Orden de entrada: se intercalan palabras, gráficos y figuras para que no salgan seguidas las parecidas. */
+const ENTRY_ORDER = [3, 7, 0, 10, 5, 1, 8, 4, 11, 2, 9, 6];
+/** Parte del ciclo en que una pieza está visible; con las entradas parejas eso da MAX_VISIBLE o una menos. */
+const VISIBLE_FRACTION = (MAX_VISIBLE - 0.15) / PIECES.length;
+const pct = (n: number) => (n * 100).toFixed(2);
+const FADE = VISIBLE_FRACTION * 0.15;
+/** Fundido de entrada, pausa visible y fundido de salida; el resto del ciclo la pieza descansa invisible. */
+const ROAM_KEYFRAMES = `@keyframes hero-roam{0%{opacity:0}${pct(FADE)}%,${pct(VISIBLE_FRACTION - FADE)}%{opacity:var(--o)}${pct(VISIBLE_FRACTION)}%,100%{opacity:0}}`;
 /**
- * Arranque de cada pieza (s): negativo = ya va a mitad de ciclo al cargar (solo tres), positivo = entra después.
- * Así el panel empieza casi vacío y se va llenando poco a poco.
+ * Arranque de cada pieza (s). Las tres primeras en el orden de entrada ya van en curso al cargar y las demás
+ * entran una cada CYCLE_S / piezas, así el panel empieza casi vacío y se llena sin pasar del tope.
  */
-const STARTS = [11, 22, 6, -9, 17, 29, 14, -10, -8, 25, 3, 20];
+const STARTS = PIECES.map((_, i) => {
+  const slot = ENTRY_ORDER.indexOf(i);
+  const step = CYCLE_S / PIECES.length;
+  return slot < 3 ? -slot * step : (slot - 2) * step;
+});
 
 type Slot = { x: number; y: number; data: Data; tone: number };
 
@@ -261,6 +275,8 @@ const overlapArea = (a: Box, b: Box) => Math.max(0, Math.min(a.r, b.r) - Math.ma
 export function HeroField() {
   const [slots, setSlots] = useState<Slot[]>(() => PIECES.map((p) => ({ x: p.x, y: p.y, data: INITIAL_DATA, tone: p.tone })));
   const [paused, setPaused] = useState(false);
+  /** El servidor pinta posiciones fijas; al montar cada pieza toma posición, valores y color al azar y recién entonces se muestra. */
+  const [ready, setReady] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const pieceRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -303,6 +319,14 @@ export function HeroField() {
     return best;
   }
 
+  useLayoutEffect(() => {
+    queueMicrotask(() => {
+      setSlots(PIECES.map((p, i) => ({ ...pickSpot(i), data: randomChartData(), tone: Math.floor(Math.random() * TONES.length) })));
+      setReady(true);
+    });
+    // Solo al montar: pickSpot lee refs y no depende de props ni de estado.
+  }, []);
+
   /** Al terminar un ciclo la pieza está invisible: cambia de punto, de valores y de color sin que se note. */
   function onCycleEnd(i: number, e: AnimationEvent<HTMLDivElement>) {
     if (e.target !== e.currentTarget || e.animationName !== "hero-roam") return;
@@ -312,7 +336,8 @@ export function HeroField() {
 
   return (
     <div className={`pointer-events-none absolute inset-0 ${paused ? "hero-paused" : ""}`}>
-      <div ref={rootRef} aria-hidden className="absolute inset-0 overflow-hidden [container-type:inline-size]">
+      <style>{ROAM_KEYFRAMES}</style>
+      <div ref={rootRef} aria-hidden className={`absolute inset-0 overflow-hidden [container-type:inline-size] ${ready ? "" : "invisible"}`}>
         {PIECES.map((p, i) => {
           const color = TONES[slots[i].tone];
           return (
@@ -321,7 +346,7 @@ export function HeroField() {
               ref={(el) => {
                 pieceRefs.current[i] = el;
               }}
-              className="hero-draw absolute"
+              className={`hero-draw absolute ${ENTRY_ORDER.indexOf(i) >= MAX_VISIBLE ? "motion-reduce:hidden" : ""}`}
               onAnimationIteration={(e) => onCycleEnd(i, e)}
               style={
                 {
@@ -329,7 +354,7 @@ export function HeroField() {
                   top: `${slots[i].y}%`,
                   color,
                   "--o": (p.opacity ?? DEPTH[p.depth].opacity) * soft(color),
-                  animationDuration: `${Math.round(CYCLES[i] * 1.3)}s`,
+                  animationDuration: `${CYCLE_S}s`,
                   animationDelay: `${STARTS[i]}s`,
                 } as CSSProperties
               }
