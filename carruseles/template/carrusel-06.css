@@ -1,0 +1,391 @@
+/* Carrusel 06 — Marco (Taste redesign)
+   Dials: VARIANCE 9 / MOTION 1 / DENSITY 3
+   Cielo full-bleed + ventana blanca inset. Disco coral con numero.
+   Distinto de Contrapeso (banda) y de 01–05. */
+
+:root {
+  --cielo: #e8f4fa;
+  --papel: #ffffff;
+  --verde-confianza: #05422c;
+  --tinta-secundaria: #3d5c50;
+  --coral-accion: #ff7043;
+  --azul-guia: #6baed6;
+  --musgo: #f0f5f3;
+  --inset: 48px;
+  --marco-pad: 64px;
+  --radio: 28px;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("../fonts/Geist-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("../fonts/Geist-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 1080px;
+  height: 1350px;
+  overflow: hidden;
+  background: var(--cielo);
+  color: var(--verde-confianza);
+  font-family: "Geist", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.slide {
+  position: relative;
+  width: 1080px;
+  height: 1350px;
+  background: var(--cielo);
+  padding: var(--inset);
+  display: flex;
+  overflow: hidden;
+}
+
+/* Soft vignette on sky - not dots/grid/ledger */
+.slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    rgba(107, 174, 214, 0.35) 0%,
+    transparent 70%
+  );
+}
+
+.marco {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  background: var(--papel);
+  border-radius: var(--radio);
+  padding: var(--marco-pad);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.marco--cta {
+  background: var(--verde-confianza);
+}
+
+.logo-wrap {
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+
+.logo-lockup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-mark {
+  width: 48px;
+  height: auto;
+  display: block;
+}
+
+.logo-wordmark {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--verde-confianza);
+  letter-spacing: -0.02em;
+}
+
+.logo-wrap--light .logo-wordmark {
+  color: var(--papel);
+}
+
+.logo-wrap--light .logo-mark {
+  filter: brightness(0) invert(1);
+}
+
+.etiqueta {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--azul-guia);
+}
+
+.titulo {
+  font-size: 54px;
+  font-weight: 600;
+  line-height: 1.12;
+  color: var(--verde-confianza);
+  text-wrap: balance;
+  letter-spacing: -0.03em;
+}
+
+.titulo--sm {
+  font-size: 42px;
+  margin-top: 16px;
+}
+
+.titulo .accent {
+  color: var(--coral-accion);
+}
+
+.titulo--light {
+  color: var(--papel);
+  font-size: 56px;
+  margin-top: 56px;
+}
+
+.titulo--light .accent {
+  color: var(--coral-accion);
+}
+
+.apoyo {
+  font-size: 32px;
+  line-height: 1.35;
+  color: var(--tinta-secundaria);
+}
+
+.apoyo--light {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 34px;
+  font-weight: 600;
+  margin-top: 28px;
+}
+
+/* ——— Cover ——— */
+.slide--cover .cover-mid {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.slide--cover .titulo {
+  font-size: 58px;
+  line-height: 1.08;
+}
+
+.slide--cover .cover-foot {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 3px solid var(--musgo);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.slide--cover .apoyo {
+  flex: 1;
+  font-weight: 600;
+  color: var(--verde-confianza);
+  font-size: 30px;
+}
+
+.slide--cover .hint {
+  flex-shrink: 0;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--azul-guia);
+}
+
+/* ——— Text ——— */
+.slide--text .text-mid {
+  margin-top: auto;
+  margin-bottom: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.coral-bar {
+  width: 96px;
+  height: 8px;
+  background: var(--azul-guia);
+  border-radius: 4px;
+}
+
+.slide--text .titulo {
+  font-size: 50px;
+}
+
+.slide--text .apoyo {
+  font-size: 34px;
+}
+
+/* ——— Signal ——— */
+.slide--signal .signal-head {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.num-disc {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: var(--coral-accion);
+  color: var(--papel);
+  font-size: 56px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: -0.04em;
+}
+
+.signal-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.signal-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--musgo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signal--sky .signal-icon {
+  background: var(--cielo);
+}
+
+.slide--signal .titulo {
+  margin-top: 40px;
+  font-size: 48px;
+}
+
+.slide--signal .apoyo {
+  margin-top: auto;
+  font-size: 34px;
+  font-weight: 600;
+  color: var(--verde-confianza);
+  border-radius: 20px;
+  padding: 32px 36px;
+}
+
+.apoyo--tone-moss {
+  background: var(--musgo);
+}
+
+.apoyo--tone-sky {
+  background: var(--cielo);
+}
+
+/* ——— Compare (misma familia: filas apiladas en el marco) ——— */
+.slide--compare .etiqueta {
+  margin-top: 36px;
+}
+
+.compare-stack {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.compare-row {
+  border-radius: 20px;
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.compare-row--a {
+  background: var(--musgo);
+}
+
+.compare-row--b {
+  background: var(--cielo);
+}
+
+.compare-label {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--azul-guia);
+}
+
+.compare-texto {
+  font-size: 30px;
+  line-height: 1.35;
+  color: var(--verde-confianza);
+}
+
+.compare-texto .accent {
+  color: var(--coral-accion);
+  font-weight: 600;
+}
+
+/* ——— CTA ——— */
+.slide--cta {
+  background: var(--cielo);
+}
+
+.slide--cta::before {
+  opacity: 0.5;
+}
+
+.cta-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.cta-button {
+  align-self: stretch;
+  background: var(--coral-accion);
+  color: var(--papel);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  padding: 28px 36px;
+  border-radius: 999px;
+}
+
+.cta-lema-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.cta-mini-icon {
+  display: flex;
+  opacity: 0.85;
+}
+
+.lema {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}

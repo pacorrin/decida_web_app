@@ -1,11 +1,15 @@
-# Carrusel 05: Ingresos vs. utilidad: el error que complica a los negocios nuevos
+# Carrusel 05: Vender mucho no es lo mismo que ganar
 
-> Antes de generarlo, lee [base.md](base.md) (preparación del proyecto y reglas de calidad).
+> Antes de generarlo, lee [base.md](base.md) (Storytelling + reglas) y [diseno.md](diseno.md).  
+> Identidad visual: **Corte neto** → detalle en [diseno.md](diseno.md).
 
 - **ID:** `carrusel-05`
+- **Identidad:** Corte neto (ledger lines + panel con franja)
 - **Pilar:** P1 Validación de ideas · **Semana:** 2 · **Slides:** 9 · **Formato:** 4:5 (1080x1350)
-- **Objetivo:** Distinguir ingresos de utilidad con un ejemplo y llevar a calcular la utilidad esperada.
-- **Tipos nuevos que usa:** `calc`, `compare` (definidos en [base.md](base.md))
+- **Objetivo:** Distinguir ingresos de utilidad con un ejemplo numérico y el contraste A/B; llevar a calcular utilidad antes de lanzar.
+- **Idea controladora:** Quien celebra lo que vende enfrenta confundir volumen con ganancia. Cuando ve $50,000 de ingresos, puede quedarle $3,000 (y aún sin sueldo). Con la cuenta de utilidad, decide si la idea vale la pena.
+- **Tipos:** `cover`, `signal`, `calc`, `compare`, `text`, `cta`
+- **Build:** `pnpm build:05` → `builds/carrusel-05.js` + `template/carrusel-05.css`
 
 ## Prompt para Cursor
 
@@ -22,7 +26,7 @@ Genera el carrusel `carrusel-05` de Decida (9 slides, 4:5, 1080x1350).
       "type": "cover",
       "etiqueta": "Un error muy común",
       "titulo": "Vender mucho no es lo mismo que [ganar]",
-      "apoyo": "Ingresos vs. utilidad",
+      "apoyo": "La cifra que emociona no siempre es la que te queda.",
       "hint": "Desliza →"
     },
     {
@@ -43,7 +47,7 @@ Genera el carrusel `carrusel-05` de Decida (9 slides, 4:5, 1080x1350).
     },
     {
       "type": "calc",
-      "etiqueta": "Ejemplo ilustrativo",
+      "etiqueta": "Ejemplo",
       "titulo": "Vendiste $50,000 este mes. ¿Cuánto te quedó?",
       "filas": [
         {
@@ -71,7 +75,7 @@ Genera el carrusel `carrusel-05` de Decida (9 slides, 4:5, 1080x1350).
         "label": "Utilidad",
         "valor": "$3,000"
       },
-      "nota": "Cifras ilustrativas."
+      "nota": "De $50,000 solo quedaron $3,000."
     },
     {
       "type": "signal",
@@ -118,22 +122,26 @@ Genera el carrusel `carrusel-05` de Decida (9 slides, 4:5, 1080x1350).
 }
 ```
 
-2. Este carrusel usa los tipos `calc`, `compare`. Si todavía no existen en `build.js` y `template/slide.css`, impleméntalos primero siguiendo la sección "Preparación del proyecto" de `docs/base.md`.
-3. Ejecuta `node build.js carrusel-05` y confirma que existen los 9 PNG de 1080x1350 en `output/carrusel-05/`.
-4. Revisa cada PNG según las "Reglas de calidad" de `docs/base.md` y corrige desbordes o líneas huérfanas ajustando el CSS del tipo de slide, no el texto.
+2. Respeta la identidad Corte neto en `builds/carrusel-05.js` y `template/carrusel-05.css` (ver [diseno.md](diseno.md)).
+3. Ejecuta `pnpm build:05` (o `node builds/carrusel-05.js`) y confirma 9 PNG a 1080x1350 en `output/carrusel-05/`.
+4. Revisa cada PNG según las "Reglas de calidad" de `docs/base.md` y corrige desbordes ajustando CSS, no el texto.
 
 Notas específicas:
-- Usa `calc` (slide 4) y `compare` (slide 6). El slide 4 tiene 5 filas más total: confirma que cabe sin apretarse.
+- El calc tiene 5 filas + total: no apretar el título; reduce padding de filas si hace falta.
+- Compare: tarjeta A musgo, B cielo; único coral en `[$9,000]`.
+- Un solo coral por slide. Sin disclaimers de “tus números serán distintos”.
 ````
 
 ## Pie de foto (para Instagram)
 
 ```
-Vender mucho no es lo mismo que ganar. 💸
+Vender mucho no es lo mismo que ganar.
 
 Los ingresos son todo lo que entra. La utilidad es lo que realmente te queda después de pagar costos, publicidad, herramientas y comisiones. Y todavía falta contar tu propio tiempo.
 
-Los números del ejemplo son ilustrativos. Guárdalo y revisa cuál de las dos cifras estás usando para evaluar tu idea.
+Guárdalo y revisa si tu idea mide ingresos o utilidad.
+
+Contenido informativo. No es asesoría financiera.
 
 #emprender #utilidad #finanzasparaemprendedores #emprendimientomexico #decida
 ```

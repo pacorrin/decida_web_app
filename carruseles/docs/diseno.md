@@ -25,6 +25,9 @@ carruseles/
 pnpm build:01   # node builds/carrusel-01.js carrusel-01
 pnpm build:02   # node builds/carrusel-02.js
 pnpm build:03   # node builds/carrusel-03.js
+pnpm build:04   # node builds/carrusel-04.js
+pnpm build:05   # node builds/carrusel-05.js
+pnpm build:06   # node builds/carrusel-06.js
 ```
 
 Utilidades compartidas en `lib/common.js`: `escapeHtml`, `renderMarked`, `loadIconSvg`, `resolveLogoHtml({ theme })`, `renderCarousel`.
@@ -38,6 +41,9 @@ Utilidades compartidas en `lib/common.js`: `escapeHtml`, `renderMarked`, `loadIc
 | 01 | Papel blanco | Blanco | Verde | Palabra marcada / botón | Ninguna | Señal: título arriba + card de ícono abajo |
 | 02 | Esmeralda | Verde `#05422c` | Blanco; títulos coral | Título (marcado en blanco) / botón | Cuadrícula blanca SVG + fade | Señal: ícono marca de agua (ghost) |
 | 03 | Cuenta clara | Gradiente blanco → cielo | Verde | Número de paso / total / marcada | Puntos coral SVG + fade | Señal: número gigante + apoyo en tarjeta |
+| 04 | Marcador (Taste) | Blanco editorial | Verde | Coral acento unico por slide | Ninguna | 9 familias distintas: rail/stack/bleed + tiles/ladder/strip |
+| 05 | Corte neto | Musgo → papel | Verde | Regla / total / marcada / botón | Líneas de ledger | Signal: panel + franja; compare apilado |
+| 06 | Marco (Taste) | Cielo full + ventana blanca | Verde | Disco / marcada / botón | Vignette cielo | Inset marco; compares apilados |
 
 No repetir la misma combinación fondo + textura + layout de un carrusel ya publicado.
 
@@ -127,7 +133,106 @@ Logo en tema claro (`logoTheme: "light"`).
 - Misma esmeralda + cuadrícula del 02.
 - Mismo papel blanco + card de ícono del 01.
 
-Inventar otra firma: otro fondo de marca, otra textura (o ninguna), otra composición dominante.
+---
+
+## Carrusel 04 - Marcador Taste (detalle)
+
+**Archivos:** `builds/carrusel-04.js` · `template/carrusel-04.css` · `content/carrusel-04.json`  
+**Dials:** VARIANCE 8 / MOTION 1 / DENSITY 3  
+**Tema:** punto de equilibrio. Anti-plantilla: cada slide es una familia distinta.
+
+### Familias de layout (9)
+
+| Slide | Familia |
+|-------|---------|
+| 1 cover | editorial-type-dominant |
+| 2 signal | solid-rail + copy |
+| 3 calc | metric-tiles valor-primero |
+| 4 signal | apoyo-first stack |
+| 5 calc | ladder rows + total suave |
+| 6 signal | bleed-bar + ghost icon |
+| 7 calc | horizontal strip cells |
+| 8 text | manifesto column |
+| 9 cta | copy stack + action band |
+
+### Paleta (theme lock light)
+
+| Token | Hex |
+|-------|-----|
+| fondo | `#ffffff` |
+| verde | `#05422c` |
+| coral | `#ff7043` (unico acento) |
+| azul | `#6baed6` |
+| suave | `#f0f5f3` |
+| radio | `16px` (shape lock) |
+
+### Qué no copiar en el 05+
+
+- Repetir rail/stack/bleed + tiles/ladder/strip como sistema.
+- Combinaciones de 01-03 (ghost unico, numero gigante, ficha, ledger, puntos, grid).
+
+Inventar otra **estructura**, no solo otro color.
+
+---
+
+## Carrusel 05 — Corte neto (detalle)
+
+**Archivos:** `builds/carrusel-05.js` · `template/carrusel-05.css` · `content/carrusel-05.json`  
+**Tema:** ingresos vs. utilidad · sensación de “corte” entre lo que entra y lo que queda.
+
+### Paleta
+
+| Token | Hex | Uso |
+|-------|-----|-----|
+| `--fondo-musgo` | `#f0f5f3` | Extremo superior del fondo; tarjeta A |
+| `--papel` | `#ffffff` | Extremo inferior; cards |
+| `--verde-confianza` | `#05422c` | Títulos, franja moss, CTA band |
+| `--coral-accion` | `#ff7043` | Un acento por slide |
+| `--azul-guia` | `#6baed6` | Etiquetas; franja sky |
+| `--cielo-tenue` | `#e8f4fa` | Tarjeta B compare |
+| `--radio` | `20px` | Shape lock |
+
+Logo en tema claro.
+
+### Fondo y textura
+
+1. Gradiente vertical musgo → papel.
+2. Líneas horizontales de ledger (repeating 48px) con máscara que se desvanece abajo.
+3. No puntos coral ni cuadrícula.
+
+### Layout por tipo
+
+- **Cover:** regla coral bajo logo; título abajo; pie con apoyo + hint.
+- **Signal:** panel anclado abajo con franja lateral (verde o azul según `cardTone`) + ícono en círculo.
+- **Calc:** ledger compacto (5 filas + total coral) + nota de contraste.
+- **Compare:** dos cards apiladas (musgo / cielo); coral solo en `[$9,000]`.
+- **Text:** regla coral + manifiesto.
+- **CTA:** zona superior musgo/papel + franja verde con botón coral.
+
+### Qué no copiar en el 06+
+
+- Mismo musgo→papel + líneas de ledger + panel con franja.
+- Combinaciones ya usadas en 01–04.
+
+---
+
+## Carrusel 06 — Marco Taste (detalle)
+
+**Archivos:** `builds/carrusel-06.js` · `template/carrusel-06.css` · `content/carrusel-06.json`  
+**Dials:** VARIANCE 9 / MOTION 1 / DENSITY 3  
+**Tema:** tres sesgos cognitivos · “ventana” de claridad sobre cielo.
+
+### Firma
+
+1. Fondo cielo full-bleed + vignette suave; contenido en **marco** blanco inset (`48px`, radio `28px`).
+2. Signal: disco coral relleno con número blanco (no outline).
+3. Compare (×3, misma familia): filas apiladas musgo/cielo dentro del marco.
+4. CTA: marco verde sólido, logo claro, botón coral.
+
+### Qué no copiar en el 07+
+
+- Cielo + ventana inset + disco coral como sistema.
+- Combinaciones 01–05 (ni la iteración Contrapeso/banda del 06).
 
 ---
 

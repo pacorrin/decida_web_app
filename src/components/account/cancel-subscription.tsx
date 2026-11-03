@@ -11,7 +11,7 @@ export function CancelSubscription({ accessUntil }: { accessUntil: string | null
 
   if (!confirming) {
     return (
-      <Button type="button" variant="outline" onClick={() => setConfirming(true)}>
+      <Button type="button" variant="destructive" onClick={() => setConfirming(true)}>
         Cancelar suscripción
       </Button>
     );
