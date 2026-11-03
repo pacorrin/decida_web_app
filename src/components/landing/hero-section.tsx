@@ -16,8 +16,8 @@ export function HeroSection() {
       <div className="flex flex-col justify-between gap-10 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pb-14">
         <div className="hero-step flex flex-wrap items-center gap-3" style={{ animationDelay: "0ms" }}>
           <p className="text-4xl font-semibold tracking-tight sm:text-5xl">Decida</p>
-          <AiBadge className="border-white/30 bg-white/10 text-white" />
-          <BetaBadge className="border-white/30 bg-white/10 text-white [&>svg]:text-white" />
+          <AiBadge className="border-white/30 bg-white/10 text-white [&>svg]:text-[#6baed6]" />
+          <BetaBadge className="border-white/30 bg-white/10 text-white [&>svg]:text-[#6baed6]" />
         </div>
 
         <div className="space-y-6">
