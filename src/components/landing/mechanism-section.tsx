@@ -22,7 +22,7 @@ export function MechanismSection() {
 
         <div className="mt-20 grid gap-10 lg:grid-cols-2">
           <div>
-            <h3 className="text-2xl font-semibold tracking-tight text-primary">Lo que cruzamos con tu situación</h3>
+            <h3 className="text-2xl font-semibold tracking-tight text-primary">Lo que medimos de tu situación</h3>
             <p
               data-testid="ai-mechanism-note"
               className="mt-4 max-w-md text-base leading-relaxed text-foreground"
