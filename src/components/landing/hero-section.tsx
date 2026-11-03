@@ -1,9 +1,11 @@
+import { AiBadge } from "@/components/beta/ai-badge";
+import { BetaBadge } from "@/components/beta/beta-badge";
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
 import { HeroField } from "@/components/landing/hero-field";
 
 /**
- * Hero del inicio, con la distribución del de Cifra: tarjeta en dos columnas, marca y badges arriba a la
- * izquierda, titular y CTAs abajo, y un panel claro a la derecha con fragmentos de reporte. Sin verde de fondo.
+ * Hero del inicio, con la distribución del de Cifra: tarjeta en dos columnas, marca arriba a la
+ * izquierda; badges, titular y CTAs abajo, y un panel claro a la derecha con fragmentos de reporte. Sin verde de fondo.
  */
 export function HeroSection() {
   return (
@@ -12,20 +14,15 @@ export function HeroSection() {
       className="mx-3 mb-3 grid min-h-[calc(100svh-5.5rem)] overflow-hidden rounded-3xl bg-primary text-white sm:mx-6 lg:grid-cols-[1fr_1.25fr]"
     >
       <div className="flex flex-col justify-between gap-10 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pb-14">
-        <div className="hero-step flex flex-wrap items-center gap-3" style={{ animationDelay: "0ms" }}>
-          <p className="text-4xl font-semibold tracking-tight sm:text-5xl">Decida</p>
-          {["IA", "Beta"].map((label) => (
-            <span
-              key={label}
-              data-testid={label === "IA" ? "ai-badge" : "beta-badge"}
-              className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-3 py-1 text-sm font-medium text-white"
-            >
-              {label}
-            </span>
-          ))}
-        </div>
+        <p className="hero-step text-4xl font-semibold tracking-tight sm:text-5xl" style={{ animationDelay: "0ms" }}>
+          Decida
+        </p>
 
         <div className="space-y-6">
+          <div className="hero-step flex flex-wrap items-center gap-2" style={{ animationDelay: "0ms" }}>
+            <AiBadge className="border-white/25 bg-white/10 px-3 text-sm text-white" />
+            <BetaBadge className="border-white/25 bg-white/10 px-3 text-sm text-white [&>svg]:text-white" />
+          </div>
           <h1
             id="hero-heading"
             className="text-5xl font-semibold leading-[1.02] tracking-[-0.04em] sm:text-6xl xl:text-7xl"
