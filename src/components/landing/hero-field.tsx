@@ -15,8 +15,8 @@ type Depth = "far" | "mid" | "near";
 
 const DEPTH: Record<Depth, { opacity: number }> = {
   far: { opacity: 0.1 },
-  mid: { opacity: 0.3 },
-  near: { opacity: 0.9 },
+  mid: { opacity: 0.22 },
+  near: { opacity: 0.72 },
 };
 
 /**
@@ -329,7 +329,7 @@ export function HeroField() {
                   top: `${slots[i].y}%`,
                   color,
                   "--o": (p.opacity ?? DEPTH[p.depth].opacity) * soft(color),
-                  animationDuration: `${CYCLES[i]}s`,
+                  animationDuration: `${Math.round(CYCLES[i] * 1.3)}s`,
                   animationDelay: `${STARTS[i]}s`,
                 } as CSSProperties
               }
