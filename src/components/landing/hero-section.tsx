@@ -26,7 +26,7 @@ export function HeroSection() {
           </div>
           <h1
             id="hero-heading"
-            className="text-[clamp(3rem,9vw,8.5rem)] font-semibold leading-[0.98] tracking-[-0.04em] text-white"
+            className="text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.04em] text-white"
           >
             {["¿Tu idea vale", "tu tiempo", "y tu dinero?"].map((line, i) => (
               <span key={line} className="hero-step block whitespace-nowrap" style={{ animationDelay: `${120 + i * 120}ms` }}>
