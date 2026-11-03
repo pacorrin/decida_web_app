@@ -58,7 +58,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="relative min-h-72 max-lg:order-first lg:col-start-2 lg:row-start-1">
+      <div className="relative h-44 sm:h-56 lg:h-auto lg:col-start-2 lg:row-start-1">
         <HeroField />
       </div>
     </section>

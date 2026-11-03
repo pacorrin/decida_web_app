@@ -1,20 +1,22 @@
 "use client";
 
-import { type AnimationEvent, type CSSProperties, type ReactNode, useState } from "react";
+import { Pause, Play } from "lucide-react";
+import { type AnimationEvent, type CSSProperties, type ReactNode, useRef, useState } from "react";
 import { HeroTypedAnswer } from "@/components/landing/hero-typed-answer";
 
 /**
  * Panel del hero: fragmentos de un reporte (veredictos, cifras y gráficas) a distintos tamaños, opacidades y
  * profundidades. Cada pieza tiene su propio ciclo: aparece con un fundido lento, se queda, se desvanece y, ya
- * invisible, reaparece en otro punto del panel y con valores nuevos al azar. Los ciclos tienen duraciones y
- * arranques distintos (la mayoría entra con retraso) para que nunca aparezcan ni cambien todas a la vez. Solo transform y opacity.
+ * invisible, reaparece en otro punto del panel (buscando un hueco libre) y con valores nuevos al azar. Los ciclos
+ * tienen duraciones y arranques distintos para que nunca aparezcan ni cambien todas a la vez. Hay un botón para
+ * pausar todo el movimiento. Solo opacity.
  */
 type Depth = "far" | "mid" | "near";
 
-const DEPTH: Record<Depth, { opacity: number; drift: string; seconds: number }> = {
-  far: { opacity: 0.1, drift: "0.9rem", seconds: 11 },
-  mid: { opacity: 0.3, drift: "0.6rem", seconds: 8 },
-  near: { opacity: 0.9, drift: "0.35rem", seconds: 6 },
+const DEPTH: Record<Depth, { opacity: number }> = {
+  far: { opacity: 0.1 },
+  mid: { opacity: 0.3 },
+  near: { opacity: 0.9 },
 };
 
 /**
@@ -22,6 +24,9 @@ const DEPTH: Record<Depth, { opacity: number; drift: string; seconds: number }> 
  * Cada pieza cambia al otro color cada vez que reaparece.
  */
 const TONES = ["#ffffff", "#ff7043"];
+const CORAL = "#ff7043";
+/** El coral del panel se atenúa a la mitad para que el botón principal siga siendo lo único intenso. */
+const soft = (color: string) => (color === CORAL ? 0.5 : 1);
 
 const LABELS = ["Encaje con tu tiempo", "Capacidad de inversión", "Afinidad con tu perfil", "Demanda en tu zona"];
 
@@ -167,7 +172,7 @@ const PIECES: Piece[] = [
     render: (d) => (
       <div>
         <p className="text-[15cqw] font-semibold leading-none tracking-[-0.05em]">{d.pct}%</p>
-        <p className="mt-1 text-[clamp(0.75rem,2.4cqw,1rem)] font-medium">{d.label}</p>
+        <p className="mt-1 text-[clamp(0.75rem,2.4cqw,1rem)] font-medium">{d.label} (ejemplo)</p>
       </div>
     ),
   },
@@ -181,7 +186,7 @@ const PIECES: Piece[] = [
     render: (d, accent, partner) => (
       <div className="flex h-[16cqw] items-end gap-[1.6cqw]">
         {d.bars.map((h, i) => (
-          <span key={i} className="block w-[3.2cqw]" style={{ height: `${h}%`, backgroundColor: i % 2 === 1 ? partner : accent }} />
+          <span key={i} className="block w-[3.2cqw]" style={{ height: `${h}%`, backgroundColor: i % 2 === 1 ? partner : accent, opacity: soft(i % 2 === 1 ? partner : accent) }} />
         ))}
       </div>
     ),
@@ -197,7 +202,7 @@ const PIECES: Piece[] = [
     render: (d, _accent, partner) => (
       <svg viewBox="0 0 120 50" className="w-[36cqw]" fill="none" strokeWidth="2" aria-hidden>
         <polyline points={d.line.map((v, i) => `${i * 24},${v.toFixed(1)}`).join(" ")} stroke="currentColor" strokeLinejoin="round" />
-        <circle cx="120" cy={d.line[5].toFixed(1)} r="3.5" fill={partner} />
+        <circle cx="120" cy={d.line[5].toFixed(1)} r="3.5" fill={partner} fillOpacity={soft(partner)} />
       </svg>
     ),
   },
@@ -242,45 +247,108 @@ const STARTS = [11, 22, 6, -9, 17, 29, 14, -10, -8, 25, 3, 20];
 
 type Slot = { x: number; y: number; data: Data; tone: number };
 
+/** Rectángulo de un elemento relativo a la raíz del panel; null si no ocupa espacio. */
+function boxOf(el: Element, root: DOMRect) {
+  const r = el.getBoundingClientRect();
+  if (r.width === 0 || r.height === 0) return null;
+  return { l: r.left - root.left, t: r.top - root.top, r: r.right - root.left, b: r.bottom - root.top };
+}
+
+type Box = NonNullable<ReturnType<typeof boxOf>>;
+
+const overlapArea = (a: Box, b: Box) => Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
+
 export function HeroField() {
   const [slots, setSlots] = useState<Slot[]>(() => PIECES.map((p) => ({ x: p.x, y: p.y, data: INITIAL_DATA, tone: p.tone })));
+  const [paused, setPaused] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const pieceRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  /** Al terminar un ciclo la pieza está invisible: cambia de punto y de valores sin que se note. */
+  /** Elige un punto del rango de la pieza que no pise a las demás piezas ni a la tarjeta; si no hay, el que menos. */
+  function pickSpot(i: number) {
+    const p = PIECES[i];
+    const candidate = () => ({ x: between(p.xr[0], p.xr[1]), y: between(p.yr[0], p.yr[1]) });
+    const root = rootRef.current;
+    const self = pieceRefs.current[i];
+    if (!root || !self || p.depth === "far") return candidate();
+
+    const area = root.getBoundingClientRect();
+    const own = self.getBoundingClientRect();
+    const others: Box[] = [];
+    pieceRefs.current.forEach((el, k) => {
+      if (k === i || !el || PIECES[k].depth === "far") return;
+      const b = boxOf(el, area);
+      if (b) others.push(b);
+    });
+    root.querySelectorAll("[data-keepout]").forEach((el) => {
+      const b = boxOf(el, area);
+      if (b) others.push(b);
+    });
+
+    let best = candidate();
+    let bestScore = Infinity;
+    for (let n = 0; n < 20; n++) {
+      const c = candidate();
+      const l = (c.x / 100) * area.width;
+      const t = (c.y / 100) * area.height;
+      const box: Box = { l, t, r: l + own.width, b: t + own.height };
+      const outside = Math.max(0, box.r - area.width) + Math.max(0, box.b - area.height);
+      const score = others.reduce((sum, o) => sum + overlapArea(box, o), 0) + outside * 50;
+      if (score === 0) return c;
+      if (score < bestScore) {
+        best = c;
+        bestScore = score;
+      }
+    }
+    return best;
+  }
+
+  /** Al terminar un ciclo la pieza está invisible: cambia de punto, de valores y de color sin que se note. */
   function onCycleEnd(i: number, e: AnimationEvent<HTMLDivElement>) {
     if (e.target !== e.currentTarget || e.animationName !== "hero-roam") return;
-    const p = PIECES[i];
-    setSlots((prev) =>
-      prev.map((s, k) => (k === i ? { x: between(p.xr[0], p.xr[1]), y: between(p.yr[0], p.yr[1]), data: randomChartData(), tone: (s.tone + 1) % TONES.length } : s)),
-    );
+    const spot = pickSpot(i);
+    setSlots((prev) => prev.map((s, k) => (k === i ? { ...spot, data: randomChartData(), tone: (s.tone + 1) % TONES.length } : s)));
   }
 
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden [container-type:inline-size]">
-      {PIECES.map((p, i) => {
-        const d = DEPTH[p.depth];
-        return (
-          <div
-            key={i}
-            className="hero-draw absolute"
-            onAnimationIteration={(e) => onCycleEnd(i, e)}
-            style={
-              {
-                left: `${slots[i].x}%`,
-                top: `${slots[i].y}%`,
-                color: TONES[slots[i].tone],
-                "--o": p.opacity ?? d.opacity,
-                animationDuration: `${CYCLES[i]}s`,
-                animationDelay: `${STARTS[i]}s`,
-              } as CSSProperties
-            }
-          >
-            <div className="hero-drift" style={{ "--d": d.drift, animationDuration: `${d.seconds}s`, animationDelay: `-${i * 1.3}s` } as CSSProperties}>
-              {p.render(slots[i].data, TONES[slots[i].tone], TONES[(slots[i].tone + 1) % TONES.length])}
+    <div className={`pointer-events-none absolute inset-0 ${paused ? "hero-paused" : ""}`}>
+      <div ref={rootRef} aria-hidden className="absolute inset-0 overflow-hidden [container-type:inline-size]">
+        {PIECES.map((p, i) => {
+          const color = TONES[slots[i].tone];
+          return (
+            <div
+              key={i}
+              ref={(el) => {
+                pieceRefs.current[i] = el;
+              }}
+              className="hero-draw absolute"
+              onAnimationIteration={(e) => onCycleEnd(i, e)}
+              style={
+                {
+                  left: `${slots[i].x}%`,
+                  top: `${slots[i].y}%`,
+                  color,
+                  "--o": (p.opacity ?? DEPTH[p.depth].opacity) * soft(color),
+                  animationDuration: `${CYCLES[i]}s`,
+                  animationDelay: `${STARTS[i]}s`,
+                } as CSSProperties
+              }
+            >
+              {p.render(slots[i].data, color, TONES[(slots[i].tone + 1) % TONES.length])}
             </div>
-          </div>
-        );
-      })}
-      <HeroTypedAnswer />
+          );
+        })}
+        <HeroTypedAnswer paused={paused} />
+      </div>
+      <button
+        type="button"
+        onClick={() => setPaused((v) => !v)}
+        aria-pressed={paused}
+        aria-label={paused ? "Reanudar la animación" : "Pausar la animación"}
+        className="pointer-events-auto absolute bottom-3 right-3 z-20 inline-flex size-11 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:hidden"
+      >
+        {paused ? <Play className="size-4" aria-hidden /> : <Pause className="size-4" aria-hidden />}
+      </button>
     </div>
   );
 }

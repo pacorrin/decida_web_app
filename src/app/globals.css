@@ -263,7 +263,7 @@
   }
 }
 
-/* Panel del hero: cada pieza aparece con fundido (--o es su opacidad), reaparece en otro punto y flota (transform + opacity). */
+/* Panel del hero: cada pieza aparece con fundido (--o es su opacidad), reaparece en otro punto (solo opacity). */
 @keyframes hero-roam {
   0% {
     opacity: 0;
@@ -277,28 +277,20 @@
   }
 }
 
-@keyframes hero-drift {
-  from {
-    transform: translateY(calc(var(--d) * -1));
-  }
-  to {
-    transform: translateY(var(--d));
-  }
-}
-
 .hero-draw {
   opacity: var(--o);
   animation: hero-roam 28s ease-in-out infinite both;
-}
-
-.hero-drift {
-  animation: hero-drift 8s ease-in-out infinite alternate;
 }
 
 @keyframes hero-caret {
   50% {
     opacity: 0;
   }
+}
+
+.hero-paused .hero-draw,
+.hero-paused .hero-caret {
+  animation-play-state: paused;
 }
 
 .hero-caret {
@@ -312,8 +304,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-draw,
-  .hero-drift {
+  .hero-draw {
     animation: none;
   }
 }
