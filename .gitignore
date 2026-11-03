@@ -61,3 +61,5 @@ pnpm-workspace.yaml
 
 video-decida
 certificates
+# Archivos de usuario en desarrollo local (sin bucket)
+/.data/
