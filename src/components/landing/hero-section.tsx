@@ -1,32 +1,34 @@
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
-import { HeroField } from "@/components/landing/hero-field";
+import { HERO_FILTERS, HeroField } from "@/components/landing/hero-field";
 
 /**
- * Hero del inicio: una idea cruzando seis filtros sobre fondo blanco, con el verde solo en el texto.
+ * Hero del inicio, con la distribución del de Cifra: tarjeta en dos columnas, marca y badges arriba a la
+ * izquierda, titular y CTAs abajo, y un panel claro a la derecha con las ondas de la idea. Sin verde de fondo.
  */
 export function HeroSection() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative flex min-h-[calc(100svh-4.75rem)] items-center overflow-hidden bg-background"
+      className="mx-3 mb-3 grid min-h-[calc(100svh-5.5rem)] overflow-hidden rounded-3xl border border-border bg-background sm:mx-6 lg:grid-cols-2"
     >
-      <HeroField />
-      <div className="relative mx-auto w-full max-w-7xl px-4 pb-24 pt-28 sm:px-6 lg:px-8">
+      <div className="flex flex-col justify-between gap-10 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pb-14">
+        <div className="hero-step flex flex-wrap items-center gap-3" style={{ animationDelay: "0ms" }}>
+          <p className="text-4xl font-semibold tracking-tight text-primary sm:text-5xl">Decida</p>
+          {["IA", "Beta"].map((label) => (
+            <span
+              key={label}
+              data-testid={label === "IA" ? "ai-badge" : "beta-badge"}
+              className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary"
+            >
+              {label}
+            </span>
+          ))}
+        </div>
+
         <div className="space-y-6">
-          <div className="hero-step flex flex-wrap items-center gap-2" style={{ animationDelay: "0ms" }}>
-            {["IA", "Beta"].map((label) => (
-              <span
-                key={label}
-                data-testid={label === "IA" ? "ai-badge" : "beta-badge"}
-                className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary"
-              >
-                {label}
-              </span>
-            ))}
-          </div>
           <h1
             id="hero-heading"
-            className="text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.04em] text-primary"
+            className="text-5xl font-semibold leading-[1.02] tracking-[-0.04em] text-primary sm:text-6xl xl:text-7xl"
           >
             {["¿Tu idea vale", "tu tiempo", "y tu dinero?"].map((line, i) => (
               <span key={line} className="hero-step block whitespace-nowrap" style={{ animationDelay: `${120 + i * 120}ms` }}>
@@ -54,6 +56,21 @@ export function HeroSection() {
             <p className="max-w-md text-base text-muted-foreground">15 a 20 minutos. Primera evaluación gratis, sin tarjeta.</p>
           </div>
         </div>
+      </div>
+
+      <div className="relative min-h-72 bg-muted max-lg:order-first lg:col-start-2 lg:row-start-1">
+        <HeroField />
+        <ul
+          aria-label="Lo que Decida cruza con tu idea"
+          className="absolute inset-x-0 bottom-0 hidden grid-cols-2 gap-x-6 gap-y-2 px-8 pb-10 text-sm font-medium text-primary/80 lg:grid xl:px-12"
+        >
+          {HERO_FILTERS.map((label) => (
+            <li key={label} className="flex items-center gap-2">
+              <span aria-hidden className="size-1.5 rounded-full bg-primary/40" />
+              {label}
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
