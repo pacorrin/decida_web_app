@@ -13,7 +13,7 @@ export function HeroField() {
         {Array.from({ length: RINGS }, (_, i) => (
           <span
             key={i}
-            className="hero-ring absolute left-1/2 top-1/2 -ml-[min(60vh,32rem)] -mt-[min(60vh,32rem)] block size-[min(120vh,64rem)] rounded-full border border-white/25"
+            className="hero-ring absolute left-1/2 top-1/2 -ml-[min(60vh,32rem)] -mt-[min(60vh,32rem)] block size-[min(120vh,64rem)] rounded-full border border-primary/25"
             style={{
               animationDuration: `${LOOP_SECONDS}s`,
               animationDelay: `-${((i * LOOP_SECONDS) / RINGS).toFixed(2)}s`,
