@@ -1,9 +1,9 @@
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
-import { HERO_FILTERS, HeroField } from "@/components/landing/hero-field";
+import { HeroField } from "@/components/landing/hero-field";
 
 /**
  * Hero del inicio, con la distribución del de Cifra: tarjeta en dos columnas, marca y badges arriba a la
- * izquierda, titular y CTAs abajo, y un panel claro a la derecha con las ondas de la idea. Sin verde de fondo.
+ * izquierda, titular y CTAs abajo, y un panel claro a la derecha con fragmentos de reporte. Sin verde de fondo.
  */
 export function HeroSection() {
   return (
@@ -60,17 +60,6 @@ export function HeroSection() {
 
       <div className="relative min-h-72 bg-muted max-lg:order-first lg:col-start-2 lg:row-start-1">
         <HeroField />
-        <ul
-          aria-label="Lo que Decida cruza con tu idea"
-          className="absolute inset-x-0 bottom-0 hidden grid-cols-2 gap-x-6 gap-y-2 px-8 pb-10 text-sm font-medium text-primary/80 lg:grid xl:px-12"
-        >
-          {HERO_FILTERS.map((label) => (
-            <li key={label} className="flex items-center gap-2">
-              <span aria-hidden className="size-1.5 rounded-full bg-primary/40" />
-              {label}
-            </li>
-          ))}
-        </ul>
       </div>
     </section>
   );
