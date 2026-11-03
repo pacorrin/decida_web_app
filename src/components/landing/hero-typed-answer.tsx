@@ -50,7 +50,7 @@ export function HeroTypedAnswer() {
 
   return (
     <div
-      className="absolute left-[34%] top-[43%] w-[38cqw] text-primary transition-opacity duration-500"
+      className="absolute left-[34%] top-[43%] w-[38cqw] rounded-2xl bg-white p-[clamp(0.75rem,2.4cqw,1.25rem)] text-primary shadow-[0_4px_24px_rgba(5,66,44,0.08)] transition-opacity duration-500"
       style={{ opacity: visible ? 1 : 0 }}
     >
       <p className="mb-1 text-[clamp(0.65rem,1.9cqw,0.8rem)] font-semibold uppercase tracking-[0.14em] text-primary/60">Decida responde</p>
