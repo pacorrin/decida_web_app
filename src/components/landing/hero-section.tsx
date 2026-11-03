@@ -9,7 +9,7 @@ export function HeroSection() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="mx-3 mb-3 grid min-h-[calc(100svh-5.5rem)] overflow-hidden rounded-3xl border border-border bg-background sm:mx-6 lg:grid-cols-2"
+      className="mx-3 mb-3 grid min-h-[calc(100svh-5.5rem)] overflow-hidden rounded-3xl border border-border bg-background sm:mx-6 lg:grid-cols-[1fr_1.25fr]"
     >
       <div className="flex flex-col justify-between gap-10 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pb-14">
         <div className="hero-step flex flex-wrap items-center gap-3" style={{ animationDelay: "0ms" }}>
@@ -60,7 +60,7 @@ export function HeroSection() {
 
       <div className="relative min-h-72 bg-muted max-lg:order-first lg:col-start-2 lg:row-start-1">
         <HeroField />
-        <span aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-40 bg-gradient-to-r from-background to-transparent lg:block" />
+        <span aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-64 bg-gradient-to-r from-background via-background/70 to-transparent lg:block" />
       </div>
     </section>
   );
