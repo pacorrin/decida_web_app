@@ -2,10 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const ANSWERS = [
-  "Con 10 horas a la semana y un presupuesto corto, conviene validar antes de invertir.",
-  "Tu mercado cercano es claro, pero tu nivel de riesgo pide ajustar el primer paso.",
-  "Hoy la idea no cabe en tu tiempo ni en tu dinero: lo más sano es pausar y replantear.",
+/** Lo que hace Decida dentro de la app, cada punto con su título corto. */
+const ITEMS = [
+  { title: "Tu idea, en tus palabras", text: "La escribes como se la contarías a alguien y Decida la resume para que confirmes que la entendió." },
+  { title: "Tus límites reales", text: "Te pregunta tiempo, capital y cuánto podrías perder para medir la idea contra tu situación." },
+  { title: "Paso a paso", text: "Avanzas en pasos cortos y tus respuestas se guardan, así retomas donde te quedaste." },
+  { title: "Cuentas con reglas fijas", text: "Los puntajes salen de reglas fijas con tus respuestas; la IA ayuda a interpretarlos." },
+  { title: "Una idea a la vez", text: "Evalúa la idea que ya tienes, sin inventarte negocios, y guarda cada análisis en tu historial." },
 ];
 
 /** Color de acento (cursor) de cada respuesta: se alterna entre el verde y el azul de la marca. */
@@ -19,7 +22,7 @@ const FADE_MS = 500;
 export function HeroTypedAnswer({ paused }: { paused: boolean }) {
   const [text, setText] = useState("");
   const [visible, setVisible] = useState(true);
-  const [accent, setAccent] = useState(0);
+  const [item, setItem] = useState(0);
   const pausedRef = useRef(paused);
 
   useEffect(() => {
@@ -38,14 +41,14 @@ export function HeroTypedAnswer({ paused }: { paused: boolean }) {
     (async () => {
       if (reduced) {
         await wait(0);
-        if (!cancelled) setText(ANSWERS[0]);
+        if (!cancelled) setText(ITEMS[0].text);
         return;
       }
       await wait(900);
-      for (let n = 0; !cancelled; n = (n + 1) % ANSWERS.length) {
-        const answer = ANSWERS[n];
+      for (let n = 0; !cancelled; n = (n + 1) % ITEMS.length) {
+        const answer = ITEMS[n].text;
         setVisible(true);
-        setAccent(n % ACCENTS.length);
+        setItem(n);
         for (let i = 1; i <= answer.length && !cancelled; i++) {
           await gate();
           setText(answer.slice(0, i));
@@ -70,9 +73,10 @@ export function HeroTypedAnswer({ paused }: { paused: boolean }) {
       className="absolute left-[34%] top-[43%] hidden w-[38cqw] rounded-2xl sm:block bg-white p-[clamp(0.75rem,2.4cqw,1.25rem)] text-primary shadow-[0_4px_24px_rgba(5,66,44,0.08)] transition-opacity duration-500"
       style={{ opacity: visible ? 1 : 0 }}
     >
-      <p className="min-h-[4.5em] text-[clamp(0.875rem,2.7cqw,1.15rem)] font-medium leading-snug">
+      <p className="mb-1 text-[clamp(0.75rem,2cqw,0.875rem)] font-semibold" style={{ color: ACCENTS[item % ACCENTS.length] }}>{ITEMS[item].title}</p>
+      <p className="min-h-[5.5em] text-[clamp(0.875rem,2.7cqw,1.15rem)] font-medium leading-snug">
         {text}
-        <span className="hero-caret ml-0.5 inline-block h-[1em] w-[2px] translate-y-[0.15em]" style={{ backgroundColor: ACCENTS[accent] }} />
+        <span className="hero-caret ml-0.5 inline-block h-[1em] w-[2px] translate-y-[0.15em]" style={{ backgroundColor: ACCENTS[item % ACCENTS.length] }} />
       </p>
     </div>
   );
