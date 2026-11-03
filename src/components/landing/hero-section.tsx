@@ -35,7 +35,7 @@ export function HeroSection() {
             Decida cruza tu idea de negocio con tus límites reales y te dice si conviene probar, validar, ajustar o pausar.
           </p>
           <div className="hero-step space-y-4 short-landscape:space-y-2" style={{ animationDelay: "700ms" }}>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-start xl:flex-row xl:items-center short-landscape:flex-row! short-landscape:items-center!">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:w-fit lg:flex-col lg:items-stretch xl:w-auto xl:flex-row xl:items-center short-landscape:flex-row! short-landscape:items-center!">
               <PrimaryCtaButton href="/analizar" location="hero">
                 Analizar mi idea gratis
               </PrimaryCtaButton>
@@ -48,7 +48,7 @@ export function HeroSection() {
                 Ver ejemplo de reporte
               </CtaLink>
             </div>
-            <p className="max-w-md text-base text-white/75 short-landscape:hidden">15 a 20 minutos. Primera evaluación gratis, sin tarjeta.</p>
+            <p className="max-w-md text-pretty text-base text-white/75 short-landscape:hidden">15 a 20 minutos. Primera evaluación gratis, sin tarjeta.</p>
           </div>
         </div>
       </div>
