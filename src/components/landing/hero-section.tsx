@@ -9,7 +9,7 @@ import { HeroField } from "@/components/landing/hero-field";
 export function HeroSection() {
   return (
     <HeroTheme className="mx-3 mb-3 grid min-h-[calc(100svh-5.5rem)] overflow-hidden rounded-3xl border border-border bg-background sm:mx-6 lg:grid-cols-[1fr_1.25fr]">
-      <div className="flex flex-col justify-between gap-10 bg-[#dcebe3] px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pb-14">
+      <div className="flex flex-col justify-between gap-10 bg-primary px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pb-14">
         <div className="hero-step flex flex-wrap items-center gap-3" style={{ animationDelay: "0ms" }}>
           <p className="text-4xl font-semibold tracking-tight transition-colors duration-[1500ms] text-[var(--hero-c0)] sm:text-5xl">Decida</p>
           {["IA", "Beta"].map((label, i) => (
@@ -35,7 +35,7 @@ export function HeroSection() {
               </span>
             ))}
           </h1>
-          <p style={{ animationDelay: "560ms" }} className="hero-step max-w-[34rem] text-pretty text-lg leading-relaxed text-foreground/80 sm:text-xl">
+          <p style={{ animationDelay: "560ms" }} className="hero-step max-w-[34rem] text-pretty text-lg leading-relaxed text-white/85 sm:text-xl">
             Decida cruza tu idea de negocio con tus límites reales y te dice si conviene probar, validar, ajustar o pausar.
           </p>
           <div className="hero-step space-y-4" style={{ animationDelay: "700ms" }}>
@@ -52,14 +52,14 @@ export function HeroSection() {
                 Ver ejemplo de reporte
               </CtaLink>
             </div>
-            <p className="max-w-md text-base text-muted-foreground">15 a 20 minutos. Primera evaluación gratis, sin tarjeta.</p>
+            <p className="max-w-md text-base text-white/75">15 a 20 minutos. Primera evaluación gratis, sin tarjeta.</p>
           </div>
         </div>
       </div>
 
       <div className="relative min-h-72 bg-muted max-lg:order-first lg:col-start-2 lg:row-start-1">
         <HeroField />
-        <span aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-64 bg-gradient-to-r from-[#dcebe3] via-[#dcebe3]/70 to-transparent lg:block" />
+        <span aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-64 bg-gradient-to-r from-primary via-primary/70 to-transparent lg:block" />
       </div>
     </HeroTheme>
   );
