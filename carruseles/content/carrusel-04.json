@@ -1,0 +1,120 @@
+{
+  "id": "carrusel-04",
+  "slides": [
+    {
+      "type": "cover",
+      "etiqueta": "Antes de invertir",
+      "titulo": "Tu idea puede emocionarte… y aún así [no pagarte]",
+      "apoyo": "La cuenta que duele es la que te ahorra meses trabajando gratis.",
+      "hint": "Desliza →"
+    },
+    {
+      "type": "signal",
+      "etiqueta": "Paso 1",
+      "titulo": "Lo que crees ganar no es lo que te queda",
+      "apoyo": "Cada venta se come sola: materiales, envío y una reserva para impuestos.",
+      "icon": "tag",
+      "cardTone": "moss"
+    },
+    {
+      "type": "calc",
+      "etiqueta": "Ejemplo",
+      "titulo": "Lo que te queda por cada venta",
+      "filas": [
+        {
+          "label": "Precio de venta",
+          "valor": "$500"
+        },
+        {
+          "label": "− Materiales y empaque",
+          "valor": "$220"
+        },
+        {
+          "label": "− Envío y comisiones",
+          "valor": "$80"
+        },
+        {
+          "label": "− Reserva para impuestos",
+          "valor": "$50"
+        }
+      ],
+      "total": {
+        "label": "Te queda por venta",
+        "valor": "$150"
+      },
+      "nota": "Tu reserva fiscal depende del país y de sus leyes fiscales."
+    },
+    {
+      "type": "signal",
+      "etiqueta": "Paso 2",
+      "titulo": "Hay dinero que se va aunque no vendas nada",
+      "apoyo": "Herramientas, publicidad, renta, suscripciones. Salen igual los días en cero.",
+      "icon": "receipt",
+      "cardTone": "sky"
+    },
+    {
+      "type": "calc",
+      "etiqueta": "Punto de equilibrio",
+      "titulo": "¿Cuántas ventas necesitas para no perder dinero?",
+      "filas": [
+        {
+          "label": "Costos fijos al mes",
+          "valor": "$10,000"
+        },
+        {
+          "label": "÷ Lo que te queda por venta",
+          "valor": "$150"
+        }
+      ],
+      "total": {
+        "label": "Ventas al mes",
+        "valor": "67"
+      },
+      "nota": "Con 67 solo dejas de perder. Todavía no te pagas ni ganas un peso."
+    },
+    {
+      "type": "signal",
+      "etiqueta": "Paso 3",
+      "titulo": "Ahora mira lo que vale tu tiempo",
+      "apoyo": "Meses sin pagarte no son sacrificio noble: son un riesgo. Y tu sueldo solo entra si las ventas lo sostienen; el negocio también pide reinversión.",
+      "icon": "clock",
+      "cardTone": "moss"
+    },
+    {
+      "type": "calc",
+      "etiqueta": "Con tu pago incluido",
+      "titulo": "La meta que casi nadie calcula",
+      "filas": [
+        {
+          "label": "Costos fijos al mes",
+          "valor": "$10,000"
+        },
+        {
+          "label": "+ Lo que quieres pagarte",
+          "valor": "$12,000"
+        },
+        {
+          "label": "÷ Lo que te queda por venta",
+          "valor": "$150"
+        }
+      ],
+      "total": {
+        "label": "Ventas al mes para costos + tu pago",
+        "valor": "147"
+      },
+      "nota": "$22,000 ÷ $150 ≈ 147. Esa es la meta para cubrir costos y pagarte. Si no llegas, prioriza reinvertir."
+    },
+    {
+      "type": "text",
+      "titulo": "Si esa cifra te aprieta el pecho, mejor [ahora] que después de invertir.",
+      "apoyo": "Todavía puedes cambiar precio, costos o el plan. Lo caro es descubrirlo cuando ya pusiste el dinero."
+    },
+    {
+      "type": "cta",
+      "titulo": "Decide con los ojos abiertos",
+      "apoyo": "Guárdalo y haz esta cuenta antes de invertir.",
+      "boton": "¿Tu meta se parece a 67… o a 147? Cuéntanos",
+      "lema": "Tú decides, nosotros te impulsamos."
+    }
+  ]
+}

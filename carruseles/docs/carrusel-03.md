@@ -62,7 +62,7 @@ Genera el carrusel `carrusel-03` de Decida (8 slides, 4:5, 1080x1350).
     },
     {
       "type": "calc",
-      "etiqueta": "Ejemplo ilustrativo",
+      "etiqueta": "Ejemplo",
       "titulo": "Así se ve la cuenta completa",
       "filas": [
         {
@@ -86,7 +86,7 @@ Genera el carrusel `carrusel-03` de Decida (8 slides, 4:5, 1080x1350).
         "label": "Tu colchón",
         "valor": "$121,000"
       },
-      "nota": "Cifras ilustrativas. Las tuyas serán distintas."
+      "nota": "Las tuyas serán distintas."
     },
     {
       "type": "text",
@@ -109,7 +109,7 @@ Genera el carrusel `carrusel-03` de Decida (8 slides, 4:5, 1080x1350).
 4. Revisa cada PNG según las "Reglas de calidad" de `docs/base.md` y corrige desbordes o líneas huérfanas ajustando el CSS del tipo de slide, no el texto.
 
 Notas específicas:
-- El slide 6 usa el tipo nuevo `calc`. Las cifras son inventadas a propósito y deben decir que son ilustrativas.
+- El slide 6 usa el tipo nuevo `calc`. Las cifras son inventadas a propósito y no deben llevar la frase "cifras ilustrativas" en pantalla.
 ````
 
 ## Pie de foto (para Instagram)
@@ -117,9 +117,7 @@ Notas específicas:
 ```
 Antes de renunciar, haz la cuenta. 🧮
 
-Para saber cuánto necesitas ahorrar, suma tus gastos de los meses que tardarías en generar ingresos, lo que cuesta arrancar la idea y un margen para imprevistos. Los números del ejemplo son ilustrativos: los tuyos serán distintos.
-
-Guárdalo para hacer tu cuenta con calma y cuéntanos en comentarios qué paso te costó más.
+Para saber cuánto necesitas ahorrar, suma tus gastos de los meses que tardarías en generar ingresos, lo que cuesta arrancar la idea y un margen para imprevistos. Guárdalo para hacer tu cuenta con calma y cuéntanos en comentarios qué paso te costó más.
 
 Contenido informativo, no es asesoría financiera.
 

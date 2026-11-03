@@ -168,6 +168,29 @@ function clearNonPng(outDir) {
   }
 }
 
+/** Prefer bundled Chromium; fall back to system Chrome (no install). */
+async function launchBrowser() {
+  const attempts = [
+    { headless: true },
+    { headless: true, channel: "chrome" },
+    {
+      headless: true,
+      executablePath:
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    },
+  ];
+
+  let lastError;
+  for (const opts of attempts) {
+    try {
+      return await chromium.launch(opts);
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError;
+}
+
 function wrapDocument(body, css, title) {
   return `<!DOCTYPE html>
 <html lang="es">
@@ -215,7 +238,7 @@ async function renderCarousel(opts) {
   fs.mkdirSync(outDir, { recursive: true });
   clearNonPng(outDir);
 
-  const browser = await chromium.launch({ headless: true });
+  const browser = await launchBrowser();
   const context = await browser.newContext({
     viewport: { width: WIDTH, height: HEIGHT },
     deviceScaleFactor: 1,

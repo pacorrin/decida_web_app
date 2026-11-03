@@ -2,7 +2,7 @@
 
 Este archivo reúne todo lo que comparten los carruseles 02 a 12 del plan de 4 semanas: índice, formato, preparación del proyecto (una sola vez) y reglas de calidad. Cada carrusel vive en su propio archivo `docs/carrusel-NN.md`. El carrusel 01 ya está generado (`content/carrusel-01.json`).
 
-**Cómo usarlo con Cursor.** Primera vez: pídele que lea este archivo y aplique la sección "Preparación del proyecto". Después, para cada carrusel: *«Lee `docs/base.md`, `docs/diseno.md` y ejecuta el prompt de `docs/carrusel-NN.md`»*. Cada prompt trae el JSON exacto del contenido, así que no hay que transcribir texto y se evitan errores de ortografía. El pie de foto es para pegarlo en Instagram, no para Cursor.
+**Cómo usarlo con Cursor.** Primera vez: pídele que lea este archivo y aplique la sección "Preparación del proyecto". Después, para cada carrusel: *«Lee `docs/base.md` (incluye Storytelling), `docs/diseno.md` y ejecuta el prompt de `docs/carrusel-NN.md`»*. Si el JSON del prompt ya existe y hay que reescribir copy, aplica primero la sección Storytelling y luego regenera PNGs. El pie de foto es para pegarlo en Instagram, no para Cursor.
 
 **Diseño.** Cada carrusel tiene identidad propia (`builds/carrusel-NN.js` + `template/carrusel-NN.css`). La referencia visual acumulada está en [diseno.md](diseno.md) — léela antes de armar el siguiente para no repetir fondo, textura ni layout.
 
@@ -13,7 +13,7 @@ Este archivo reúne todo lo que comparten los carruseles 02 a 12 del plan de 4 s
 | [02](carrusel-02.md) | Tener ideas no es el problema: el problema es que ninguna se prueba | P4 Desarrollo personal | 1 | 8 | `checklist` |
 | [03](carrusel-03.md) | ¿Cuánto necesitas ahorrar antes de renunciar? La cuenta real | P3 Dejar el trabajo / ingresos extra | 1 | 8 | `calc` |
 | [04](carrusel-04.md) | Cuánto tienes que vender para que tu idea valga tu tiempo | P1 Validación de ideas | 2 | 9 | `calc` |
-| [05](carrusel-05.md) | Ingresos vs. utilidad: el error que complica a los negocios nuevos | P1 Validación de ideas | 2 | 9 | `calc`, `compare` |
+| [05](carrusel-05.md) | Vender mucho no es lo mismo que ganar (ingresos vs. utilidad) | P1 Validación de ideas | 2 | 9 | `calc`, `compare` |
 | [06](carrusel-06.md) | 3 sesgos que te hacen creer que tu idea es buena | P2 Decidir sin que gane la emoción | 2 | 9 | `compare` |
 | [07](carrusel-07.md) | Miedo a renunciar vs. riesgo real: cómo distinguirlos | P3 Dejar el trabajo / ingresos extra | 3 | 8 | `compare` |
 | [08](carrusel-08.md) | Pre-mortem: imagina que tu idea fracasó, ¿por qué fue? | P2 Decidir sin que gane la emoción | 3 | 9 | `compare` |
@@ -70,10 +70,71 @@ Tarea (no cambies el aspecto de los tipos existentes: `carrusel-01` debe seguir 
 
 ---
 
+## Storytelling (filosofía Decida)
+
+Los carruseles no venden motivación ni “el negocio perfecto”. Venden **claridad antes de invertir**: evaluar *una idea* bajo las condiciones reales de quien lee (tiempo, dinero, riesgo) y salir con una decisión más informada — seguir, ajustar o pausar. Lema de marca: *Tú decides, nosotros te impulsamos.*
+
+La historia se **excava** del pilar del carrusel y de lo que Decida ya promete (`PRODUCT.md`, landing). No se inventan clientes, testimonios, métricas de conversión ni “casos de éxito”. Si falta un dato verificable, usa un ejemplo numérico inventado *sin anunciarlo* (ver reglas de calidad) o una escena concreta en segunda persona (“tú”), no un personaje inventado con nombre.
+
+### Idea controladora (una frase, antes de escribir slides)
+
+> Quien [contexto del lector] enfrenta [dolor concreto]. Cuando [disparador], [impacto]. Con [esta cuenta / este filtro / este ejercicio], [resultado: claridad para decidir].
+
+Si no puedes llenarla sin humo (“éxito garantizado”, “libertad financiera”), el ángulo está mal.
+
+### Excavación mínima (antes de draft o al reescribir)
+
+Responde en una línea cada punto; si falta, márcalo — no rellenes con supuestos:
+
+1. **Héroe:** persona con trabajo / side hustle / idea ya en mente (no “emprendedores” genéricos). ¿Qué intenta lograr?
+2. **Dolor:** qué le cuesta hoy (meses sin cobrarse, invertir a ciegas, confiar en la emoción). Un ejemplo concreto, no una categoría.
+3. **Evidencia:** cifra del ejemplo del carrusel, contraste (67 vs 147), o detalle sensorial (“los días en cero también pagan renta”).
+4. **Decisión dura:** qué debe aceptar (reinvertir antes de sueldo, descartar a tiempo, validar en pequeño, esperar 48 h).
+5. **Resultado:** no es “hacerse rico”; es *saber a tiempo* / *decidir con los ojos abiertos*.
+6. **Siguiente paso:** una sola acción (guardar, hacer la cuenta, comentar, probar en pequeño). Semanas 3–4: mención suave de Decida solo en el cierre, sin pitch agresivo.
+
+### Estructura SCAR → slides
+
+| Beat | Qué cambia para el héroe | Suele vivir en |
+|------|--------------------------|----------------|
+| **Situation** | Su mundo antes del problema (ilusión, mil ideas, ganas de renunciar) | `cover` |
+| **Complication** | La tensión con evidencia (margen real, sesgo, miedo vs riesgo) | `signal` + `calc` / `compare` / `checklist` |
+| **Action** | El ejercicio o filtro que propone Decida (sin vender el producto aún) | pasos intermedios |
+| **Resolution** | El giro: mejor saber ahora; descartar también es ganar | `text` |
+| **CTA** | Una acción explícita + lema | `cta` |
+
+Cada slide debe avanzar un beat. Si dos slides dicen lo mismo con distinta tipografía, corta o fusiona.
+
+### Emoción con suelo
+
+- Emoción = **apuesta personal** (tiempo, ahorro, orgullo, miedo a trabajar gratis), no teatro de gurú.
+- Par cada cifra con una imagen concreta (“67 ventas solo para no perder”).
+- Preferir títulos que cambian algo (“La meta que casi nadie calcula”) frente a rótulos de manual (“Paso 3: suma tu sueldo”) cuando el JSON aún se está escribiendo; si el prompt ya trae JSON exacto, no lo alteres salvo que el usuario pida reescritura.
+- Claridad > drama. “Mejor ahora que después de invertir” sí; “cambiará tu vida” no.
+- Palabras a usar: claridad, viabilidad, riesgos, próximos pasos, antes de invertir, validar, decidir.  
+- Palabras a evitar: garantizado, hacerte rico, negocio perfecto, fórmula secreta, éxito seguro, libertad financiera rápida.
+
+### Checklist antes de dar por bueno el copy
+
+- [ ] Hay idea controladora escrita (aunque sea en el doc del carrusel).
+- [ ] La complicación aparece *antes* de cualquier mención de producto.
+- [ ] Al menos una cifra del ejemplo o un detalle concreto (no solo abstractos).
+- [ ] Cierra con **una** acción; el lema no compite con el botón.
+- [ ] Ninguna promesa de resultado ni disclaimer de “tus números serán distintos” en pantalla.
+- [ ] Suena a Decida: cercano, serio, MX; no a coach ni a banco.
+
+### Revisar un carrusel ya escrito
+
+- **Modo crítico:** señala qué suena genérico, qué claim no tiene respaldo y qué beat falta; ordena por impacto.
+- **Modo rescate:** reescribe quedándote solo con hechos/ejemplos del JSON y reordena a SCAR; no inventes prueba social.
+
+---
+
 ## Reglas de calidad (aplican a todos los carruseles)
 
-- **Texto exacto.** No cambies, agregues ni quites palabras del JSON. Respeta acentos y signos (¿ ? ¡ !).
+- **Texto exacto.** No cambies, agregues ni quites palabras del JSON. Respeta acentos y signos (¿ ? ¡ !). (Excepción: cuando el usuario pide reescritura de storytelling o copy; entonces actualiza JSON + `docs/carrusel-NN.md` juntos.)
 - **Un solo coral por slide:** la palabra entre `[corchetes]` o el total/botón. Nunca dos.
-- **Sin cifras reales.** Los números de los ejemplos son inventados para ilustrar y los slides lo dicen ("Ejemplo ilustrativo", "Cifras ilustrativas").
-- **Tono.** Español de México, cercano pero serio. Sin promesas de resultados ni lenguaje de gurú.
-- **Revisión final.** Después de `node build.js <id>`, abre cada PNG y revisa: texto desbordado, palabras huérfanas en una línea, ortografía, que el logo no choque con nada y que todos los slides se vean como la misma serie que el carrusel 01.
+- **Sin cifras reales.** Los números de los ejemplos son inventados para ilustrar. No pongas en pantalla "cifras ilustrativas", "datos ilustrativos" ni "ejemplo ilustrativo": la etiqueta puede ser solo "Ejemplo" si hace falta.
+- **Sin disclaimers de ejemplo en pantalla.** No digas que "tus números serán distintos", "este es un caso de ejemplo", "hazlo con tus propios números" ni "no uses los del ejemplo". Quien lee ya entiende que debe aplicar la cuenta a su idea; en slides suena condescendiente y rompe el ritmo.
+- **Tono.** Español de México, cercano pero serio. Sin promesas de resultados ni lenguaje de gurú. Ver también Storytelling arriba.
+- **Revisión final.** Después de `node build.js <id>` (o `pnpm build:NN`), abre cada PNG y revisa: texto desbordado, palabras huérfanas en una línea, ortografía, que el logo no choque con nada y que todos los slides se vean como la misma serie (identidad de *ese* carrusel, no clon del anterior).
