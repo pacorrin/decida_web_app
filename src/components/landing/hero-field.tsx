@@ -17,10 +17,12 @@ const DEPTH: Record<Depth, { opacity: number; drift: string; seconds: number }> 
   near: { opacity: 0.9, drift: "0.35rem", seconds: 6 },
 };
 
-type Tone = "green" | "teal" | "blue";
-
-/** Verde de la marca, su variante más clara y el azul-guía, que se alternan entre las piezas. */
-const TONE: Record<Tone, string> = { green: "#05422c", teal: "#0d5a40", blue: "#6baed6" };
+/**
+ * Colores de la marca que se alternan: verde-confianza, azul-guía, verde medio y un azul más hondo (el mismo
+ * azul-guía, para que se lea sobre el gris). Cada pieza cambia al siguiente color cada vez que reaparece.
+ * El coral queda reservado al botón principal.
+ */
+const TONES = ["#05422c", "#6baed6", "#0d5a40", "#3a86b8"];
 
 const LABELS = ["Encaje con tu tiempo", "Capacidad de inversión", "Afinidad con tu perfil", "Demanda en tu zona"];
 
@@ -97,23 +99,23 @@ function word(text: string, size: string) {
 
 type Piece = {
   depth: Depth;
-  tone: Tone;
+  tone: number;
   opacity?: number;
   /** Posición inicial y rango (en % del panel) al que puede reaparecer. */
   x: number;
   y: number;
   xr: [number, number];
   yr: [number, number];
-  render: (d: Data) => ReactNode;
+  render: (d: Data, accent: string, partner: string) => ReactNode;
 };
 
 
 const PIECES: Piece[] = [
-  { depth: "far", tone: "green", x: -4, y: 2, xr: [-6, 28], yr: [0, 60], render: word("Validar", "text-[26cqw]") },
-  { depth: "far", tone: "blue", x: 24, y: 72, xr: [-4, 36], yr: [40, 80], render: word("Pausar", "text-[22cqw]") },
+  { depth: "far", tone: 0, x: -4, y: 2, xr: [-6, 28], yr: [0, 60], render: word("Validar", "text-[26cqw]") },
+  { depth: "far", tone: 1, x: 24, y: 72, xr: [-4, 36], yr: [40, 80], render: word("Pausar", "text-[22cqw]") },
   {
     depth: "far",
-    tone: "teal",
+    tone: 2,
     x: 6,
     y: 38,
     xr: [0, 60],
@@ -126,10 +128,10 @@ const PIECES: Piece[] = [
       </svg>
     ),
   },
-  { depth: "mid", tone: "green", x: 48, y: 13, xr: [0, 55], yr: [5, 75], render: word("Probar", "text-[14cqw]") },
+  { depth: "mid", tone: 0, x: 48, y: 13, xr: [0, 55], yr: [5, 75], render: word("Probar", "text-[14cqw]") },
   {
     depth: "mid",
-    tone: "blue",
+    tone: 1,
     x: 62,
     y: 50,
     xr: [0, 70],
@@ -141,10 +143,10 @@ const PIECES: Piece[] = [
       </svg>
     ),
   },
-  { depth: "mid", tone: "teal", opacity: 0.45, x: 54, y: 33, xr: [0, 70], yr: [5, 85], render: word("Ajustar", "text-[8cqw]") },
+  { depth: "mid", tone: 2, opacity: 0.45, x: 54, y: 33, xr: [0, 70], yr: [5, 85], render: word("Ajustar", "text-[8cqw]") },
   {
     depth: "mid",
-    tone: "green",
+    tone: 0,
     x: 82,
     y: 6,
     xr: [0, 80],
@@ -158,7 +160,7 @@ const PIECES: Piece[] = [
   },
   {
     depth: "near",
-    tone: "green",
+    tone: 0,
     x: 9,
     y: 21,
     xr: [2, 65],
@@ -172,37 +174,37 @@ const PIECES: Piece[] = [
   },
   {
     depth: "near",
-    tone: "green",
+    tone: 0,
     x: 52,
     y: 71,
     xr: [0, 75],
     yr: [20, 75],
-    render: (d) => (
+    render: (d, accent, partner) => (
       <div className="flex h-[16cqw] items-end gap-[1.6cqw]">
         {d.bars.map((h, i) => (
-          <span key={i} className="block w-[3.2cqw]" style={{ height: `${h}%`, backgroundColor: i % 2 === 1 ? TONE.blue : TONE.green }} />
+          <span key={i} className="block w-[3.2cqw]" style={{ height: `${h}%`, backgroundColor: i % 2 === 1 ? partner : accent }} />
         ))}
       </div>
     ),
   },
   {
     depth: "near",
-    tone: "teal",
+    tone: 2,
     opacity: 0.75,
     x: 7,
     y: 62,
     xr: [0, 60],
     yr: [10, 80],
-    render: (d) => (
+    render: (d, _accent, partner) => (
       <svg viewBox="0 0 120 50" className="w-[36cqw]" fill="none" strokeWidth="2" aria-hidden>
         <polyline points={d.line.map((v, i) => `${i * 24},${v.toFixed(1)}`).join(" ")} stroke="currentColor" strokeLinejoin="round" />
-        <circle cx="120" cy={d.line[5].toFixed(1)} r="3.5" fill={TONE.blue} />
+        <circle cx="120" cy={d.line[5].toFixed(1)} r="3.5" fill={partner} />
       </svg>
     ),
   },
   {
     depth: "near",
-    tone: "blue",
+    tone: 1,
     x: 40,
     y: 5,
     xr: [0, 80],
@@ -217,7 +219,7 @@ const PIECES: Piece[] = [
   },
   {
     depth: "near",
-    tone: "teal",
+    tone: 2,
     x: 78,
     y: 88,
     xr: [0, 90],
@@ -239,17 +241,17 @@ const CYCLES = [26, 31, 28, 24, 33, 29, 25, 32, 27, 30, 23, 35];
  */
 const STARTS = [11, 22, 6, -9, 17, 29, 14, -10, -8, 25, 3, 20];
 
-type Slot = { x: number; y: number; data: Data };
+type Slot = { x: number; y: number; data: Data; tone: number };
 
 export function HeroField() {
-  const [slots, setSlots] = useState<Slot[]>(() => PIECES.map((p) => ({ x: p.x, y: p.y, data: INITIAL_DATA })));
+  const [slots, setSlots] = useState<Slot[]>(() => PIECES.map((p) => ({ x: p.x, y: p.y, data: INITIAL_DATA, tone: p.tone })));
 
   /** Al terminar un ciclo la pieza está invisible: cambia de punto y de valores sin que se note. */
   function onCycleEnd(i: number, e: AnimationEvent<HTMLDivElement>) {
     if (e.target !== e.currentTarget || e.animationName !== "hero-roam") return;
     const p = PIECES[i];
     setSlots((prev) =>
-      prev.map((s, k) => (k === i ? { x: between(p.xr[0], p.xr[1]), y: between(p.yr[0], p.yr[1]), data: randomChartData() } : s)),
+      prev.map((s, k) => (k === i ? { x: between(p.xr[0], p.xr[1]), y: between(p.yr[0], p.yr[1]), data: randomChartData(), tone: (s.tone + 1) % TONES.length } : s)),
     );
   }
 
@@ -266,7 +268,7 @@ export function HeroField() {
               {
                 left: `${slots[i].x}%`,
                 top: `${slots[i].y}%`,
-                color: TONE[p.tone],
+                color: TONES[slots[i].tone],
                 "--o": p.opacity ?? d.opacity,
                 animationDuration: `${CYCLES[i]}s`,
                 animationDelay: `${STARTS[i]}s`,
@@ -274,7 +276,7 @@ export function HeroField() {
             }
           >
             <div className="hero-drift" style={{ "--d": d.drift, animationDuration: `${d.seconds}s`, animationDelay: `-${i * 1.3}s` } as CSSProperties}>
-              {p.render(slots[i].data)}
+              {p.render(slots[i].data, TONES[slots[i].tone], TONES[(slots[i].tone + 1) % TONES.length])}
             </div>
           </div>
         );
