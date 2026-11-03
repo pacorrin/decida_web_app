@@ -3,6 +3,8 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+/* Teléfono en horizontal: poco alto, así que el hero pasa a dos columnas para que el botón quede en la primera vista. */
+@custom-variant short-landscape (@media (orientation: landscape) and (max-height: 500px));
 
 @theme inline {
   --color-background: var(--background);

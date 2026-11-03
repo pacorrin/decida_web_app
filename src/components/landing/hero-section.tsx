@@ -11,19 +11,19 @@ export function HeroSection() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="mx-3 mb-3 grid min-h-[calc(100svh-5.5rem)] overflow-hidden rounded-3xl bg-primary text-white sm:mx-6 lg:grid-cols-[1fr_1.25fr]"
+      className="mx-3 mb-3 grid min-h-[calc(100svh-5.5rem)] overflow-hidden rounded-3xl bg-primary text-white sm:mx-6 lg:grid-cols-[1fr_1.25fr] short-landscape:min-h-0 short-landscape:grid-cols-2"
     >
-      <div className="flex flex-col justify-between gap-10 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pb-14">
+      <div className="flex flex-col justify-between gap-10 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-8 lg:pb-14 xl:px-12 short-landscape:col-start-1 short-landscape:row-start-1 short-landscape:gap-3 short-landscape:py-4">
         <div className="hero-step flex flex-wrap items-center gap-3" style={{ animationDelay: "0ms" }}>
-          <p className="text-4xl font-semibold tracking-tight sm:text-5xl">Decida</p>
+          <p className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-4xl xl:text-5xl short-landscape:hidden">Decida</p>
           <AiBadge className="border-white/30 bg-white/10 text-white [&>svg]:text-[#ffb74d]" />
           <BetaBadge className="border-white/30 bg-white/10 text-white [&>svg]:text-[#ff7043]" />
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 short-landscape:space-y-2">
           <h1
             id="hero-heading"
-            className="text-5xl font-semibold leading-[1.02] tracking-[-0.04em] sm:text-6xl xl:text-7xl"
+            className="text-5xl font-semibold leading-[1.02] tracking-[-0.04em] sm:text-6xl xl:text-7xl short-landscape:text-3xl!"
           >
             {["¿Tu idea vale", "tu tiempo", "y tu dinero?"].map((line, i) => (
               <span key={line} className="hero-step block whitespace-nowrap " style={{ animationDelay: `${120 + i * 120}ms` }}>
@@ -31,11 +31,11 @@ export function HeroSection() {
               </span>
             ))}
           </h1>
-          <p style={{ animationDelay: "560ms" }} className="hero-step max-w-[34rem] text-pretty text-lg leading-relaxed text-white/85 sm:text-xl">
+          <p style={{ animationDelay: "560ms" }} className="hero-step max-w-[34rem] text-pretty text-lg leading-relaxed text-white/85 sm:text-xl short-landscape:text-base">
             Decida cruza tu idea de negocio con tus límites reales y te dice si conviene probar, validar, ajustar o pausar.
           </p>
-          <div className="hero-step space-y-4" style={{ animationDelay: "700ms" }}>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-start xl:flex-row xl:items-center">
+          <div className="hero-step space-y-4 short-landscape:space-y-2" style={{ animationDelay: "700ms" }}>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-start xl:flex-row xl:items-center short-landscape:flex-row! short-landscape:items-center!">
               <PrimaryCtaButton href="/analizar" location="hero">
                 Analizar mi idea gratis
               </PrimaryCtaButton>
@@ -48,12 +48,12 @@ export function HeroSection() {
                 Ver ejemplo de reporte
               </CtaLink>
             </div>
-            <p className="max-w-md text-base text-white/75">15 a 20 minutos. Primera evaluación gratis, sin tarjeta.</p>
+            <p className="max-w-md text-base text-white/75 short-landscape:hidden">15 a 20 minutos. Primera evaluación gratis, sin tarjeta.</p>
           </div>
         </div>
       </div>
 
-      <div className="relative h-44 sm:h-56 lg:h-auto lg:col-start-2 lg:row-start-1">
+      <div className="relative h-44 sm:h-56 lg:col-start-2 lg:row-start-1 lg:h-auto short-landscape:col-start-2 short-landscape:row-start-1 short-landscape:h-auto">
         <HeroField />
       </div>
     </section>
