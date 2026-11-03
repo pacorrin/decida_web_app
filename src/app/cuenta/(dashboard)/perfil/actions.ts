@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { CANCEL_MESSAGES, planCancellation } from "@/lib/subscription/cancel";
 import { getStripe } from "@/lib/stripe/client";
 import { describeStripeError } from "@/lib/subscription/stripe-errors";
+import { avatarKey, deleteUserFile, putUserFile } from "@/lib/storage/user-files";
 import { trackServer } from "@/lib/analytics/server";
 import { sendBillingEmail } from "@/lib/email/billing";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
@@ -100,15 +101,12 @@ export async function saveAvatar(formData: FormData): Promise<{ success: boolean
   const data = new Uint8Array(await file.arrayBuffer());
   if (!hasImageSignature(data, file.type)) return { success: false, message: "El archivo no es una imagen válida." };
 
-  const now = new Date();
-  await prisma.$transaction([
-    prisma.user_avatars.upsert({
-      where: { uavatar_user_id: user.user_id },
-      create: { uavatar_user_id: user.user_id, uavatar_mime: file.type, uavatar_data: data },
-      update: { uavatar_mime: file.type, uavatar_data: data },
-    }),
-    prisma.users.update({ where: { user_id: user.user_id }, data: { user_avatar_version: now } }),
-  ]);
+  try {
+    await putUserFile(avatarKey(user.user_id), data, file.type);
+  } catch {
+    return { success: false, message: "No pudimos guardar tu foto. Intenta de nuevo." };
+  }
+  await prisma.users.update({ where: { user_id: user.user_id }, data: { user_avatar_version: new Date() } });
 
   revalidatePath("/cuenta", "layout");
   return { success: true };
@@ -118,10 +116,12 @@ export async function removeAvatar(): Promise<{ success: boolean; message?: stri
   const user = await getCurrentUser();
   if (!user) return { success: false, message: "Tu sesión expiró. Inicia sesión de nuevo." };
 
-  await prisma.$transaction([
-    prisma.user_avatars.deleteMany({ where: { uavatar_user_id: user.user_id } }),
-    prisma.users.update({ where: { user_id: user.user_id }, data: { user_avatar_version: null } }),
-  ]);
+  try {
+    await deleteUserFile(avatarKey(user.user_id));
+  } catch {
+    return { success: false, message: "No pudimos quitar tu foto. Intenta de nuevo." };
+  }
+  await prisma.users.update({ where: { user_id: user.user_id }, data: { user_avatar_version: null } });
 
   revalidatePath("/cuenta", "layout");
   return { success: true };

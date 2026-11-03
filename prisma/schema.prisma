@@ -489,7 +489,6 @@ model users {
   payments      payments[]
   credit_ledger credit_ledger[]
   suggestions   suggestions[]
-  avatar        user_avatars?
 
   cifra_accounts       cifra_accounts[]
   cifra_cards          cifra_cards[]
@@ -498,18 +497,6 @@ model users {
   cifra_transactions   cifra_transactions[]
 
   @@map("users")
-}
-
-/// Foto de perfil ya recortada y reducida en el navegador; los bytes viven aparte para no viajar con cada lectura del usuario.
-model user_avatars {
-  uavatar_user_id    String   @id
-  uavatar_mime       String
-  uavatar_data       Bytes
-  uavatar_updated_at DateTime @updatedAt
-
-  user users @relation(fields: [uavatar_user_id], references: [user_id], onDelete: Cascade)
-
-  @@map("user_avatars")
 }
 
 model user_sessions {
