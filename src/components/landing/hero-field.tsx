@@ -7,7 +7,7 @@ import { HeroTypedAnswer } from "@/components/landing/hero-typed-answer";
  * Panel del hero: fragmentos de un reporte (veredictos, cifras y gráficas) a distintos tamaños, opacidades y
  * profundidades. Cada pieza tiene su propio ciclo: aparece con un fundido lento, se queda, se desvanece y, ya
  * invisible, reaparece en otro punto del panel y con valores nuevos al azar. Los ciclos tienen duraciones y
- * fases distintas para que nunca cambien todas a la vez. Solo transform y opacity.
+ * arranques distintos (la mayoría entra con retraso) para que nunca aparezcan ni cambien todas a la vez. Solo transform y opacity.
  */
 type Depth = "far" | "mid" | "near";
 
@@ -233,8 +233,11 @@ const PIECES: Piece[] = [
 
 /** Duración del ciclo de cada pieza (s): todas distintas, entre 23 y 35. */
 const CYCLES = [26, 31, 28, 24, 33, 29, 25, 32, 27, 30, 23, 35];
-/** Fase inicial: al cargar, unas piezas ya se ven y otras entran poco a poco. */
-const PHASES = [0.3, 0.55, 0.12, 0.7, 0.4, 0.85, 0.2, 0.05, 0.62, 0.35, 0.78, 0.48];
+/**
+ * Arranque de cada pieza (s): negativo = ya va a mitad de ciclo al cargar (solo tres), positivo = entra después.
+ * Así el panel empieza casi vacío y se va llenando poco a poco.
+ */
+const STARTS = [11, 22, 6, -9, 17, 29, 14, -10, -8, 25, 3, 20];
 
 type Slot = { x: number; y: number; data: Data };
 
@@ -266,7 +269,7 @@ export function HeroField() {
                 color: TONE[p.tone],
                 "--o": p.opacity ?? d.opacity,
                 animationDuration: `${CYCLES[i]}s`,
-                animationDelay: `-${(PHASES[i] * CYCLES[i]).toFixed(2)}s`,
+                animationDelay: `${STARTS[i]}s`,
               } as CSSProperties
             }
           >
