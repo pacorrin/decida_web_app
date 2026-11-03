@@ -301,17 +301,23 @@ export function HeroField() {
       if (b) others.push(b);
     });
 
+    /** Cuántos puntos se prueban: más candidatos dan piezas más separadas. */
+    const TRIES = 30;
     let best = candidate();
-    let bestScore = Infinity;
-    for (let n = 0; n < 20; n++) {
+    let bestScore = -Infinity;
+    for (let n = 0; n < TRIES; n++) {
       const c = candidate();
       const l = (c.x / 100) * area.width;
       const t = (c.y / 100) * area.height;
       const box: Box = { l, t, r: l + own.width, b: t + own.height };
       const outside = Math.max(0, box.r - area.width) + Math.max(0, box.b - area.height);
-      const score = others.reduce((sum, o) => sum + overlapArea(box, o), 0) + outside * 50;
-      if (score === 0) return c;
-      if (score < bestScore) {
+      const overlap = others.reduce((sum, o) => sum + overlapArea(box, o), 0);
+      // Distancia (en anchos del panel) al centro de la pieza más cercana: gana el punto más despejado.
+      const cx = (box.l + box.r) / 2;
+      const cy = (box.t + box.b) / 2;
+      const nearest = others.reduce((m, o) => Math.min(m, Math.hypot(cx - (o.l + o.r) / 2, cy - (o.t + o.b) / 2)), Infinity);
+      const score = (Number.isFinite(nearest) ? nearest / area.width : 1) - overlap / (area.width * area.height) * 20 - outside * 0.05;
+      if (score > bestScore) {
         best = c;
         bestScore = score;
       }
@@ -322,7 +328,11 @@ export function HeroField() {
   useLayoutEffect(() => {
     queueMicrotask(() => {
       setSlots(PIECES.map((p, i) => ({ ...pickSpot(i), data: randomChartData(), tone: Math.floor(Math.random() * TONES.length) })));
-      setReady(true);
+      // Segunda pasada: ya con las posiciones nuevas en el DOM, cada pieza se aleja de las demás antes de mostrarse.
+      requestAnimationFrame(() => {
+        setSlots((prev) => prev.map((s, i) => ({ ...s, ...pickSpot(i) })));
+        setReady(true);
+      });
     });
     // Solo al montar: pickSpot lee refs y no depende de props ni de estado.
   }, []);
