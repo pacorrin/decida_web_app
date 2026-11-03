@@ -172,7 +172,7 @@ const PIECES: Piece[] = [
     render: (d) => (
       <div>
         <p className="text-[15cqw] font-semibold leading-none tracking-[-0.05em]">{d.pct}%</p>
-        <p className="mt-1 text-[clamp(0.75rem,2.4cqw,1rem)] font-medium">{d.label} (ejemplo)</p>
+        <p className="mt-1 text-[clamp(0.75rem,2.4cqw,1rem)] font-medium">{d.label}</p>
       </div>
     ),
   },
