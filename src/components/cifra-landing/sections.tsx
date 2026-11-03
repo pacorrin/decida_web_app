@@ -35,8 +35,8 @@ export function CifraHero() {
         <div className="flex flex-1 flex-col gap-6 lg:pb-6">
           <div className="flex flex-wrap items-center gap-3">
             <p className="text-4xl font-semibold tracking-tight sm:text-5xl">Cifra</p>
-            <AiBadge className="border-white/30 bg-white/10 text-white" />
-            <BetaBadge className="border-white/30 bg-white/10 text-white">{BETA_HERO_TEXT}</BetaBadge>
+            <AiBadge className="border-white/30 bg-white/10 text-white [&>svg]:text-[#ffb74d]" />
+            <BetaBadge className="border-white/30 bg-white/10 text-white [&>svg]:text-[#ff7043]">{BETA_HERO_TEXT}</BetaBadge>
           </div>
           <div className="hidden min-h-40 flex-1 items-end lg:flex">
             <HeroChart />
