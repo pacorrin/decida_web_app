@@ -15,11 +15,13 @@ import { logOut } from "@/app/cuenta/actions";
 import { resetAnalytics } from "@/lib/analytics/client";
 import { DashboardMobileNav } from "@/components/account/dashboard-sidebar";
 import { PlanBadge } from "@/components/account/plan-badge";
+import { avatarSrc } from "@/lib/account/avatar";
 import { BetaBadge } from "@/components/beta/beta-badge";
 
 type DashboardNavbarProps = {
   user: {
     user_name: string | null;
+    user_avatar_version: Date | null;
     user_email: string;
     user_subscription_status: string;
     user_subscription_plan: string | null;
@@ -30,6 +32,7 @@ type DashboardNavbarProps = {
 export function DashboardNavbar({ user }: DashboardNavbarProps) {
   const [, startTransition] = useTransition();
   const label = user.user_name ?? user.user_email;
+  const avatar = avatarSrc(user.user_avatar_version);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/80 bg-background">
@@ -57,8 +60,13 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
               className="flex items-center gap-2 rounded-lg border border-transparent px-1 py-1.5 sm:px-2 text-sm font-medium text-foreground outline-none hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               data-testid="dashboard-user-menu"
             >
-              <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <UserIcon className="size-4" aria-hidden />
+              <span className="flex size-7 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-primary">
+                {avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- foto propia servida con sesión, ya reducida
+                  <img src={avatar} alt="" className="size-full object-cover" />
+                ) : (
+                  <UserIcon className="size-4" aria-hidden />
+                )}
               </span>
               <span className="hidden max-w-40 truncate sm:inline">{label}</span>
               <ChevronDown className="hidden size-4 text-muted-foreground sm:block" aria-hidden />

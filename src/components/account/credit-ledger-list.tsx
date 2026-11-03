@@ -11,6 +11,19 @@ const TYPE_LABEL: Record<credit_ledger["cled_type"], string> = {
   adjustment: "Ajuste",
 };
 
+const CIFRA_CAPTURE_LABEL = "Cifra - Captura inteligente";
+
+/** Concepto del movimiento: los de la captura inteligente de Cifra dicen de qué son, el resto usa su tipo. */
+export function entryLabel(entry: Pick<credit_ledger, "cled_type" | "cled_metadata">): string {
+  const meta = entry.cled_metadata;
+  const feature =
+    typeof meta === "object" && meta !== null && !Array.isArray(meta) ? (meta as Record<string, unknown>).feature : null;
+  if (typeof feature === "string" && feature.startsWith("cifra_capture")) {
+    return entry.cled_type === "refund" ? `Reembolso: ${CIFRA_CAPTURE_LABEL}` : CIFRA_CAPTURE_LABEL;
+  }
+  return TYPE_LABEL[entry.cled_type];
+}
+
 function formatWhen(date: Date) {
   return new Intl.DateTimeFormat("es-MX", {
     day: "numeric",
@@ -41,7 +54,7 @@ export function CreditLedgerList({ entries }: { entries: credit_ledger[] }) {
           >
             <div className="space-y-0.5">
               <p className="font-medium text-foreground">
-                {TYPE_LABEL[entry.cled_type]}
+                {entryLabel(entry)}
               </p>
               <p className="text-xs text-muted-foreground">
                 {formatWhen(entry.cled_created_at)}
