@@ -239,8 +239,6 @@ const PIECES: Piece[] = [
 
 /** Máximo de piezas que se ven a la vez en el panel (con los fundidos puede haber una menos). Ajústalo aquí. */
 const MAX_VISIBLE = 5;
-/** Pasadas de ajuste al cargar para que las posiciones iniciales se separen entre sí. */
-const SETTLE_PASSES = 5;
 /** Duración (s) del ciclo de cada pieza; todas comparten ciclo y entran repartidas en partes iguales. */
 const CYCLE_S = 66;
 /** Orden de entrada: se intercalan palabras, gráficos y figuras para que no salgan seguidas las parecidas. */
@@ -279,6 +277,8 @@ function boxOf(el: Element, root: DOMRect) {
 
 type Box = NonNullable<ReturnType<typeof boxOf>>;
 
+const pad = (b: Box, m: number): Box => ({ l: b.l - m, t: b.t - m, r: b.r + m, b: b.b + m });
+
 const overlapArea = (a: Box, b: Box) => Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
 
 export function HeroField() {
@@ -289,20 +289,27 @@ export function HeroField() {
   const rootRef = useRef<HTMLDivElement>(null);
   const pieceRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  /** Elige un punto del rango de la pieza que no pise a las demás piezas ni a la tarjeta; si no hay, el que menos. */
-  function pickSpot(i: number) {
+  /**
+   * Elige un punto del rango de la pieza que no pise a las que coinciden con ella en pantalla ni a la tarjeta;
+   * si no hay, el que menos. `placed` trae las cajas ya decididas en esta ronda (sustituyen a las del DOM).
+   */
+  function pickSpot(i: number, placed?: Map<number, Box>) {
     const p = PIECES[i];
-    const candidate = () => ({ x: between(p.xr[0], p.xr[1]), y: between(p.yr[0], p.yr[1]) });
     const root = rootRef.current;
     const self = pieceRefs.current[i];
-    if (!root || !self || p.depth === "far") return candidate();
+    const fallback = () => ({ x: between(p.xr[0], p.xr[1]), y: between(p.yr[0], p.yr[1]) });
+    if (!root || !self) return { ...fallback(), box: null as Box | null };
 
     const area = root.getBoundingClientRect();
     const own = self.getBoundingClientRect();
+    // Cualquier punto del panel donde la pieza quepa (las de fondo pueden sangrar un poco por la izquierda).
+    const maxX = Math.max(0, (1 - own.width / area.width) * 100);
+    const maxY = Math.max(0, (1 - own.height / area.height) * 100);
+    const candidate = () => ({ x: between(p.depth === "far" ? -6 : 0, maxX), y: between(0, maxY) });
     const others: Box[] = [];
     pieceRefs.current.forEach((el, k) => {
-      if (k === i || !el || PIECES[k].depth === "far" || !coexist(i, k)) return;
-      const b = boxOf(el, area);
+      if (k === i || !el || !coexist(i, k)) return;
+      const b = placed?.get(k) ?? boxOf(el, area);
       if (b) others.push(b);
     });
     root.querySelectorAll("[data-keepout]").forEach((el) => {
@@ -311,8 +318,9 @@ export function HeroField() {
     });
 
     /** Cuántos puntos se prueban: más candidatos dan piezas más separadas. */
-    const TRIES = 40;
+    const TRIES = 120;
     let best = candidate();
+    let bestBox: Box | null = null;
     let bestScore = -Infinity;
     for (let n = 0; n < TRIES; n++) {
       const c = candidate();
@@ -320,7 +328,8 @@ export function HeroField() {
       const t = (c.y / 100) * area.height;
       const box: Box = { l, t, r: l + own.width, b: t + own.height };
       const outside = Math.max(0, box.r - area.width) + Math.max(0, box.b - area.height);
-      const overlap = others.reduce((sum, o) => sum + overlapArea(box, o), 0);
+      // Margen alrededor de cada vecina: tocarse o quedar pegadas cuenta como solapamiento.
+      const overlap = others.reduce((sum, o) => sum + overlapArea(box, pad(o, area.width * 0.03)), 0);
       // Distancia (en anchos del panel) al centro de la pieza más cercana: gana el punto más despejado.
       const cx = (box.l + box.r) / 2;
       const cy = (box.t + box.b) / 2;
@@ -328,34 +337,36 @@ export function HeroField() {
       // Aparte, la separación vertical con la pieza que quede más a su altura: evita que varias se apilen en la misma franja.
       const nearestDy = others.reduce((m, o) => Math.min(m, Math.abs(cy - (o.t + o.b) / 2)), Infinity);
       const dyScore = Number.isFinite(nearestDy) ? nearestDy / area.height : 1;
-      const score = (Number.isFinite(nearest) ? nearest / area.width : 1) + dyScore * 1.5 - overlap / (area.width * area.height) * 20 - outside * 0.05;
+      const score = (Number.isFinite(nearest) ? nearest / area.width : 1) + dyScore * 1.5 - (overlap / (area.width * area.height)) * 2000 - outside * 0.05;
       if (score > bestScore) {
         best = c;
+        bestBox = box;
         bestScore = score;
       }
     }
-    return best;
+    return { ...best, box: bestBox };
   }
 
   useLayoutEffect(() => {
     queueMicrotask(() => {
-      setSlots(PIECES.map((p, i) => ({ ...pickSpot(i), data: randomChartData(), tone: Math.floor(Math.random() * TONES.length) })));
-      // Pasadas de ajuste: con las posiciones nuevas ya en el DOM, cada pieza se aleja de las demás antes de mostrarse.
-      const refine = (pass: number) =>
-        requestAnimationFrame(() => {
-          setSlots((prev) => prev.map((s, i) => ({ ...s, ...pickSpot(i) })));
-          if (pass < SETTLE_PASSES) refine(pass + 1);
-          else setReady(true);
-        });
-      refine(1);
+      // Colocación secuencial en el orden de entrada: cada pieza ve ya fijas a las anteriores y se aleja de ellas.
+      const placed = new Map<number, Box>();
+      const spots = new Map<number, { x: number; y: number }>();
+      for (const i of ENTRY_ORDER) {
+        const { box, ...spot } = pickSpot(i, placed);
+        if (box) placed.set(i, box);
+        spots.set(i, spot);
+      }
+      setSlots(PIECES.map((_, i) => ({ ...spots.get(i)!, data: randomChartData(), tone: Math.floor(Math.random() * TONES.length) })));
+      setReady(true);
     });
-    // Solo al montar: pickSpot lee refs y no depende de props ni de estado.
   }, []);
 
   /** Al terminar un ciclo la pieza está invisible: cambia de punto, de valores y de color sin que se note. */
   function onCycleEnd(i: number, e: AnimationEvent<HTMLDivElement>) {
     if (e.target !== e.currentTarget || e.animationName !== "hero-roam") return;
-    const spot = pickSpot(i);
+    const { x, y } = pickSpot(i);
+    const spot = { x, y };
     setSlots((prev) => prev.map((s, k) => (k === i ? { ...spot, data: randomChartData(), tone: (s.tone + 1) % TONES.length } : s)));
   }
 
