@@ -1,0 +1,74 @@
+import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { MonthSelect } from "@/components/cifra/month-select";
+import { TransactionList } from "@/components/cifra/transaction-list";
+import { TransactionForm } from "@/components/cifra/transaction-form";
+import { getCifraAccess } from "@/lib/cifra/access";
+import {
+  formatDateInput,
+  monthRange,
+  periodOf,
+  todayInMexico,
+} from "@/lib/cifra/dates";
+import { formatMxn } from "@/lib/cifra/money";
+import { getCardOptions, getMonthTransactions } from "@/lib/cifra/queries";
+import { summarizeTransactions } from "@/lib/cifra/summary";
+
+function shiftPeriod(period: string, delta: number): string {
+  const [y, m] = period.split("-").map(Number);
+  const d = new Date(Date.UTC(y, m - 1 + delta, 1));
+  return periodOf({ year: d.getUTCFullYear(), month: d.getUTCMonth() + 1 });
+}
+
+export default async function CifraMovimientosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ mes?: string }>;
+}) {
+  const access = await getCifraAccess();
+  if (!access.ok) return null;
+
+  const today = todayInMexico();
+  const { mes } = await searchParams;
+  const period = mes && monthRange(mes) ? mes : periodOf(today);
+  const [rows, cardOptions] = await Promise.all([
+    getMonthTransactions(access.userId, period),
+    getCardOptions(access.userId),
+  ]);
+  const summary = summarizeTransactions(
+    rows.flatMap((r) => [r, ...r.parts]).map((r) => ({ flow: r.flow, amountCents: r.amountCents, isTransfer: r.isTransfer })),
+  );
+
+  return (
+    <div className="space-y-8">
+      <TransactionForm today={formatDateInput(today)} cardOptions={cardOptions} />
+
+      <section aria-labelledby="movs" className="space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <MonthSelect period={period} />
+          <div className="flex items-center gap-1">
+            <Link href={`/cuenta/cifra/movimientos?mes=${shiftPeriod(period, -1)}`} aria-label="Mes anterior" className="rounded-md p-1.5 text-muted-foreground hover:bg-muted">
+              <ChevronLeft className="size-4" aria-hidden />
+            </Link>
+            <Link href={`/cuenta/cifra/movimientos?mes=${shiftPeriod(period, 1)}`} aria-label="Mes siguiente" className="rounded-md p-1.5 text-muted-foreground hover:bg-muted">
+              <ChevronRight className="size-4" aria-hidden />
+            </Link>
+          </div>
+        </div>
+
+        <p className="text-sm text-muted-foreground" data-testid="cifra-month-summary">
+          Ingresos {formatMxn(summary.incomeCents)} · Egresos {formatMxn(summary.expenseCents)} · Balance{" "}
+          {formatMxn(summary.balanceCents)}
+        </p>
+
+        {rows.length === 0 ? (
+          <p className="rounded-xl border border-border/80 px-4 py-4 text-sm text-muted-foreground" data-testid="cifra-transactions-empty">
+            No hay movimientos en este mes.
+          </p>
+        ) : (
+          <TransactionList rows={rows} deletable testId="cifra-transactions-list" />
+        )}
+      </section>
+    </div>
+  );
+}

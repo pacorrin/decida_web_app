@@ -58,6 +58,8 @@ Leyenda: ⬜ Pendiente · 🟦 En curso · 🟢 Cerrado · 🔴 Atrasado
 
 ## Después de la beta (pendientes que no bloquean el lanzamiento)
 
+- [ ] **Cifra v1 (finanzas personales)**: construida en `dev` el 2026-10-30, **sin pasar a `main`**. Antes de publicar: revisión legal de datos financieros, decidir si se anuncia, y confirmar la migración `20261101000000_cifra` en Railway. Detalle y pendientes en [[../arquitectura/cifra-finanzas-personales]].
+
 - [ ] **Facturación y CFDI** (decidido el 2026-10-29: no se factura en la beta). Al formalizar la plataforma: formalización fiscal con un contador, captura de datos de facturación en la cuenta, emisión del CFDI y todo lo relacionado con el SAT. Detalle y orden en [[../decisiones/facturacion-y-cfdi-despues-de-la-beta]].
 - [ ] **Revisión legal de los términos** (vencimiento de créditos y reembolsos). Sigue abierta; es independiente de la facturación.
 - [ ] Reescribir los e2e de suscripción que aún apuntan al modelo anterior y revisar la vista móvil.

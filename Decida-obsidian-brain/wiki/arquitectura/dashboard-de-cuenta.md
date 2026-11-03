@@ -41,11 +41,12 @@ Layout estándar confirmado con el usuario antes de construir (su mensaje origin
 
 ## Sidebar (`src/components/account/dashboard-sidebar.tsx`)
 
-Tiene dos ítems (`NAV_ITEMS`, actualizado el 2026-10-22 en `567c4a1`):
+Tiene tres ítems (`NAV_ITEMS`; Cifra se agregó el 2026-10-30 y cada ítem ahora define su propio `isActive`):
 1. **"Análisis realizados"** → `/cuenta` (activo también en `/cuenta/evaluaciones/[id]`).
-2. **"Créditos"** → `/cuenta/creditos` (activo en `/cuenta/creditos` y `/cuenta/creditos/paquetes`), donde la persona consulta su saldo en formato decimal (`formatCredits`), su historial de movimientos (`CreditLedgerList`) y compra paquetes.
+2. **"Cifra"** → `/cuenta/cifra` (activo en todo `/cuenta/cifra/*`; sus pestañas Resumen, Mis cuentas y Movimientos están en `cifra/layout.tsx` y sirven también de navegación en móvil). Ver [[cifra-finanzas-personales]].
+3. **"Créditos"** → `/cuenta/creditos` (activo en `/cuenta/creditos` y `/cuenta/creditos/paquetes`), donde la persona consulta su saldo en formato decimal (`formatCredits`), su historial de movimientos (`CreditLedgerList`) y compra paquetes.
 
-Oculto en mobile (`hidden sm:block`); en el navbar (`dashboard-navbar.tsx`) también se enlaza a Créditos y Perfil.
+Oculto en mobile (`hidden sm:block`); en el navbar (`dashboard-navbar.tsx`) el menú de usuario también enlaza a Cifra, Créditos, Perfil y Plan (así se llega a Cifra desde el móvil).
 
 ## Página de perfil (`(dashboard)/perfil/page.tsx`)
 

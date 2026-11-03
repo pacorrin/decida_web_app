@@ -2,7 +2,13 @@ import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Probar el servidor de desarrollo desde el teléfono por la red local: sin esto Next bloquea los
+  // scripts de desarrollo y la página no se hidrata (los botones no responden).
+  allowedDevOrigins: ["192.168.*.*", "10.*.*.*", "172.*.*.*"],
+  experimental: {
+    // La captura inteligente de Cifra sube hasta 3 fotos ya reducidas en el navegador.
+    serverActions: { bodySizeLimit: "5mb" },
+  },
 };
 
 export default withSentryConfig(nextConfig, {

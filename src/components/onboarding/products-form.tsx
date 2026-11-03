@@ -15,6 +15,7 @@ import { saveProducts } from "@/app/analizar/actions";
 import { type ActionState } from "@/lib/onboarding/schemas";
 import { parseStoredProducts } from "@/lib/onboarding/products";
 import type { AssessmentWithRelations } from "@/lib/onboarding/assessment-utils";
+import { newId } from "@/lib/new-id";
 
 const initialState: ActionState = { success: false };
 const MAX_PRODUCTS = 10;
@@ -30,7 +31,7 @@ type ProductRow = {
 
 function emptyRow(): ProductRow {
   return {
-    id: crypto.randomUUID(),
+    id: newId(),
     name: "",
     kind: "producto",
     price: "",
@@ -43,7 +44,7 @@ function initialRows(assessment: AssessmentWithRelations): ProductRow[] {
   const stored = parseStoredProducts(assessment.financial_inputs?.finp_products);
   if (stored.length === 0) return [emptyRow()];
   return stored.map((p) => ({
-    id: crypto.randomUUID(),
+    id: newId(),
     name: p.name,
     kind: p.kind,
     price: p.price ? String(p.price) : "",

@@ -13,7 +13,7 @@ Antes de generar las secciones, `runResearch` (`src/lib/ai/research/`) investiga
 
 Mercado objetivo: no se ata al país del visitante. `saveIdea` lo infiere de la idea (`inferTargetMarket`), el usuario lo edita en la confirmación (`bide_target_market`), y si no hay señal se usa `REPORT_DEFAULT_MARKET_COUNTRY` (México) marcado como supuesto.
 
-Flag: `REPORT_RESEARCH_ENABLED` = `true` | `false` | `posthog` (por defecto; clave `report-research`). **Si falla, se degrada**: el reporte sale sin ficha (`arep_research.status = "failed"|"skipped"`), nunca se tumba. Se muestra en una sección «Fuentes y límites». Sin proveedor de respaldo (documentado; el punto de extensión es `generateWithWebSearch` / `runResearch`).
+Disponibilidad: la decide el usuario en su evaluación; `REPORT_RESEARCH_ENABLED=false` es solo un apagado de emergencia (ya no se usa el flag `report-research` de PostHog). **Si falla, se degrada**: el reporte sale sin ficha (`arep_research.status = "failed"|"skipped"`), nunca se tumba. Se muestra en una sección «Fuentes y límites». Sin proveedor de respaldo (documentado; el punto de extensión es `generateWithWebSearch` / `runResearch`).
 
 ## Resultados (5 casos)
 | Caso | Investigación | Revisión | Citas `[F#]` |
@@ -38,7 +38,7 @@ Flag: `REPORT_RESEARCH_ENABLED` = `true` | `false` | `posthog` (por defecto; cla
 
 ## Pendiente / decisiones del usuario
 - **04**: fortaleza determinista «inversión cabe en lo que puedes perder» con tolerancia «< $5,000» e inversión de $5,000 (`src/lib/scoring/strengths.ts`). Es scoring; el encargo prohíbe tocarlo.
-- Crear el flag `report-research` en PostHog (o usar `REPORT_RESEARCH_ENABLED=true`).
+- Ya no hace falta crear el flag `report-research` en PostHog.
 - Aplicar la migración `20261020010000_report_research` (`bide_target_market`, `arep_research`).
 - Confirmar el precio real de búsqueda web.
 - Calibración de jueces LLM con 10 reportes revisados a mano → Paso 4.

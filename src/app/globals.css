@@ -3,6 +3,8 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+/* Teléfono en horizontal: poco alto, así que el hero pasa a dos columnas para que el botón quede en la primera vista. */
+@custom-variant short-landscape (@media (orientation: landscape) and (max-height: 500px));
 
 @theme inline {
   --color-background: var(--background);
@@ -174,4 +176,136 @@
 
 .decida-reveal-delay {
   animation-delay: 0.12s;
+}
+/* Cifra: titular que sube desde detrás de su propia línea (cada línea la escribe el componente). */
+@keyframes cifra-rise {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.cifra-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.cifra-line > span {
+  display: block;
+  animation: cifra-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--cifra-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cifra-line > span {
+    animation: none;
+  }
+}
+
+/* Cifra: entrada al llegar a la vista. Sin soporte del navegador o con movimiento reducido, el contenido ya está visible. */
+@keyframes cifra-in {
+  from {
+    transform: translateY(32px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cifra-in {
+      animation: cifra-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+/* Cifra: gráfica decorativa del hero. Con movimiento reducido se ve ya dibujada. */
+.cifra-bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+}
+
+@keyframes cifra-bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes cifra-line-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.cifra-chart-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cifra-bar {
+    animation: cifra-bar-grow 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--cifra-bar-delay, 0s);
+  }
+
+  .cifra-chart-line {
+    animation: cifra-line-draw 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.5s both;
+  }
+}
+
+/* Panel del hero: cada pieza aparece con fundido (--o es su opacidad) y reaparece en otro punto (solo opacity).
+   Los keyframes `hero-roam` los genera hero-field.tsx a partir de MAX_VISIBLE. */
+.hero-draw {
+  opacity: var(--o);
+  animation: hero-roam 66s ease-in-out infinite both;
+}
+
+@keyframes hero-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.hero-paused .hero-draw,
+.hero-paused .hero-caret {
+  animation-play-state: paused;
+}
+
+.hero-caret {
+  animation: hero-caret 1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-caret {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-draw {
+    animation: none;
+  }
+}
+
+/* Entrada escalonada del hero: badges, titular, subtítulo y CTAs (opacity + transform). */
+.hero-step {
+  animation: decida-reveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-step {
+    animation: none;
+  }
 }

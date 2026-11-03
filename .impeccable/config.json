@@ -17,6 +17,24 @@
         ],
         "createdAt": "2026-08-05T23:23:29.179Z",
         "reason": "HTML de email transaccional con estilos inline; los clientes de correo no soportan la escala rem/CSS vars de DESIGN.md. Confirmado por el usuario."
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "8rem",
+        "createdAt": "2026-10-30T22:32:37.385Z",
+        "reason": "User confirmed 8rem is intentional"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "13px",
+        "createdAt": "2026-10-30T22:32:37.403Z",
+        "reason": "User confirmed 13px is intentional"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "12rem",
+        "createdAt": "2026-10-30T22:32:37.422Z",
+        "reason": "User confirmed 12rem is intentional"
       }
     ]
   }

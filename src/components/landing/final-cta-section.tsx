@@ -2,26 +2,16 @@ import { PrimaryCtaButton } from "@/components/landing/cta-link";
 
 export function FinalCtaSection() {
   return (
-    <section
-      aria-labelledby="final-cta-heading"
-      className="bg-primary py-16 text-primary-foreground md:py-20"
-    >
-      <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
-        <h2
-          id="final-cta-heading"
-          className="text-balance text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl"
-        >
+    <section aria-labelledby="final-cta-heading" className="bg-background px-4 pb-20 sm:px-6 lg:px-8">
+      <div className="mx-auto grid max-w-6xl gap-8 rounded-3xl bg-[#e8f4fa] p-8 sm:p-14 lg:grid-cols-12 lg:items-end">
+        <h2 id="final-cta-heading" className="text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-primary sm:text-6xl lg:col-span-8">
           Evalúa tu idea bajo tus condiciones
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-pretty text-base leading-relaxed text-primary-foreground/85 sm:text-lg">
-          Entre 15 y 20 minutos para saber si conviene probar, validar,
-          ajustar o pausar — antes de invertir más tiempo o dinero.
-        </p>
-        <div className="mt-8 flex justify-center">
-          <PrimaryCtaButton
-            href="/analizar" location="final_cta"
-            className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
-          >
+        <div className="space-y-5 lg:col-span-4">
+          <p className="text-lg leading-relaxed text-foreground">
+            15 a 20 minutos para saber si conviene probar, validar, ajustar o pausar.
+          </p>
+          <PrimaryCtaButton href="/analizar" location="final_cta">
             Analizar mi idea gratis
           </PrimaryCtaButton>
         </div>

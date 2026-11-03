@@ -28,6 +28,8 @@ Estas **no estaban** en `.env.example` hasta el 2026-10-29 y tienen un valor por
 | Función | Variable | Por defecto |
 |---|---|---|
 | Redacción de las secciones y resumen de la idea | `OPENAI_MODEL_NARRATIVE` | `gpt-4o-mini` |
+| Captura inteligente de Cifra (lee fotos y texto) | `OPENAI_MODEL_CAPTURE` | `gpt-4.1-mini` |
+| Captura inteligente de Cifra (nota de voz a texto) | `OPENAI_MODEL_TRANSCRIBE` | `gpt-4o-mini-transcribe` |
 | Interpretación de puntajes y revisión | `OPENAI_MODEL_REASONING` (+ `OPENAI_REASONING_EFFORT`, `medium`) | `gpt-5-mini` |
 | Búsquedas web generales | `OPENAI_MODEL_RESEARCH` | `gpt-4.1-mini` |
 | Tamaño de mercado (fuentes oficiales) | `OPENAI_MODEL_RESEARCH_OFFICIAL` | `gpt-4.1` |
@@ -43,7 +45,7 @@ Estas **no estaban** en `.env.example` hasta el 2026-10-29 y tienen un valor por
 | `REPORT_REVIEW_ENABLED` | `true` |
 | `REPORT_REVIEW_MAX_ISSUES` | `6` |
 | `REPORT_REVIEW_MAX_REWRITES` | `4` |
-| `REPORT_RESEARCH_ENABLED` | `posthog` (`true` / `false` / flag `report-research`) |
+| `REPORT_RESEARCH_ENABLED` | `true` por defecto; solo `false` como apagado de emergencia. La investigación la decide el usuario en cada evaluación (ya no depende del flag `report-research` de PostHog) |
 
 ## Stripe, correo y monitoreo
 - **Stripe:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_EXPLORA`, `STRIPE_PRICE_VALIDA`, `STRIPE_PRICE_ESCALA`. Todo es **por organización y por modo**. Detalle de los planes: [[../decisiones/modelo-de-creditos-hibrido]] y [[pagos-con-stripe]].

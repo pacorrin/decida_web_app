@@ -591,3 +591,56 @@ Se conectó GitHub en Railway y se fijó la rama `main`; el merge del PR #20 a `
 
 Sitemap con `lastModified` real y sin `changeFrequency`/`priority`; robots que bloquea todo fuera del dominio real; canónica, Open Graph y Twitter por página; JSON-LD de Organization y WebSite en la landing. Documentado en `wiki/arquitectura/seo-y-sitemap.md`. Pendiente: Google Search Console.
 
+
+## [2026-10-30] plan | Nueva feature planeada: brief de marca
+
+Se creó `wiki/producto/nuevas-features.md` como registro de funcionalidades por construir, con el plan del generador de brief de marca (7 secciones, datos que se reutilizan, flujo, propuesta técnica, preguntas abiertas). No se escribió código. Pendiente: que el usuario cierre el alcance.
+
+## [2026-10-30] decision | Visión de plataforma y nueva feature planeada: finanzas personales
+
+El usuario aclaró que Decida es una plataforma con varias herramientas al servicio de una comunidad de desarrollo personal con finanzas y planeación; el análisis de ideas es el foco actual y las herramientas son complemento. Por eso se rehízo el navbar público. En `wiki/producto/nuevas-features.md` se documentó la visión y la herramienta de finanzas personales (captura de gastos, deudas e ingresos; uso en análisis solo con consentimiento). Ambas, junto al brief de marca, quedan solo en el mapa. Pendiente: nombres y revisión legal. Ojo: el PRD aún no refleja el cambio de enfoque.
+
+## [2026-10-30] decision | Nombre Cifra y metodología CDPE
+
+La herramienta de finanzas personales se llama **Cifra** (descartado Alcanza). La plataforma se organiza en la secuencia Cifra, Decida, Planifica, Ejecuta (CDPE), todas bajo la marca Decida. Detalle y notas de diseño en `wiki/producto/nuevas-features.md`. Pendiente: dominio e IMPI de Cifra, nombre de Planifica y Ejecuta, reflejarlo en el PRD.
+
+## [2026-10-30] plan | Narrativa «El orden Decida»
+
+Se creó `wiki/marca/narrativa-del-orden-decida.md`: reencuadre de la metodología como camino con cuatro preguntas, opciones de nombre para la secuencia (recomendada «El orden Decida»), arco SCAR, formatos para redes y los cinco datos que faltan para volverla historia. Sirve para pulir el propósito de Decida (de evaluar ideas a recorrer un camino). Pendiente: elegir nombre, reunir evidencia, actualizar visión y PRD.
+
+## [2026-10-30] impl | Cifra v1 en dev
+
+Se construyó la primera versión de Cifra en la rama `dev` (no en `main`): saldos, deudas, gastos fijos con fechas, registro de ingresos y egresos, resumen del mes y «Marcar como pagado». Requiere plan activo; sin plan se conservan y se pueden borrar los datos. Nuevas tablas `cifra_*` (migración `20261101000000_cifra`), eventos de analítica sin montos y aviso en la política de privacidad. Documentado en `wiki/arquitectura/cifra-finanzas-personales.md`. Pendiente: revisión legal, uso en el análisis de ideas, exportar y borrado de cuenta.
+
+## [2026-10-30] impl | Rediseño de deudas en Cifra
+
+Las deudas capturan el próximo pago (monto y fecha real), corte y límite en tarjetas, pago recurrente con ajuste a fin de mes y vigencia opcional. Pagos restantes se estiman (nunca se piden). Nuevo reporte «¿Qué tengo que pagar?» por periodo. Campos numéricos y de dinero con formato. Documentado en `wiki/arquitectura/cifra-finanzas-personales.md`.
+
+## [2026-10-30] impl | Observaciones en Cifra
+
+Campo de texto libre opcional en saldos, deudas y gastos fijos. Se editó la migración `20261101000000_cifra` (aún no está en main).
+
+## [2026-10-30] impl | Captura inteligente de Cifra
+
+Fotos y/o texto leídos con IA proponen un ingreso o egreso que la persona confirma. 3 créditos por captura (reembolso si falla), consentimiento previo, fotos sin guardar, aviso de privacidad actualizado. Probado con OpenAI real: texto y ticket sintético. Detalle en `wiki/arquitectura/cifra-finanzas-personales.md`.
+
+## [2026-10-30] ingest | Cifra: nota de voz en la captura inteligente
+Botón «Grabar voz» con transcripción (`gpt-4o-mini-transcribe`) al campo de texto; mismo cobro único por captura, reembolso si falla; consentimiento y privacidad mencionan la voz. Ver [[arquitectura/cifra-finanzas-personales]].
+
+## [2026-10-30] ingest | Página pública de Cifra (/cifra)
+Landing con arco SCAR, sección completa de captura inteligente y secciones de cuentas, pagos, resumen, privacidad, precio y FAQ. Ver [[arquitectura/cifra-finanzas-personales]].
+
+## [2026-10-30] ingest | Rediseño de la página pública /cifra
+Hero partido con demo viva, barra y pie propios, tablero de pagos, selector de plan y FAQ en mosaicos; distinta del inicio de Decida. Ver [[arquitectura/cifra-finanzas-personales]].
+
+## [2026-10-30] ingest | Rediseño del inicio y navbar/pie únicos
+El inicio se rehízo (hero con diagnóstico vivo `hero-verdict.tsx`, secciones sin tarjetas con borde). `SiteHeader` y `SiteFooter` son ahora los únicos del sitio público (inicio, Cifra, legales, ejemplo, cuenta); se eliminaron `ReportHeader`, la barra y el pie propios de Cifra y la segunda fila de secciones. Ver [[arquitectura/cifra-finanzas-personales]].
+
+## [2026-10-30] ingest | Tarjetas de crédito en Cifra
+Tarjeta como entidad ligada a su deuda; compras con tarjeta suben el saldo, el pago es transferencia y solo intereses y «Compras sin detalle» cuentan como gasto. Migración nueva pendiente en producción. Ver [[arquitectura/cifra-finanzas-personales]].
+
+## [2026-11-02] ingest | Cuentas ligadas a movimientos en Cifra
+Selector único «¿Con qué pagaste?» (cuentas y tarjetas de crédito); la tarjeta de débito es una cuenta (tipo `debit`). Egreso baja el saldo de la cuenta, ingreso lo sube, borrar revierte; «Editar y pagar» puede salir de una cuenta. Migración `20261103000000_cifra_account_payments` pendiente en producción. Pendiente: captura inteligente con cuentas.
+
+## [2026-11-02] ingest | Captura inteligente con cuentas
+El prompt de captura recibe nombre e id de las cuentas además de las tarjetas; `accountId` se valida contra las cuentas de la persona y precarga el selector «¿Con qué pagaste?» / «¿A qué cuenta entró?».

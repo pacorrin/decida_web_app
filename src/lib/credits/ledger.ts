@@ -234,7 +234,8 @@ export async function expireCredits(params: {
 export async function spendCredits(params: {
   userId: string;
   amount: number;
-  assessmentId: string;
+  /** Evaluación a la que se asocia el gasto; los gastos de otras funciones (Cifra) no la llevan. */
+  assessmentId?: string | null;
   idempotencyKey: string;
   metadata?: Prisma.InputJsonValue;
   /** Si true, marca asmt_credit_cost y asmt_credits_charged_at en la misma tx. */
@@ -269,13 +270,13 @@ export async function spendCredits(params: {
           cled_type: "spend",
           cled_amount: -params.amount,
           cled_balance_after: balanceAfter,
-          cled_asmt_id: params.assessmentId,
+          cled_asmt_id: params.assessmentId ?? null,
           cled_idempotency_key: params.idempotencyKey,
           cled_metadata: params.metadata ?? undefined,
         },
       });
 
-      if (params.markAssessmentCharged) {
+      if (params.markAssessmentCharged && params.assessmentId) {
         await tx.assessments.update({
           where: { asmt_id: params.assessmentId },
           data: {
@@ -315,6 +316,22 @@ export async function refundCredits(params: {
     idempotencyKey: `refund:${params.assessmentId}:${params.reason}`,
     assessmentId: params.assessmentId,
     metadata: params.metadata ?? { reason: params.reason },
+  });
+}
+
+/** Reembolso que no pertenece a una evaluación (p. ej. una captura inteligente de Cifra que falló). */
+export async function refundCreditsByKey(params: {
+  userId: string;
+  amount: number;
+  idempotencyKey: string;
+  metadata?: Prisma.InputJsonValue;
+}): Promise<LedgerResult> {
+  return creditLedgerEntry({
+    userId: params.userId,
+    amount: params.amount,
+    type: "refund",
+    idempotencyKey: params.idempotencyKey,
+    metadata: params.metadata,
   });
 }
 

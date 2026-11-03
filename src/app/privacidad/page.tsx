@@ -57,6 +57,25 @@ export default function PrivacidadPage() {
             formulario.
           </li>
           <li>
+            <strong className="text-foreground">Datos de Cifra:</strong> si
+            usas Cifra, los saldos, deudas, gastos fijos, ingresos y egresos que
+            tú registras manualmente, con sus fechas y categorías. No nos
+            conectamos a tus bancos. Estos datos solo los ves tú, no se usan en
+            tus análisis de ideas ni se comparten con terceros, y puedes borrarlos
+            en cualquier momento desde Cifra.
+          </li>
+          <li>
+            <strong className="text-foreground">Captura inteligente de Cifra:</strong>{" "}
+            si decides usarla, las fotos (por ejemplo, de un ticket), las notas de
+            voz y el texto que escribes o dictas se envían a OpenAI para proponerte un ingreso o
+            egreso. Antes de la primera vez te pedimos tu autorización y la
+            guardamos con su fecha. Las fotos y las notas de voz no se guardan en Decida: se
+            procesan y se descartan; solo se conserva el movimiento que tú
+            confirmas. Un ticket puede incluir datos personales (como tu nombre o
+            los últimos dígitos de tu tarjeta): tápalos si prefieres. Es
+            opcional: puedes registrar todo a mano sin enviar nada a la IA.
+          </li>
+          <li>
             <strong className="text-foreground">Datos técnicos:</strong>{" "}
             dirección IP, tipo de navegador y registros de uso necesarios para
             operar el servicio de forma segura.
@@ -96,7 +115,9 @@ export default function PrivacidadPage() {
           <li>
             <strong className="text-foreground">OpenAI</strong> (inteligencia
             artificial): procesa el texto de tu idea y tus respuestas para
-            interpretar tus resultados y redactar tu reporte.
+            interpretar tus resultados y redactar tu reporte. Si usas la captura
+            inteligente de Cifra, también procesa las fotos, las notas de voz y el texto
+            que envías en ella.
           </li>
           <li>
             <strong className="text-foreground">Stripe</strong>: procesa los
