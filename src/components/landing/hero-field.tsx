@@ -20,13 +20,13 @@ const DEPTH: Record<Depth, { opacity: number }> = {
 };
 
 /**
- * Sobre el verde oscuro solo se alternan el blanco (con la transparencia de cada profundidad) y el coral.
- * Cada pieza cambia al otro color cada vez que reaparece.
+ * Sobre el verde oscuro domina el blanco (con la transparencia de cada profundidad) y cada pieza intercala
+ * un acento de marca —coral, azul o amarillo— al reaparecer.
  */
-const TONES = ["#ffffff", "#ff7043"];
-const CORAL = "#ff7043";
-/** El coral del panel se atenúa a la mitad para que el botón principal siga siendo lo único intenso. */
-const soft = (color: string) => (color === CORAL ? 0.5 : 1);
+const TONES = ["#ffffff", "#ff7043", "#ffffff", "#6baed6", "#ffffff", "#ffb74d"];
+const ACCENT_SOFT: Record<string, number> = { "#ff7043": 0.5, "#6baed6": 0.65, "#ffb74d": 0.6 };
+/** Los acentos del panel se atenúan para que el botón principal siga siendo lo único intenso. */
+const soft = (color: string) => ACCENT_SOFT[color] ?? 1;
 
 const LABELS = ["Encaje con tu tiempo", "Capacidad de inversión", "Afinidad con tu perfil", "Demanda en tu zona"];
 
