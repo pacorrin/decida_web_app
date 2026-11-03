@@ -1,4 +1,5 @@
 import { CtaLink, PrimaryCtaButton } from "@/components/landing/cta-link";
+import { HeroTheme } from "@/components/landing/hero-theme";
 import { HeroField } from "@/components/landing/hero-field";
 
 /**
@@ -7,18 +8,16 @@ import { HeroField } from "@/components/landing/hero-field";
  */
 export function HeroSection() {
   return (
-    <section
-      aria-labelledby="hero-heading"
-      className="mx-3 mb-3 grid min-h-[calc(100svh-5.5rem)] overflow-hidden rounded-3xl border border-border bg-background sm:mx-6 lg:grid-cols-[1fr_1.25fr]"
-    >
+    <HeroTheme className="mx-3 mb-3 grid min-h-[calc(100svh-5.5rem)] overflow-hidden rounded-3xl border border-border bg-background sm:mx-6 lg:grid-cols-[1fr_1.25fr]">
       <div className="flex flex-col justify-between gap-10 px-4 pb-12 pt-10 sm:px-8 lg:col-start-1 lg:row-start-1 lg:px-12 lg:pb-14">
         <div className="hero-step flex flex-wrap items-center gap-3" style={{ animationDelay: "0ms" }}>
-          <p className="text-4xl font-semibold tracking-tight text-primary sm:text-5xl">Decida</p>
-          {["IA", "Beta"].map((label) => (
+          <p className="text-4xl font-semibold tracking-tight transition-colors duration-[1500ms] text-[var(--hero-c0)] sm:text-5xl">Decida</p>
+          {["IA", "Beta"].map((label, i) => (
             <span
               key={label}
               data-testid={label === "IA" ? "ai-badge" : "beta-badge"}
-              className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary"
+              className="inline-flex items-center rounded-full border border-current/25 bg-current/5 px-3 py-1 text-sm font-medium transition-colors duration-[1500ms]"
+              style={{ color: `var(--hero-c${i + 1})` }}
             >
               {label}
             </span>
@@ -28,10 +27,10 @@ export function HeroSection() {
         <div className="space-y-6">
           <h1
             id="hero-heading"
-            className="text-5xl font-semibold leading-[1.02] tracking-[-0.04em] text-primary sm:text-6xl xl:text-7xl"
+            className="text-5xl font-semibold leading-[1.02] tracking-[-0.04em] sm:text-6xl xl:text-7xl"
           >
             {["¿Tu idea vale", "tu tiempo", "y tu dinero?"].map((line, i) => (
-              <span key={line} className="hero-step block whitespace-nowrap" style={{ animationDelay: `${120 + i * 120}ms` }}>
+              <span key={line} className="hero-step block whitespace-nowrap transition-colors duration-[1500ms]" style={{ animationDelay: `${120 + i * 120}ms`, color: `var(--hero-c${i})` }}>
                 {line}
               </span>
             ))}
@@ -48,7 +47,7 @@ export function HeroSection() {
                 href="/ejemplo"
                 location="hero_example"
                 variant="outline"
-                className="border-primary/30 bg-transparent text-primary hover:bg-primary/5 hover:text-primary"
+                className="border-current/30 bg-transparent text-[var(--hero-c1)] transition-colors duration-[1500ms] hover:bg-current/5 hover:text-[var(--hero-c1)]"
               >
                 Ver ejemplo de reporte
               </CtaLink>
@@ -62,6 +61,6 @@ export function HeroSection() {
         <HeroField />
         <span aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-64 bg-gradient-to-r from-background via-background/70 to-transparent lg:block" />
       </div>
-    </section>
+    </HeroTheme>
   );
 }
