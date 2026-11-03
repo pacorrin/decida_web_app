@@ -324,6 +324,22 @@
   animation: hero-drift 8s ease-in-out infinite alternate;
 }
 
+@keyframes hero-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.hero-caret {
+  animation: hero-caret 1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-caret {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-draw,
   .hero-drift {

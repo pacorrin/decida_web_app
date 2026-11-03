@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import { HeroTypedAnswer } from "@/components/landing/hero-typed-answer";
 
 /**
  * Panel del hero: fragmentos de un reporte (veredictos, cifras, cuadros y gráficas) dibujados a distintos
@@ -126,6 +127,7 @@ export function HeroField() {
           </div>
         );
       })}
+      <HeroTypedAnswer />
     </div>
   );
 }
