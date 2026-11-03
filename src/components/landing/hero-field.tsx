@@ -18,11 +18,10 @@ const DEPTH: Record<Depth, { opacity: number; drift: string; seconds: number }> 
 };
 
 /**
- * Colores de la marca que se alternan: verde-confianza, azul-guía, verde medio y un azul más hondo (el mismo
- * azul-guía, para que se lea sobre el gris). Cada pieza cambia al siguiente color cada vez que reaparece.
- * El coral queda reservado al botón principal.
+ * Sobre el verde oscuro solo se alternan el blanco (con la transparencia de cada profundidad) y el coral.
+ * Cada pieza cambia al otro color cada vez que reaparece.
  */
-const TONES = ["#05422c", "#6baed6", "#0d5a40", "#3a86b8"];
+const TONES = ["#ffffff", "#ff7043"];
 
 const LABELS = ["Encaje con tu tiempo", "Capacidad de inversión", "Afinidad con tu perfil", "Demanda en tu zona"];
 
