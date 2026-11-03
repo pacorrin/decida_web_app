@@ -263,15 +263,46 @@
   }
 }
 
-/* Panel del hero: cada pieza se dibuja al entrar (--o es su opacidad final) y luego flota (transform + opacity). */
-@keyframes hero-draw {
-  from {
+/* Panel del hero: cada pieza aparece con fundido (--o es su opacidad), reaparece en otros dos puntos y flota (transform + opacity). */
+@keyframes hero-roam {
+  0% {
     opacity: 0;
-    transform: translateY(1rem) scale(0.96);
+    transform: translate(0, 0);
   }
-  to {
+  6%,
+  30% {
     opacity: var(--o);
-    transform: none;
+    transform: translate(0, 0);
+  }
+  36% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  36.01% {
+    opacity: 0;
+    transform: translate(var(--x1), var(--y1));
+  }
+  42%,
+  63% {
+    opacity: var(--o);
+    transform: translate(var(--x1), var(--y1));
+  }
+  69% {
+    opacity: 0;
+    transform: translate(var(--x1), var(--y1));
+  }
+  69.01% {
+    opacity: 0;
+    transform: translate(var(--x2), var(--y2));
+  }
+  75%,
+  93% {
+    opacity: var(--o);
+    transform: translate(var(--x2), var(--y2));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--x2), var(--y2));
   }
 }
 
@@ -286,7 +317,7 @@
 
 .hero-draw {
   opacity: var(--o);
-  animation: hero-draw 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: hero-roam 20s ease-in-out infinite both;
 }
 
 .hero-drift {

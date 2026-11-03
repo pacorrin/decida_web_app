@@ -2,8 +2,9 @@ import type { CSSProperties, ReactNode } from "react";
 
 /**
  * Panel del hero: fragmentos de un reporte (veredictos, cifras, cuadros y gráficas) dibujados a distintos
- * tamaños, opacidades y profundidades. Cada pieza se dibuja al entrar y luego flota despacio; las lejanas
- * son grandes y tenues, las cercanas nítidas y pequeñas. Solo transform y opacity.
+ * tamaños, opacidades y profundidades. Cada pieza aparece con un fundido, se desvanece y reaparece en otro
+ * punto del panel (tres posiciones por ciclo), y entre tanto flota despacio; las lejanas son grandes y tenues,
+ * las cercanas nítidas y pequeñas. Solo transform y opacity.
  */
 type Depth = "far" | "mid" | "near";
 
@@ -14,6 +15,22 @@ const DEPTH: Record<Depth, { opacity: number; drift: string; seconds: number }> 
 };
 
 type Piece = { x: number; y: number; depth: Depth; opacity?: number; node: ReactNode };
+
+/** Desplazamientos (en cqw) a los que reaparece cada pieza, dos por pieza respecto a su posición base. */
+const JUMPS: [number, number, number, number][] = [
+  [22, 14, -18, 24],
+  [-16, 20, 20, -12],
+  [14, -20, -22, 16],
+  [-24, 18, 12, 26],
+  [18, 22, -14, -18],
+  [-20, -14, 16, 20],
+  [12, 26, -22, 10],
+  [-14, 16, 24, -16],
+  [20, -12, -18, 22],
+  [-22, 24, 14, -20],
+  [16, 12, -12, 28],
+  [-18, -22, 22, 14],
+];
 
 const BARS = [38, 62, 48, 80, 100];
 
@@ -92,7 +109,11 @@ export function HeroField() {
                 left: `${p.x}%`,
                 top: `${p.y}%`,
                 "--o": p.opacity ?? d.opacity,
-                animationDelay: `${150 + i * 110}ms`,
+                "--x1": `${JUMPS[i][0]}cqw`,
+                "--y1": `${JUMPS[i][1]}cqw`,
+                "--x2": `${JUMPS[i][2]}cqw`,
+                "--y2": `${JUMPS[i][3]}cqw`,
+                animationDelay: `${150 + i * 350}ms`,
               } as CSSProperties
             }
           >
