@@ -4,15 +4,15 @@ import type { SignalLevel } from "@/lib/example-report-data";
 import { SIGNAL_LABELS } from "@/lib/example-report-data";
 
 const signalStyles: Record<SignalLevel, string> = {
-  green: "border-emerald-200 bg-emerald-50 text-emerald-800",
-  yellow: "border-amber-200 bg-amber-50 text-amber-900",
-  red: "border-red-200 bg-red-50 text-red-800",
+  green: "border-transparent bg-[#81c784]/30 text-foreground",
+  yellow: "border-transparent bg-[#ffb74d]/30 text-foreground",
+  red: "border-transparent bg-[#ff7043]/25 text-foreground",
 };
 
 const signalDots: Record<SignalLevel, string> = {
-  green: "bg-emerald-500",
-  yellow: "bg-amber-500",
-  red: "bg-red-500",
+  green: "bg-[#81c784]",
+  yellow: "bg-[#ffb74d]",
+  red: "bg-[#ff7043]",
 };
 
 type SignalBadgeProps = {

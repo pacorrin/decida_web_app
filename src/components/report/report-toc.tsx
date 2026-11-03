@@ -35,9 +35,9 @@ export function ReportToc({
   return (
     <nav
       aria-label="Contenido del reporte"
-      className={cn("rounded-xl border border-border/70 bg-muted/30 p-4", className)}
+      className={cn("rounded-2xl bg-white shadow-[0_4px_12px_rgba(5,66,44,0.07)] p-4", className)}
     >
-      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+      <p className="mb-3 px-2 text-sm font-medium text-muted-foreground">
         Contenido
       </p>
       <ol className="space-y-1">
